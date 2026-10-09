@@ -13,6 +13,14 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 2026-10-09 17:36 · Cursor
+- Commit `3ec8baa51e6ed3c7ae66fbec2d273eebaf6e7ef7` sul ramo main di https://github.com/anchecasa/anchecasapulito. Messaggio: «Home: ricerca intelligente, SuperMastro con risposta e cartina artigiani; Magazine e statistiche».
+- Il push da solo non avvia Vercel. Pubblicata la cartella `sito` sul progetto `anchecasa-pulito` in produzione. Deployment `dpl_E7ESrwYmgsqBuKpBcMQo9K15Gj57`, stato Ready, indirizzo https://anchecasa.it. Area privata non ripubblicata.
+- Con questo invio è andato online anche il Check Bollette a due schermate e il report PDF con le onde (voce Claude delle 17:45), insieme alla ricerca della home e alla rete certificata.
+- Prova da telefono (390 px) su https://anchecasa.it: scritto «idr», scelto Idraulico, città Roma, Cerca. Si apre `/supermastro?p=m-idraulico&c=Roma#richiesta`. «Cerca artigiano» trova 10 idraulici: i primi due sono «Idraulico certificato · Roma», segno blu, «Certificato DM 37/08»; dal terzo in poi OpenStreetMap, segno arancio.
+- `POST /api/rete-artigiani` con mestiere idraulico a Roma risponde 200 e mette i certificati in ordine di distanza.
+- File annotato: `CLAUDE.md`.
+
 ### 2026-10-09 17:33 · Cursor — Logica di supermastro.com innestata nel sito
 - Lette le regole dal sito supermastro.com (Palumbo Investment): diagnosi video nella funzione `diagnose-video` (categorie idraulico, elettricista, fabbro, muratore, falegname, giardiniere; confidenza sotto 70 = video non chiaro; `faidate_consigliato` solo se è sicuro; artigiano certificato DM 37/08) e tabella pubblica `artigiani` (approvati, online, con certificazione, il più vicino entro 40 km).
 - `sito/api/rete-artigiani.js` (nuovo): restituisce `{ nome, lat, lng, tel, indirizzo, sito, rete: true }`. Nella tabella non ci sono telefono né sito, quindi quei campi restano vuoti. Il nome, se manca la ragione sociale, è «Idraulico certificato · Roma».
