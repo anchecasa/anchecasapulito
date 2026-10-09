@@ -13,6 +13,13 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 2026-10-09 18:01 · Cursor
+- Commit `af752cb` sul ramo main: «SuperMastro: guida fai da te con attrezzi, professionista solo al clic, Comuni d'Italia, video solo da telefono». Poi `68f5d3e` (Photon con `lang=default`, perché `lang=it` rispondeva 400) e `46d40df` (tolto il riquadro dei voti ancora senza script).
+- Il push da solo non avvia Vercel. Pubblicata la cartella `sito` sul progetto `anchecasa-pulito`. Deployment `dpl_GTyFQB12rGqukdEwwXoxGrqZvf21`, stato Ready, alias https://anchecasa.it. Area privata non ripubblicata. Le voci delle 18:20 e delle 18:35 restano solo in locale.
+- Prova da telefono (390 px): «rubinetto» → Rubinetto che gocciola → «Tea» → Teano (Caserta, CAP 81057). Si apre `/supermastro?p=rubinetto-gocciola&c=Teano&lat=41.25108&lng=14.06715#richiesta`. Scheda «Puoi provarci tu», tempo 20-40 minuti, difficoltà facile, 6 attrezzi e 7 passi. La cartina resta chiusa finché non si preme «Cerca un idraulico vicino a te»: 4 idraulici, il più vicino a 36 km (OpenStreetMap, raggio allargato).
+- Da PC (1280 px, mouse): al posto del video c’è «SuperMastro con il video funziona dal telefono», con anchecasa.it/supermastro e «Copia il link». Il riquadro di registrazione è nascosto.
+- File annotato: `CLAUDE.md`.
+
 ### 2026-10-09 ~18:35 · Claude — SuperMastro impara dai pollici (NON ancora pubblicato)
 - Sotto ogni risposta di SuperMastro: "SuperMastro ha capito il problema?" con 👍 Sì / 👎 No. Con No compare "Cos'era invece? Così SuperMastro impara." (`supermastro.html`, `js/trova-artigiano.js`, `css/supermastro.css` v=5, trova-artigiano v=5).
 - NUOVO `sito/api/supermastro-voto.js`: salva voto, fonte (testo/video), richiesta, risposta data, mestiere, correzione e città in `marketplace.supermastro_voti` (solo INSERT, approvato sempre false).
