@@ -24,8 +24,45 @@
   user-select: none;
   -webkit-tap-highlight-color: transparent;
 }
-.mg-root.is-single { --mg-body: 13.6px; padding-block: 10px 10px; }
+.mg-root.is-single { --mg-body: 13.6px; padding-block: 8px 8px; }
 .mg-root:fullscreen { display: flex; flex-direction: column; justify-content: center; }
+
+/* Telefono: la rivista occupa tutto lo schermo visibile, senza scorrere la pagina del sito. */
+@media (max-width: 899px) {
+  body[data-page="magazine"] {
+    overflow: hidden;
+    overscroll-behavior: none;
+    background: #141c28;
+  }
+  body[data-page="magazine"] .site-footer,
+  body[data-page="magazine"] .mg-hint { display: none; }
+  body[data-page="magazine"] .mg-root {
+    position: fixed;
+    z-index: 30;
+    left: 0;
+    right: 0;
+    top: var(--head);
+    bottom: 0;
+    width: auto;
+    height: auto;
+    padding: 6px 0 calc(6px + env(safe-area-inset-bottom));
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    overscroll-behavior: none;
+  }
+  body[data-page="magazine"] .mg-stage {
+    flex: 1 1 auto;
+    width: 100%;
+    min-height: 0;
+    margin: 0;
+    animation: none;
+  }
+  body[data-page="magazine"] .mg-controls {
+    flex: none;
+    margin-top: 6px;
+  }
+}
 
 .mg-stage { position: relative; margin: 0 auto; touch-action: pan-y; }
 .mg-scaler { position: absolute; top: 0; left: 50%; transform-origin: top center; }
@@ -454,9 +491,9 @@
 .mg-face.hint .mg-curl { animation: mg-curl-hint 2.4s ease 1.2s 2; }
 @keyframes mg-curl-hint { 0%, 100% { width: 0; height: 0; } 40%, 60% { width: 64px; height: 64px; } }
 
-/* entrata della rivista */
-.mg-stage { animation: mg-enter 1s cubic-bezier(.2,.8,.2,1) both; }
-@keyframes mg-enter { from { opacity: 0; transform: translateY(26px) scale(.97); } to { opacity: 1; transform: none; } }
+/* entrata della rivista: solo un breve dissolvenza, senza spostamento */
+.mg-stage { animation: mg-enter .25s ease both; }
+@keyframes mg-enter { from { opacity: 0; } to { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .mg-stage, .mg-face.hint .mg-curl { animation: none; } }
 
 .mg-folio span:last-child { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }

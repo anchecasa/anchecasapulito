@@ -759,10 +759,40 @@
     var sz = size();
     var bookW = mode === "spread" ? sz.w * 2 : sz.w;
     var isFs = document.fullscreenElement === root;
-    var header = isFs ? 0 : (document.querySelector(".site-header") || { offsetHeight: 86 }).offsetHeight;
-    var availW = root.clientWidth - (mode === "spread" ? 48 : 16);
-    var availH = window.innerHeight - header - (mode === "spread" ? 120 : 96);
-    var scale = Math.max(0.3, Math.min(availW / bookW, availH / sz.h, mode === "spread" ? 1.25 : 1.15));
+    var headerEl = document.querySelector(".site-header");
+    var header = isFs ? 0 : (headerEl ? headerEl.offsetHeight : 86);
+
+    if (mode === "single" && !isFs) {
+      var vv = window.visualViewport;
+      var viewH = vv ? vv.height : window.innerHeight;
+      var viewTop = vv ? vv.offsetTop : 0;
+      root.style.top = (viewTop + header) + "px";
+      root.style.height = Math.max(0, viewH - header) + "px";
+      stage.style.width = "100%";
+      stage.style.height = "";
+      var availW = Math.max(1, stage.clientWidth - 8);
+      var availH = stage.clientHeight;
+      if (availH < 40) {
+        var controls = root.querySelector(".mg-controls");
+        availH = Math.max(40, viewH - header - (controls ? controls.offsetHeight : 48) - 16);
+      }
+      var scale = Math.max(0.3, Math.min(availW / bookW, availH / sz.h));
+      var drawnH = sz.h * scale;
+      scaler.style.width = bookW + "px";
+      scaler.style.height = sz.h + "px";
+      scaler.style.top = Math.max(0, (Math.max(availH, stage.clientHeight) - drawnH) / 2) + "px";
+      scaler.style.transform = "translateX(-50%) scale(" + scale + ")";
+      book.style.width = bookW + "px";
+      book.style.height = sz.h + "px";
+      return;
+    }
+
+    root.style.top = "";
+    root.style.height = "";
+    scaler.style.top = "0";
+    var availW = root.clientWidth - 48;
+    var availH = window.innerHeight - header - 120;
+    var scale = Math.max(0.3, Math.min(availW / bookW, availH / sz.h, 1.25));
     stage.style.width = bookW * scale + "px";
     stage.style.height = sz.h * scale + "px";
     scaler.style.width = bookW + "px";
@@ -819,12 +849,18 @@
   document.addEventListener("fullscreenchange", fit);
 
   var resizeT = null;
-  window.addEventListener("resize", function () {
+  function onResize() {
+    if (currentMode() !== mode) { build(); return; }
+    if (mode === "single") { fit(); return; }
     clearTimeout(resizeT);
-    resizeT = setTimeout(function () {
-      if (currentMode() !== mode) build(); else fit();
-    }, 120);
-  });
+    resizeT = setTimeout(fit, 120);
+  }
+  window.addEventListener("resize", onResize);
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener("resize", onResize);
+    window.visualViewport.addEventListener("scroll", onResize);
+  }
 
   build();
+  requestAnimationFrame(function () { requestAnimationFrame(fit); });
 })();
