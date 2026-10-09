@@ -91,33 +91,27 @@
         '<p class="mg-small" style="border-top:1px solid var(--mg-rule);padding-top:6px;margin:0">N. ' + NUMERO.n + " · " + NUMERO.data + " · Quindicinale gratuito su anchecasa.it · Prossimo numero " + NUMERO.prossimo + ". Contenuti divulgativi: non sostituiscono il parere di un tecnico.</p>" +
         "</div>" + folio(i) + "</div>";
     } },
-    /* 2 · SOMMARIO */
-    { html: function (i) {
-      var voci = [
-        [3, "In cifre", "I numeri della casa", "tetti"],
-        [4, "Inchiesta", "Gli ultimi 83 giorni al 50%", "bonus"],
-        [6, "Guida", "Bonifico parlante e documenti", "architetto"],
-        [7, "Bollette", "Leggere la bolletta in 2 minuti", "bolletta"],
-        [8, "Strumento gratuito", "Check Bollette: verifica la tua", "bolletta"],
-        [9, "Energia", "Cappotto e pompa di calore", "pompa-calore"],
-        [11, "Serramenti", "Finestre che isolano davvero", "finestra"],
-        [12, "Cantiere", "Il preventivo blindato", "cantiere"],
-        [14, "Tendenze", "Bagno: microcemento e doccia a filo", "bagno"],
-        [15, "Abitare", "Cucina, le misure che contano", "cucina"],
-        [16, "Esterni", "La pergola bioclimatica", "pergola"],
-        [17, "Cura della casa", "Il calendario d'autunno", "caldaia"],
-        [19, "Glossario", "Le parole della casa", "editoriale"],
-        [20, "Servizio", "Trova chi lo fa nella tua zona", "stretta-mano"]
-      ];
-      var li = voci.map(function (v) {
-        return '<li><div class="row"><span class="pg">' + v[0] + "</span>" +
-          '<span><span class="sec">' + v[1] + '</span><span class="tt">' + v[2] + "</span></span>" +
-          '<img src="' + NUMERO.cartella + v[3] + '.jpg" alt="" draggable="false">' +
-          "</div></li>";
-      }).join("");
-      return '<div class="mg-page mg-pad">' + kicker("Sommario · N. " + NUMERO.n) +
-        '<h2 class="mg-h2">In questo numero</h2>' +
-        '<div class="mg-body" data-noflip><ul class="mg-toc">' + li + "</ul></div>" + folio(i) + "</div>";
+    /* 2 · IN ARRIVO: APP RACCOLTA RIFIUTI + ISCRIZIONE AGLI AVVISI (09.10.2026, al posto del sommario) */
+    { cover: true, html: function (i) {
+      return '<div class="mg-page mg-p2app">' +
+        '<div class="mg-bleed mg-photo">' + img("rifiuti", "Una ragazza porta fuori la raccolta differenziata guardando l’app sul telefono") + "</div>" +
+        '<div class="mg-shade-t" style="background:linear-gradient(180deg,rgba(8,12,22,.88) 0%,rgba(8,12,22,.55) 30%,rgba(8,12,22,0) 50%)"></div>' +
+        '<div class="mg-p2-top">' +
+          '<div class="mg-kicker">In arrivo · con il numero 2</div>' +
+          '<h2 class="mg-h1">La raccolta,<br><em>senza pensieri</em></h2>' +
+          '<p class="mg-p2-dek">Una nuova app gratuita di AncheCasa, collegata al calendario del tuo Comune: ti dice <b>cosa</b> portare fuori, <b>che giorno</b> e <b>a che ora</b>. E la sera prima ti avvisa.</p>' +
+        "</div>" +
+        '<div class="mg-p2-card" data-noflip>' +
+          '<div class="mg-p2-feat"><span>' + ICO.check + 'Calendario del tuo Comune</span><span>' + ICO.check + 'Avviso la sera prima</span><span>' + ICO.check + 'Dove va ogni rifiuto</span></div>' +
+          '<form class="mg-avvisi" novalidate>' +
+            '<p class="t"><b>Vuoi scaricarla per primo, gratis?</b> Lasciaci la mail: ti avvisiamo appena esce e ti mandiamo ogni nuovo numero della rivista.</p>' +
+            '<div class="r"><input type="email" name="mail" placeholder="La tua mail" autocomplete="email" required aria-label="La tua mail"><input type="text" name="comune" placeholder="Il tuo Comune" autocomplete="address-level2" aria-label="Il tuo Comune"></div>' +
+            '<label class="ok"><input type="checkbox" name="privacy" required><span>Ho letto l’<a href="privacy.html" target="_blank" rel="noopener">informativa privacy</a></span></label>' +
+            '<button type="submit" class="mg-cta wide">Avvisami quando esce</button>' +
+            '<p class="esito" role="status" hidden></p>' +
+          "</form>" +
+        "</div>" +
+        folio(i, true) + "</div>";
     } },
 
     /* 3 · I NUMERI */
@@ -467,7 +461,7 @@
         '<div style="position:absolute;top:34px;left:0;right:0;text-align:center;z-index:3"><img src="assets/logo/anchecasa-payoff-bianco.png" alt="AncheCasa, costruiamo fiducia" style="width:58%;max-width:260px"></div>' +
         '<div class="mg-opener" style="bottom:40px">' + kicker("Prossimo numero · " + NUMERO.prossimo) +
         '<h2 class="mg-h1" style="font-size:38px">Nel numero 2</h2>' +
-        '<div class="mg-3steps"><div><i>›</i>Il calcolatore gratuito del Bonus Casa, con il bonifico pronto</div><div><i>›</i>Muffa e condensa: prepararsi all’inverno</div><div><i>›</i>Fotovoltaico sul balcone: cosa si può fare</div></div>' +
+        '<div class="mg-3steps"><div><i>›</i>L’app gratuita per la raccolta dei rifiuti, col calendario del tuo Comune</div><div><i>›</i>Il calcolatore gratuito del Bonus Casa, con il bonifico pronto</div><div><i>›</i>Muffa e condensa: prepararsi all’inverno</div><div><i>›</i>Fotovoltaico sul balcone: cosa si può fare</div></div>' +
         '<p class="mg-small" style="color:rgba(255,255,255,.7);margin-top:12px">AncheCasa Magazine · gratuito ogni 15 giorni su anchecasa.it</p></div>' +
       "</div>";
     } }
@@ -800,17 +794,48 @@
     $("mg-b-edit").addEventListener("click", function () { bolletta.vista = "form"; });
   }
 
+  /* ---------------- iscrizione agli avvisi (app raccolta + nuovi numeri) ---------------- */
+  function initAvvisi() {
+    document.querySelectorAll(".mg-avvisi").forEach(function (f) {
+      if (f.dataset.pronto) return;
+      f.dataset.pronto = "1";
+      f.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var esito = f.querySelector(".esito");
+        var mail = f.elements.mail.value.trim();
+        var scrivi = function (t, ok) { esito.hidden = false; esito.textContent = t; esito.className = "esito" + (ok ? " si" : " no"); };
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(mail)) { scrivi("Scrivi una mail valida.", false); f.elements.mail.focus(); return; }
+        if (!f.elements.privacy.checked) { scrivi("Spunta l’informativa privacy per continuare.", false); return; }
+        var btn = f.querySelector("button[type=submit]");
+        btn.disabled = true;
+        var fatto = function () {
+          f.querySelectorAll("input,button").forEach(function (x) { x.disabled = true; });
+          scrivi("Fatto! Ti scriviamo appena l’app è pronta e a ogni nuovo numero.", true);
+          try { localStorage.setItem("anchecasa-avvisi", "1"); } catch (er) {}
+        };
+        var errore = function () { btn.disabled = false; scrivi("Non è partito. Riprova tra poco o scrivi a info@anchecasa.it.", false); };
+        var dati = { modulo: "magazine-avvisi", pagina: location.pathname, Mail: mail, Comune: f.elements.comune.value.trim(), Interesse: "App raccolta rifiuti e nuovi numeri della rivista", Numero: "N." + NUMERO.n, Privacy: "accettata" };
+        if (!/(^|\.)anchecasa\.it$/.test(location.hostname)) { fatto(); return; } // anteprima: non scrive nel database
+        fetch("https://edsvmnxojsmknjuhobqa.supabase.co/rest/v1/richieste_iscrizione", {
+          method: "POST",
+          headers: { apikey: "sb_publishable_QbYv61SkMkjA9_GGb1hhOA_6v6GEw87", Authorization: "Bearer sb_publishable_QbYv61SkMkjA9_GGb1hhOA_6v6GEw87", "Content-Type": "application/json", "Content-Profile": "marketplace", Prefer: "return=minimal" },
+          body: JSON.stringify({ famiglia: "privato", dati: dati })
+        }).then(function (r) { if (r.ok) fatto(); else errore(); }).catch(errore);
+      });
+    });
+  }
+
   /* ---------------- sfogliabile ---------------- */
   var root = document.getElementById("mg-root");
   if (!root) return;
   var stage = root.querySelector(".mg-stage");
   var scaler = root.querySelector(".mg-scaler");
   var book = root.querySelector(".mg-book");
-  var counter = root.querySelector(".mg-counter");
+  var counter = root.querySelector(".mg-counter") || { textContent: "" };
   var btnPrev = root.querySelector("[data-act=prev]");
   var btnNext = root.querySelector("[data-act=next]");
-  var btnFs = root.querySelector("[data-act=fs]");
-  var hint = root.querySelector(".mg-hint");
+  var btnFs = root.querySelector("[data-act=fs]") || document.createElement("button");
+  var hint = root.querySelector(".mg-hint") || document.createElement("p");
 
   var total = PAGINE.length;
   var mode = null, leaves = [], leafCount = 0, maxFlipped = 0, flipped = 0, pageIndex = 0, turnTimer = null;
@@ -861,6 +886,7 @@
       b.addEventListener("click", function () { goToPage(+b.getAttribute("data-goto")); });
     });
     initBolletta();
+    initAvvisi();
     hint.textContent = mode === "spread" ? "Clicca sulla pagina o usa le frecce ← → per sfogliare" : "Scorri col dito o tocca il bordo della pagina per sfogliare";
     btnFs.hidden = mode !== "spread";
     mosse = false;
@@ -941,7 +967,7 @@
     var availW = Math.max(1, stage.clientWidth - (mode === "spread" ? 32 : 8));
     var availH = stage.clientHeight;
     if (availH < 40) return;
-    var scale = Math.max(0.3, Math.min(availW / bookW, availH / sz.h, mode === "spread" ? 1.25 : 4));
+    var scale = Math.max(0.3, Math.min(availW / bookW, availH / sz.h, mode === "spread" ? 1.8 : 4));
     var drawnH = sz.h * scale;
     scaler.style.width = bookW + "px";
     scaler.style.height = sz.h + "px";
@@ -993,7 +1019,8 @@
   });
   btnPrev.addEventListener("click", prev);
   btnNext.addEventListener("click", next);
-  root.querySelector("[data-act=toc]").addEventListener("click", function () { goToPage(2); });
+  var btnToc = root.querySelector("[data-act=toc]");
+  if (btnToc) btnToc.addEventListener("click", function () { goToPage(2); });
   btnFs.addEventListener("click", function () {
     try {
       if (document.fullscreenElement) document.exitFullscreen();

@@ -553,3 +553,42 @@ body[data-page="magazine"] .mg-root img { max-width: none; }
 .is-single .mg-row .l { font-size: 12px; }
 .is-single .mg-chips button { padding: 6px 8px; min-width: 30px; }
 .is-single .mg-app-note { font-size: 10.5px; }
+
+/* ===== 09.10.2026 15:00 · rivista più grande, solo Indietro e Avanti, pagina 2 «app raccolta» ===== */
+body[data-page="magazine"] .mg-controls { margin: 0; padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px)); gap: 12px; flex-wrap: nowrap; }
+body[data-page="magazine"] .mg-counter,
+body[data-page="magazine"] [data-act="toc"],
+body[data-page="magazine"] [data-act="fs"] { display: none; }
+.mg-controls .mg-btn.primary { min-width: 132px; justify-content: center; padding: 10px 20px; font-size: 14px; font-weight: 700; border-radius: 999px; }
+.mg-controls .mg-btn.primary:disabled { opacity: .35; }
+.is-single .mg-controls .mg-btn.primary { flex: 1; max-width: 190px; min-width: 0; padding: 11px 14px; font-size: 14px; }
+
+.mg-p2app { color: #fff; }
+.mg-p2-top { position: absolute; top: 30px; left: 34px; right: 34px; z-index: 3; }
+.mg-p2-top .mg-kicker { color: #ffd23f; }
+.mg-p2-top .mg-kicker::after { background: rgba(255,255,255,.35); }
+.mg-p2-top .mg-h1 { color: #fff; font-size: 44px; margin: 10px 0 8px; }
+.mg-p2-top .mg-h1 em { color: var(--mg-orange); }
+.mg-p2-dek { font-family: var(--mg-serif); font-size: 14.5px; line-height: 1.42; color: rgba(255,255,255,.92); margin: 0; max-width: 400px; text-shadow: 0 1px 10px rgba(0,0,0,.35); }
+.mg-p2-dek b { color: #ffd23f; font-weight: 600; }
+.mg-p2-card { position: absolute; left: 22px; right: 22px; bottom: 36px; z-index: 4; background: #fff; color: var(--mg-ink); border-radius: 14px; padding: 12px 14px 12px; box-shadow: 0 20px 40px rgba(0,0,0,.35); font-family: var(--mg-sans); }
+.mg-p2-feat { display: flex; flex-wrap: wrap; gap: 6px 12px; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid #eef0f4; }
+.mg-p2-feat span { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 700; color: var(--mg-navy); }
+.mg-p2-feat svg { width: 15px; height: 15px; color: #fff; background: #3f9d63; border-radius: 50%; padding: 2px; box-sizing: border-box; }
+.mg-avvisi .t { font-size: 11.5px; line-height: 1.38; margin: 0 0 8px; color: #374151; }
+.mg-avvisi .t b { color: var(--mg-navy); }
+.mg-avvisi .r { display: grid; grid-template-columns: 1.35fr 1fr; gap: 6px; }
+.mg-avvisi input[type=email], .mg-avvisi input[type=text] { box-sizing: border-box; width: 100%; min-width: 0; font: 600 13px var(--mg-sans); color: var(--mg-navy); background: #f6f7f9; border: 1.5px solid #e5e7eb; border-radius: 9px; padding: 9px 10px; user-select: text; }
+.mg-avvisi input:focus { outline: none; border-color: var(--mg-orange); box-shadow: 0 0 0 3px rgba(229,107,16,.15); background: #fff; }
+.mg-avvisi .ok { display: flex; align-items: center; gap: 6px; font-size: 10.5px; color: #6b7280; margin: 7px 0 8px; }
+.mg-avvisi .ok a { color: var(--mg-navy); font-weight: 700; text-decoration: underline; }
+.mg-avvisi .mg-cta.wide { width: 100%; box-sizing: border-box; justify-content: center; border-radius: 10px; }
+.mg-avvisi .esito { font-size: 11.5px; font-weight: 700; margin: 7px 0 0; text-align: center; }
+.mg-avvisi .esito.si { color: #1d5a32; }
+.mg-avvisi .esito.no { color: #8a1f12; }
+.is-single .mg-p2-top { top: 24px; left: 24px; right: 24px; }
+.is-single .mg-p2-top .mg-h1 { font-size: 38px; }
+.is-single .mg-p2-card { left: 14px; right: 14px; bottom: 34px; }
+.is-single .mg-avvisi .r { grid-template-columns: 1fr; }
+.is-single .mg-p2-feat span, .is-single .mg-avvisi .ok { font-size: 11px; }
+.is-single .mg-avvisi .t { font-size: 12px; }

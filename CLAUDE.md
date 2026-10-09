@@ -13,6 +13,31 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 2026-10-09 14:55 · Cursor
+- Commit `d2de8d7689cf06b92de6ae02c66c546efadcab29` sul ramo main di https://github.com/anchecasa/anchecasapulito. Messaggio: «Magazine: Check Bollette come modulo guidato (campi vuoti, 3 passi, risultato dopo la verifica)».
+- Cartella `sito` pubblicata sul progetto Vercel `anchecasa-pulito` in produzione. Deployment `dpl_AEnpmpYaa5U28pzhpwwxUvVANs6T`, indirizzo https://anchecasa.it.
+- Controllo su https://anchecasa.it/magazine. Da computer (1280 px, pagine 7–8) e da telefono (390 px, pagina 8): il tasto «Verifica la tua bolletta» in copertina apre lo strumento. I campi sono vuoti. «Verifica la mia bolletta» resta spento finché mancano i dati. Con totale 182,40, consumo 420, 2 mesi e 3 persone compare «Il risultato della tua bolletta», con «‹ Cambia i dati» e «Scarica il report PDF». Il file scaricato è `AncheCasa-report-bolletta-luce.pdf`.
+- Al controllo la pagina online carica `js/magazine.js?v=18` e `css/magazine.css?v=19`.
+- File: `CLAUDE.md`.
+
+### 2026-10-09 14:53 · Cursor
+- Pubblicato su https://anchecasa.it il report PDF «Check Bollette» del Magazine, su carta intestata AncheCasa. Progetto Vercel `anchecasa-pulito`, deployment `dpl_8d6nko4QFYhhuRDVbDwZBv7Y8Awk` (https://anchecasa-pulito-i779i2vav-anchecasas-projects.vercel.app).
+- Provato in locale e poi sul sito: Magazine, pagina 8, «Verifica la mia bolletta» e «Scarica il report PDF», sia Luce sia Gas. File scaricati: `AncheCasa-report-bolletta-luce.pdf` e `AncheCasa-report-bolletta-gas.pdf`. Logo AncheCasa a colori in alto a sinistra (`sito/assets/logo-colore.png`), dati di Palumbo Investment S.r.l., fascia blu con numero AC-CB-data-ora, testi dentro i riquadri, piè di pagina «Pag. 1 di 1». jsPDF 2.5.1 da cdnjs. Resta la funzione nuova (commento «Report PDF su carta intestata AncheCasa»), non quella vecchia in Times.
+- La pagina online carica `js/magazine.js?v=18`. Con questo invio è andato online anche il resto della cartella `sito` già pronto in locale: la pagina «La raccolta, senza pensieri», i due pulsanti Indietro e Avanti (`css/magazine.css?v=19`) e la barra del sito in `css/ac.css`.
+- File: `sito/magazine.html`, `sito/js/magazine.js`, `CLAUDE.md`.
+
+### 2026-10-09 14:52 · Claude
+- Magazine, pagina 2: sostituita l'anteprima con la foto vera scaricata da Canva (1024×1536), rinominata `sito/magazine/numero-1/rifiuti.jpg`.
+- NON ancora pubblicato su anchecasa.it.
+
+### 2026-10-09 15:05 · Claude
+- Magazine, vista: sotto la rivista solo due pulsanti, «‹ Indietro» e «Avanti ›», stesso arancio (tolti contatore pagine, Sommario, schermo intero, suggerimento). La rivista si ingrandisce fino a riempire lo spazio sotto la barra del sito (limite di zoom da 1,25 a 1,8 su computer). La barra del sito resta (scelta delle 13:21).
+- Magazine, pagina 2: tolto il sommario. Al suo posto «In arrivo · con il numero 2 — La raccolta, senza pensieri»: l'app gratuita AncheCasa per la raccolta dei rifiuti collegata al calendario del Comune (cosa, che giorno, a che ora, avviso la sera prima), foto a tutta pagina (`sito/magazine/numero-1/rifiuti.jpg`, per ora anteprima piccola: sostituire con la foto Canva MAHXhLtH70Y) e modulo «Avvisami quando esce» (mail, Comune, spunta privacy).
+- Il modulo scrive in `marketplace.richieste_iscrizione` come gli altri moduli del sito: famiglia «privato», dati.modulo «magazine-avvisi» (Mail, Comune, Interesse, Numero, Privacy). Fuori da anchecasa.it (anteprime) non scrive nel database.
+- Retro: «L'app gratuita per la raccolta dei rifiuti» è la prima voce di «Nel numero 2».
+- File: `sito/js/magazine.js` (`?v=18`), `sito/css/magazine.css` (`?v=19`), `sito/magazine.html`, `sito/magazine/numero-1/rifiuti.jpg`. Copia di prima: `_copie-magazine-1435` (+ le versioni intermedie annotate sopra).
+- NON ancora pubblicato su anchecasa.it.
+
 ### 2026-10-09 14:45 · Claude
 - anchecasa.it, barra in alto: il logo AncheCasa non si schiaccia più (tra 961 e 1180 px si riduceva fino a sparire). Il menu passa alle tre righe sotto i 1180 px (prima 960), perché il menu intero non sta nella barra sotto ~1160 px.
 - File: solo `sito/css/ac.css` (le due soglie 960 → 1180 e tre righe in fondo). Copia di prima: `_copie-sito-header-1437`. Il file coincide con il ac.css online (deploy dpl_4V4EPDEnw75Q69oU9S8jF4UMjs9x) più queste righe.
