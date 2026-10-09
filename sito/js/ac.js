@@ -258,6 +258,8 @@
           return r.json();
         }).then(function (d) {
           if (!d || !d.problema || !d.mestiere) throw new Error("analisi");
+          // 09.10.2026: la risposta del video va nella scheda "La tua richiesta" (attrezzi, passi, Cerca un professionista).
+          if (window.ACTrova && window.ACTrova.risposta) { $("#sm-stato").hidden = true; nota.textContent = "SuperMastro ha visto il video: la risposta è qui sopra."; window.ACTrova.risposta(d); return; }
           var passi = (d.passi || []).filter(Boolean).join(" ");
           var avvisi = (d.avvertenze || []).filter(Boolean).join(" ");
           $("#sm-stato").hidden = true;
@@ -346,7 +348,7 @@
       vai.textContent = p.fai ? "Chiama comunque un " + p.mestiere : "Cerca un " + p.mestiere + " vicino a me";
       vai.addEventListener("click", function () { cerca(p); });
       az.appendChild(vai);
-      if (!p.fai) cerca(p);
+      // 09.10.2026: la ricerca parte solo quando si preme il pulsante.
     }
     function mapsUrl(q, pos) {
       if (pos) return "https://www.google.com/maps/search/" + encodeURIComponent(q) + "/@" + pos.lat + "," + pos.lng + ",14z";

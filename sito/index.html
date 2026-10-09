@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=DM+Sans:wght@400;500;600;700&display=swap">
 <link rel="stylesheet" href="css/ac.css?v=4">
-<link rel="stylesheet" href="css/cerca-casa.css?v=1">
+<link rel="stylesheet" href="css/cerca-casa.css?v=3">
 </head>
 <body data-page="home">
 <a class="skip" href="#contenuto">Vai al contenuto</a>
@@ -36,7 +36,7 @@
     <p class="lead">Artigiani, imprese e fornitori della tua zona. Scrivi cosa ti serve, ricevi i preventivi, chiudi in chat.</p>
     <form class="cerca" id="cerca" autocomplete="off" role="search" data-nuova>
       <label><span>Cosa ti serve?</span><input id="q" type="text" placeholder="Es. idraulico, ristrutturazione, subappalto"></label>
-      <label class="dove"><span>Dove?</span><input id="dove" type="text" placeholder="Città o CAP"></label>
+      <label class="dove"><span>Dove?</span><input id="dove" type="text" placeholder="Comune o CAP" data-comuni></label>
       <button class="btn" type="submit"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>Cerca</button>
       <div class="sugg" id="sugg" hidden></div>
     </form>
@@ -107,8 +107,9 @@
     <nav aria-label="Informazioni legali"><a href="privacy.html">Privacy</a><a href="cookie.html">Cookie</a><a href="note-legali.html">Note legali</a></nav></div>
 </div></footer>
 <script>window.AC_APP=[{"id": "imprese-edili", "nome": "Imprese edili"}, {"id": "artigiani", "nome": "Artigiani e installatori"}, {"id": "subappaltatori", "nome": "Subappaltatori"}, {"id": "impiantisti", "nome": "Impiantisti"}, {"id": "condominio", "nome": "Condominio e amministratori"}, {"id": "materiali-edili", "nome": "Materiali edili"}, {"id": "noleggio-attrezzature", "nome": "Noleggio attrezzature"}, {"id": "traslochi", "nome": "Traslochi"}, {"id": "facchinaggio", "nome": "Facchinaggio"}, {"id": "pulizie", "nome": "Pulizie"}, {"id": "manutenzione-stabili", "nome": "Manutenzione stabili"}, {"id": "hotel", "nome": "Hotel"}, {"id": "ristoranti", "nome": "Ristoranti"}, {"id": "negozi", "nome": "Negozi"}, {"id": "capannoni-logistica", "nome": "Capannoni e logistica"}, {"id": "studi-tecnici", "nome": "Studi tecnici"}, {"id": "consulenti", "nome": "Consulenti"}, {"id": "fornitori-it", "nome": "Fornitori IT"}, {"id": "agenzie-immobiliari", "nome": "Agenzie immobiliari"}];</script>
-<script src="js/ac.js?v=5"></script>
-<script src="js/problemi.js?v=2"></script>
-<script src="js/cerca-casa.js?v=1"></script>
+<script src="js/ac.js?v=6"></script>
+<script src="js/problemi.js?v=3"></script>
+<script src="js/comuni.js?v=1"></script>
+<script src="js/cerca-casa.js?v=3"></script>
 </body>
 </html>

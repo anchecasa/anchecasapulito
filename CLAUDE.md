@@ -13,6 +13,23 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 2026-10-09 ~18:10 · Claude — SuperMastro: guida fai da te con attrezzi, ricerca solo al clic, Comuni d'Italia, video solo dal telefono (NON ancora pubblicato)
+- Unito SOPRA il lavoro di Cursor delle 17:33-17:36 (rete certificata `/api/rete-artigiani`, regole supermastro.com nel prompt): unione a tre vie, niente di Cursor è stato tolto.
+- `js/problemi.js`: guide fai da te per tutte le 25 voci che si possono fare da soli (campo `g`: `a` attrezzi e materiali, `p` passi dettagliati, `tm` tempo, `d` difficoltà).
+- `api/supermastro.js`:
+  - l'AI ora restituisce anche `attrezzi` (max 10), `tempo` e `difficolta`, con passi da 4 a 8 dettagliati (il primo è la sicurezza) e descrizione fino a 400 caratteri; max_tokens 1200;
+  - restano le regole supermastro.com di Cursor.
+- `js/trova-artigiano.js` + `supermastro.html` + `css/supermastro.css`:
+  - scheda "La tua richiesta" con chip Tempo e Difficoltà, "Cosa ti serve" (attrezzi), "Come fare, passo per passo", "Quando fermarti";
+  - in fondo "Preferisci che lo faccia un professionista?" e "Cerca un <mestiere> vicino a te": la ricerca parte SOLO al clic. Se l'AI non dà passi o attrezzi, si usa la guida del dizionario. Sul gas e sui pericoli niente guida.
+- Video: la risposta del video va nella stessa scheda (`ACTrova.risposta`, chiamata da `js/ac.js`), senza ricerca automatica.
+  - SuperMastro con il video funziona SOLO dal telefono (`.sm-solo-tel`). Sul PC (mouse e schermo ≥ 900 px) c'è l'avviso "SuperMastro con il video funziona dal telefono" con anchecasa.it/supermastro e "Copia il link".
+- NUOVO `js/comuni.js`: campi `data-comuni` (home "Dove?", SuperMastro "Comune o CAP").
+  - Suggerisce i Comuni d'Italia mentre scrivi (Photon/OpenStreetMap, città, paesi, frazioni), con provincia, regione e CAP, e tiene le coordinate.
+  - Dalla home passano a SuperMastro come `&lat=&lng=`. Se il servizio non risponde, la città si cerca come prima con Nominatim.
+- Ricerca artigiani OpenStreetMap: raggio 12 → 30 → 50 km per i paesi piccoli (i certificati della rete restano in cima).
+- Testo in cima a SuperMastro aggiornato. Versioni: problemi, trova-artigiano, supermastro.css, cerca-casa.css e cerca-casa.js v=3; ac.js v=6; comuni.js v=1.
+
 ### 2026-10-09 17:36 · Cursor
 - Commit `3ec8baa51e6ed3c7ae66fbec2d273eebaf6e7ef7` sul ramo main di https://github.com/anchecasa/anchecasapulito. Messaggio: «Home: ricerca intelligente, SuperMastro con risposta e cartina artigiani; Magazine e statistiche».
 - Il push da solo non avvia Vercel. Pubblicata la cartella `sito` sul progetto `anchecasa-pulito` in produzione. Deployment `dpl_E7ESrwYmgsqBuKpBcMQo9K15Gj57`, stato Ready, indirizzo https://anchecasa.it. Area privata non ripubblicata.

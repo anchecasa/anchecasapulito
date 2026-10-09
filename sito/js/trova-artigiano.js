@@ -13,6 +13,9 @@
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
   var qs = new URLSearchParams(location.search);
   var stato = { voce: null, testo: "", citta: qs.get("c") || "", mestiere: "", centro: null, mappa: null, livello: null, segni: [] };
+  // Comune scelto dai suggerimenti della home: arrivano anche le coordinate (nessuna ricerca in più).
+  var latQ = parseFloat(qs.get("lat")), lngQ = parseFloat(qs.get("lng"));
+  if (stato.citta && isFinite(latQ) && isFinite(lngQ)) stato.coord = { lat: latQ, lng: lngQ, nome: stato.citta };
   try { if (!stato.citta) stato.citta = localStorage.getItem("anchecasa-citta") || ""; } catch (e) { /* storage non disponibile */ }
 
   /* ---------- mestieri: dal nome (anche quello scelto da SuperMastro) alla chiave del dizionario ---------- */
@@ -45,7 +48,8 @@
     $("richiesta").hidden = false;
     $("r-titolo").textContent = stato.testo.charAt(0).toUpperCase() + stato.testo.slice(1);
     $("r-dove").textContent = stato.citta ? "A " + stato.citta : "Scrivi la città quando cerchi l’artigiano";
-    if (base && base.l !== "mestiere") mostraRisposta({ fai: base.f, mestiere: base.m, descrizione: base.c, passi: [], avvertenze: [], provvisoria: true });
+    stato.guida = base && base.g ? base.g : null;
+    if (base && base.l !== "mestiere") mostraRisposta({ fai: base.f, mestiere: base.m, descrizione: base.c, passi: stato.guida ? stato.guida.p : [], attrezzi: stato.guida ? stato.guida.a : [], tempo: stato.guida ? stato.guida.tm : "", difficolta: stato.guida ? stato.guida.d : "", avvertenze: [], provvisoria: true });
     else if (base) mostraRisposta({ fai: false, mestiere: base.m, descrizione: "Ti mostro chi fa questo lavoro vicino a te. Se mi fai vedere il problema con un video di 5 secondi, te lo spiego prima.", passi: [], avvertenze: [], provvisoria: true });
     else { $("r-verdetto").textContent = "Sto pensando…"; $("r-desc").textContent = "SuperMastro sta leggendo la tua richiesta."; }
     $("r-cerca").addEventListener("click", function () { apri({ mestiere: stato.mestiere, titolo: stato.testo }); });
@@ -61,12 +65,35 @@
         if (!d || !d.problema) throw new Error("analisi");
         var k = chiaveMestiere(d.mestiere) || stato.mestiere;
         if (k) stato.mestiere = k;
-        mostraRisposta({ fai: d.fai_da_te === true, pericolo: d.pericolo === true, urgenza: d.urgenza, mestiere: stato.mestiere, problema: d.problema, descrizione: d.descrizione, passi: d.passi || [], avvertenze: d.avvertenze || [] });
+        mostraRisposta(daRispostaAI(d));
       })
       .catch(function () {
         if (!stato.mestiere) mostraRisposta({ fai: false, mestiere: "", descrizione: "Non ho capito bene. Fammi vedere il problema con un video di 5 secondi, oppure cerca direttamente l’artigiano.", passi: [], avvertenze: [] });
       })
       .then(function () { $("r-pensa").hidden = true; });
+  }
+  // Risposta di SuperMastro (testo o video) -> dati della scheda. Se l'AI non dà passi o attrezzi, si usano quelli della guida.
+  function daRispostaAI(d) {
+    var g = stato.guida, fai = d.fai_da_te === true && d.pericolo !== true;
+    var passi = (d.passi || []).filter(Boolean), attrezzi = (d.attrezzi || []).filter(Boolean);
+    return { fai: fai, pericolo: d.pericolo === true, urgenza: d.urgenza, mestiere: stato.mestiere, problema: d.problema, descrizione: d.descrizione,
+      passi: fai ? (passi.length >= 3 || !g ? passi : g.p) : [], attrezzi: fai ? (attrezzi.length || !g ? attrezzi : g.a) : [],
+      tempo: fai ? (d.tempo || (g && g.tm) || "") : "", difficolta: fai ? (d.difficolta || (g && g.d) || "") : "", avvertenze: d.avvertenze || [] };
+  }
+  // Arriva dal video di 5 secondi (js/ac.js): stessa scheda, in cima alla pagina.
+  function risposta(d) {
+    var k = chiaveMestiere(d.mestiere);
+    if (k) stato.mestiere = k;
+    var r = P ? P.cerca(d.problema || "", 1) : [];
+    stato.guida = r.length && r[0].g ? r[0].g : null;
+    stato.testo = d.problema || "Il tuo video";
+    $("richiesta").hidden = false;
+    $("r-titolo").textContent = stato.testo;
+    $("r-dove").textContent = "Dal tuo video";
+    $("r-pensa").hidden = true;
+    mostraRisposta(daRispostaAI(d));
+    if (!$("r-cerca").dataset.pronto) { $("r-cerca").dataset.pronto = "1"; $("r-cerca").addEventListener("click", function () { apri({ mestiere: stato.mestiere, titolo: stato.testo }); }); }
+    $("richiesta").scrollIntoView({ behavior: "smooth", block: "start" });
   }
   function mostraRisposta(x) {
     var nome = nomeMestiere(x.mestiere);
@@ -76,15 +103,25 @@
     $("r-problema").textContent = x.problema || "";
     $("r-problema").hidden = !x.problema;
     $("r-desc").textContent = x.descrizione || "";
-    var passi = (x.passi || []).filter(Boolean);
+    var passi = x.fai ? (x.passi || []).filter(Boolean) : [];
+    var attrezzi = x.fai ? (x.attrezzi || []).filter(Boolean) : [];
     $("r-passi").innerHTML = passi.map(function (p) { return "<li>" + esc(p) + "</li>"; }).join("");
-    $("r-passi").hidden = !passi.length;
+    $("r-attrezzi").innerHTML = attrezzi.map(function (a) { return "<li>" + esc(a) + "</li>"; }).join("");
+    $("r-guida").hidden = !(passi.length || attrezzi.length);
+    $("r-box-attrezzi").hidden = !attrezzi.length;
+    $("r-box-passi").hidden = !passi.length;
+    $("r-tempo").textContent = x.tempo ? "Tempo: " + x.tempo : "";
+    $("r-tempo").hidden = !x.tempo;
+    $("r-diff").textContent = x.difficolta ? "Difficoltà: " + x.difficolta : "";
+    $("r-diff").className = "sm-r-chip diff-" + (x.difficolta || "");
+    $("r-diff").hidden = !x.difficolta;
     var avv = (x.avvertenze || []).filter(Boolean);
     $("r-avvisi").innerHTML = avv.length ? "<b>Quando fermarti:</b> " + avv.map(esc).join(" ") : "";
     $("r-avvisi").hidden = !avv.length;
     $("r-urgenza").textContent = x.urgenza ? "Urgenza " + x.urgenza : "";
     $("r-urgenza").hidden = !x.urgenza;
-    $("r-cerca").textContent = x.mestiere ? (x.fai ? "Chiama comunque un " + nome.toLowerCase() : "Cerca " + nome.toLowerCase() + " vicino a me") : "Cerca artigiano";
+    $("r-pro-titolo").textContent = x.fai ? "Preferisci che lo faccia un professionista?" : "Ti serve un professionista";
+    $("r-cerca").textContent = x.mestiere ? "Cerca un " + nome.toLowerCase() + " vicino a te" : "Cerca un professionista";
   }
 
   /* ---------- 2. cerca artigiano: cartina + elenco ---------- */
@@ -118,6 +155,7 @@
   }
   function daCitta(citta) {
     stato.citta = citta;
+    if (stato.coord && stato.coord.nome === citta) { stato.centro = stato.coord; cercaArtigiani(); return; }
     try { localStorage.setItem("anchecasa-citta", citta); } catch (e) { /* storage non disponibile */ }
     scrivi("Cerco a " + citta + "…");
     fetch("https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=it&q=" + encodeURIComponent(citta))
@@ -150,7 +188,7 @@
       .then(function (j) { return (j && j.artigiani) || []; })
       .catch(function () { return []; });
     var tags = (m && m.osm) || [];
-    var giri = [12000, 30000];
+    var giri = [12000, 30000, 50000]; // nei paesi piccoli il raggio si allarga da solo
     function overpass(r) {
       if (!tags.length) return Promise.resolve([]);
       var q = "[out:json][timeout:20];(" + tags.map(function (t) { return "nwr" + t + "(around:" + r + "," + c.lat + "," + c.lng + ");"; }).join("") + ");out center tags 60;";
@@ -182,7 +220,8 @@
     Promise.all([
       rete,
       overpass(giri[0])
-        .then(function (l) { return l.length >= 4 ? l : overpass(giri[1]).then(function (l2) { return l2.length ? l2 : l; }); })
+        .then(function (l) { return l.length >= 4 ? l : overpass(giri[1]).then(function (l2) { return l2.length > l.length ? l2 : l; }); })
+        .then(function (l) { return l.length >= 3 ? l : overpass(giri[2]).then(function (l3) { return l3.length > l.length ? l3 : l; }); })
         .then(function (l) { return l.length >= 3 ? l : nominatim().then(function (n) { return l.concat(n); }); })
     ]).then(function (parti) {
       var certificati = parti[0].slice().sort(function (a, b) { return a.dist - b.dist; });
@@ -250,9 +289,29 @@
       setTimeout(function () { mk.openPopup(); }, 650);
     }
   });
+  var ac = $("a-citta");
+  if (ac) ac.addEventListener("comune", function (e) {
+    var v = e.detail; if (!v) return;
+    stato.citta = v.nome; stato.coord = { lat: v.lat, lng: v.lng, nome: v.nome };
+    try { localStorage.setItem("anchecasa-citta", v.nome); } catch (er) { /* storage non disponibile */ }
+    if (!$("artigiani").hidden) { stato.centro = stato.coord; cercaArtigiani(); }
+  });
   var f = $("a-citta-form");
   if (f) f.addEventListener("submit", function (e) { e.preventDefault(); var c = $("a-citta").value.trim(); if (!c) { $("a-citta").focus(); return; } daCitta(c); });
 
-  window.ACTrova = { apri: apri };
+  window.ACTrova = { apri: apri, risposta: risposta };
   richiesta();
+})();
+/* PC: il video si fa dal telefono. "Copia il link" della pagina SuperMastro. */
+(function () {
+  var b = document.getElementById("sm-copia-link");
+  if (!b) return;
+  b.addEventListener("click", function () {
+    var link = "https://anchecasa.it/supermastro";
+    var ok = function () { b.textContent = "Link copiato"; setTimeout(function () { b.textContent = "Copia il link"; }, 2200); };
+    try { if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(link).then(ok, function () {}); return; } } catch (e) { /* metodo vecchio */ }
+    var t = document.createElement("textarea"); t.value = link; document.body.appendChild(t); t.select();
+    try { document.execCommand("copy"); ok(); } catch (e2) { /* niente */ }
+    t.remove();
+  });
 })();

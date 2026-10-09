@@ -86,7 +86,8 @@
     if (!testo) { q.focus(); return; }
     if (!scelto) { var r = P.cerca(testo, 1); scelto = r.length && P.norm(r[0].t).indexOf(P.norm(testo).split(" ")[0]) >= 0 ? r[0] : { libero: testo }; }
     try { if (citta) localStorage.setItem("anchecasa-citta", citta); } catch (e) { /* storage non disponibile */ }
-    var url = "supermastro.html?" + (scelto.id ? "p=" + encodeURIComponent(scelto.id) : "q=" + encodeURIComponent(scelto.libero)) + (citta ? "&c=" + encodeURIComponent(citta) : "") + "#richiesta";
+    var coord = citta && dove.dataset.lat ? "&lat=" + (+dove.dataset.lat).toFixed(5) + "&lng=" + (+dove.dataset.lng).toFixed(5) : "";
+    var url = "supermastro.html?" + (scelto.id ? "p=" + encodeURIComponent(scelto.id) : "q=" + encodeURIComponent(scelto.libero)) + (citta ? "&c=" + encodeURIComponent(citta) : "") + coord + "#richiesta";
     location.href = url;
   }
   q.setAttribute("role", "combobox");

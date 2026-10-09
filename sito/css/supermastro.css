@@ -68,3 +68,38 @@
 .sm-pop .b { display: flex; gap: 8px; flex-wrap: wrap; }
 .sm-pop .b a { font-weight: 700; color: var(--arancio-scuro); }
 .sm-pop .b a.chiama { background: var(--arancio); color: #fff; border-radius: 999px; padding: 5px 10px; }
+
+/* 09.10.2026 ~17:55 · guida fai da te: attrezzi, passi, tempo e difficoltà; professionista solo se lo chiedi */
+.sm-r { grid-template-columns: minmax(0, .7fr) minmax(0, 1.3fr); }
+.sm-r-guida { margin-top: 6px; }
+.sm-r-chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+.sm-r-chip { font: 700 13px var(--testo); padding: 6px 12px; border-radius: 999px; background: var(--carta); color: var(--blu-medio); }
+.sm-r-chip.diff-facile { background: #e3f1e9; color: #1f6b4a; }
+.sm-r-chip.diff-media { background: #fff1e4; color: #93440a; }
+.sm-r-chip.diff-impegnativa { background: #fdecea; color: #a93226; }
+.sm-r-box { border-top: 1px solid var(--linea); padding-top: 14px; margin-top: 14px; }
+.sm-r-box h3 { font: 800 15px var(--display); color: var(--blu); margin: 0 0 10px; text-transform: none; letter-spacing: 0; }
+.sm-r-attrezzi { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 8px; }
+.sm-r-attrezzi li { display: flex; align-items: flex-start; gap: 10px; background: var(--carta); border-radius: 10px; padding: 9px 12px; font-size: 15px; line-height: 1.35; color: var(--ink); }
+.sm-r-attrezzi li::before { content: ""; flex: none; width: 18px; height: 18px; margin-top: 1px; background: var(--arancio); -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-2.4 2.6-2.6Z'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-2.4 2.6-2.6Z'/%3E%3C/svg%3E") center / contain no-repeat; }
+.sm-r-box .sm-r-passi { counter-reset: passo; list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+.sm-r-box .sm-r-passi li { counter-increment: passo; display: grid; grid-template-columns: 30px 1fr; gap: 12px; align-items: start; font-size: 16px; line-height: 1.5; padding: 0; }
+.sm-r-box .sm-r-passi li::before { content: counter(passo); width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: var(--blu); color: #fff; font: 800 14px var(--display); }
+.sm-r-avvisi { margin-top: 14px; }
+.sm-r-pro { margin-top: 18px; border-top: 1px dashed var(--linea); padding-top: 14px; }
+.sm-r-pro p { margin: 0 0 4px; font-weight: 700; color: var(--blu); }
+.sm-r-risposta.is-fai .sm-r-pro .btn:first-child { background: var(--blu); }
+.sm-r-risposta.is-fai .sm-r-pro .btn:first-child:hover { background: var(--blu-notte); }
+@media (max-width: 860px) { .sm-r { grid-template-columns: 1fr; } }
+
+/* 09.10.2026 ~18:05 · SuperMastro con il video solo dal telefono (sul PC: avviso con il link) */
+.sm-solo-pc { display: none; }
+@media (hover: hover) and (pointer: fine) and (min-width: 900px) {
+  .sm-solo-tel { display: none !important; }
+  .sm-solo-pc { display: block; }
+}
+.sm-video-pc h3 { font: 800 22px var(--display); color: var(--blu); margin: 6px 0 8px; }
+.sm-video-pc p { color: var(--ink); max-width: 560px; }
+.sm-link-tel { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 16px 0 6px; }
+.sm-link-tel span { font: 800 18px var(--display); color: var(--arancio-scuro); background: var(--arancio-chiaro); padding: 10px 16px; border-radius: 12px; }
+.sm-r-video-pc { margin: 10px 0 0; font-size: 14px; color: var(--grigio); }

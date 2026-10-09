@@ -19,14 +19,18 @@ const PROMPT = `Sei SuperMastro. Analizzi un guasto in una casa italiana: o i fo
 Rispondi SOLO con un oggetto JSON, in italiano semplice, con questi campi:
 {
  "problema": "nome breve del problema, max 60 caratteri",
- "descrizione": "cosa si vede e la causa più probabile, max 240 caratteri",
+ "descrizione": "cosa succede e la causa più probabile, spiegato a chi non è del mestiere, max 400 caratteri",
  "mestiere": uno tra ${MESTIERI.join(", ")},
  "urgenza": "bassa" | "media" | "alta",
  "pericolo": true | false,
  "fai_da_te": true | false,
- "passi": ["massimo 6 passi brevi e sicuri per risolvere da solo; vuoto se fai_da_te è false"],
+ "attrezzi": ["attrezzi e materiali che servono per farlo da solo, con misura o tipo quando conta (es. 'Chiave a brugola da 4 mm', 'Silicone sanitario antimuffa'); massimo 10; vuoto se fai_da_te è false"],
+ "passi": ["da 4 a 8 passi dettagliati e sicuri, nell'ordine giusto, ognuno con cosa fare e come capire se è fatto bene; vuoto se fai_da_te è false"],
+ "tempo": "tempo indicativo per farlo da solo, es. '20-40 minuti'; vuoto se fai_da_te è false",
+ "difficolta": "facile" | "media" | "impegnativa",
  "avvertenze": ["quando fermarsi e chiamare un professionista"]
 }
+Il primo passo è sempre la sicurezza (chiudere l'acqua, staccare la corrente, mettere guanti o occhiali) quando serve.
 Regole di supermastro.com, obbligatorie:
 - Prima scegli la categoria tra idraulico, elettricista, fabbro, muratore, falegname, giardiniere. Se il lavoro è un altro mestiere della lista, usa quello.
 - Se il video è scuro, mosso, lontano o non si capisce il guasto, non inventare: mestiere "altro", fai_da_te false, problema "Problema da verificare", descrizione che chiede di rifare il video più vicino al guasto.
@@ -49,13 +53,16 @@ function normalizza(x) {
   const fai = !pericolo && x.fai_da_te === true;
   return {
     problema: testo(x.problema, 60) || "Problema da verificare",
-    descrizione: testo(x.descrizione, 240),
+    descrizione: testo(x.descrizione, 400),
     mestiere: mestiere,
     urgenza: pericolo ? "alta" : urgenza,
     pericolo: pericolo,
     fai_da_te: fai,
-    passi: fai ? lista(x.passi, 6, 160) : [],
-    avvertenze: lista(x.avvertenze, 4, 160)
+    passi: fai ? lista(x.passi, 8, 240) : [],
+    attrezzi: fai ? lista(x.attrezzi, 10, 90) : [],
+    tempo: fai ? testo(x.tempo, 40) : "",
+    difficolta: fai && ["facile", "media", "impegnativa"].indexOf(String(x.difficolta)) >= 0 ? String(x.difficolta) : "",
+    avvertenze: lista(x.avvertenze, 4, 200)
   };
 }
 
@@ -91,7 +98,7 @@ module.exports = async function handler(req, res) {
       body: JSON.stringify({
         model: process.env.OPENAI_MODEL || "gpt-4o-mini",
         temperature: 0.2,
-        max_tokens: 700,
+        max_tokens: 1200,
         response_format: { type: "json_object" },
         messages: [
           { role: "system", content: PROMPT },
