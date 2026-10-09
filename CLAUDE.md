@@ -13,6 +13,12 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 2026-10-09 16:06 · Cursor
+- Commit `96b3a06853ea927ec0141a58426b88e31e6d3805` sul ramo main di https://github.com/anchecasa/anchecasapulito. Messaggio: «Magazine: copertina con bambino, Check Bollette con grafici dal vivo, retro solo app raccolta, pagina 2 con app nel telefono, pulsante Condividi, date ottobre/novembre, report bollette senza dati societari».
+- Pubblicato https://anchecasa.it, progetto Vercel `anchecasa-pulito` (deployment `dpl_6YbpePDXn2jgM9mFaCvVDchzPaz8`, alias https://anchecasa.it). Il push da solo non avvia Vercel.
+- Controllato https://anchecasa.it/magazine (da /magazine.html), telefono. Copertina: famiglia con il bambino, richiami in alto a sinistra, «83 giorni» in basso. Pagina 2: telefono con il secchio CARTA e riquadro stasera/domani. Pagina 8: a campi vuoti i grafici sono un esempio («Così vedrai la tua bolletta», badge Esempio, PDF spento); con 182,40 € e 420 kWh il badge diventa «Il tuo risultato», i grafici si aggiornano e «Scarica il report PDF» si accende. Retro: solo «Arriva l’app della raccolta», con «Avvisami quando esce» e «Condividi la rivista». Date «Ottobre 2026» e «1° novembre 2026». css e js `?v=27`. Nel report restano anchecasa.it e info@anchecasa.it, senza Palumbo, P.IVA o REA.
+- File: `sito/js/magazine.js`, `sito/css/magazine.css`, `sito/magazine.html`, `sito/magazine/numero-1/` (copertina.jpg, copertina-con-bambino-canva.jpg, copertina-senza-bambino.jpg), `CLAUDE.md`.
+
 ### 2026-10-09 ~16:35 · Claude — Copertina con il bambino (NON ancora pubblicato)
 - `copertina.jpg` sostituita con la stessa foto modificata in Canva: stessa coppia e stesso soggiorno, in più un bambino davanti ai genitori. Originale: `copertina-senza-bambino.jpg`; file scaricato da Canva: `copertina-con-bambino-canva.jpg`.
 - Telefono (pagina singola): i tre richiami Energia/Cantiere/Tendenze vanno in alto a sinistra sul muro e "83 giorni" resta in basso, così il volto del bambino resta libero. PC invariato. Testo alternativo aggiornato ("Una famiglia…"). Versioni css/js v=27.
