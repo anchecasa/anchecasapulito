@@ -23,6 +23,10 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 - Come si approva oggi: Supabase → tabella `supermastro_voti` → `approvato = true` sulle correzioni giuste. Si può aggiungere una pagina admin.
 - Tenuta la correzione di Cursor delle 18:05 (`comuni.js?v=2`).
 
+### 2026-10-09 18:08 · Cursor
+- Tolto da `sito/supermastro.html` il riquadro «SuperMastro ha capito il problema?» finito nel commit precedente senza lo script e senza l’API. Resta nel commit `68f5d3e` se serve riprenderlo. Non pubblicato.
+- File: `sito/supermastro.html`, `CLAUDE.md`.
+
 ### 2026-10-09 18:05 · Cursor
 - Photon non accetta più `lang=it` (risponde 400) e la tendina dei Comuni restava vuota. In `sito/js/comuni.js` la lingua della richiesta è `default`: i nomi restano quelli italiani di OpenStreetMap. «Tea» propone Teano (Caserta) e Teana (Potenza).
 - Versione `comuni.js?v=2` in `sito/index.html` e `sito/supermastro.html`.
