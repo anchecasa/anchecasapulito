@@ -13,6 +13,12 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 2026-10-09 15:32 · Cursor
+- Commit `0d482d60c1eb3205a1e58af7254853de20ff6da6` sul ramo main di https://github.com/anchecasa/anchecasapulito. Messaggio: «Magazine: pagina 2 'Cosa porto fuori stasera?' con app nel telefono, date ottobre/novembre, report bollette senza dati societari».
+- Il push non ha fatto partire Vercel da solo. Pubblicata la cartella `sito` sul progetto `anchecasa-pulito` in produzione. Deployment `dpl_FePsT4V2qwnVstzw3ty7f6JrtVvw`, stato Ready, indirizzo https://anchecasa.it.
+- Controllo su https://anchecasa.it/magazine.html (si apre come /magazine). Titolo «AncheCasa Magazine · N. 1 · Ottobre 2026». Pagina 2: «Cosa porto fuori stasera?», foto della cucina con i contenitori e l’app nel telefono, barra «Avvisami gratis quando esce». In basso «Indietro» e «Avanti». Il file online è `magazine.js?v=22`: date «Ottobre 2026» e «1° novembre 2026», niente Palumbo né P.IVA nel report. La foto `rifiuti-casa.jpg` risponde.
+- File: `CLAUDE.md`.
+
 ### 2026-10-09 ~15:45 · Claude — Magazine pagina 2 rifatta: "Cosa porto fuori stasera?" (NON ancora pubblicato)
 - Nuova foto `sito/magazine/numero-1/rifiuti-casa.jpg`: donna in una cucina moderna con quattro contenitori di design per la differenziata. Nel telefono è stata inserita la schermata vera dell'app AncheCasa ("Stasera porta fuori la carta", Bergamo, esponi 20–24). L'originale Canva è `rifiuti-casa-originale-canva.jpg`.
 - Pagina a tutta foto: titolo navy sul muro a sinistra; la barra in vetro "Avvisami gratis quando esce" è compatta in basso a destra e si apre al tocco.
