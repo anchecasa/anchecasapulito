@@ -13,6 +13,12 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 2026-10-09 16:57 · Cursor
+- Commit `bad3db7cb6df38577d9568e67fcd73bd401f2879` sul ramo main di https://github.com/anchecasa/anchecasapulito. Messaggio: «Magazine: pagine grandi sul telefono con testata, Check Bollette con Analizza, copertina leggibile, statistiche e pagina admin». In questo commit sono cambiati solo i file del Magazine e `CLAUDE.md`.
+- Pubblicato https://anchecasa.it, progetto Vercel `anchecasa-pulito` (deployment `dpl_BxoA7TD7kDueTabrYEPKGRpni2Mq`, alias https://anchecasa.it). Il push da solo non avvia Vercel.
+- Controllato https://anchecasa.it/magazine (da /magazine.html) a 390×844. css `?v=36`, js `?v=34`. La testata del sito è visibile (55 px, logo 30 px). La pagina occupa il 99% della larghezza. La capsula dei pulsanti sta sotto la pagina e non copre «Scarica il report PDF» (pagina 8). Copertina con la famiglia, «83 giorni» e i richiami in basso.
+- File: `sito/js/magazine.js`, `sito/css/magazine.css`, `sito/magazine.html`, `CLAUDE.md`.
+
 ### 2026-10-09 ~18:15 · Claude — Telefono: torna la testata, pagine grandi quanto lo schermo (NON ancora pubblicato)
 - Sul telefono la testata del sito è di nuovo visibile, ma più sottile (54 px, logo 30 px).
   - La capsula dei pulsanti sta subito SOTTO la pagina, non sopra: non copre più pulsanti come "Scarica il report PDF".
