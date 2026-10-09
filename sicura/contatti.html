@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Contatti · AncheSicura</title>
+  <meta name="description" content="Scrivi ad AncheSicura per un’offerta. Se hai un’urgenza, segnalala nel modulo." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/site.css?v=39" />
+  <link rel="stylesheet" href="assets/home-az.css?v=33" />
+  <link rel="stylesheet" href="assets/pagine.css?v=15" />
+  <link rel="icon" href="assets/favicon.ico?v=3" sizes="any" />
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png?v=3" />
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=3" />
+</head>
+<body class="az-home pagina-contatti">
+  <header class="site-header">
+    <div class="wrap nav">
+      <div class="brand">
+        <a href="https://www.anchecasa.it/" aria-label="AncheCasa, vai al sito">
+          <img class="anche" src="assets/anche-sicura-logo.png?v=3" alt="AncheSicura" />
+        </a>
+      </div>
+      <nav class="nav-links" id="menu">
+        <a href="index.html">Home</a>
+        <a href="chi-siamo.html">Chi siamo</a>
+        <a href="corsi.html">Corsi</a>
+        <a href="progetti.html">Settori</a>
+        <a href="contatti.html">Contatti</a>
+      </nav>
+      <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+  <main>
+    <section class="con-split">
+      <div class="con-lato fondo-scuro">
+        <img src="assets/hero-anchesicura.jpg?v=5" alt="">
+        <div class="testo">
+          <h1>Mandaci la richiesta. Se è urgente, dillo subito.</h1>
+        </div>
+      </div>
+      <div class="con-form">
+        <h2>Offerta rapida</h2>
+        <form class="con-campi" id="contact-form">
+          <label>Nome e azienda
+            <input name="nome_azienda" required />
+          </label>
+          <div class="due">
+            <label>Telefono
+              <input name="telefono" type="tel" />
+            </label>
+            <label>Email
+              <input name="email" type="email" required />
+            </label>
+          </div>
+          <div class="due">
+            <label>Urgenza
+              <select name="urgenza">
+                <option>No</option>
+                <option>Sì, è urgente</option>
+              </select>
+            </label>
+            <label>Servizio
+              <select name="servizio">
+                <option>Sicurezza sul lavoro</option>
+                <option>Direttiva cantieri</option>
+                <option>Formazione</option>
+                <option>Medicina del lavoro</option>
+                <option>Certificazioni</option>
+                <option>Risorse umane</option>
+                <option>Organizzazione</option>
+                <option>Privacy</option>
+              </select>
+            </label>
+          </div>
+          <label>Messaggio
+            <textarea name="messaggio" rows="4"></textarea>
+          </label>
+          <button class="btn-lente" type="submit">
+            <span class="btn-lente-orb" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="21" height="21" fill="none">
+                <circle cx="10.2" cy="10.2" r="5.7" stroke="#fff" stroke-width="2.1"/>
+                <path d="M14.5 14.5 L19.6 19.6" stroke="#fff" stroke-width="2.1" stroke-linecap="round"/>
+              </svg>
+            </span>
+            Invia richiesta
+          </button>
+          <p class="form-note" id="contact-ok">Apertura della mail verso AncheSicura.</p>
+        </form>
+      </div>
+    </section>
+    <section class="con-fatti">
+      <article>
+        <h3>Tutta Italia</h3>
+        <p>La stessa cura in ogni regione della rete AncheCasa.</p>
+      </article>
+      <article>
+        <h3>Urgenze</h3>
+        <p>Se segni l’urgenza, la richiesta passa davanti.</p>
+      </article>
+      <article>
+        <h3>Un riferimento</h3>
+        <p>Risponde AncheSicura, con l’azienda della rete più vicina al tuo lavoro.</p>
+      </article>
+    </section>
+  </main>
+  <div id="ac-footer"></div>
+  <script src="assets/site.js?v=24"></script>
+</body>
+</html>

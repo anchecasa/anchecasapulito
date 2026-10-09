@@ -1,0 +1,48 @@
+/* Luce e gas · offerte e proposte su carta intestata (09.10.2026) */
+.en-kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 14px; }
+@media (max-width: 860px) { .en-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.en-banner { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  background: linear-gradient(120deg, #16304d, #2c4a6e); color: #fff; }
+.en-banner h2 { color: #fff; }
+.en-banner .note { color: rgba(255,255,255,.82); margin: 0; max-width: 560px; }
+.en-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 14px; }
+.en-grid .span2 { grid-column: 1 / -1; }
+.en-grid label.check { display: flex; gap: 8px; align-items: center; font-weight: 600; }
+@media (max-width: 640px) { .en-grid { grid-template-columns: 1fr; } }
+.en-scroll { overflow-x: auto; }
+.en-act { white-space: nowrap; text-align: right; }
+.en-act .btn-mini { margin-left: 4px; }
+.en-two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; align-items: start; }
+@media (max-width: 1100px) { .en-two { grid-template-columns: 1fr; } }
+.en-carta-wrap { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); gap: 18px; align-items: start; }
+@media (max-width: 900px) { .en-carta-wrap { grid-template-columns: 1fr; } }
+
+/* foglio A4 in anteprima */
+.en-carta { background: #fff; border: 1px solid #e4ebf3; border-radius: 4px; box-shadow: 0 18px 40px rgba(22,48,77,.14); overflow: hidden;
+  aspect-ratio: 210 / 297; max-width: 100%; display: flex; flex-direction: column; font-size: 12px; color: #24384c; }
+.en-carta-head { background: #16304d; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 4.5% 6%; }
+.en-carta-head > img { width: 34%; height: auto; }
+.en-carta-az { background: #fff; border-radius: 6px; width: 30%; aspect-ratio: 56 / 24; display: grid; place-items: center; padding: 4px; }
+.en-carta-az img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.en-carta-az span { font-weight: 800; color: #16304d; font-size: 11px; text-align: center; line-height: 1.15; }
+.en-carta-rule { height: 4px; background: #e56b10; }
+.en-carta-body { flex: 1; padding: 5% 6%; min-height: 0; overflow: hidden; }
+.en-carta-foot { border-top: 1px solid #e56b10; margin: 0 6%; padding: 6px 0 10px; display: flex; justify-content: space-between; gap: 10px; font-size: 9px; color: #66758a; }
+.en-carta-foot b { color: #16304d; }
+.en-p-meta { font-size: 10px; color: #66758a; margin: 0 0 10px; }
+.en-p-to { font-size: 11px; margin: 0 0 12px; line-height: 1.45; }
+.en-p-title { font-family: Georgia, "Times New Roman", serif; font-size: 20px; color: #16304d; margin: 0; line-height: 1.15; }
+.en-p-offer { font-family: Georgia, "Times New Roman", serif; font-style: italic; color: #e56b10; font-size: 14px; margin: 2px 0 10px; }
+.en-p-tab { width: 100%; border-collapse: collapse; border-top: 2px solid #16304d; font-size: 11px; }
+.en-p-tab td { padding: 6px 4px; }
+.en-p-tab tr:nth-child(odd) td { background: #f3f6fb; }
+.en-p-tab td:last-child { text-align: right; font-weight: 700; }
+.en-p-stima { display: flex; justify-content: space-between; align-items: center; background: #fff1e4; border-radius: 6px; padding: 10px 12px; margin-top: 12px; }
+.en-p-stima span { font-size: 9.5px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: #b4520b; }
+.en-p-stima b { font-family: Georgia, "Times New Roman", serif; font-size: 22px; color: #16304d; }
+.en-p-note { font-size: 10.5px; margin: 10px 0 0; line-height: 1.45; }
+.en-carta-mini .en-carta { font-size: 10px; }
+.en-mini-t { font-family: Georgia, serif; font-weight: 700; color: #16304d; font-size: 15px; margin: 0 0 10px; }
+.en-mini-l { height: 7px; background: #eef2f7; border-radius: 4px; margin: 8px 0; }
+.en-mini-l.s { width: 60%; }
+.en-prev-card { position: sticky; top: 12px; }

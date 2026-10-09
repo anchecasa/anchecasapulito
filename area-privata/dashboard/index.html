@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#1f4d7a">
+  <meta http-equiv="Cache-Control" content="no-store">
+  <title>AncheCasa · Area riservata</title>
+  <link rel="icon" href="../assets/logo/favicon.jpg" type="image/jpeg">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/mobile-app.css">
+  <link rel="stylesheet" href="css/admin-task.css">
+  <link rel="stylesheet" href="css/energia.css">
+</head>
+<body>
+  <div class="stage">
+    <span class="dots dots-tl" aria-hidden="true"></span>
+    <span class="dots dots-br" aria-hidden="true"></span>
+
+    <div class="app-frame">
+      <aside class="side">
+        <div class="side-sticky">
+          <div class="side-brand">
+            <a class="mark" id="brand-link" href="#/" aria-label="AncheCasa, vai alla tua bacheca"><img src="../assets/logo/anchecasa-orizzontale-trasparente.png?v=3" alt="AncheCasa"></a>
+            <span class="nav-lab" id="nav-lab" hidden></span>
+          </div>
+          <nav class="side-menu" id="nav" aria-label="Sezioni della dashboard"></nav>
+          <nav class="side-foot" id="nav-foot" aria-label="Impostazioni e uscita"></nav>
+        </div>
+      </aside>
+
+      <main class="main">
+        <div class="topbar">
+          <h1><span id="page-title">Cruscotto</span><span class="sub" id="page-sub"></span></h1>
+          <div class="top-meta">
+            <div class="top-actions" id="top-actions"></div>
+            <span>dati al <b id="data-label"></b></span>
+            <div class="clock" id="clock" aria-label="Ora attuale">00 : 00</div>
+          </div>
+        </div>
+        <div id="view" tabindex="-1"></div>
+        <noscript><p>Questa dashboard richiede JavaScript.</p></noscript>
+      </main>
+    </div>
+  </div>
+
+  <nav class="tabbar" id="tabbar" aria-label="Sezioni"></nav>
+  <div class="altro" id="altro" hidden><div class="altro-panel" id="altro-panel"></div></div>
+
+  <div id="modal-root"></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/cartina-italia.js"></script>
+  <script src="js/views.js"></script>
+  <script src="js/energia.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

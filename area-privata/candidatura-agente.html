@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Candidatura agente · AncheCasa</title>
+  <meta name="description" content="Invia la candidatura da agente ad AncheCasa. Nome, contatti, zona, curriculum e portfolio. L’amministrazione legge solo questa richiesta.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="AncheCasa">
+  <meta property="og:title" content="Candidatura agente · AncheCasa">
+  <meta property="og:description" content="Una piazza sola per privati, aziende e agenti. Invia la tua candidatura da agente.">
+  <meta property="og:url" content="https://areaprivata.anchecasa.it/candidatura-agente.html">
+  <meta property="og:image" content="https://areaprivata.anchecasa.it/img/anteprima-invito.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="it_IT">
+  <link rel="icon" href="assets/logo/favicon.jpg" type="image/jpeg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/sito.css">
+</head>
+<body data-page="agente">
+  <a class="skip" href="#contenuto">Vai al contenuto</a>
+  <div id="site-header"></div>
+  <main id="contenuto">
+    <section class="page-hero">
+      <img class="bg" src="img/ag-network.jpg" alt="">
+      <div class="wrap">
+        <p class="crumbs"><a href="https://anchecasa.it/agente.html">Agente</a> · Candidatura</p>
+        <h1>La tua candidatura.<br><span class="accent">Solo da agente.</span></h1>
+        <p class="lead">Compili i tuoi dati, indichi la zona in cui lavori e alleghi curriculum e portfolio. L’amministrazione legge questa richiesta. Non è il modulo del privato e non è quello dell’azienda.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <div>
+          <h2>I dati della candidatura</h2>
+          <p class="form-hint">Scrivi tutto quello che serve a capirti. La richiesta arriva all’amministrazione, che ti contatta dopo la verifica.</p>
+        </div>
+        <form class="form agent-apply" data-store="anchecasa-sito-agente">
+          <label>Nome <input name="nome" required autocomplete="given-name"></label>
+          <label>Cognome <input name="cognome" required autocomplete="family-name"></label>
+          <label>Mail <input type="email" name="email" required autocomplete="email"></label>
+          <label>Password per accedere <input type="password" name="password" required minlength="8" autocomplete="new-password"><span class="form-hint">Almeno 8 caratteri. Ti servirà per entrare nella tua area.</span></label>
+          <label>Telefono <input type="tel" name="telefono" required autocomplete="tel"></label>
+          <label>Città <input name="citta" required autocomplete="address-level2"></label>
+          <label>Zona in cui lavori <input name="zona" required></label>
+          <label>Curriculum <input type="file" name="cv" accept=".pdf,.doc,.docx"></label>
+          <label>Portfolio <input type="file" name="portfolio" accept=".pdf,.zip,image/*"></label>
+          <label class="span-2">Presentati
+            <textarea name="presentati" required placeholder="Chi sei, che cosa hai fatto e perché vuoi entrare in questa rete."></textarea>
+          </label>
+          <p class="form-hint span-2">Se vendi case, l’agenzia immobiliare entra come azienda, dall’albo, non da questa candidatura.</p>
+          <label class="check span-2"><input type="checkbox" name="privacy" required><span>Ho letto l’<a href="https://anchecasa.it/privacy.html" target="_blank" rel="noopener">informativa privacy</a> e acconsento al trattamento dei miei dati.</span></label>
+          <button class="btn-cotto span-2" type="submit">Invia candidatura</button>
+          <div class="form-ok span-2" role="status">Candidatura inviata. Ti contatteremo dopo la verifica.</div>
+          <div class="form-err span-2" role="alert"></div>
+        </form>
+      </div>
+    </section>
+  </main>
+  <div id="site-footer"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/iscrizione.js"></script>
+</body>
+</html>

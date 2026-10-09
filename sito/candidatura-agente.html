@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Candidatura agente · AncheCasa</title>
+  <meta name="description" content="Invia la candidatura da agente ad AncheCasa. Nome, contatti, zona, curriculum e portfolio. L’amministrazione legge solo questa richiesta.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#16304d">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/sito.css?v=legal12">
+</head>
+<body data-page="agente">
+  <a class="skip" href="#contenuto">Vai al contenuto</a>
+  <div id="site-header"></div>
+  <main id="contenuto">
+    <section class="hero">
+      <img class="hero-bg" src="img/ag-network.jpg" alt="">
+      <div class="wrap">
+        <p class="crumbs"><a href="/agente">Agente</a> · Candidatura</p>
+        <p class="kicker">Agente</p>
+        <h1>La tua candidatura.<br><span class="accent">Solo da agente.</span></h1>
+        <p class="lead">Compili i tuoi dati, indichi la zona in cui lavori e alleghi curriculum e portfolio. L’amministrazione legge questa richiesta. Non è il modulo del privato e non è quello dell’azienda.</p>
+      </div>
+    </section>
+
+    <section class="band white agent-work">
+      <div class="wrap">
+        <div class="band-head">
+          <h2>I dati della candidatura</h2>
+          <p class="lead">Scrivi tutto quello che serve a capirti. La copia resta in questo browser e la richiesta arriva all’amministrazione.</p>
+        </div>
+        <form class="form agent-apply" data-store="anchecasa-sito-agente">
+          <label>Nome <input name="nome" required autocomplete="given-name"></label>
+          <label>Cognome <input name="cognome" required autocomplete="family-name"></label>
+          <label>Mail <input type="email" name="email" required autocomplete="email"></label>
+          <label>Telefono <input type="tel" name="telefono" required autocomplete="tel"></label>
+          <label>Città <input name="citta" required autocomplete="address-level2"></label>
+          <label>Zona in cui lavori <input name="zona" required></label>
+          <label>Curriculum <input type="file" name="cv" accept=".pdf,.doc,.docx"></label>
+          <label>Portfolio <input type="file" name="portfolio" accept=".pdf,.zip,image/*"></label>
+          <label class="span-2">Presentati
+            <textarea name="presentati" required placeholder="Chi sei, che cosa hai fatto e perché vuoi entrare in questa rete."></textarea>
+          </label>
+          <p class="form-hint span-2">Se vendi case, l’agenzia immobiliare entra come azienda, dall’albo, non da questa candidatura.</p>
+          <button class="btn-cotto span-2" type="submit">Invia candidatura</button>
+          <div class="form-ok span-2">La tua candidatura è registrata in questo browser.</div>
+        </form>
+      </div>
+    </section>
+  </main>
+  <div id="site-footer"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/sito.js?v=acc1"></script>
+</body>
+</html>

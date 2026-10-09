@@ -1,0 +1,6 @@
+---
+description: Registro obbligatorio delle modifiche in CLAUDE.md
+alwaysApply: true
+---
+
+Prima di chiudere qualsiasi modifica a questo progetto, aggiungi una voce in cima alla sezione "Registro delle modifiche" del file CLAUDE.md nella cartella principale: data e ora (Europe/Rome), chi, cosa è cambiato, quali file. Non cancellare né spostare CLAUDE.md.

@@ -1,0 +1,98 @@
+[
+  {
+    "nome": "Blu AncheCasa",
+    "hex": "#16304d",
+    "rgb": [
+      22,
+      48,
+      77
+    ],
+    "cmyk": "C100 M80 Y35 K35",
+    "pantone": "Pantone 2767 C (indicativo)",
+    "uso": "Simbolo (tetto), «Anche», fondi scuri"
+  },
+  {
+    "nome": "Arancio AncheCasa",
+    "hex": "#E56B10",
+    "rgb": [
+      229,
+      107,
+      16
+    ],
+    "cmyk": "C0 M65 Y100 K5",
+    "pantone": "Pantone 1595 C (indicativo)",
+    "uso": "Finestra, «Casa»/«Sicura», pulsanti principali"
+  },
+  {
+    "nome": "Blu notte",
+    "hex": "#0b1a2c",
+    "rgb": [
+      11,
+      26,
+      44
+    ],
+    "cmyk": "C95 M80 Y45 K60",
+    "pantone": "—",
+    "uso": "Fondi delle mail e aree riservate"
+  },
+  {
+    "nome": "Blu medio",
+    "hex": "#2c4a6e",
+    "rgb": [
+      44,
+      74,
+      110
+    ],
+    "cmyk": "C90 M65 Y30 K15",
+    "pantone": "—",
+    "uso": "Testi secondari, bordi su fondo chiaro"
+  },
+  {
+    "nome": "Arancio chiaro",
+    "hex": "#fff1e4",
+    "rgb": [
+      255,
+      241,
+      228
+    ],
+    "cmyk": "C0 M6 Y12 K0",
+    "pantone": "—",
+    "uso": "Fondi di evidenza, etichette"
+  },
+  {
+    "nome": "Grigio carta",
+    "hex": "#eef2f7",
+    "rgb": [
+      238,
+      242,
+      247
+    ],
+    "cmyk": "C6 M2 Y0 K2",
+    "pantone": "—",
+    "uso": "Fondi delle pagine"
+  },
+  {
+    "nome": "Nero",
+    "hex": "#141c26",
+    "rgb": [
+      20,
+      28,
+      38
+    ],
+    "cmyk": "C80 M65 Y45 K75",
+    "pantone": "—",
+    "uso": "Versione a un colore, stampa"
+  },
+  {
+    "nome": "Bianco",
+    "hex": "#ffffff",
+    "rgb": [
+      255,
+      255,
+      255
+    ],
+    "cmyk": "C0 M0 Y0 K0",
+    "pantone": "—",
+    "uso": "Logo in negativo, fondi"
+  }
+]

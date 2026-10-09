@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Benvenuto · AncheCasa</title>
+  <meta name="robots" content="noindex">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="AncheCasa">
+  <meta property="og:title" content="Sei invitato su AncheCasa">
+  <meta property="og:description" content="Imposta la password e entra nel tuo pannello di gestione.">
+  <meta property="og:image" content="https://areaprivata.anchecasa.it/img/anteprima-invito.jpg">
+  <meta property="og:locale" content="it_IT">
+  <meta name="theme-color" content="#16304d">
+  <link rel="icon" href="assets/logo/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/benvenuto.css?v=2">
+</head>
+<body>
+  <main class="bv">
+    <div class="bv-box">
+      <!-- Lato modulo -->
+      <section class="bv-card">
+        <img class="bv-logo" src="assets/logo/anchecasa-orizzontale-trasparente.png?v=3" alt="AncheCasa">
+
+        <div id="bv-attesa" class="bv-stato">Un attimo…</div>
+
+        <div id="bv-errore" class="bv-stato" hidden>
+          <h1>Link non valido</h1>
+          <p>Questo invito è già stato usato oppure non è più valido. Se hai già impostato la password, <a href="index.html">entra qui</a>. Altrimenti chiedi un nuovo invito a chi te l’ha mandato.</p>
+        </div>
+
+        <form id="bv-form" novalidate hidden>
+          <h1 id="bv-h1">Benvenuto</h1>
+          <p class="bv-lead" id="bv-lead">Manca un solo passo: <strong>scegli una tua password</strong> ed entri subito.</p>
+
+          <label for="bv-mail">Email a cui è stato inviato il link</label>
+          <input id="bv-mail" name="email" type="email" autocomplete="email" inputmode="email" required>
+
+          <label for="bv-password">Scegli una tua password</label>
+          <div class="bv-pw">
+            <input id="bv-password" name="password" type="password" autocomplete="new-password" minlength="8" placeholder="Almeno 8 caratteri" required>
+            <button type="button" id="bv-occhio" aria-label="Mostra la password" aria-pressed="false">Mostra</button>
+          </div>
+          <div class="bv-forza" aria-hidden="true"><i id="bv-forza"></i></div>
+
+          <label class="bv-check">
+            <input id="bv-privacy" name="privacy" type="checkbox" required>
+            <span>Ho letto l’<a href="https://anchecasa.it/privacy.html" target="_blank" rel="noopener">informativa sulla privacy</a>.</span>
+          </label>
+
+          <p class="bv-err" id="bv-err" role="alert" hidden></p>
+          <button class="bv-btn" id="bv-invia" type="submit">Entra in AncheCasa</button>
+          <p class="bv-nota" id="bv-nota"></p>
+        </form>
+
+        <div id="bv-fine" class="bv-stato" hidden>
+          <h1>Tutto pronto</h1>
+          <p>Il tuo account è stato creato. Ti porto nel pannello…</p>
+          <p><a href="index.html">Se non succede nulla, entra da qui</a>.</p>
+        </div>
+
+        <p class="bv-aiuto">Serve aiuto? <a href="mailto:info@anchecasa.it">info@anchecasa.it</a></p>
+      </section>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/benvenuto.js?v=2"></script>
+</body>
+</html>

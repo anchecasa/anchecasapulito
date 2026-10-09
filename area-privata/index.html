@@ -1,0 +1,61 @@
+﻿<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AncheCasa · Area riservata</title>
+  <link rel="icon" href="assets/logo/favicon.jpg" type="image/jpeg">
+  <link rel="stylesheet" href="css/kit.css">
+</head>
+<body>
+  <div class="stage">
+    <span class="dots dots-tl"></span>
+    <span class="dots dots-tr"></span>
+    <span class="dots dots-bl"></span>
+    <span class="dots dots-br"></span>
+
+    <section class="login-wrap" aria-label="Schermata di accesso">
+      <div class="login-left">
+        <form class="login-form" id="login-form" novalidate>
+          <h1>Area riservata</h1>
+          <p class="sub">Entra con la mail e la password scelte all'iscrizione</p>
+          <input type="email" name="email" placeholder="Email" autocomplete="username" required>
+          <input type="password" name="password" placeholder="Password" autocomplete="current-password" required>
+          <div class="row">
+            <button class="btn-in" type="submit">Accedi</button>
+            <a class="forgot" href="#recupero">Password dimenticata</a>
+          </div>
+          <p class="login-error" id="login-error" role="alert" hidden></p>
+        </form>
+      </div>
+      <div class="login-right">
+        <div class="login-hero">
+          <img src="assets/hero-isometric.svg" alt="">
+        </div>
+        <div class="product-name">
+          <img class="product-logo" src="assets/logo/anchecasa-orizzontale-trasparente.png?v=3" alt="AncheCasa · Costruiamo fiducia">
+          <small>Privati, aziende e agenti in una piazza sola</small>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="modal" id="recupero">
+    <div class="sheet">
+      <h3>Recupero accesso</h3>
+      <p>Inserisci l'email usata per l'iscrizione: se è registrata, ricevi un link per reimpostare la password.</p>
+      <input type="email" id="recupero-email" placeholder="Email" autocomplete="email">
+      <p class="login-note" id="recupero-esito" hidden></p>
+      <div class="actions">
+        <a class="btn-ghost" href="#">Chiudi</a>
+        <button type="button" class="btn-in" id="recupero-invia">Invia link</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/mostra-password.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

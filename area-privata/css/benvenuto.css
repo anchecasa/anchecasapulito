@@ -1,0 +1,115 @@
+/* Pagina di benvenuto dell'invito (rifatta il 06.10.2026, stessa grafica delle mail d'invito).
+   PC: foto del profilo a sinistra con i vantaggi, modulo a destra. Telefono: foto in alto, modulo sotto. */
+:root {
+  --cotto: #E56B10;
+  --cotto-scuro: #c45d0c;
+  --navy: #16304d;
+  --navy2: #2c4a6e;
+  --ink: #24384c;
+  --muted: #66758a;
+  --line: #d9e2ec;
+  --carta: #eef2f7;
+  --chiaro: #fff1e4;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; }
+body {
+  font-family: "Open Sans", system-ui, sans-serif;
+  color: var(--ink);
+  background: var(--carta);
+}
+.bv {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 20px calc(32px + env(safe-area-inset-bottom, 0px));
+}
+.bv-box {
+  width: 100%;
+  max-width: 460px;
+  background: #fff;
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(22, 48, 77, .16);
+}
+
+/* (lato foto tolto il 06.10.2026: resta solo il modulo) */
+/* Lato modulo */
+.bv-card { padding: 38px 40px 28px; display: flex; flex-direction: column; justify-content: center; }
+.bv-logo { display: block; width: auto; height: 58px; max-width: 80%; margin: 0 auto 22px; object-fit: contain; }
+h1 {
+  margin: 0 0 6px;
+  font-family: Montserrat, system-ui, sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--navy);
+  text-align: center;
+}
+.bv-lead, .bv-stato p { margin: 0 0 18px; color: var(--muted); font-size: 15px; line-height: 1.5; text-align: center; }
+.bv-stato { padding: 8px 0 4px; color: var(--muted); text-align: center; }
+
+.bv-passi { list-style: none; display: flex; justify-content: space-between; gap: 6px; margin: 0 0 8px; padding: 12px 14px; border-radius: 14px; background: var(--carta); }
+.bv-passi li { display: flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 700; color: var(--muted); }
+.bv-passi b {
+  width: 24px; height: 24px; border-radius: 12px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: #fff; border: 1px solid var(--line); color: var(--muted); font-size: 12px;
+}
+.bv-passi .fatto b { background: var(--navy2); border-color: var(--navy2); color: #fff; }
+.bv-passi .ora { color: var(--navy); }
+.bv-passi .ora b { background: var(--cotto); border-color: var(--cotto); color: #fff; }
+
+label { display: block; margin: 14px 0 6px; font-size: 13px; font-weight: 700; color: var(--navy); }
+input[type="email"], input[type="password"], input[type="text"] {
+  width: 100%;
+  min-width: 0;
+  padding: 13px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  font: inherit;
+  font-size: 16px; /* 16px: su iPhone evita lo zoom automatico */
+  color: var(--ink);
+}
+input[readonly] { background: #f3f6fa; color: var(--muted); }
+input:focus-visible { outline: 2px solid var(--cotto); outline-offset: 1px; border-color: transparent; }
+.bv-pw { position: relative; }
+.bv-pw input { padding-right: 84px; }
+.bv-pw button {
+  position: absolute; top: 50%; right: 6px; transform: translateY(-50%);
+  padding: 8px 10px; border: 0; background: none;
+  color: var(--navy); font: inherit; font-size: 13px; font-weight: 700; cursor: pointer;
+}
+.bv-forza { height: 4px; margin-top: 8px; border-radius: 2px; background: var(--line); overflow: hidden; }
+.bv-forza i { display: block; height: 100%; width: 0; background: #c0392b; transition: width .2s, background .2s; }
+
+.bv-check { display: flex; align-items: flex-start; gap: 10px; margin: 18px 0 4px; font-weight: 400; color: var(--muted); font-size: 13px; line-height: 1.45; }
+.bv-check input { width: 18px; height: 18px; margin: 1px 0 0; flex: 0 0 auto; accent-color: var(--cotto); }
+.bv-check a, .bv-stato a, .bv-aiuto a { color: var(--navy); font-weight: 700; }
+.bv-err {
+  margin: 14px 0 0; padding: 10px 12px;
+  border-left: 4px solid #c0392b; border-radius: 8px;
+  background: #fdecea; color: #8e2a20; font-size: 14px; font-weight: 600;
+}
+.bv-btn {
+  width: 100%; margin-top: 18px; padding: 15px;
+  border: 0; border-radius: 999px;
+  background: var(--cotto-scuro); color: #fff;
+  font-family: Montserrat, system-ui, sans-serif; font-size: 17px; font-weight: 800;
+  cursor: pointer; box-shadow: 0 8px 20px rgba(229, 107, 16, .28);
+}
+.bv-btn:hover { background: #a94f09; }
+.bv-btn:disabled { opacity: .6; cursor: default; box-shadow: none; }
+.bv-nota { margin: 10px 0 0; text-align: center; font-size: 13px; color: var(--muted); }
+.bv-aiuto { margin: 22px 0 0; padding-top: 14px; border-top: 1px solid var(--line); text-align: center; font-size: 13px; color: var(--muted); }
+.bv-lead strong { color: var(--navy); font-weight: 800; }
+[hidden] { display: none !important; }
+
+/* Telefono: il riquadro occupa tutta la larghezza */
+@media (max-width: 520px) {
+  .bv { padding: 16px 12px; }
+  .bv-card { padding: 28px 20px 22px; }
+  .bv-logo { height: 48px; margin-bottom: 16px; }
+  h1 { font-size: 25px; }
+}

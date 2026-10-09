@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestione · AncheCasa</title>
+  <meta name="description" content="Gestione di cookie e memoria locale di AncheCasa. Palumbo Investments Srl. Per una richiesta già inviata scrivi a ufficio.privacy@anchecasa.it.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#16304d">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/sito.css?v=legal12">
+</head>
+<body data-page="gestione">
+  <a class="skip" href="#contenuto">Vai al contenuto</a>
+  <div id="site-header"></div>
+  <main id="contenuto">
+    <section class="page-hero">
+      <div class="wrap">
+        <p class="crumbs"><a href="/">Home</a> · Gestione</p>
+        <h1>Gestione cookie</h1>
+        <p class="lead">Qui cancelli, da questo browser, le copie dei moduli che hai già inviato.</p>
+      </div>
+    </section>
+    <section class="section">
+      <div class="wrap legal-doc">
+        <nav class="legal-links" aria-label="Pagine legali">
+          <a href="/privacy">Privacy</a>
+          <a href="/note-legali">Note legali</a>
+          <a href="/cookie">Cookie</a>
+        </nav>
+        <p class="legal-meta">Ultimo aggiornamento: 23 settembre 2026. Il dettaglio tecnico è nella <a href="/cookie">cookie policy</a>.</p>
+
+        <h2>Che cosa puoi togliere da questo browser</h2>
+        <p>Non depositiamo cookie di profilazione. L’unica memoria nostra è la copia dei moduli che hai già inviato, tenuta in questo browser. Il pulsante qui sotto cancella solo quelle copie, su questo dispositivo e su questo browser.</p>
+        <p><button class="btn-cotto" type="button" id="clear-local">Cancella le copie dei moduli</button></p>
+        <p id="clear-msg" class="legal-meta" role="status"></p>
+
+        <h2>Dal tuo browser</h2>
+        <ul>
+          <li>Chrome e Edge: Impostazioni, Privacy e sicurezza, Cookie e altri dati dei siti, poi i dati di questo sito.</li>
+          <li>Firefox: Impostazioni, Privacy e sicurezza, Cookie e dati dei siti, Gestisci dati, poi questo sito.</li>
+          <li>Safari: Impostazioni, Privacy, Gestisci dati siti web.</li>
+        </ul>
+        <p>Se non vuoi contattare Google mentre carichi i caratteri, blocca fonts.googleapis.com e fonts.gstatic.com dal browser o da un’estensione. Continui a navigare con i caratteri del sistema.</p>
+
+        <h2>Che cosa il pulsante non cancella</h2>
+        <p>La cancellazione locale non ritira una richiesta di iscrizione già arrivata all’amministrazione, né un codice invito già segnato come aperto o completato. Per quella richiesta scrivi a Palumbo Investments Srl all’indirizzo <a class="mail-ac" href="mailto:ufficio.privacy@anchecasa.it">ufficio.privacy@anchecasa.it</a>, come indicato nell’<a href="/privacy">informativa privacy</a>.</p>
+      </div>
+    </section>
+  </main>
+  <div id="site-footer"></div>
+  <script src="js/sito.js?v=acc1"></script>
+  <script>
+    document.getElementById("clear-local").addEventListener("click", function () {
+      ["anchecasa-sito-privato", "anchecasa-sito-azienda", "anchecasa-sito-agente", "anchecasa-sito-contatti"].forEach(function (key) {
+        localStorage.removeItem(key);
+      });
+      document.getElementById("clear-msg").textContent = "Copie dei moduli cancellate da questo browser.";
+    });
+  </script>
+</body>
+</html>

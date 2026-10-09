@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contatti · AncheCasa</title>
+  <meta name="description" content="Scrivi ad AncheCasa. Una piazza sola per tutti. Il modulo apre la mail verso rete@anchecasa.it.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#16304d">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/sito.css?v=legal12">
+</head>
+<body data-page="contatti">
+  <a class="skip" href="#contenuto">Vai al contenuto</a>
+  <div id="site-header"></div>
+  <main id="contenuto">
+    <section class="con-split">
+      <div class="con-lato">
+        <img src="img/contatti.jpg" alt="">
+        <div class="testo">
+          <p class="kicker">Contatti</p>
+          <p class="con-payoff">Una piazza sola<br><span>per tutti</span></p>
+          <h1>Scrivi. Se è urgente, dillo subito.</h1>
+          <p class="lead">Per entrare usa <a href="/iscriviti">Iscriviti</a>. Il modulo apre la mail verso <a href="mailto:rete@anchecasa.it">rete@anchecasa.it</a>.</p>
+        </div>
+      </div>
+      <div class="con-form">
+        <h2>Scrivi ad AncheCasa</h2>
+        <form class="form con-campi" id="contact-form">
+          <label>Nome
+            <input name="nome" required>
+          </label>
+          <div class="due">
+            <label>Telefono
+              <input name="telefono" type="tel">
+            </label>
+            <label>Email
+              <input name="email" type="email" required>
+            </label>
+          </div>
+          <div class="due">
+            <label>Urgenza
+              <select name="urgenza">
+                <option>No</option>
+                <option>Sì, è urgente</option>
+              </select>
+            </label>
+            <label>Motivo
+              <select name="motivo">
+                <option>Domanda sul sito</option>
+                <option>Ingresso come privato</option>
+                <option>Ingresso come azienda</option>
+                <option>Candidatura agente</option>
+                <option>Altro</option>
+              </select>
+            </label>
+          </div>
+          <label>Messaggio
+            <textarea name="messaggio" rows="4" required></textarea>
+          </label>
+          <button class="btn-cotto" type="submit">Invia richiesta</button>
+          <p class="form-note" id="contact-ok">Apertura della mail verso AncheCasa.</p>
+        </form>
+      </div>
+    </section>
+    <section class="con-fatti">
+      <article>
+        <h3>La piazza</h3>
+        <p>Privato, azienda e agente usano lo stesso sito.</p>
+      </article>
+      <article>
+        <h3>L’ingresso</h3>
+        <p>Per entrare vai su Iscriviti. Qui le domande sul sito.</p>
+      </article>
+      <article>
+        <h3>La rete</h3>
+        <p>La mail arriva a rete@anchecasa.it.</p>
+      </article>
+    </section>
+  </main>
+  <div id="site-footer"></div>
+  <script src="js/sito.js?v=acc1"></script>
+  <script>
+    (function () {
+      var form = document.getElementById("contact-form");
+      if (!form) return;
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var lines = [];
+        new FormData(form).forEach(function (value, key) {
+          lines.push(key + ": " + value);
+        });
+        var subject = encodeURIComponent("AncheCasa — messaggio dal sito");
+        var body = encodeURIComponent(lines.join("\n"));
+        location.href = "mailto:rete@anchecasa.it?subject=" + subject + "&body=" + body;
+        var note = document.getElementById("contact-ok");
+        if (note) note.style.display = "block";
+      });
+    })();
+  </script>
+</body>
+</html>

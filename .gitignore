@@ -1,0 +1,10 @@
+# cartelle di prova e cestino
+/_*/
+.vercel/
+.wrangler/
+node_modules/
+.DS_Store
+Thumbs.db
+*.log
+.env
+.env.*

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Contatti · AncheSicura</title>
+<meta name="description" content="Chiedi un'offerta ad AncheSicura.">
+<meta name="theme-color" content="#16304D">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32x32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=DM+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="css/ac.css?v=1">
+<link rel="stylesheet" href="css/sicura.css?v=1">
+</head>
+<body data-page="contatti">
+<a class="skip" href="#contenuto">Vai al contenuto</a>
+<div class="nota-anteprima">Anteprima del nuovo sito AncheSicura · non è online</div>
+<header class="testata"><div class="wrap">
+  <a class="marchio" href="index.html" aria-label="AncheSicura, home"><img src="assets/anchesicura-colore.png" alt="AncheSicura · La sicurezza di AncheCasa"></a>
+  <nav class="menu" id="menu" aria-label="Menu principale"><a class="voce" href="servizi.html">Servizi</a><a class="voce" href="corsi.html">Corsi online</a><a class="voce" href="progetti.html">Settori</a><a class="voce" href="italia.html">Tutta Italia</a><a class="voce" href="chi-siamo.html">Chi siamo</a><a class="voce on" aria-current="page" href="contatti.html">Contatti</a><a class="voce solo-tel" href="rete.html">Entra nella rete</a><a class="voce solo-tel" href="https://www.anchecasa.it/">AncheCasa ↗</a></nav>
+  <div class="azioni">
+    <a class="accedi" href="rete.html">Entra nella rete</a>
+    <a class="btn" href="contatti.html">Chiedi un'offerta</a>
+    <button class="hamburger" id="hamburger" type="button" aria-label="Apri il menu" aria-expanded="false" aria-controls="menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  </div>
+</div></header>
+<main id="contenuto">
+<section class="hero basso">
+  <img src="img/hero-anchesicura.jpg" alt="">
+  <div class="wrap"><p class="kicker">Contatti</p><h1>Scrivici.<br><span class="acc">Se è urgente, dillo subito.</span></h1><p class="lead">Ti risponde AncheSicura, con l'azienda della rete più vicina al tuo lavoro.</p></div>
+</section>
+<section class="sez"><div class="wrap duo" style="align-items:start">
+  <div><h2>Chiedi un'offerta</h2><p>Compila il modulo: si apre la tua mail con la richiesta già scritta per AncheSicura.</p>
+    <div class="griglia" style="margin-top:24px">
+      <div class="box"><span class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg></span><h3>Tutta Italia</h3><p>La stessa cura in ogni regione della rete AncheCasa.</p></div>
+      <div class="box"><span class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><h3>Urgenze</h3><p>Se segni l'urgenza, la richiesta passa davanti.</p></div>
+    </div>
+    <p style="margin-top:22px">Mail: <a href="mailto:rete@anchecasa.it" style="color:var(--arancio);font-weight:700">rete@anchecasa.it</a></p></div>
+  <div class="pannello"><form class="modulo" id="f-offerta">
+    <label>Nome e azienda<input name="nome" required type="text" autocomplete="organization"></label>
+    <div class="due"><label>Telefono<input name="telefono" required type="tel" autocomplete="tel"></label><label>Mail<input name="mail" required type="email" autocomplete="email"></label></div>
+    <div class="due"><label>Servizio<select name="servizio" id="f-servizio"><option value="rspp">Sicurezza sul lavoro</option><option value="cantieri">Sicurezza nei cantieri</option><option value="formazione">Formazione</option><option value="medicina">Medicina del lavoro</option><option value="certificazioni">Certificazioni</option><option value="hr">Risorse umane</option><option value="organizzazione">Organizzazione</option><option value="privacy">Privacy</option><option value="altro">Altro</option></select></label><label>Città<input name="citta" type="text"></label></div>
+    <label>È urgente?<select name="urgenza"><option>No</option><option>Sì, è urgente</option></select></label>
+    <label>Messaggio<textarea name="messaggio" placeholder="Es. cantiere di 3 mesi a Roma, servono CSE e corso preposti"></textarea></label>
+    <label class="spunta"><input required type="checkbox">Ho letto l'<a href="https://www.anchecasa.it/privacy.html" style="text-decoration:underline">informativa privacy</a>.</label>
+    <button class="btn" type="submit">Invia la richiesta</button>
+    <p class="esito" id="f-esito" hidden>Si è aperta la tua mail con la richiesta: premi Invia per mandarla ad AncheSicura.</p>
+  </form></div>
+</div></section>
+</main>
+<footer class="piede"><div class="wrap">
+  <div class="col">
+    <div><img src="assets/anchesicura-bianco.png" alt="AncheSicura · La sicurezza di AncheCasa"><p style="margin-top:14px;max-width:280px">La divisione sicurezza del gruppo AncheCasa, in tutta Italia.</p></div>
+    <div><h4>AncheSicura</h4><a href="servizi.html">Servizi</a><a href="corsi.html">Corsi online</a><a href="progetti.html">Settori</a><a href="italia.html">Tutta Italia</a><a href="chi-siamo.html">Chi siamo</a><a href="contatti.html">Contatti</a></div>
+    <div><h4>Società della sicurezza</h4><a href="rete.html">Entra nella rete</a><a href="rete.html#requisiti">Chi cerchiamo</a><a href="rete.html#candidatura">Candidatura</a></div>
+        <div><h4>Una divisione di</h4><a href="https://www.anchecasa.it/" class="logo-ac"><img src="assets/anchecasa-negativo.png" alt="AncheCasa · Costruiamo fiducia"></a></div>
+  </div>
+  <div class="basso"><span>AncheSicura è una divisione di AncheCasa, marchio di Palumbo Investments Srl. Tutti i diritti riservati.</span>
+    <nav aria-label="Informazioni legali"><a href="https://www.anchecasa.it/privacy.html">Privacy</a><a href="https://www.anchecasa.it/cookie.html">Cookie</a><a href="https://www.anchecasa.it/note-legali.html">Note legali</a></nav></div>
+</div></footer>
+<script src="js/ac.js?v=1"></script>
+<script src="js/sicura.js?v=1"></script>
+</body>
+</html>

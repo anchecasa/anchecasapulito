@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AncheCasa · Costruiamo fiducia</title>
+<meta name="description" content="Artigiani, imprese e fornitori della tua zona. Ristrutturazioni, appalti e app per la tua attività.">
+<meta name="theme-color" content="#16304D">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32x32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=DM+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="css/ac.css?v=2">
+</head>
+<body data-page="home">
+<a class="skip" href="#contenuto">Vai al contenuto</a>
+<div class="nota-anteprima">Anteprima del nuovo sito · non è online</div>
+<header class="testata"><div class="wrap">
+  <a class="marchio" href="index.html" aria-label="AncheCasa, home"><img src="assets/logo-colore.png" alt="AncheCasa · Costruiamo fiducia"></a>
+  <nav class="menu" id="menu" aria-label="Menu principale"><div class="gruppo"><button type="button" class="apri" aria-expanded="false" aria-controls="g-casa">Per la casa<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="tendina" id="g-casa"><a href="trova.html"><b>Trova artigiano</b><small>Video di 5 secondi, artigiani in zona</small></a><a href="supermastro.html"><b>SuperMastro</b><small>Il pronto intervento per i guasti</small></a><a href="ristruttura.html"><b>Ristruttura casa</b><small>AncheCasa general contractor, con garanzie</small></a><a href="bacheca.html"><b>Bacheca annunci</b><small>Case, affitti, alloggi studenti, lavoro</small></a></div></div><div class="gruppo"><button type="button" class="apri" aria-expanded="false" aria-controls="g-aziende">Per le aziende<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="tendina" id="g-aziende"><a href="app.html"><b>App per la tua attività</b><small>Un'app per ogni mestiere, con l'Ufficio</small></a><a href="appalti.html"><b>Appalti e subappalti</b><small>General contractor, imprese e fornitori</small></a><a href="opportunita.html"><b>Opportunità</b><small>Club riservato, solo su invito</small></a><a href="anchevoice.html"><b>AncheVoice</b><small>Il centralino unico</small></a><a href="https://sicura.anchecasa.it"><b>AncheSicura</b><small>La sicurezza di AncheCasa</small></a></div></div><div class="gruppo"><button type="button" class="apri" aria-expanded="false" aria-controls="g-lavora">Lavora con noi<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="tendina" id="g-lavora"><a href="agenti.html"><b>Diventa agente</b><small>Porti persone e aziende nella rete</small></a><a href="partner.html"><b>Diventa partner</b><small>La tua impresa col marchio AncheCasa</small></a><a href="citta.html"><b>AncheCasa nella tua città</b><small>Le città d'Italia</small></a></div></div><a class="voce" href="come-funziona.html">Come funziona</a><a class="voce" href="prezzi.html">Prezzi</a></nav>
+  <div class="azioni">
+    <a class="accedi" href="https://areaprivata.anchecasa.it/">Accedi</a>
+    <a class="btn" href="iscriviti.html">Iscriviti</a>
+    <button class="hamburger" id="hamburger" type="button" aria-label="Apri il menu" aria-expanded="false" aria-controls="menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  </div>
+</div></header>
+<main id="contenuto">
+<section class="hero">
+  <img src="img/hero/home.jpg" alt="Cantiere AncheCasa in una via di città">
+  <div class="wrap">
+    <p class="kicker">AncheCasa · Costruiamo fiducia</p>
+    <h1>Di chi hai bisogno<br><span class="acc">oggi?</span></h1>
+    <p class="lead">Artigiani, imprese e fornitori della tua zona. Scrivi cosa ti serve, ricevi i preventivi, chiudi in chat.</p>
+    <form class="cerca" id="cerca" autocomplete="off" role="search">
+      <label><span>Cosa ti serve?</span><input id="q" type="text" placeholder="Es. idraulico, ristrutturazione, subappalto"></label>
+      <label class="dove"><span>Dove?</span><input id="dove" type="text" placeholder="Città o CAP"></label>
+      <button class="btn" type="submit"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>Cerca</button>
+      <div class="sugg" id="sugg" hidden></div>
+    </form>
+    <div class="chips"><b>Più cercati:</b><button type="button" data-q="Idraulico">Idraulico</button><button type="button" data-q="Elettricista">Elettricista</button><button type="button" data-q="Imbianchino">Imbianchino</button><button type="button" data-q="Ristrutturazione">Ristrutturazione</button><button type="button" data-q="Subappalto">Subappalto</button></div>
+    <a class="sos" href="trova.html"><i>▶</i>Guasto in casa? Fai un video di 5 secondi e trovi l'artigiano in zona</a>
+  </div>
+</section>
+<section class="sez"><div class="wrap">
+  <div class="testa"><div><h2>Cosa puoi fare con AncheCasa</h2><p>Scegli da dove partire.</p></div></div>
+  <div class="porte">
+    <a class="carta-foto grande" href="ristruttura.html"><img src="img/foto/hero.jpg" alt="Cantiere AncheCasa con il furgone e lo striscione" loading="lazy"><div class="t">
+      <p class="kicker" style="margin:0">AncheCasa general contractor</p><h3>Ristruttura casa con AncheCasa</h3>
+      <p>Un solo referente e un solo contratto. I lavori li fanno le imprese partner AncheCasa della tua città, e AncheCasa ne risponde.</p>
+      <ul class="lista"><li><strong>Imprese selezionate</strong>, una per una.</li><li><strong>Fideiussione</strong> sul lavoro e <strong>conto dedicato</strong> per i pagamenti.</li><li><strong>L'app del tuo cantiere</strong>: segui tutto e segnali, AncheCasa interviene.</li><li><strong>Sopralluogo gratuito</strong> e preventivo unico.</li></ul>
+      <span class="vai">Chiedi un sopralluogo →</span></div></a>
+    <a class="carta-foto " href="trova.html"><img src="img/foto/priv-pittore.jpg" alt="" loading="lazy"><div class="t"><h3>Trova l'artigiano in zona</h3><p>Un video o una foto del lavoro, e ti rispondono gli artigiani più vicini.</p><span class="vai">Trova artigiano →</span></div></a>
+    <a class="carta-foto " href="bacheca.html"><img src="img/foto/studenti.jpg" alt="" loading="lazy"><div class="t"><h3>Bacheca annunci</h3><p>Case in vendita e in affitto, alloggi per studenti, lavoro. Aperta a tutti, con la chat.</p><span class="vai">Apri la bacheca →</span></div></a>
+    <a class="carta-foto " href="appalti.html"><img src="img/foto/az-cantiere-app.jpg" alt="" loading="lazy"><div class="t"><h3>Appalti e subappalti</h3><p>I general contractor trovano imprese e fornitori di materiali e servizi.</p><span class="vai">Vai agli appalti →</span></div></a>
+    <a class="carta-foto " href="app.html"><img src="img/foto/az-luogo-hotel.jpg" alt="" loading="lazy"><div class="t"><h3>App per la tua attività</h3><p>Impresa, artigiano, condominio, hotel, negozio: l'app del tuo mestiere.</p><span class="vai">Scopri le app →</span></div></a>
+    <a class="carta-foto " href="partner.html"><img src="img/foto/card-villetta.jpg" alt="" loading="lazy"><div class="t"><h3>Diventa partner nella tua città</h3><p>La tua impresa col marchio AncheCasa, lavori assegnati e app incluse.</p><span class="vai">Candida l'impresa →</span></div></a>
+  </div>
+</div></section>
+<section class="sez blu"><div class="wrap">
+  <div class="testa"><div><p class="kicker">Perché AncheCasa</p><h2>Cambiamo il modo di fare impresa.</h2><p style="color:rgba(255,255,255,.82)">Un'azienda sola che mette dalla stessa parte chi cerca e chi lavora.</p></div><a class="btn" href="chi-siamo.html">Chi siamo</a></div>
+  <div class="griglia tre">
+    <div><h3 style="color:#fff">Per i privati, tutto gratis</h3><p style="color:rgba(255,255,255,.82)">Artigiano in zona, bacheca, chat e sopralluogo senza pagare nulla. Solo vantaggi.</p></div>
+    <div><h3 style="color:#fff">Per chi lavora, lavoro vero</h3><p style="color:rgba(255,255,255,.82)">Richieste del tuo mestiere nella tua zona, app per la tua attività, appalti e forniture.</p></div>
+    <div><h3 style="color:#fff">Per tutti, fiducia</h3><p style="color:rgba(255,255,255,.82)">Imprese selezionate, garanzie per iscritto e un referente che risponde.</p></div>
+  </div>
+</div></section>
+<section class="sez carta"><div class="wrap duo">
+  <div><p class="kicker">Costruiamo fiducia, con te</p><h2>Ristrutturi con AncheCasa?<br>Sei garantito.</h2>
+    <ul class="lista"><li><strong>Imprese selezionate</strong> da AncheCasa, una per una.</li><li><strong>Fideiussione</strong> sul lavoro e <strong>conto dedicato</strong> per i tuoi pagamenti.</li><li><strong>Un solo contratto</strong> con AncheCasa, general contractor.</li><li><strong>La tua app</strong>: segui tutto, segnali, AncheCasa interviene.</li></ul>
+    <div class="btns" style="margin-top:24px"><a class="btn" href="ristruttura.html#garanzie">Le nostre garanzie</a><a class="btn linea" href="iscriviti.html#privato">Iscriviti gratis</a></div></div>
+  <div class="telefono" aria-hidden="true"><div class="schermo"><div class="barra"><img src="assets/logo-colore.png" alt=""><span>Il mio cantiere</span></div><div class="corpo"><div class="riga blu"><b>Bagno e cucina</b><small style="color:rgba(255,255,255,.75)">Avanzamento 60%</small></div><div class="riga"><b>Foto di oggi</b><small>Posa delle piastrelle</small></div><div class="riga"><b>Documenti e pagamenti</b><small>Contratto, fideiussione, SAL</small></div><div class="riga"><b>Chat con il referente</b><small>Il tuo referente AncheCasa</small></div><div class="riga"><b>Prossima fase</b><small>Impianto elettrico</small></div><div class="riga arancio">Segnala un problema</div></div><div class="tabbar"><span class="">Piazza</span><span class="">Pubblica</span><span class="on">Richieste</span><span class="">Profilo</span></div></div></div>
+</div></section>
+<section class="sez blu"><div class="wrap duo">
+  <div><p class="kicker">SuperMastro · un servizio AncheCasa</p><h2>Guasto in casa?<br>Bastano 5 secondi.</h2>
+    <p style="color:rgba(255,255,255,.82)">Riprendi il guasto con il telefono. Capiamo che mestiere serve e ti mostriamo gli artigiani della tua zona: prima gli iscritti AncheCasa, poi i più vicini sulla mappa.</p>
+    <div class="btns" style="margin-top:24px"><a class="btn" href="trova.html">Fai il video</a><a class="btn chiaro" href="supermastro.html">Come funziona</a></div></div>
+  <img src="img/foto/sm-video.jpg" alt="Con SuperMastro si riprende il guasto per 5 secondi" loading="lazy">
+</div></section>
+<section class="sez"><div class="wrap">
+  <div class="testa"><div><h2>Come funziona</h2><p>Tre passi, dal telefono o dal computer.</p></div><a class="btn linea" href="come-funziona.html">Scopri tutto</a></div>
+  <div class="passi"><div class="passo"><div><h3>Dici cosa ti serve</h3><p>Poche righe, la zona e un video o una foto.</p></div></div><div class="passo"><div><h3>Ti rispondono</h3><p>Solo chi fa quel lavoro, nella tua zona.</p></div></div><div class="passo"><div><h3>Scegli e chiudi in chat</h3><p>Preventivo, accordo e documenti restano lì.</p></div></div></div>
+</div></section>
+<section class="sez carta"><div class="wrap">
+  <div class="testa"><div><h2>Tutti i servizi</h2><p>Un marchio, tanti strumenti per la casa e per il lavoro.</p></div><a class="btn linea" href="servizi.html">Vedi tutti</a></div>
+  <div class="griglia">
+    <a class="box" href="anchevoice.html"><span class="stato breve">A breve</span><span class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H8l-4 4z"/></svg></span><h3>AncheVoice</h3><p>Il centralino unico per ufficio, cantiere e artigiani.</p></a>
+    <a class="box" href="https://sicura.anchecasa.it"><span class="stato ">Attivo</span><span class="ico"><img class="ico-logo" src="assets/anchesicura-payoff-colore.png" alt="AncheSicura · La sicurezza di AncheCasa"></span><h3>AncheSicura</h3><p>La sicurezza di AncheCasa: sicurezza sul lavoro, corsi, medicina e documenti.</p></a>
+    <a class="box" href="opportunita.html"><span class="stato ris">Area riservata</span><span class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3"/></svg></span><h3>Opportunità</h3><p>Club riservato: progetti portati dagli agenti e controllati da AncheCasa, per imprese selezionate.</p></a>
+    <a class="box" href="agenti.html"><span class="ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2.5"/><circle cx="5" cy="18" r="2.5"/><circle cx="19" cy="18" r="2.5"/><path d="M12 7.5v4M12 11.5L6.5 16M12 11.5l5.5 4.5"/></svg></span><h3>Diventa agente</h3><p>Porti persone e aziende nella rete, il guadagno resta tuo.</p></a>
+  </div>
+</div></section>
+<section class="sez"><div class="wrap">
+  <div class="banner"><img src="img/hero/citta.jpg" alt="Una città italiana"><div class="t"><p class="kicker">Tutta Italia</p><h2>AncheCasa arriva nella tua città</h2><p>Cerchiamo imprese partner città per città. Guarda la tua.</p><div class="citta"><a href="citta.html#roma">Roma</a><a href="citta.html#milano">Milano</a><a href="citta.html#napoli">Napoli</a><a href="citta.html#torino">Torino</a><a href="citta.html#palermo">Palermo</a><a href="citta.html#genova">Genova</a><a href="citta.html#bologna">Bologna</a><a href="citta.html#firenze">Firenze</a></div></div></div>
+</div></section>
+</main>
+<footer class="piede"><div class="wrap">
+  <div class="col">
+    <div><img src="assets/logo-negativo.png" alt="AncheCasa · Costruiamo fiducia"><p style="margin-top:14px;max-width:260px">Artigiani, imprese, fornitori e servizi per la casa e il lavoro, in tutta Italia.</p></div>
+    <div><h4>Per la casa</h4><a href="trova.html">Trova artigiano</a><a href="supermastro.html">SuperMastro · video 5 secondi</a><a href="ristruttura.html">Ristruttura casa</a><a href="bacheca.html">Bacheca annunci</a></div>
+    <div><h4>Per le aziende</h4><a href="app.html">App per la tua attività</a><a href="appalti.html">Appalti e subappalti</a><a href="anchevoice.html">AncheVoice</a><a href="https://sicura.anchecasa.it">AncheSicura</a><a href="opportunita.html">Opportunità</a></div>
+    <div><h4>Lavora con noi</h4><a href="agenti.html">Diventa agente</a><a href="partner.html">Diventa partner</a><a href="citta.html#roma">AncheCasa nelle città</a></div>
+    <div><h4>AncheCasa</h4><a href="come-funziona.html">Come funziona</a><a href="servizi.html">Tutti i servizi</a><a href="prezzi.html">Prezzi</a><a href="faq.html">Domande frequenti</a><a href="chi-siamo.html">Chi siamo</a><a href="contatti.html">Contatti</a></div>
+  </div>
+  <div class="basso"><span>AncheCasa è un marchio di Palumbo Investments Srl. Tutti i diritti riservati.</span>
+    <nav aria-label="Informazioni legali"><a href="privacy.html">Privacy</a><a href="cookie.html">Cookie</a><a href="note-legali.html">Note legali</a></nav></div>
+</div></footer>
+<script>window.AC_APP=[{"id": "imprese-edili", "nome": "Imprese edili"}, {"id": "artigiani", "nome": "Artigiani e installatori"}, {"id": "subappaltatori", "nome": "Subappaltatori"}, {"id": "impiantisti", "nome": "Impiantisti"}, {"id": "condominio", "nome": "Condominio e amministratori"}, {"id": "materiali-edili", "nome": "Materiali edili"}, {"id": "noleggio-attrezzature", "nome": "Noleggio attrezzature"}, {"id": "traslochi", "nome": "Traslochi"}, {"id": "facchinaggio", "nome": "Facchinaggio"}, {"id": "pulizie", "nome": "Pulizie"}, {"id": "manutenzione-stabili", "nome": "Manutenzione stabili"}, {"id": "hotel", "nome": "Hotel"}, {"id": "ristoranti", "nome": "Ristoranti"}, {"id": "negozi", "nome": "Negozi"}, {"id": "capannoni-logistica", "nome": "Capannoni e logistica"}, {"id": "studi-tecnici", "nome": "Studi tecnici"}, {"id": "consulenti", "nome": "Consulenti"}, {"id": "fornitori-it", "nome": "Fornitori IT"}, {"id": "agenzie-immobiliari", "nome": "Agenzie immobiliari"}];</script>
+<script src="js/ac.js?v=1"></script>
+</body>
+</html>

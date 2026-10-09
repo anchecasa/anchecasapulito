@@ -1,0 +1,32 @@
+name: Supabase · applica migrazioni
+
+on:
+  push:
+    branches: [main]
+    paths: ["supabase/migrations/**"]
+  workflow_dispatch:
+
+jobs:
+  migrazioni:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Controlla il segreto
+        id: segreto
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          if [ -z "$SUPABASE_DB_URL" ]; then
+            echo "Segreto SUPABASE_DB_URL non impostato: migrazioni non applicate. Vedi LEGGIMI-GITHUB.md." >> "$GITHUB_STEP_SUMMARY"
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Installa psql
+        if: steps.segreto.outputs.ok == 'true'
+        run: sudo apt-get update -q && sudo apt-get install -y -q postgresql-client
+      - name: Applica
+        if: steps.segreto.outputs.ok == 'true'
+        env:
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: bash scripts/applica-migrazioni.sh

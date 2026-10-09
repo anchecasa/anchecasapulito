@@ -1,0 +1,63 @@
+PALETTE ANCHECASA · logo ufficiale con payoff «Costruiamo fiducia»
+CMYK e Pantone sono indicativi: da confermare con la tipografia.
+
+Blu AncheCasa
+  HEX #16304D
+  RGB 22 48 77
+  CMYK C100 M80 Y35 K35
+  Pantone 2767 C
+  Uso: Tetto, «Anche», fondi scuri
+
+Arancio AncheCasa
+  HEX #E56B10
+  RGB 229 107 16
+  CMYK C0 M65 Y100 K5
+  Pantone 1595 C
+  Uso: Finestra, «Casa», pulsanti
+
+Blu notte
+  HEX #0B1A2C
+  RGB 11 26 44
+  CMYK C95 M80 Y45 K60
+  —
+  Uso: Fondi mail e aree riservate
+
+Blu medio
+  HEX #2C4A6E
+  RGB 44 74 110
+  CMYK C90 M65 Y30 K15
+  —
+  Uso: Testi secondari, bordi
+
+Arancio chiaro
+  HEX #FFF1E4
+  RGB 255 241 228
+  CMYK C0 M6 Y12 K0
+  —
+  Uso: Fondi di evidenza
+
+Grigio carta
+  HEX #EEF2F7
+  RGB 238 242 247
+  CMYK C6 M2 Y0 K2
+  —
+  Uso: Fondi delle pagine
+
+Nero
+  HEX #141C26
+  RGB 20 28 38
+  CMYK C80 M65 Y45 K75
+  —
+  Uso: Un colore, stampa
+
+Bianco
+  HEX #FFFFFF
+  RGB 255 255 255
+  CMYK C0 M0 Y0 K0
+  —
+  Uso: Logo in negativo, fondi
+
+CARATTERI
+  Logo: Inter Display ExtraBold (già in tracciati)
+  Payoff: Inter Display SemiBold, maiuscolo spaziato, largo quanto la scritta AncheCasa
+  Testi: DM Sans / Montserrat (presentazioni)

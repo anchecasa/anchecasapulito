@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iscriviti · AncheCasa</title>
+  <meta name="description" content="Chiedi l’ingresso ad AncheCasa come privato, azienda all’albo fornitori o agente. La verifica la fa l’amministrazione.">
+  <!-- Anteprima dei link condivisi (WhatsApp, Telegram, Facebook...): URL assoluti, obbligatori per og:image. -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="AncheCasa">
+  <meta property="og:title" content="Sei invitato su AncheCasa">
+  <meta property="og:description" content="Una piazza sola per privati, aziende e agenti. Iscriviti da questo link.">
+  <meta property="og:url" content="https://areaprivata.anchecasa.it/iscriviti.html">
+  <meta property="og:image" content="https://areaprivata.anchecasa.it/img/anteprima-invito.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Logo AncheCasa">
+  <meta property="og:locale" content="it_IT">
+  <link rel="icon" href="assets/logo/favicon.jpg" type="image/jpeg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/sito.css">
+</head>
+<body data-page="iscriviti">
+  <a class="skip" href="#contenuto">Vai al contenuto</a>
+  <div id="site-header"></div>
+  <main id="contenuto">
+    <section class="page-hero">
+      <img class="bg" src="img/hero.jpg" alt="">
+      <div class="wrap">
+        <p class="crumbs"><a href="https://anchecasa.it/">Home</a> · Iscriviti</p>
+        <h1>Chiedi l’ingresso.<br><span class="accent">Poi la rete.</span></h1>
+        <p class="lead">L’amministrazione verifica ogni richiesta, poi ti contatta.</p>
+      </div>
+    </section>
+    <section class="section">
+      <div class="wrap" data-tabs="privato">
+        <div class="seg">
+          <button type="button" data-tab="privato">Privato</button>
+          <button type="button" data-tab="azienda">Azienda</button>
+          <button type="button" data-tab="agente">Agente</button>
+        </div>
+        <div class="panel is-on" data-panel="privato">
+          <form class="form" data-store="anchecasa-sito-privato">
+            <label>Nome <input name="nome" required></label>
+            <label>Cognome <input name="cognome" required></label>
+            <label>Mail <input type="email" name="email" required autocomplete="email"></label>
+            <label>Password per accedere <input type="password" name="password" required minlength="8" autocomplete="new-password"><span class="form-hint">Almeno 8 caratteri. Ti servirà per entrare nella tua area.</span></label>
+            <label class="check"><input type="checkbox" name="privacy" required><span>Ho letto l’<a href="https://anchecasa.it/privacy.html" target="_blank" rel="noopener">informativa privacy</a> e acconsento al trattamento dei miei dati.</span></label>
+            <button class="btn-cotto" type="submit">Invia richiesta privato</button>
+            <div class="form-ok" role="status">Richiesta inviata. Ti contatteremo dopo la verifica.</div>
+            <div class="form-err" role="alert"></div>
+          </form>
+        </div>
+        <div class="panel" data-panel="azienda">
+          <form class="form" data-store="anchecasa-sito-azienda">
+            <label>Ragione sociale <input name="ragione" required></label>
+            <label>Mail <input type="email" name="email" required autocomplete="email"></label>
+            <label>Password per accedere <input type="password" name="password" required minlength="8" autocomplete="new-password"><span class="form-hint">Almeno 8 caratteri. Ti servirà per entrare nella tua area.</span></label>
+            <label>Regione
+              <select name="zona" required>
+                <option value="">Scegli</option>
+                <option value="abruzzo">Abruzzo</option>
+                <option value="basilicata">Basilicata</option>
+                <option value="calabria">Calabria</option>
+                <option value="campania">Campania</option>
+                <option value="emilia_romagna">Emilia-Romagna</option>
+                <option value="friuli_venezia_giulia">Friuli-Venezia Giulia</option>
+                <option value="lazio">Lazio</option>
+                <option value="liguria">Liguria</option>
+                <option value="lombardia">Lombardia</option>
+                <option value="marche">Marche</option>
+                <option value="molise">Molise</option>
+                <option value="piemonte">Piemonte</option>
+                <option value="puglia">Puglia</option>
+                <option value="sardegna">Sardegna</option>
+                <option value="sicilia">Sicilia</option>
+                <option value="toscana">Toscana</option>
+                <option value="trentino_alto_adige">Trentino-Alto Adige</option>
+                <option value="umbria">Umbria</option>
+                <option value="valle_d_aosta">Valle d’Aosta</option>
+                <option value="veneto">Veneto</option>
+              </select>
+            </label>
+            <label class="check"><input type="checkbox" name="privacy" required><span>Ho letto l’<a href="https://anchecasa.it/privacy.html" target="_blank" rel="noopener">informativa privacy</a> e acconsento al trattamento dei dati.</span></label>
+            <button class="btn-cotto" type="submit">Chiedi l’ingresso</button>
+            <div class="form-ok" role="status">Richiesta inviata. Ti contatteremo dopo la verifica.</div>
+            <div class="form-err" role="alert"></div>
+          </form>
+        </div>
+        <div class="panel" data-panel="agente">
+          <form class="form" data-store="anchecasa-sito-agente">
+            <label>Nome e cognome <input name="nome" required></label>
+            <label>Mail <input type="email" name="email" required autocomplete="email"></label>
+            <label>Password per accedere <input type="password" name="password" required minlength="8" autocomplete="new-password"><span class="form-hint">Almeno 8 caratteri. Ti servirà per entrare nella tua area.</span></label>
+            <label>Zona <input name="zona" required></label>
+            <label>Curriculum <input type="file" name="cv" accept=".pdf,.doc,.docx"></label>
+            <label>Portfolio <input type="file" name="portfolio" accept=".pdf,.zip,image/*"></label>
+            <label>Presentati <textarea name="presentati" placeholder="Chi sei, cosa hai fatto, perché questa rete."></textarea></label>
+            <p class="form-hint">L’agenzia immobiliare si iscrive come azienda, non da qui.</p>
+            <label class="check"><input type="checkbox" name="privacy" required><span>Ho letto l’<a href="https://anchecasa.it/privacy.html" target="_blank" rel="noopener">informativa privacy</a> e acconsento al trattamento dei miei dati.</span></label>
+            <button class="btn-cotto" type="submit">Invia candidatura</button>
+            <div class="form-ok" role="status">Candidatura inviata. Ti contatteremo dopo la verifica.</div>
+            <div class="form-err" role="alert"></div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+  <div id="site-footer"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/iscrizione.js"></script>
+</body>
+</html>

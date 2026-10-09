@@ -1,0 +1,139 @@
+/* Pannello admin · Task (02.10.2026). File separato per non toccare dashboard.css (lo modifica anche il collega). */
+.tk-barra { margin: 0 0 12px; }
+.tk-filtri { margin: 0 0 10px; }
+.tk-lista { display: grid; gap: 8px; }
+.tk {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px 14px;
+}
+.tk.is-scaduto { border-color: #e7b9b3; background: #fff8f7; }
+.tk.is-fatto { background: #f6f8fa; }
+.tk.is-fatto .tk-titolo { text-decoration: line-through; color: var(--muted); }
+.tk-testa { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 10px; }
+.tk-spunta { width: 18px; height: 18px; flex: none; accent-color: var(--navy); cursor: pointer; }
+.tk-titolo {
+  flex: 1 1 220px;
+  min-width: 0;
+  text-align: left;
+  background: none;
+  border: 0;
+  padding: 4px 0;
+  font: inherit;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--navy);
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+.tk-titolo:hover { text-decoration: underline; }
+.tk-meta, .tk-scad, .tk-n { font-size: 12px; color: var(--muted); white-space: nowrap; }
+.tk.is-scaduto .tk-scad { color: var(--danger); font-weight: 600; }
+.tk-dett { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); }
+.tk-desc { margin: 0 0 12px; font-size: 13px; line-height: 1.5; white-space: pre-wrap; overflow-wrap: anywhere; color: #3d5165; }
+.tk-commenti { margin: 12px 0; display: grid; gap: 8px; }
+.tk-com { background: #f4f7fb; border-radius: 8px; padding: 8px 10px; font-size: 13px; }
+.tk-com p { margin: 4px 0 0; white-space: pre-wrap; overflow-wrap: anywhere; color: #3d5165; }
+.tk-com small { color: var(--muted); }
+.tk-link { background: none; border: 0; padding: 0; font: inherit; font-size: 12px; color: var(--muted); text-decoration: underline; cursor: pointer; }
+.tk-fcom { display: flex; gap: 8px; }
+.tk-fcom input { flex: 1; min-width: 0; height: 36px; border: 1px solid var(--line); border-radius: 8px; padding: 0 10px; font: inherit; font-size: 13px; }
+
+/* Admin · File */
+.fl-drop {
+  display: grid;
+  gap: 4px;
+  justify-items: center;
+  text-align: center;
+  padding: 22px 16px;
+  margin-bottom: 14px;
+  border: 2px dashed #c3d0df;
+  border-radius: 12px;
+  background: #fff;
+  color: var(--navy);
+  cursor: pointer;
+}
+.fl-drop span { font-size: 12px; color: var(--muted); }
+.fl-drop:hover, .fl-drop.is-sopra { border-color: var(--navy); background: #f4f7fb; }
+.fl-cerca { flex: 1 1 200px; min-width: 0; height: 34px; border: 1px solid var(--line); border-radius: 8px; padding: 0 10px; font: inherit; font-size: 13px; }
+.fl-nome { overflow-wrap: anywhere; }
+.fl-task { max-width: 180px; height: 30px; border: 1px solid var(--line); border-radius: 6px; font: inherit; font-size: 12px; background: #fff; }
+.fl-az { white-space: nowrap; text-align: right; }
+.fl-az button { margin-left: 4px; }
+
+/* Admin · Chat e pallino dei non letti */
+.nav-badge {
+  margin-left: auto;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 9px;
+  background: #E56B10;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 18px;
+  text-align: center;
+}
+.tab-it.has-badge { position: relative; }
+.tab-it.has-badge::after {
+  content: "";
+  position: absolute;
+  top: 6px;
+  left: calc(50% + 8px);
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #E56B10;
+  border: 2px solid #fff;
+}
+.ch-card { display: grid; gap: 12px; }
+.ch-lista {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+  height: min(58vh, 520px);
+  overflow-y: auto;
+  padding: 4px 2px;
+}
+.ch-msg { display: grid; gap: 2px; justify-items: start; max-width: 100%; }
+.ch-msg.mio { justify-items: end; }
+.ch-nome { font-size: 11px; color: var(--muted); }
+.ch-bolla {
+  max-width: min(520px, 88%);
+  padding: 8px 12px;
+  border-radius: 12px 12px 12px 4px;
+  background: #eef2f7;
+  color: #1f2f43;
+  font-size: 13px;
+  line-height: 1.45;
+}
+.ch-msg.mio .ch-bolla { border-radius: 12px 12px 4px 12px; background: #dfe9f6; }
+.ch-bolla p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.ch-bolla p + .ch-chip, .ch-bolla .ch-chip + .ch-chip { margin-top: 6px; }
+.ch-chip {
+  display: inline-block;
+  max-width: 100%;
+  padding: 4px 10px;
+  border: 1px solid #c3d0df;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--navy);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+.ch-chip:hover { border-color: var(--navy); }
+.ch-chip.is-off { color: var(--muted); font-weight: 400; cursor: default; }
+.ch-form { display: grid; gap: 8px; }
+.ch-form textarea { width: 100%; resize: vertical; border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; font: inherit; font-size: 13px; box-sizing: border-box; }
+.ch-sotto { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.ch-sotto select { flex: 1 1 140px; min-width: 0; height: 34px; border: 1px solid var(--line); border-radius: 8px; font: inherit; font-size: 12px; background: #fff; }
+@media (max-width: 640px) {
+  .tk-meta, .tk-scad, .tk-n { white-space: normal; }
+  .tk-fcom { flex-direction: column; }
+}

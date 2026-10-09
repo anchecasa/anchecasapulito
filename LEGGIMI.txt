@@ -1,0 +1,39 @@
+AncheCasa, cartella pulita dell'8 ottobre 2026.
+Solo file ufficiali e aggiornati. Gli originali in ANCHECASA-LAVORO non sono stati modificati.
+
+Apri questa cartella in Cursor.
+
+marchio
+Logo ufficiale con payoff Costruiamo fiducia, logo per le mail, palette, favicon, simbolo e immagini social.
+Parte da marchio\1-logo-con-payoff
+Palette in marchio\3-palette
+Favicon in marchio\4-favicon
+
+sito
+Pagine attuali di www.anchecasa.it.
+Prima pagina: sito\index.html
+Questa cartella è collegata al progetto Vercel anchecasa-pulito.
+Indirizzo del progetto: https://anchecasa-pulito.vercel.app
+Il dominio anchecasa.it resta sul progetto anchecasa-manutenzione.
+Favicon ufficiale nella radice di sito.
+
+area-privata
+Accessi ufficiali di areaprivata.anchecasa.it.
+Ingresso: area-privata\index.html
+Nuova password: area-privata\nuova-password.html
+Invito: area-privata\benvenuto.html
+Iscrizione: area-privata\iscriviti.html
+Dashboard: area-privata\dashboard\index.html
+
+mail
+Solo le tre mail ufficiali di invito: privato, azienda e agente, con il logo e il piede del marchio.
+Si aprono da mail\invito\ufficiali\
+Il generatore è mail\invito\mail-invito.js
+La copia per la funzione online è mail\invito\funzione-caricata-invia-invito-marketplace.ts
+
+sicura
+Sito attuale di sicura.anchecasa.it.
+Prima pagina: sicura\index.html
+
+CLAUDE.md
+Registro di tutte le modifiche al progetto, con la regola fissa: ogni intervento va annotato lì, la voce più recente in alto.

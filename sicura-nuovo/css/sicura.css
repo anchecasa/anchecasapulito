@@ -1,0 +1,15 @@
+/* AncheSicura: solo le differenze rispetto al sistema AncheCasa */
+.marchio img { height: 52px; width: auto; }
+@media (max-width: 560px) { .marchio img { height: 40px; } }
+.menu .solo-tel { display: none; }
+.testata .accedi { white-space: nowrap; }
+@media (max-width: 1180px) { .testata .accedi { display: none; } }
+@media (max-width: 960px) { .menu.aperto .solo-tel { display: block; } }
+.piede .logo-ac img { height: 40px; width: auto; margin-top: 6px; }
+.piede .col > div:first-child img { height: 46px; width: auto; }
+.carta-foto .foto { position: relative; }
+.carta-foto .etichetta { position: absolute; top: 12px; left: 12px; background: var(--blu); color: #fff; font-weight: 700; font-size: 13px; padding: 5px 11px; border-radius: 999px; }
+.indice { display: flex; flex-wrap: wrap; gap: 8px; }
+.indice a { padding: 9px 16px; border-radius: 999px; border: 1.5px solid var(--linea); color: var(--blu); font-weight: 700; }
+.indice a:hover { border-color: var(--arancio); color: var(--arancio); }
+.kicker svg { vertical-align: middle; color: var(--arancio); }

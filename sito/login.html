@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Accesso · AncheCasa</title>
+  <meta name="description" content="Accedi ad AncheCasa. Se non hai un accesso, iscriviti come privato, azienda o agente.">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#16304d">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/sito.css?v=legal12">
+</head>
+<body data-page="login">
+  <a class="skip" href="#contenuto">Vai al contenuto</a>
+  <div id="site-header"></div>
+  <main id="contenuto">
+    <section class="section">
+      <div class="wrap">
+        <div class="login-box">
+          <h1>Entra in AncheCasa</h1>
+          <p class="lead">Per pubblicare una richiesta serve un accesso. Se non ce l’hai, iscriviti come privato, azienda o agente.</p>
+          <form class="login-campi" id="login-form">
+            <input type="email" name="email" placeholder="Email" autocomplete="username" required>
+            <input type="password" name="password" placeholder="Password" autocomplete="current-password" required>
+            <p class="login-error" id="login-error" role="alert" hidden></p>
+            <div class="login-azioni">
+              <button class="btn-cotto" type="submit">Accedi</button>
+              <a class="btn-line" id="iscriviti-btn" href="/iscriviti">Iscriviti</a>
+            </div>
+          </form>
+          <p class="login-stato" id="login-stato" hidden>Accesso aperto.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="iscriviti-pannello" aria-labelledby="iscriviti-titolo">
+    <div class="iscriviti-sheet" data-tabs="privato">
+      <h2 id="iscriviti-titolo">Iscriviti</h2>
+      <p class="lead">Scegli come entri. La richiesta resta in questo browser e la legge l’amministrazione.</p>
+      <div class="seg">
+        <button type="button" data-tab="privato">Privato</button>
+        <button type="button" data-tab="azienda">Azienda</button>
+        <button type="button" data-tab="agente">Agente</button>
+      </div>
+      <div class="panel is-on" data-panel="privato">
+        <form class="form" data-store="anchecasa-sito-privato">
+          <label>Nome <input name="nome" required></label>
+          <label>Cognome <input name="cognome" required></label>
+          <label>Mail <input type="email" name="email" required></label>
+          <button class="btn-cotto" type="submit">Invia richiesta privato</button>
+          <div class="form-ok">Richiesta registrata in questo browser.</div>
+        </form>
+      </div>
+      <div class="panel" data-panel="azienda">
+        <form class="form" data-store="anchecasa-sito-azienda">
+          <label>Ragione sociale <input name="ragione" required></label>
+          <label>Mail <input type="email" name="email" required></label>
+          <label>Regione
+            <select name="zona" required>
+              <option value="">Scegli</option>
+              <option value="abruzzo">Abruzzo</option>
+              <option value="basilicata">Basilicata</option>
+              <option value="calabria">Calabria</option>
+              <option value="campania">Campania</option>
+              <option value="emilia_romagna">Emilia-Romagna</option>
+              <option value="friuli_venezia_giulia">Friuli-Venezia Giulia</option>
+              <option value="lazio">Lazio</option>
+              <option value="liguria">Liguria</option>
+              <option value="lombardia">Lombardia</option>
+              <option value="marche">Marche</option>
+              <option value="molise">Molise</option>
+              <option value="piemonte">Piemonte</option>
+              <option value="puglia">Puglia</option>
+              <option value="sardegna">Sardegna</option>
+              <option value="sicilia">Sicilia</option>
+              <option value="toscana">Toscana</option>
+              <option value="trentino_alto_adige">Trentino-Alto Adige</option>
+              <option value="umbria">Umbria</option>
+              <option value="valle_d_aosta">Valle d’Aosta</option>
+              <option value="veneto">Veneto</option>
+            </select>
+          </label>
+          <button class="btn-cotto" type="submit">Chiedi l’ingresso</button>
+          <div class="form-ok">Richiesta registrata in questo browser.</div>
+        </form>
+      </div>
+      <div class="panel" data-panel="agente">
+        <form class="form" data-store="anchecasa-sito-agente">
+          <label>Nome e cognome <input name="nome" required></label>
+          <label>Mail <input type="email" name="email" required></label>
+          <label>Zona <input name="zona" required></label>
+          <label>Curriculum <input type="file" name="cv" accept=".pdf,.doc,.docx"></label>
+          <label>Portfolio <input type="file" name="portfolio" accept=".pdf,.zip,image/*"></label>
+          <label>Presentati <textarea name="presentati" placeholder="Chi sei, cosa hai fatto, perché questa rete."></textarea></label>
+          <p class="form-hint">L’agenzia immobiliare si iscrive come azienda, non da qui.</p>
+          <button class="btn-cotto" type="submit">Invia candidatura</button>
+          <div class="form-ok">Candidatura registrata in questo browser.</div>
+        </form>
+      </div>
+      <button class="btn-line iscriviti-chiudi" id="iscriviti-chiudi" type="button">Chiudi</button>
+    </div>
+  </dialog>
+
+  <div id="site-footer"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="js/supabase-client.js"></script>
+  <script src="js/sito.js?v=acc1"></script>
+  <script>
+    (function () {
+      var btn = document.getElementById("iscriviti-btn");
+      var panel = document.getElementById("iscriviti-pannello");
+      var chiudi = document.getElementById("iscriviti-chiudi");
+      var stato = document.getElementById("login-stato");
+      var form = document.getElementById("login-form");
+      var errore = document.getElementById("login-error");
+
+      function dentro() {
+        if (btn) btn.hidden = true;
+        if (form) form.hidden = true;
+        if (stato) stato.hidden = false;
+        if (panel && panel.open) panel.close();
+      }
+      if (chiudi && panel) chiudi.addEventListener("click", function () { panel.close(); });
+      if (panel) {
+        panel.addEventListener("click", function (e) {
+          if (e.target === panel) panel.close();
+        });
+      }
+      if (!window.acDb || !window.acDb.auth) return;
+      window.acDb.auth.getSession().then(function (res) {
+        if (res.data && res.data.session) dentro();
+      });
+      if (!form) return;
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        if (errore) errore.hidden = true;
+        var email = form.elements.email.value.trim();
+        var password = form.elements.password.value;
+        window.acDb.auth.signInWithPassword({ email: email, password: password }).then(function (res) {
+          if (res.error) {
+            if (errore) {
+              errore.hidden = false;
+              errore.textContent = res.error.message === "Invalid login credentials"
+                ? "Email o password non corretti."
+                : "Accesso non riuscito. Riprova.";
+            }
+            return;
+          }
+          dentro();
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

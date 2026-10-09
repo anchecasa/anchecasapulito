@@ -1,0 +1,57 @@
+/* Dati di esempio del prototipo: niente di reale. */
+window.D = {
+  moduli: [
+    { id: "ufficio", nome: "Ufficio", desc: "Clienti, preventivi, fatture, documenti, titolare e operatori", prezzo: 9, ico: "ufficio", base: true },
+    { id: "sicurezza", nome: "Sicurezza", desc: "Dipendenti, corsi, visite, scadenze, patentino QR, firma DPI", prezzo: 9, nota: "fino a 10 dipendenti, poi 0,50 € a dipendente", ico: "scudo", div: "AncheSicura" },
+    { id: "sicantiere", nome: "Sicurezza Cantiere", desc: "Ingressi con QR, verbali del coordinatore, checklist del preposto", prezzo: 19, ico: "casco", div: "AncheSicura" },
+    { id: "cantieri", nome: "Cantiere e SAL", desc: "Giornale dei lavori, presenze, rapportini, SAL, cronoprogramma, DDT da foto", prezzo: 29, ico: "gru" },
+    { id: "gare", nome: "Gare", desc: "Ricerca, analisi del bando con IA, partecipa sì o no, buste, esito e analisi", prezzo: 29, ico: "gara" },
+    { id: "lotti", nome: "Lotti e subappalti", desc: "Pubblica i lotti, ricevi offerte, albo fornitori", prezzo: 9, ico: "lotti" },
+    { id: "centralino", nome: "Centralino AncheVoice", desc: "Un numero, smistamento, segreteria che riassume, chiamate nella pratica", prezzo: 19, ico: "tel", div: "AncheVoice" },
+    { id: "magazzino", nome: "Magazzino e mezzi", desc: "Giacenze, mezzi, manutenzioni", prezzo: 9, ico: "box" },
+    { id: "recensioni", nome: "Recensioni e vetrina", desc: "Profilo pubblico, recensioni verificate, risposte", prezzo: 0, ico: "stella", incluso: true },
+  ],
+  pacchetto: { nome: "Impresa completa", prezzo: 69, invece: 132 },
+  corsi: [
+    { nome: "Lavoratori, parte generale (4 ore)", modo: "Online", prezzo: 29, mercato: 40 },
+    { nome: "Generale + specifica rischio basso (8 ore)", modo: "Online", prezzo: 49, mercato: 70 },
+    { nome: "Lavoratori rischio medio (12 ore)", modo: "Online + aula", prezzo: 129, mercato: 180 },
+    { nome: "Lavoratori rischio alto (16 ore)", modo: "Online + aula", prezzo: 159, mercato: 210 },
+    { nome: "Aggiornamento lavoratori (6 ore)", modo: "Online", prezzo: 45, mercato: 65 },
+    { nome: "Dirigenti (12 ore)", modo: "Online", prezzo: 99, mercato: 143 },
+    { nome: "Datore di lavoro RSPP (16 ore)", modo: "Online", prezzo: 129, mercato: 176 },
+    { nome: "Preposto (12 ore)", modo: "Aula", prezzo: 159, mercato: 220 },
+    { nome: "Antincendio livello 1", modo: "Aula", prezzo: 139, mercato: 200 },
+    { nome: "Antincendio livello 2", modo: "Aula", prezzo: 179, mercato: 250 },
+    { nome: "Primo soccorso gruppo B e C", modo: "Aula", prezzo: 179, mercato: 250 },
+    { nome: "Primo soccorso gruppo A", modo: "Aula", prezzo: 239, mercato: 330 },
+    { nome: "HACCP", modo: "Online", prezzo: 29, mercato: null },
+  ],
+  servizi: [
+    { nome: "Visita medica", prezzo: 29, da: true }, { nome: "POS", prezzo: 59, da: true }, { nome: "DUVRI", prezzo: 69, da: true },
+    { nome: "DVR", prezzo: 199, da: true }, { nome: "PSC", prezzo: 199, da: true }, { nome: "RSPP esterno", prezzo: null },
+  ],
+  dipendenti: [
+    { nome: "Marco R.", mansione: "Muratore", stato: "rosso", cosa: "Corso preposto scaduto da 12 giorni" },
+    { nome: "Luca B.", mansione: "Carpentiere", stato: "giallo", cosa: "Visita medica tra 18 giorni" },
+    { nome: "Andrea P.", mansione: "Gruista", stato: "giallo", cosa: "Abilitazione gru tra 41 giorni" },
+    { nome: "Sara T.", mansione: "Impiegata", stato: "verde", cosa: "Tutto in regola" },
+    { nome: "Paolo M.", mansione: "Elettricista", stato: "verde", cosa: "Tutto in regola" },
+    { nome: "Giorgio F.", mansione: "Manovale", stato: "rosso", cosa: "Formazione specifica mancante" },
+  ],
+  cantieri: [
+    { nome: "Via Garibaldi 12, Roma", tipo: "Ristrutturazione palazzina", av: 62, stato: "verde", sal: "SAL 3 di 5" },
+    { nome: "Scuola Rodari, Latina", tipo: "Appalto pubblico · facciate", av: 28, stato: "giallo", sal: "SAL 1 di 4" },
+    { nome: "Villa Bianchi, Frascati", tipo: "Bagno e cucina", av: 90, stato: "verde", sal: "SAL finale" },
+  ],
+  gare: [
+    { nome: "Manutenzione scuole comunali", ente: "Comune di Latina", importo: "480.000 €", scade: "tra 9 giorni", punti: 82, cat: "OG1 cl. II" },
+    { nome: "Riqualificazione energetica edificio ASL", ente: "ASL Roma 2", importo: "1.250.000 €", scade: "tra 21 giorni", punti: 64, cat: "OG1 cl. III" },
+    { nome: "Rifacimento coperture palestra", ente: "Comune di Aprilia", importo: "210.000 €", scade: "tra 5 giorni", punti: 91, cat: "OG1 cl. I" },
+  ],
+  chiamate: [
+    { chi: "Cliente · Via Garibaldi", ora: "09:12", esito: "Passata al capocantiere", tipo: "verde" },
+    { chi: "Numero nuovo", ora: "10:40", esito: "Segreteria: chiede preventivo bagno", tipo: "arancio" },
+    { chi: "Fornitore laterizi", ora: "11:05", esito: "Persa, richiamare", tipo: "rosso" },
+  ],
+};
