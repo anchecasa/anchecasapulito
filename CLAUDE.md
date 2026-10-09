@@ -13,6 +13,13 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 2026-10-09 15:06 · Cursor
+- Commit `e31e443db6ea53b408b2fc771169a95540c70161` sul ramo main di https://github.com/anchecasa/anchecasapulito. Messaggio: «Magazine: pagina della raccolta e soli tasti Indietro e Avanti».
+- Cartella `sito` pubblicata sul progetto Vercel `anchecasa-pulito` in produzione. Deployment `dpl_d8uCDhg9B2AzFhAQqF5ozr1DZ3QK`, indirizzo https://anchecasa.it.
+- Controllo su https://anchecasa.it/magazine. Da computer (1280 px) e da telefono (390 px): sotto la rivista ci sono solo «‹ Indietro» e «Avanti ›». Pagina 2 è «La raccolta, senza pensieri», con la foto `rifiuti.jpg` (1024×1536) e il modulo «Avvisami quando esce». Pagina 8, Check Bollette: campi vuoti, «Verifica la mia bolletta» spento.
+- Prova del modulo da anchecasa.it: mail prova-magazine-avvisi@anchecasa.it, Comune Roma. Supabase ha risposto 201 e il sito ha scritto «Fatto!». Riga in `marketplace.richieste_iscrizione`, famiglia «privato», dati.modulo «magazine-avvisi». La lettura dell’elenco da qui è negata (manca il permesso di lettura), come per le prove precedenti.
+- File del Magazine non modificati in questo intervento. File annotato: `CLAUDE.md`.
+
 ### 2026-10-09 14:55 · Cursor
 - Commit `d2de8d7689cf06b92de6ae02c66c546efadcab29` sul ramo main di https://github.com/anchecasa/anchecasapulito. Messaggio: «Magazine: Check Bollette come modulo guidato (campi vuoti, 3 passi, risultato dopo la verifica)».
 - Cartella `sito` pubblicata sul progetto Vercel `anchecasa-pulito` in produzione. Deployment `dpl_AEnpmpYaa5U28pzhpwwxUvVANs6T`, indirizzo https://anchecasa.it.
