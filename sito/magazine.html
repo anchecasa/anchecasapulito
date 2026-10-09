@@ -18,12 +18,16 @@
   <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
-  <meta name="theme-color" content="#16304d">
+  <meta name="theme-color" content="#141c28">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="AncheCasa Magazine">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&family=Open+Sans:wght@400;600;700&family=Bodoni+Moda:ital,opsz,wght@0,6..96,600;0,6..96,700;1,6..96,500;1,6..96,600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/ac.css?v=5">
-  <link rel="stylesheet" href="css/magazine.css?v=27">
+  <link rel="stylesheet" href="css/magazine.css?v=30">
   <link rel="preload" as="image" href="magazine/numero-1/copertina.jpg">
 </head>
 <body data-page="magazine">
@@ -46,13 +50,15 @@
       </div>
       <div class="mg-controls">
         <button type="button" class="mg-btn mg-glass" data-act="prev" aria-label="Pagina precedente"><span class="ar" aria-hidden="true">‹</span><span>Indietro</span></button>
+        <a class="mg-share-btn mg-only-phone" href="/" aria-label="Torna al sito AncheCasa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11 12 4l8 7"/><path d="M6 10v10h12V10"/></svg></a>
         <button type="button" class="mg-share-btn" data-act="share" aria-label="Condividi la rivista" aria-haspopup="true" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg></button>
         <button type="button" class="mg-btn mg-glass" data-act="next" aria-label="Pagina successiva"><span>Avanti</span><span class="ar" aria-hidden="true">›</span></button>
+        <button type="button" class="mg-share-btn mg-only-phone" data-act="pieno" aria-label="Schermo intero" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
       </div>
     </div>
   </main>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
   <script src="js/ac.js?v=4"></script>
-  <script src="js/magazine.js?v=27"></script>
+  <script src="js/magazine.js?v=29"></script>
 </body>
 </html>

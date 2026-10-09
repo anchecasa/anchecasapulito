@@ -1,0 +1,44 @@
+/* ADMIN · Magazine (09.10.2026): statistiche della rivista. Vedi js/magazine-admin.js */
+.mga-bar-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 4px; }
+.mga-bar-top .tabs { margin-bottom: 8px; }
+.mga-avviso { display: flex; flex-direction: column; gap: 4px; margin-bottom: 12px; border-left: 4px solid var(--orange); }
+.mga-avviso.demo { border-left-color: var(--navy-soft); }
+.mga-avviso strong { color: var(--navy); font-size: 14px; }
+.mga-avviso span { color: var(--muted); font-size: 13px; }
+.mga-avviso code { background: var(--paper); padding: 1px 5px; border-radius: 4px; font-size: 12px; }
+.mga-kpis .kpi { align-items: flex-start; }
+.mga-kpis .kpi .kpi-sub { color: var(--muted); }
+
+.mga-svg { width: 100%; height: auto; display: block; overflow: visible; }
+.mga-svg .mga-grid { stroke: var(--line); stroke-width: 1; }
+.mga-svg .mga-ax { fill: var(--muted); font-size: 10px; font-family: var(--font); }
+.mga-svg .mga-bar { fill: var(--navy-mid); transition: fill .15s; }
+.mga-svg .mga-hit.is-hover .mga-bar { fill: var(--orange); }
+
+.mga-rows { display: flex; flex-direction: column; gap: 6px; }
+.mga-row { display: grid; grid-template-columns: minmax(110px, 38%) 1fr 52px 36px; align-items: center; gap: 10px; font-size: 12.5px; padding: 2px 4px; border-radius: 6px; }
+.mga-row.is-hover { background: var(--paper); }
+.mga-row .l { color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mga-row .t { height: 10px; background: var(--paper); border-radius: 999px; overflow: hidden; }
+.mga-row .t i { display: block; height: 100%; background: var(--navy-mid); border-radius: 999px; }
+.mga-row.is-hover .t i { background: var(--orange); }
+.mga-row b { text-align: right; color: var(--navy); font-variant-numeric: tabular-nums; }
+.mga-row small { text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; }
+.mga-funnel .mga-row { grid-template-columns: minmax(180px, 32%) 1fr 52px 36px; }
+.mga-h2b { margin-top: 18px !important; }
+.mga-nota { margin: 10px 0 0; font-size: 11.5px; }
+
+.mga-isc-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+.mga-isc-head h2 { display: flex; align-items: center; gap: 8px; margin: 0; }
+.mga-isc-tools { display: flex; gap: 8px; flex-wrap: wrap; }
+.mga-isc-tools input { border: 1px solid var(--line); border-radius: 18px; padding: 6px 12px; font: inherit; font-size: 13px; min-width: 200px; }
+.mga-isc-tools input:focus { outline: 2px solid var(--orange); outline-offset: 0; }
+.mga-iscritti .table-scroll { margin-top: 8px; }
+
+.mga-tip { position: fixed; z-index: 50; pointer-events: none; background: var(--navy-deep); color: #fff; font-size: 12px; font-weight: 600; padding: 6px 9px; border-radius: 6px; box-shadow: 0 8px 18px rgba(26, 51, 79, .25); white-space: nowrap; }
+
+@media (max-width: 980px) {
+  .mga-kpis { grid-template-columns: repeat(2, 1fr); }
+  .mga-row, .mga-funnel .mga-row { grid-template-columns: minmax(90px, 40%) 1fr 44px 32px; gap: 6px; font-size: 12px; }
+  .mga-isc-tools input { min-width: 0; flex: 1; }
+}

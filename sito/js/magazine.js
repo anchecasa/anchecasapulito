@@ -6,6 +6,57 @@
   "use strict";
 
   var NUMERO = { n: 1, data: "Ottobre 2026", prossimo: "1° novembre 2026", cartella: "magazine/numero-1/" };
+
+  /* ---------------- statistiche anonime (09.10.2026) ----------------
+     Conta aperture, pagine viste, Check Bollette, PDF, offerte, condivisioni e iscrizioni.
+     Niente cookie e niente dati personali: "sessione" è un codice casuale che vive finché la scheda è aperta.
+     Città e regione le aggiunge la funzione Vercel /api/mag (sito/api/mag.js). Conta solo su anchecasa.it
+     (per provare altrove: ?stat=prova). Riepilogo nella dashboard admin, pagina "Magazine". */
+  var STAT = (function () {
+    var attivo = /(^|\.)anchecasa\.it$/.test(location.hostname) || /[?&]stat=prova/.test(location.search);
+    var coda = [], visti = {}, timer = null, ses = "";
+    try { ses = sessionStorage.getItem("ac-mag-s") || ""; } catch (e) { /* storage non disponibile */ }
+    if (!ses) {
+      ses = Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+      try { sessionStorage.setItem("ac-mag-s", ses); } catch (e2) { /* storage non disponibile */ }
+    }
+    var ua = navigator.userAgent || "";
+    var disp = /iPad|Tablet/i.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1) ? "tablet" : /Mobi|Android|iPhone/i.test(ua) ? "telefono" : "pc";
+    var da = (function () {
+      var m = location.search.match(/[?&](?:da|utm_source)=([^&]+)/);
+      if (m) { try { return decodeURIComponent(m[1]).slice(0, 60); } catch (e) { return m[1].slice(0, 60); } }
+      if (!document.referrer) return "diretto";
+      try {
+        var h = new URL(document.referrer).hostname.replace(/^www\./, "");
+        return /(^|\.)anchecasa\.it$/.test(h) ? "sito anchecasa" : h;
+      } catch (e2) { return "altro"; }
+    })();
+    function invia(beacon) {
+      clearTimeout(timer); timer = null;
+      if (!coda.length) return;
+      if (!attivo) { coda = []; return; }
+      var corpo = JSON.stringify({ s: ses, n: NUMERO.n, d: disp, da: da, ev: coda.splice(0, 40) });
+      try {
+        if (beacon && navigator.sendBeacon && navigator.sendBeacon("/api/mag", new Blob([corpo], { type: "text/plain" }))) return;
+        fetch("/api/mag", { method: "POST", headers: { "Content-Type": "application/json" }, body: corpo, keepalive: true }).catch(function () {});
+      } catch (e) { /* le statistiche non devono mai bloccare la rivista */ }
+    }
+    function traccia(evento, pagina, dettaglio) {
+      var k = evento + "|" + (pagina == null ? "" : pagina) + "|" + (dettaglio || "");
+      if (visti[k]) return;
+      visti[k] = 1;
+      coda.push({ e: evento, p: pagina == null ? null : pagina, x: dettaglio || "" });
+      if (!timer) timer = setTimeout(function () { invia(false); }, 2500);
+    }
+    window.addEventListener("pagehide", function () { invia(true); });
+    document.addEventListener("visibilitychange", function () { if (document.visibilityState === "hidden") invia(true); });
+    var kA = "ac-mag-ap-" + NUMERO.n, gia = false;
+    try { gia = sessionStorage.getItem(kA) === "1"; sessionStorage.setItem(kA, "1"); } catch (e3) { /* storage non disponibile */ }
+    if (!gia) traccia("apertura");
+    traccia("pagina", 0);
+    return { traccia: traccia };
+  })();
+  window.ACMagStat = STAT;
   /* Azienda luce e gas della rete AncheCasa per il pulsante dello strumento: nome e link alla sua pagina.
      Vuoto = «Confronta offerte» (Portale Offerte ARERA). */
   var PARTNER_ENERGIA = { nome: "", url: "" };
@@ -562,6 +613,7 @@
       "</div>";
     var pdf = document.getElementById("mg-b-pdf");
     if (pdf) pdf.classList.toggle("is-off", c.esempio);
+    if (!c.esempio) STAT.traccia("bollette_uso", null, bolletta.tipo);
   }
 
   /* Report PDF su carta intestata AncheCasa (come i contratti): logo, intestazione, numeri grandi, grafici, consigli. */
@@ -584,6 +636,7 @@
       if (campo) campo.focus({ preventScroll: true });
       return;
     }
+    STAT.traccia("bollette_pdf", null, bolletta.tipo);
     if (!window.jspdf || !window.jspdf.jsPDF) {
       var out = document.getElementById("mg-b-out");
       if (out) out.insertAdjacentHTML("beforeend", '<p class="mg-error">Il PDF non si è caricato. Controlla la connessione e riprova.</p>');
@@ -758,6 +811,9 @@
     });
     ["mesi", "persone"].forEach(function (k) { campi[k].addEventListener("change", tutto); });
     $("mg-b-pdf").addEventListener("click", scaricaPdf);
+    box.querySelectorAll(".mg-tool-actions a").forEach(function (a) {
+      a.addEventListener("click", function () { STAT.traccia("offerte", null, PARTNER_ENERGIA.nome || "portale ARERA"); });
+    });
     if (bolletta.campi) {
       campi.importo.value = bolletta.campi.importo; campi.consumo.value = bolletta.campi.consumo;
       campi.mesi.value = bolletta.campi.mesi || "2"; campi.persone.value = bolletta.campi.persone || "3";
@@ -798,13 +854,13 @@
           try { localStorage.setItem("anchecasa-avvisi", "1"); } catch (er) {}
         };
         var errore = function () { btn.disabled = false; scrivi("Non è partito. Riprova tra poco o scrivi a info@anchecasa.it.", false); };
-        var dati = { modulo: "magazine-avvisi", pagina: location.pathname, Mail: mail, Comune: f.elements.comune.value.trim(), Interesse: "App raccolta rifiuti e nuovi numeri della rivista", Numero: "N." + NUMERO.n, Privacy: "accettata" };
         if (!/(^|\.)anchecasa\.it$/.test(location.hostname)) { fatto(); return; } // anteprima: non scrive nel database
-        fetch("https://edsvmnxojsmknjuhobqa.supabase.co/rest/v1/richieste_iscrizione", {
+        // Va alla funzione Vercel /api/mag: salva in magazine_iscritti (o, se la tabella non c'è ancora, in richieste_iscrizione).
+        fetch("/api/mag", {
           method: "POST",
-          headers: { apikey: "sb_publishable_QbYv61SkMkjA9_GGb1hhOA_6v6GEw87", Authorization: "Bearer sb_publishable_QbYv61SkMkjA9_GGb1hhOA_6v6GEw87", "Content-Type": "application/json", "Content-Profile": "marketplace", Prefer: "return=minimal" },
-          body: JSON.stringify({ famiglia: "privato", dati: dati })
-        }).then(function (r) { if (r.ok) fatto(); else errore(); }).catch(errore);
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ iscrizione: { mail: mail, comune: f.elements.comune.value.trim(), interesse: "App raccolta rifiuti e nuovi numeri della rivista", numero: NUMERO.n, privacy: true } })
+        }).then(function (r) { if (r.ok) { STAT.traccia("avvisi"); fatto(); } else errore(); }).catch(errore);
       });
     });
   }
@@ -845,6 +901,8 @@
 
   function build() {
     mode = currentMode();
+    // Telefono (09.10.2026): niente testata del sito, rivista a tutta altezza, capsula di pulsanti sopra la pagina.
+    document.body.classList.toggle("mg-phone", window.matchMedia("(max-width: 699px), (max-height: 519px)").matches);
     root.classList.toggle("is-single", mode === "single");
     root.classList.toggle("is-spread", mode === "spread");
     var sz = size();
@@ -925,6 +983,8 @@
     var salto = Math.abs(n - flipped) > 1;
     flipped = n;
     pageIndex = mode === "spread" ? (n === 0 ? 0 : Math.min(2 * n - 1, total - 1)) : n;
+    STAT.traccia("pagina", pageIndex);
+    if (mode === "spread" && pageIndex > 0 && pageIndex + 1 < total) STAT.traccia("pagina", pageIndex + 1);
     if (salto) leaves.forEach(function (l) { l.style.transitionDuration = ".6s"; });
     render(moving);
     clearTimeout(turnTimer);
@@ -951,11 +1011,13 @@
     var availW = Math.max(1, stage.clientWidth - (mode === "spread" ? 32 : 8));
     var availH = stage.clientHeight;
     if (availH < 40) return;
+    // Telefono: la capsula dei pulsanti galleggia sopra il fondo della pagina; ne copre solo il piè di pagina.
+    if (document.body.classList.contains("mg-phone")) availH = Math.max(40, availH - 22);
     var scale = Math.max(0.3, Math.min(availW / bookW, availH / sz.h, mode === "spread" ? 1.8 : 4));
     var drawnH = sz.h * scale;
     scaler.style.width = bookW + "px";
     scaler.style.height = sz.h + "px";
-    scaler.style.top = Math.max(0, (availH - drawnH) / 2) + "px";
+    scaler.style.top = (document.body.classList.contains("mg-phone") ? 0 : Math.max(0, (availH - drawnH) / 2)) + "px";
     scaler.style.transform = "translateX(-50%) scale(" + scale + ")";
     book.style.width = bookW + "px";
     book.style.height = sz.h + "px";
@@ -1005,6 +1067,26 @@
   btnNext.addEventListener("click", next);
   var btnToc = root.querySelector("[data-act=toc]");
   if (btnToc) btnToc.addEventListener("click", function () { goToPage(2); });
+  // Schermo intero vero: dove il browser lo permette (Android, PC). Su iPhone si ottiene da "Aggiungi a Home".
+  var btnPieno = root.querySelector("[data-act=pieno]");
+  var docEl = document.documentElement;
+  var puoPieno = !!(docEl.requestFullscreen || docEl.webkitRequestFullscreen) && !/iPhone|iPod/.test(navigator.userAgent) && !(window.matchMedia && window.matchMedia("(display-mode: standalone)").matches);
+  if (btnPieno && puoPieno) {
+    btnPieno.hidden = false;
+    btnPieno.addEventListener("click", function () {
+      var dentro = document.fullscreenElement || document.webkitFullscreenElement;
+      try {
+        if (dentro) (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+        else { var r = (docEl.requestFullscreen || docEl.webkitRequestFullscreen).call(docEl, { navigationUI: "hide" }); if (r && r.catch) r.catch(function () {}); }
+      } catch (e) { /* schermo intero non disponibile */ }
+    });
+    ["fullscreenchange", "webkitfullscreenchange"].forEach(function (ev) {
+      document.addEventListener(ev, function () {
+        btnPieno.classList.toggle("is-on", !!(document.fullscreenElement || document.webkitFullscreenElement));
+        setTimeout(fit, 80);
+      });
+    });
+  }
   btnFs.addEventListener("click", function () {
     try {
       if (document.fullscreenElement) document.exitFullscreen();
@@ -1048,16 +1130,19 @@
   };
   var pannello = null, aperto = false, ultimoBtn = null;
 
-  function link() {
-    return /(^|\.)anchecasa\.it$/.test(location.hostname) ? location.origin + location.pathname : URL_RIVISTA;
+  // Il link porta "?da=canale": nelle statistiche si vede da quale condivisione arrivano i nuovi lettori.
+  function link(da) {
+    var base = /(^|\.)anchecasa\.it$/.test(location.hostname) ? location.origin + location.pathname : URL_RIVISTA;
+    return da ? base + "?da=" + da : base;
   }
+  function conta(canale) { if (window.ACMagStat) window.ACMagStat.traccia("condividi", null, canale); }
   function voci() {
-    var u = encodeURIComponent(link()), t = encodeURIComponent(TESTO);
+    var u = function (da) { return encodeURIComponent(link(da)); }, t = encodeURIComponent(TESTO);
     return [
-      ["wa", "WhatsApp", "https://wa.me/?text=" + t + "%20" + u],
-      ["fb", "Facebook", "https://www.facebook.com/sharer/sharer.php?u=" + u],
-      ["tg", "Telegram", "https://t.me/share/url?url=" + u + "&text=" + t],
-      ["ml", "Email", "mailto:?subject=" + encodeURIComponent(TITOLO + ": la rivista gratuita sulla casa") + "&body=" + t + "%0A%0A" + u]
+      ["wa", "WhatsApp", "https://wa.me/?text=" + t + "%20" + u("whatsapp")],
+      ["fb", "Facebook", "https://www.facebook.com/sharer/sharer.php?u=" + u("facebook")],
+      ["tg", "Telegram", "https://t.me/share/url?url=" + u("telegram") + "&text=" + t],
+      ["ml", "Email", "mailto:?subject=" + encodeURIComponent(TITOLO + ": la rivista gratuita sulla casa") + "&body=" + t + "%0A%0A" + u("email")]
     ];
   }
   function crea() {
@@ -1068,28 +1153,29 @@
     pannello.hidden = true;
     pannello.innerHTML = '<p class="t">Condividi la rivista</p><div class="g">' +
       voci().map(function (v) {
-        return '<a class="s s-' + v[0] + '" href="' + v[2] + '" target="_blank" rel="noopener">' + ICO[v[0]] + "<span>" + v[1] + "</span></a>";
+        return '<a class="s s-' + v[0] + '" data-canale="' + v[1].toLowerCase() + '" href="' + v[2] + '" target="_blank" rel="noopener">' + ICO[v[0]] + "<span>" + v[1] + "</span></a>";
       }).join("") +
       '<button type="button" class="s s-ln" data-copia>' + ICO.ln + "<span>Copia link</span></button></div>" +
       '<p class="ok" role="status" aria-live="polite"></p>';
     document.body.appendChild(pannello);
     pannello.addEventListener("click", function (e) {
-      if (e.target.closest("[data-copia]")) { copia(); return; }
-      if (e.target.closest("a")) setTimeout(chiudi, 150);
+      if (e.target.closest("[data-copia]")) { conta("link copiato"); copia(); return; }
+      var a = e.target.closest("a");
+      if (a) { conta(a.getAttribute("data-canale") || "altro"); setTimeout(chiudi, 150); }
     });
   }
   function copia() {
     var ok = pannello.querySelector(".ok");
     var fatto = function () { ok.textContent = "Link copiato: incollalo dove vuoi."; setTimeout(function () { ok.textContent = ""; }, 2500); };
     try {
-      if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(link()).then(fatto, vecchio); return; }
+      if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(link("link")).then(fatto, vecchio); return; }
     } catch (e) { /* uso il metodo vecchio */ }
     vecchio();
     function vecchio() {
       var ta = document.createElement("textarea");
-      ta.value = link(); ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.opacity = "0";
+      ta.value = link("link"); ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.opacity = "0";
       document.body.appendChild(ta); ta.select();
-      try { document.execCommand("copy"); fatto(); } catch (e2) { ok.textContent = link(); }
+      try { document.execCommand("copy"); fatto(); } catch (e2) { ok.textContent = link("link"); }
       document.body.removeChild(ta);
     }
   }
@@ -1123,7 +1209,7 @@
   function condividi(btn) {
     var tocco = window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
     if (navigator.share && tocco) {
-      navigator.share({ title: TITOLO, text: TESTO, url: link() }).catch(function () { /* annullato */ });
+      navigator.share({ title: TITOLO, text: TESTO, url: link("condiviso") }).then(function () { conta("menu telefono"); }).catch(function () { /* annullato */ });
       return;
     }
     if (aperto) chiudi(); else apri(btn);

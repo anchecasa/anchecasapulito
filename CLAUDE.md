@@ -13,6 +13,33 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 2026-10-09 ~17:10 · Claude — Rivista a schermo pieno sul telefono + pulsanti in vetro quasi invisibile (NON ancora pubblicato)
+- Telefono (larghezza < 700 px o altezza < 520 px): `magazine.js` mette `body.mg-phone`.
+  - La testata del sito sparisce e la rivista prende tutta l'altezza.
+  - I pulsanti diventano una capsula in vetro sopra il fondo della pagina: Home, indietro, condividi, avanti e, solo dove il browser lo permette (Android/PC, non iPhone), "schermo intero" (Fullscreen API).
+- `magazine.html`: theme-color scuro (#141c28) e meta per "Aggiungi a Home". Su iPhone lo schermo pieno vero si ha solo da lì: Safari non permette ai siti di nascondere la barra.
+- Copertina sul telefono: "83 giorni" alzato sopra la capsula, slogan nascosto.
+- Tutti i pulsanti (PC e telefono) ora sono in vetro quasi invisibile: velo trasparente, bordo sottile, frecce e icone bianche, niente cerchi arancioni pieni.
+- Versioni css v=30, js v=29.
+
+### 2026-10-09 ~16:45 · Claude — Statistiche del Magazine + pagina "Magazine" nel pannello admin (NON ancora pubblicato)
+- `sito/js/magazine.js`: conteggio anonimo (modulo STAT, in alto nel file) di apertura, pagine viste, Check Bollette usato, report PDF, «Confronta offerte», condivisioni per canale e iscrizioni agli avvisi.
+  - Niente cookie: c'è solo un codice casuale in sessionStorage. Conta solo su anchecasa.it; per provare altrove si usa `?stat=prova`.
+  - I link condivisi portano `?da=whatsapp|facebook|telegram|email|link|condiviso`, così si vede da dove arrivano i lettori.
+  - Il modulo "Avvisami" ora scrive tramite `/api/mag`.
+- NUOVO `sito/api/mag.js`: funzione Vercel. Aggiunge città, regione e paese dalle intestazioni Vercel (l'IP non viene salvato) e scrive su Supabase con la chiave pubblica.
+  - Gli iscritti vanno in `magazine_iscritti`; se la tabella non c'è ancora vanno in `richieste_iscrizione`, come prima.
+- NUOVO `supabase/migrations/20261009170000_magazine_statistiche.sql`, DA APPLICARE DAL TECNICO:
+  - tabelle `marketplace.magazine_eventi` e `marketplace.magazine_iscritti`, con RLS (scrivere: tutti, solo INSERT; leggere: solo admin);
+  - funzioni `magazine_e_admin()` e `magazine_riepilogo(p_dal, p_numero)`;
+  - provato su Postgres 16 locale: si può rilanciare e i permessi sono verificati.
+- Area privata, dashboard admin: nuova voce "Magazine" (`app.js`, navItems admin), NUOVI `js/magazine-admin.js` e `css/magazine-admin.css`, caricati in `index.html`.
+  - Mostra: lettori, pagine a testa, % fino al retro, Check Bollette, condivisioni, iscritti, % da telefono, lettori al giorno, provenienza, fino a dove leggono pagina per pagina, città, azioni, canali, dispositivi, elenco iscritti con ricerca e "Scarica per Excel" (CSV).
+  - Anteprima: `?demo=admin#/admin/magazine`.
+  - A ogni nuovo numero aggiornare `PAGINE_N1` in magazine-admin.js.
+- `views.js` (Iscrizioni dal sito): le righe con `dati.modulo = "magazine-avvisi"` non compaiono più lì; si vedono in Magazine.
+- File dell'area privata salvati con CRLF come gli altri.
+
 ### 2026-10-09 16:06 · Cursor
 - Commit `96b3a06853ea927ec0141a58426b88e31e6d3805` sul ramo main di https://github.com/anchecasa/anchecasapulito. Messaggio: «Magazine: copertina con bambino, Check Bollette con grafici dal vivo, retro solo app raccolta, pagina 2 con app nel telefono, pulsante Condividi, date ottobre/novembre, report bollette senza dati societari».
 - Pubblicato https://anchecasa.it, progetto Vercel `anchecasa-pulito` (deployment `dpl_6YbpePDXn2jgM9mFaCvVDchzPaz8`, alias https://anchecasa.it). Il push da solo non avvia Vercel.

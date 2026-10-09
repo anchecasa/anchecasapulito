@@ -286,6 +286,8 @@
       return [
         { id: "iscritti", label: "Iscritti registrati", icon: "team", gruppo: "fisso", cuore: true },
         { id: "iscrizioni", label: "Iscrizioni dal sito", icon: "send", gruppo: "fisso" },
+        // 09.10.2026, su richiesta: statistiche della rivista e iscritti agli avvisi (js/magazine-admin.js).
+        { id: "magazine", label: "Magazine", icon: "chart", gruppo: "fisso" },
         { id: "richieste-agenti", label: "Richieste agenti", icon: "star", gruppo: "fisso" },
         { id: "genera-link", label: "Genera link", icon: "send", gruppo: "fisso" },
         { id: "task", label: "Task", icon: "calendar", gruppo: "fisso" },

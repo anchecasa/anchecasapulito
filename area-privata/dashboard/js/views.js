@@ -4022,7 +4022,9 @@
             erroreAdmin(el, res.error.message, carica);
             return;
           }
-          autoApprova(res.data || []).then((righe) => disegnaElenco(righe));
+          // 09.10.2026: gli iscritti agli avvisi della rivista hanno la loro pagina (Magazine), qui non compaiono.
+          const soloSito = (res.data || []).filter((r) => !(r.dati && r.dati.modulo === "magazine-avvisi"));
+          autoApprova(soloSito).then((righe) => disegnaElenco(righe));
         });
       }
 
