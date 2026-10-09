@@ -337,7 +337,41 @@
     });
   })();
 
-  window.ACTrova = { apri: apri, risposta: risposta };
+  /* ---------- video senza risposta dell'AI: si tocca quello che si vede (09.10.2026 ~19:00) ----------
+     Se SuperMastro non riesce a guardare il video (AI non disponibile o video non chiaro), sotto il video compaiono
+     i problemi più comuni dentro e fuori casa. Ognuno apre la stessa scheda: guida con attrezzi e passi
+     se si può fare da soli, altrimenti "Cerca un <mestiere> vicino a te". */
+  function bottoneCerca() {
+    var b = $("r-cerca");
+    if (b && !b.dataset.pronto) { b.dataset.pronto = "1"; b.addEventListener("click", function () { apri({ mestiere: stato.mestiere, titolo: stato.testo }); }); }
+  }
+  function voce(id) {
+    var x = P && P.perId(id);
+    if (!x) return;
+    stato.voce = x; stato.testo = x.t; stato.fonte = "video"; stato.mestiere = x.m; stato.guida = x.g || null;
+    $("richiesta").hidden = false;
+    $("r-titolo").textContent = x.t;
+    $("r-dove").textContent = "Dal tuo video";
+    $("r-pensa").hidden = true;
+    mostraRisposta({ fai: x.f, mestiere: x.m, descrizione: x.c, passi: x.g ? x.g.p : [], attrezzi: x.g ? x.g.a : [], tempo: x.g ? x.g.tm : "", difficolta: x.g ? x.g.d : "", avvertenze: [] });
+    bottoneCerca();
+    $("richiesta").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+  (function () {
+    var box = document.getElementById("sm-scelte");
+    if (!box || !P) return;
+    var IDS = ["rubinetto-gocciola", "scarico-intasato", "wc-intasato", "perdita-tubo", "macchia-soffitto", "caldaia-blocco", "termosifoni",
+      "condizionatore", "salvavita", "presa-bruciata", "luce-non-va", "serratura", "porta-interna", "finestra-chiude", "tapparella", "vetro-rotto",
+      "muffa", "crepe", "piastrelle", "grondaie", "tetto", "cancello", "recinzione", "siepe", "taglio-erba", "insetti"];
+    box.innerHTML = IDS.map(function (id) { var x = P.perId(id); return x ? '<button type="button" data-voce="' + id + '">' + esc(x.t) + "</button>" : ""; }).join("");
+    box.addEventListener("click", function (e) {
+      var b = e.target.closest("[data-voce]"); if (!b) return;
+      Array.prototype.forEach.call(box.querySelectorAll("button"), function (x) { x.classList.toggle("on", x === b); });
+      voce(b.getAttribute("data-voce"));
+    });
+  })();
+
+  window.ACTrova = { apri: apri, risposta: risposta, voce: voce };
   richiesta();
 })();
 /* PC: il video si fa dal telefono. "Copia il link" della pagina SuperMastro. */

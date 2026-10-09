@@ -13,6 +13,18 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 2026-10-09 ~19:05 · Claude — SuperMastro: solo video, niente foto (NON ancora pubblicato)
+- `sito/supermastro.html`: "Carica un video" accetta solo video (`accept="video/*"`). ac.js v=7.
+- `sito/js/ac.js`: se arriva un'immagine, non parte l'analisi e compare "SuperMastro lavora solo con un video: registra 5 secondi sul guasto e riprova."
+
+### 2026-10-09 ~19:00 · Claude — SuperMastro: dopo il video si arriva sempre alla soluzione (NON ancora pubblicato)
+- Problema visto da Cursor alle 18:09: su Vercel manca `OPENAI_API_KEY`, quindi `/api/supermastro` risponde 503 e il video non viene analizzato. Va aggiunta la chiave (vedi sotto).
+- Nel frattempo, quando l'AI non risponde, `js/trova-artigiano.js` rifà l'elenco "Tocca quello che si vede" (`#sm-scelte`) con 26 problemi del dizionario, dentro e fuori casa (rubinetto, scarico, WC, perdite, caldaia, termosifoni, clima, salvavita, presa, luce, serratura, porte, finestre, tapparella, vetro, muffa, crepe, piastrelle, grondaie, tetto, cancello, recinzione, siepe, prato, insetti).
+  - Ogni voce apre la stessa scheda "La tua richiesta · Dal tuo video" (`ACTrova.voce(id)`): guida con tempo, difficoltà, attrezzi e passi se si fa da soli, altrimenti "Cerca un <mestiere> vicino a te". La cartina si apre solo con quel pulsante.
+- Con la chiave, il video va da solo nella scheda (`ACTrova.risposta`), come prima.
+- Provato da telefono simulato, con e senza chiave. Versione trova-artigiano.js v=6. Il file resta con i fine riga Windows (CRLF), come l'ha lasciato git.
+- PER ATTIVARE L'ANALISI DEL VIDEO: su Vercel, progetto anchecasa-pulito, Settings → Environment Variables → `OPENAI_API_KEY` (Production) = la chiave OpenAI (la stessa di supermastro.com, se usa OpenAI), poi ripubblicare. Facoltativo: `OPENAI_MODEL` (predefinito gpt-4o-mini).
+
 ### 2026-10-09 18:09 · Cursor
 - `node --check` su `sito/js/*.js` e `sito/api/*.js`: tutti senza errori di sintassi.
 - Commit `67804e4` sul ramo main: «SuperMastro: guida fai da te con attrezzi, professionista solo al clic, Comuni d'Italia, video solo da telefono, solo problemi di casa, pollici per imparare». Nel commit è tornato in `sito/supermastro.html` il riquadro dei pollici (tolto alle 18:08) perché lo script e lo stile c’erano già.

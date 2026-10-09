@@ -311,6 +311,8 @@
     sm.addEventListener("click", registra);
     file.addEventListener("change", function () {
       var f = file.files && file.files[0]; if (!f) return;
+      // 09.10.2026: SuperMastro lavora solo con il video, niente foto.
+      if (f.type.indexOf("video") !== 0) { file.value = ""; nota.textContent = "SuperMastro lavora solo con un video: registra 5 secondi sul guasto e riprova."; return; }
       fermaCamera();
       conto.hidden = true;
       var eVideo = f.type.indexOf("video") === 0;
