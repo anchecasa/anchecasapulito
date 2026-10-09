@@ -13,6 +13,17 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 2026-10-09 ~18:15 · Claude — Telefono: torna la testata, pagine grandi quanto lo schermo (NON ancora pubblicato)
+- Sul telefono la testata del sito è di nuovo visibile, ma più sottile (54 px, logo 30 px).
+  - La capsula dei pulsanti sta subito SOTTO la pagina, non sopra: non copre più pulsanti come "Scarica il report PDF".
+- Pagina singola con altezza variabile (`altezzaSingola()` in magazine.js): da 640 a 760 unità di disegno, in base allo schermo; larghezza di disegno sempre 400.
+  - La pagina passa da circa il 76% al 86-99% della larghezza del telefono.
+  - Al cambio di altezza si ricostruisce.
+- `adattaFoto()`: se la pagina è più corta di 740, la foto in alto di ogni pagina si accorcia della stessa misura (minimo 120 px), così i testi restano interi.
+  - Classe `.mg-corto` (altezza < 700): Check Bollette senza sottotitolo e passi, editoriale con titolo più piccolo, pagina 7 senza la nota sulle proporzioni.
+- Copertina sul telefono: richiami in fondo, più compatti, colonna al 47%: volti liberi.
+- Controllo automatico di tutte le pagine (PC, telefono, telefono piccolo): nessun testo tagliato. Versioni css v=36, js v=34.
+
 ### 2026-10-09 16:33 · Cursor
 - Commit `a277a364d0cfbfc8d2742d1e1203449ae39edcdd` sul ramo main di https://github.com/anchecasa/anchecasapulito. Messaggio: «Magazine: copertina leggibile, Check Bollette con Analizza, rifinitura pagine, schermo pieno sul telefono, pulsanti in vetro, statistiche e pagina admin». In questo commit sono cambiati solo i file del Magazine e `CLAUDE.md`: area privata e migrazione erano già nel commit precedente.
 - Pubblicato https://anchecasa.it, progetto Vercel `anchecasa-pulito` (deployment `dpl_Epo8ApgpFBcqCGj2GSwsYnyPfZwN`, alias https://anchecasa.it). Il push da solo non avvia Vercel.

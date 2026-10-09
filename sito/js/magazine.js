@@ -950,10 +950,36 @@
     return div;
   }
 
+  // Telefono (09.10.2026, 2ª versione): la pagina prende l'altezza giusta per riempire lo schermo sotto la testata,
+  // da 640 a 760 unità di disegno (sotto 640 i testi non ci stanno). Larghezza di disegno sempre 400.
+  var SINGLE_MIN = 640, SINGLE_MAX = 760;
+  function altezzaSingola() {
+    var w = Math.max(1, stage.clientWidth - 4), h = stage.clientHeight;
+    if (window.__mgH) return window.__mgH;
+    if (h < 100) return 740;
+    return Math.round(Math.max(SINGLE_MIN, Math.min(SINGLE_MAX, 400 * h / w)));
+  }
+  // Pagina più corta di 740 (telefono): la foto in alto si accorcia della stessa misura, così il testo resta intero.
+  // Si misurano le foto con la pagina alta 740 e poi si tolgono i pixel mancanti (minimo 120).
+  function adattaFoto() {
+    root.classList.toggle("mg-corto", mode === "single" && SINGLE.h < 700);
+    if (mode !== "single" || SINGLE.h >= 740) return;
+    var taglio = 740 - SINGLE.h;
+    book.style.height = "740px";
+    var foto = [];
+    book.querySelectorAll(".mg-face > .mg-page > .mg-photo:first-child").forEach(function (f) {
+      if (f.classList.contains("mg-bleed")) return;
+      var h = f.offsetHeight;
+      if (h > 0 && h < 600) foto.push([f, h]);
+    });
+    foto.forEach(function (x) { x[0].style.setProperty("height", Math.max(120, x[1] - taglio) + "px", "important"); });
+    book.style.height = SINGLE.h + "px";
+  }
   function build() {
     mode = currentMode();
     // Telefono (09.10.2026): niente testata del sito, rivista a tutta altezza, capsula di pulsanti sopra la pagina.
     document.body.classList.toggle("mg-phone", window.matchMedia("(max-width: 699px), (max-height: 519px)").matches);
+    if (mode === "single") SINGLE.h = altezzaSingola();
     root.classList.toggle("is-single", mode === "single");
     root.classList.toggle("is-spread", mode === "spread");
     var sz = size();
@@ -975,6 +1001,7 @@
       book.appendChild(leaf);
       leaves.push(leaf);
     }
+    adattaFoto();
     book.querySelectorAll("[data-goto]").forEach(function (b) {
       b.addEventListener("click", function () { goToPage(+b.getAttribute("data-goto")); });
     });
@@ -1059,11 +1086,11 @@
     root.style.bottom = "";
     stage.style.width = "";
     stage.style.height = "";
-    var availW = Math.max(1, stage.clientWidth - (mode === "spread" ? 32 : 8));
+    var availW = Math.max(1, stage.clientWidth - (mode === "spread" ? 32 : 4));
     var availH = stage.clientHeight;
     if (availH < 40) return;
     // Telefono: la capsula dei pulsanti galleggia sopra il fondo della pagina; ne copre solo il piè di pagina.
-    if (document.body.classList.contains("mg-phone")) availH = Math.max(40, availH - 30);
+    // (telefono: la capsula ora sta sotto la pagina, nessuna riserva)
     var scale = Math.max(0.3, Math.min(availW / bookW, availH / sz.h, mode === "spread" ? 1.8 : 4));
     var drawnH = sz.h * scale;
     scaler.style.width = bookW + "px";
@@ -1153,6 +1180,7 @@
     var w = window.innerWidth;
     var h = window.innerHeight;
     if (currentMode() !== mode) { lastW = w; lastH = h; build(); return; }
+    if (mode === "single" && Math.abs(altezzaSingola() - SINGLE.h) > 12) { lastW = w; lastH = h; build(); return; }
     if (mode === "single" && Math.abs(w - lastW) < 30 && Math.abs(h - lastH) < 48) return;
     lastW = w;
     lastH = h;

@@ -873,8 +873,8 @@ body[data-page="magazine"] .mg-root { background: radial-gradient(ellipse at 50%
 
 /* ===== 2026-10-09 ~17:00 · Telefono: rivista a schermo pieno, capsula di pulsanti in vetro sopra la pagina ===== */
 .mg-only-phone { display: none !important; }
-body.mg-phone .testata { display: none; }
-body.mg-phone .mg-root { position: relative; padding-top: env(safe-area-inset-top, 0px); }
+/* (17:00 la testata spariva; dalle 18:00 resta, più sottile: vedi in fondo) */
+body.mg-phone .mg-root { position: relative; }
 body.mg-phone .mg-stage { height: 100%; }
 body.mg-phone .mg-controls { position: absolute; z-index: 20; left: 50%; bottom: calc(8px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%);
   width: auto; padding: 5px !important; gap: 6px !important; border-radius: 999px;
@@ -1002,3 +1002,33 @@ body.mg-phone .mg-folio span:last-child:not(:first-child) { visibility: hidden; 
 .mg-cb .mg-verdict { margin: 3px 0 2px; }
 .mg-cb-res { margin-bottom: 7px; }
 body.mg-phone .mg-cb .mg-app-note { display: none; }
+
+/* ===== 2026-10-09 ~18:00 · Telefono: torna la testata (più sottile), pagina grande quanto lo schermo ===== */
+body.mg-phone .testata .wrap { min-height: 58px; }
+body.mg-phone .marchio img { height: 30px; }
+body.mg-phone .testata .btn { min-height: 36px; font-size: 14px; padding: 0 14px; }
+body.mg-phone .testata .hamburger { width: 40px; height: 40px; }
+/* pagina corta (telefono): Check Bollette senza sottotitolo e passi, che lì sono superflui */
+.mg-corto .mg-cb .mg-app-sub, .mg-corto .mg-cb-steps { display: none !important; }
+.mg-corto .mg-cb .mg-app-head { margin-bottom: 8px; }
+.mg-corto .mg-cb .mg-app-title { font-size: 30px; }
+.mg-corto .mg-ph-ed .mg-h1 { font-size: 31px !important; }
+.mg-corto .mg-ph-ed .mg-opener { bottom: 14px !important; }
+.mg-corto .mg-flag + .mg-small { display: none; }
+/* telefono con testata: la capsula sta subito sotto la pagina (non copre più pulsanti o testi) */
+body.mg-phone .mg-controls { position: relative; left: auto; bottom: auto; transform: none; align-self: center; flex: none;
+  margin: 6px auto calc(6px + env(safe-area-inset-bottom, 0px)); }
+body.mg-phone .mg-folio span:last-child:not(:first-child) { visibility: visible; }
+body.mg-phone .mg-controls { margin: 4px auto calc(4px + env(safe-area-inset-bottom, 0px)); padding: 3px !important; gap: 4px !important; }
+body.mg-phone .mg-controls .mg-btn.mg-glass { width: 40px; height: 40px; }
+body.mg-phone .mg-controls .mg-btn.mg-glass .ar { width: 36px; height: 36px; font-size: 22px; }
+body.mg-phone .mg-controls .mg-share-btn { width: 36px; height: 36px; }
+body.mg-phone .testata .wrap { min-height: 54px; }
+/* copertina telefono con pagina corta: richiami in fondo e più compatti, volti liberi */
+body.mg-phone .is-single .mg-cover .mg-coverlines { bottom: 22px; gap: 6px; }
+body.mg-phone .is-single .mg-cover .mg-cl-big .n { font-size: 54px; }
+body.mg-phone .is-single .mg-cover .mg-cl-big .t { font-size: 17px; }
+body.mg-phone .is-single .mg-cover .mg-cl { margin-top: 6px; }
+body.mg-phone .is-single .mg-cover .mg-cl span { font-size: 12.5px; line-height: 1.25; }
+body.mg-phone .is-single .mg-cover .mg-slogan { opacity: 0; }
+body.mg-phone .is-single .mg-cover .mg-coverlines { width: 47%; }
