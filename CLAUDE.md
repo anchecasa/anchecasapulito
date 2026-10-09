@@ -13,6 +13,13 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 2026-10-09 ~15:20 · Claude — Magazine: pagina 2, pulsanti vetro, date, report bollette (NON ancora pubblicato)
+- `sito/js/magazine.js`, `sito/css/magazine.css`, `sito/magazine.html` (css v=20, js v=20). Copia di sicurezza: `_copie-magazine-1520/`.
+- Pagina 2 "La raccolta, senza pensieri": titolo e testo in una fascia blu sopra la foto (il volto resta libero); modulo "Avvisami gratis" ridotto a una barra in vetro che si apre solo al tocco.
+- Pulsanti Indietro/Avanti: effetto vetro con frecce arancio nei cerchi, stile brand.
+- Date: tolto "9 ottobre". Ora "N. 1 · Ottobre 2026 · Il primo numero"; prossimo numero 1° novembre 2026, poi ogni 15 giorni (NUMERO in magazine.js).
+- Report PDF Check Bollette: tolti ragione sociale, indirizzo, P.IVA e REA. Restano solo anchecasa.it, info@anchecasa.it e "© anno AncheCasa".
+
 ### 2026-10-09 15:06 · Cursor
 - Commit `e31e443db6ea53b408b2fc771169a95540c70161` sul ramo main di https://github.com/anchecasa/anchecasapulito. Messaggio: «Magazine: pagina della raccolta e soli tasti Indietro e Avanti».
 - Cartella `sito` pubblicata sul progetto Vercel `anchecasa-pulito` in produzione. Deployment `dpl_d8uCDhg9B2AzFhAQqF5ozr1DZ3QK`, indirizzo https://anchecasa.it.

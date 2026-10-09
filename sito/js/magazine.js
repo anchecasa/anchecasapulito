@@ -91,23 +91,20 @@
         '<p class="mg-small" style="border-top:1px solid var(--mg-rule);padding-top:6px;margin:0">N. ' + NUMERO.n + " · " + NUMERO.data + " · Quindicinale gratuito su anchecasa.it · Prossimo numero " + NUMERO.prossimo + ". Contenuti divulgativi: non sostituiscono il parere di un tecnico.</p>" +
         "</div>" + folio(i) + "</div>";
     } },
-    /* 2 · IN ARRIVO: APP RACCOLTA RIFIUTI + ISCRIZIONE AGLI AVVISI (09.10.2026, al posto del sommario) */
+    /* 2 · IN ARRIVO: APP RACCOLTA RIFIUTI (09.10.2026). Testo sulla fascia blu, volto libero, modulo a scomparsa. */
     { cover: true, html: function (i) {
       return '<div class="mg-page mg-p2app">' +
-        '<div class="mg-bleed mg-photo">' + img("rifiuti", "Una ragazza porta fuori la raccolta differenziata guardando l’app sul telefono") + "</div>" +
-        '<div class="mg-shade-t" style="background:linear-gradient(180deg,rgba(8,12,22,.88) 0%,rgba(8,12,22,.55) 30%,rgba(8,12,22,0) 50%)"></div>' +
-        '<div class="mg-p2-top">' +
+        '<div class="mg-p2-band">' +
           '<div class="mg-kicker">In arrivo · con il numero 2</div>' +
-          '<h2 class="mg-h1">La raccolta,<br><em>senza pensieri</em></h2>' +
-          '<p class="mg-p2-dek">Una nuova app gratuita di AncheCasa, collegata al calendario del tuo Comune: ti dice <b>cosa</b> portare fuori, <b>che giorno</b> e <b>a che ora</b>. E la sera prima ti avvisa.</p>' +
+          '<h2 class="mg-h1">La raccolta, <em>senza pensieri</em></h2>' +
+          '<p class="mg-p2-dek">L’app gratuita di AncheCasa collegata al calendario del tuo Comune: ti dice <b>cosa</b> portare fuori, <b>che giorno</b> e <b>a che ora</b>. E la sera prima ti avvisa.</p>' +
         "</div>" +
-        '<div class="mg-p2-card" data-noflip>' +
-          '<div class="mg-p2-feat"><span>' + ICO.check + 'Calendario del tuo Comune</span><span>' + ICO.check + 'Avviso la sera prima</span><span>' + ICO.check + 'Dove va ogni rifiuto</span></div>' +
-          '<form class="mg-avvisi" novalidate>' +
-            '<p class="t"><b>Vuoi scaricarla per primo, gratis?</b> Lasciaci la mail: ti avvisiamo appena esce e ti mandiamo ogni nuovo numero della rivista.</p>' +
-            '<div class="r"><input type="email" name="mail" placeholder="La tua mail" autocomplete="email" required aria-label="La tua mail"><input type="text" name="comune" placeholder="Il tuo Comune" autocomplete="address-level2" aria-label="Il tuo Comune"></div>' +
+        '<div class="mg-p2-photo mg-photo">' + img("rifiuti", "Una ragazza porta fuori la raccolta differenziata guardando l’app sul telefono") + "</div>" +
+        '<div class="mg-p2-glass" data-noflip>' +
+          '<button type="button" class="mg-p2-open" aria-expanded="false"><span class="bell" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9a6 6 0 0 1 12 0c0 6 2.5 7.5 2.5 7.5h-17S6 15 6 9Z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg></span><span class="tx"><b>Avvisami gratis quando esce</b><small>e ricevi ogni nuovo numero</small></span><span class="go" aria-hidden="true">›</span></button>' +
+          '<form class="mg-avvisi" novalidate hidden>' +
+            '<div class="r"><input type="email" name="mail" placeholder="La tua mail" autocomplete="email" required aria-label="La tua mail"><input type="text" name="comune" placeholder="Comune" autocomplete="address-level2" aria-label="Il tuo Comune"><button type="submit" class="mg-p2-send" aria-label="Invia">›</button></div>' +
             '<label class="ok"><input type="checkbox" name="privacy" required><span>Ho letto l’<a href="privacy.html" target="_blank" rel="noopener">informativa privacy</a></span></label>' +
-            '<button type="submit" class="mg-cta wide">Avvisami quando esce</button>' +
             '<p class="esito" role="status" hidden></p>' +
           "</form>" +
         "</div>" +
@@ -796,6 +793,18 @@
 
   /* ---------------- iscrizione agli avvisi (app raccolta + nuovi numeri) ---------------- */
   function initAvvisi() {
+    document.querySelectorAll(".mg-p2-open").forEach(function (b) {
+      if (b.dataset.pronto) return;
+      b.dataset.pronto = "1";
+      b.addEventListener("click", function () {
+        var box = b.parentNode, f = box.querySelector(".mg-avvisi");
+        var aperto = f.hidden;
+        f.hidden = !aperto;
+        box.classList.toggle("is-open", aperto);
+        b.setAttribute("aria-expanded", aperto ? "true" : "false");
+        if (aperto) f.elements.mail.focus();
+      });
+    });
     document.querySelectorAll(".mg-avvisi").forEach(function (f) {
       if (f.dataset.pronto) return;
       f.dataset.pronto = "1";

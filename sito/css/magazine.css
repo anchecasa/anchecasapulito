@@ -592,3 +592,63 @@ body[data-page="magazine"] [data-act="fs"] { display: none; }
 .is-single .mg-avvisi .r { grid-template-columns: 1fr; }
 .is-single .mg-p2-feat span, .is-single .mg-avvisi .ok { font-size: 11px; }
 .is-single .mg-avvisi .t { font-size: 12px; }
+
+/* ===== 09.10.2026 15:15 · pagina 2 senza testo sul volto, modulo a scomparsa, pulsanti in vetro ===== */
+.mg-p2app { display: flex; flex-direction: column; background: var(--mg-navy); }
+.mg-p2-band { position: relative; z-index: 3; flex: none; padding: 30px 34px 20px; background: linear-gradient(180deg, #16304d, #1a2432); color: #fff; }
+.mg-p2-band .mg-kicker { color: #ffd23f; }
+.mg-p2-band .mg-kicker::after { background: rgba(255,255,255,.25); }
+.mg-p2-band .mg-h1 { color: #fff; font-size: 38px; margin: 10px 0 8px; }
+.mg-p2-band .mg-h1 em { color: var(--mg-orange); }
+.mg-p2-band .mg-p2-dek { font-family: var(--mg-serif); font-size: 14px; line-height: 1.45; color: rgba(255,255,255,.88); margin: 0; max-width: none; text-shadow: none; }
+.mg-p2-band .mg-p2-dek b { color: #ffd23f; font-weight: 600; }
+.mg-p2-photo { position: relative; flex: 1; min-height: 0; }
+.mg-p2-photo img { object-position: 50% 22%; }
+.mg-p2-photo::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 26px; background: linear-gradient(180deg, #1a2432, rgba(26,36,50,0)); z-index: 1; }
+.mg-p2-photo::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 38%; background: linear-gradient(0deg, rgba(8,12,22,.75), rgba(8,12,22,0)); }
+
+/* barra in vetro, chiusa: una riga sola */
+.mg-p2-glass { position: absolute; z-index: 4; left: 22px; right: 22px; bottom: 36px; border-radius: 16px;
+  background: rgba(20, 28, 40, .42); border: 1px solid rgba(255,255,255,.22);
+  -webkit-backdrop-filter: blur(16px) saturate(150%); backdrop-filter: blur(16px) saturate(150%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 14px 30px rgba(0,0,0,.3); color: #fff; font-family: var(--mg-sans); overflow: hidden; }
+.mg-p2-open { all: unset; box-sizing: border-box; cursor: pointer; width: 100%; display: grid; grid-template-columns: 34px 1fr 30px; gap: 10px; align-items: center; padding: 10px 12px; }
+.mg-p2-open .bell { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,210,63,.18); color: #ffd23f; }
+.mg-p2-open .bell svg { width: 18px; height: 18px; }
+.mg-p2-open .tx b { display: block; font-size: 13.5px; font-weight: 700; }
+.mg-p2-open .tx small { display: block; font-size: 10.5px; color: rgba(255,255,255,.72); margin-top: 1px; }
+.mg-p2-open .go { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: var(--mg-orange); font-size: 20px; line-height: 1; transition: transform .25s; }
+.mg-p2-glass.is-open .mg-p2-open .go { transform: rotate(90deg); }
+.mg-p2-open:focus-visible { outline: 2px solid #ffd23f; outline-offset: -2px; border-radius: 16px; }
+.mg-p2-glass .mg-avvisi { padding: 0 12px 10px; }
+.mg-p2-glass .mg-avvisi .r { display: grid; grid-template-columns: 1.4fr 1fr 38px; gap: 6px; }
+.mg-p2-glass .mg-avvisi input[type=email], .mg-p2-glass .mg-avvisi input[type=text] { background: rgba(255,255,255,.92); border-color: transparent; color: var(--mg-navy); padding: 8px 10px; font-size: 13px; }
+.mg-p2-send { all: unset; cursor: pointer; display: grid; place-items: center; border-radius: 9px; background: var(--mg-orange); color: #fff; font: 700 22px/1 var(--mg-sans); }
+.mg-p2-send:disabled { opacity: .5; }
+.mg-p2-glass .mg-avvisi .ok { color: rgba(255,255,255,.8); margin: 7px 0 0; font-size: 10.5px; }
+.mg-p2-glass .mg-avvisi .ok a { color: #fff; }
+.mg-p2-glass .mg-avvisi .esito { margin: 6px 0 0; font-size: 11.5px; padding: 0; background: none; }
+.mg-p2-glass .mg-avvisi .esito.si { color: #9be3b4; }
+.mg-p2-glass .mg-avvisi .esito.no { color: #ffb4a6; }
+.is-single .mg-p2-band { padding: 24px 24px 16px; }
+.is-single .mg-p2-band .mg-h1 { font-size: 34px; }
+.is-single .mg-p2-glass { left: 14px; right: 14px; bottom: 34px; }
+.is-single .mg-p2-glass .mg-avvisi .r { grid-template-columns: 1fr 38px; }
+.is-single .mg-p2-glass .mg-avvisi input[name=comune] { grid-column: 1; grid-row: 2; }
+.is-single .mg-p2-glass .mg-p2-send { grid-row: 1 / span 2; grid-column: 2; }
+.is-single .mg-p2-open .tx small, .is-single .mg-p2-glass .mg-avvisi .ok { font-size: 11px; }
+
+/* pulsanti Indietro / Avanti in vetro */
+body[data-page="magazine"] .mg-root { background: radial-gradient(ellipse at 50% 120%, rgba(229,107,16,.16), rgba(229,107,16,0) 45%), radial-gradient(ellipse at 50% 0%, #22324a, #141c28 60%); }
+.mg-controls .mg-btn.mg-glass { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-width: 150px; padding: 8px 18px 8px 8px; border-radius: 999px;
+  background: linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.05)); border: 1px solid rgba(255,255,255,.22);
+  -webkit-backdrop-filter: blur(14px) saturate(160%); backdrop-filter: blur(14px) saturate(160%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.28), 0 10px 26px rgba(0,0,0,.35);
+  color: #fff; font: 600 13px Montserrat, "Segoe UI", Arial, sans-serif; letter-spacing: .12em; text-transform: uppercase; transition: background .2s, border-color .2s, transform .15s; }
+.mg-controls .mg-btn.mg-glass[data-act="next"] { padding: 8px 8px 8px 18px; }
+.mg-controls .mg-btn.mg-glass .ar { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: var(--mg-orange); color: #fff; font-size: 20px; line-height: 1; letter-spacing: 0; box-shadow: 0 4px 12px rgba(229,107,16,.45); }
+.mg-controls .mg-btn.mg-glass:hover:not(:disabled) { background: linear-gradient(180deg, rgba(255,255,255,.2), rgba(255,255,255,.08)); border-color: rgba(255,255,255,.34); }
+.mg-controls .mg-btn.mg-glass:active:not(:disabled) { transform: translateY(1px); }
+.mg-controls .mg-btn.mg-glass:disabled { opacity: .35; }
+.mg-controls .mg-btn.mg-glass:focus-visible { outline: 2px solid #ffd23f; outline-offset: 3px; }
+.is-single .mg-controls .mg-btn.mg-glass { flex: 1; max-width: 180px; min-width: 0; font-size: 12px; }
