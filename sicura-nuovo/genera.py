@@ -1,8 +1,9 @@
 """Genera il nuovo sito AncheSicura (anteprima 08.10.2026). Stesso sistema grafico del nuovo sito AncheCasa."""
-ANTEPRIMA = True
+import os
+ANTEPRIMA = os.environ.get("AC_PROD") != "1"
 MAIL = "rete@anchecasa.it"
 
-MENU = [("servizi", "servizi.html", "Servizi"), ("corsi", "corsi.html", "Corsi online"), ("settori", "progetti.html", "Settori"),
+MENU = [("servizi", "servizi.html", "Servizi"), ("corsi", "corsi.html", "Corsi online"), ("app", "app.html", "App"), ("settori", "progetti.html", "Settori"),
         ("italia", "italia.html", "Tutta Italia"), ("chi", "chi-siamo.html", "Chi siamo"), ("contatti", "contatti.html", "Contatti")]
 
 ICO = {
@@ -17,6 +18,17 @@ ICO = {
 }
 
 NOTA = '<div class="nota-anteprima">Anteprima del nuovo sito AncheSicura · non è online</div>' if ANTEPRIMA else ""
+
+
+import re as _re, os as _os
+_AC = open(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", "sito-nuovo", "index.html"), encoding="utf-8").read()
+def _assoluti(h):
+    h = _re.sub(r'href="index\.html"', 'href="https://www.anchecasa.it/"', h)
+    h = _re.sub(r'href="(?!https?:|#|mailto:)([^"]+)"', lambda m: 'href="https://www.anchecasa.it/' + m.group(1) + '"', h)
+    h = h.replace('href="https://sicura.anchecasa.it"', 'href="index.html"')
+    return h.replace('src="assets/logo-colore.png"', 'src="assets/anchecasa-colore.png"').replace('src="assets/logo-negativo.png"', 'src="assets/anchecasa-negativo.png"')
+TESTATA_AC = _assoluti(_AC[_AC.index('<header class="testata">'):_AC.index('</header>') + 9])
+PIEDE_AC = _assoluti(_AC[_AC.index('<footer class="piede">'):_AC.index('</footer>') + 9])
 
 
 def head(title, desc, page):
@@ -35,38 +47,25 @@ def head(title, desc, page):
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=DM+Sans:wght@400;500;600;700&display=swap">
-<link rel="stylesheet" href="css/ac.css?v=1">
-<link rel="stylesheet" href="css/sicura.css?v=1">
+<link rel="stylesheet" href="css/ac.css?v=4">
+<link rel="stylesheet" href="css/sicura.css?v=3">
 </head>
 <body data-page="{page}">
 <a class="skip" href="#contenuto">Vai al contenuto</a>
 {NOTA}
-<header class="testata"><div class="wrap">
-  <a class="marchio" href="index.html" aria-label="AncheSicura, home"><img src="assets/anchesicura-colore.png" alt="AncheSicura · La sicurezza di AncheCasa"></a>
-  <nav class="menu" id="menu" aria-label="Menu principale">{menu}<a class="voce solo-tel" href="rete.html">Entra nella rete</a><a class="voce solo-tel" href="https://www.anchecasa.it/">AncheCasa ↗</a></nav>
-  <div class="azioni">
-    <a class="accedi" href="rete.html">Entra nella rete</a>
-    <a class="btn" href="contatti.html">Chiedi un'offerta</a>
-    <button class="hamburger" id="hamburger" type="button" aria-label="Apri il menu" aria-expanded="false" aria-controls="menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
-  </div>
-</div></header>
+{TESTATA_AC}
+<div class="sottobarra"><div class="wrap">
+  <a class="div-marchio" href="index.html" aria-label="AncheSicura, home della divisione"><img src="assets/anchesicura-colore.png" alt="AncheSicura · La sicurezza di AncheCasa" width="1200" height="231"></a>
+  <nav class="div-menu" aria-label="Menu AncheSicura">{menu}<a class="voce" href="rete.html">Entra nella rete</a></nav>
+  <a class="btn div-btn" href="contatti.html">Chiedi un'offerta</a>
+</div></div>
 <main id="contenuto">
 """
 
 
-PIEDE = f"""</main>
-<footer class="piede"><div class="wrap">
-  <div class="col">
-    <div><img src="assets/anchesicura-bianco.png" alt="AncheSicura · La sicurezza di AncheCasa"><p style="margin-top:14px;max-width:280px">La divisione sicurezza del gruppo AncheCasa, in tutta Italia.</p></div>
-    <div><h4>AncheSicura</h4><a href="servizi.html">Servizi</a><a href="corsi.html">Corsi online</a><a href="progetti.html">Settori</a><a href="italia.html">Tutta Italia</a><a href="chi-siamo.html">Chi siamo</a><a href="contatti.html">Contatti</a></div>
-    <div><h4>Società della sicurezza</h4><a href="rete.html">Entra nella rete</a><a href="rete.html#requisiti">Chi cerchiamo</a><a href="rete.html#candidatura">Candidatura</a></div>
-        <div><h4>Una divisione di</h4><a href="https://www.anchecasa.it/" class="logo-ac"><img src="assets/anchecasa-negativo.png" alt="AncheCasa · Costruiamo fiducia"></a></div>
-  </div>
-  <div class="basso"><span>AncheSicura è una divisione di AncheCasa, marchio di Palumbo Investments Srl. Tutti i diritti riservati.</span>
-    <nav aria-label="Informazioni legali"><a href="https://www.anchecasa.it/privacy.html">Privacy</a><a href="https://www.anchecasa.it/cookie.html">Cookie</a><a href="https://www.anchecasa.it/note-legali.html">Note legali</a></nav></div>
-</div></footer>
-<script src="js/ac.js?v=1"></script>
-<script src="js/sicura.js?v=1"></script>
+PIEDE = "</main>\n" + PIEDE_AC + """
+<script src="js/ac.js?v=2"></script>
+<script src="js/sicura.js?v=2"></script>
 </body>
 </html>
 """
@@ -81,7 +80,7 @@ def img(n): return f"img/{n}.jpg"
 
 def hero(foto, kicker, h1, lead, extra="", basso=True, alt=""):
     return f"""<section class="hero{' basso' if basso else ''}">
-  <img src="{img(foto)}" alt="{alt}">
+  <img src="img/pannelli/{foto}.jpg" alt="{alt}">
   <div class="wrap"><p class="kicker">{kicker}</p><h1>{h1}</h1><p class="lead">{lead}</p>{extra}</div>
 </section>
 """
@@ -165,7 +164,15 @@ h += f"""<section class="sez"><div class="wrap"><div class="griglia">
   <div><p class="kicker">Corsi online</p><h2>La formazione obbligatoria,<br>quando vuoi tu.</h2>
     <p>La teoria si segue online, dal computer o dal telefono. La pratica si fa in aula con i nostri istruttori. Attestati e scadenze li teniamo noi.</p>
     {lista(["Lavoratori, preposti e dirigenti", "Aggiornamenti periodici", "HACCP", "Antincendio, primo soccorso e attrezzature in aula"])}
-    <div class="btns" style="margin-top:24px"><a class="btn" href="corsi.html">Vedi i corsi</a></div></div>
+    <p style="margin-top:14px;font-weight:700;color:#16304D">Corsi da 29 € a persona, sotto la media di mercato.</p>
+    <div class="btns" style="margin-top:24px"><a class="btn" href="corsi.html#listino">Listino corsi</a><a class="btn linea" href="corsi.html">Vedi i corsi</a></div></div>
+</div></section>
+<section class="sez carta"><div class="wrap duo">
+  <div><p class="kicker">App AncheSicura</p><h2>La sicurezza della tua azienda,<br>nel telefono.</h2>
+    <p>Dipendenti, corsi, visite, scadenze e DPI firmati in un posto solo. Ogni lavoratore ha il suo patentino sul telefono.</p>
+    {lista(["Modulo Sicurezza: 9 € al mese", "Modulo Sicurezza Cantiere: 19 € al mese", "Avvisi prima che qualcosa scada"])}
+    <div class="btns" style="margin-top:24px"><a class="btn" href="app.html">Scopri l'app</a></div></div>
+  <div class="telefoni due-tel"><figure class="tel-app"><div class="cornice"><img src="img/app/as-sicurezza.jpg" alt="Il quadro della sicurezza nell'app" loading="lazy"></div></figure><figure class="tel-app"><div class="cornice"><img src="img/app/as-patentino.jpg" alt="Il patentino del lavoratore nell'app" loading="lazy"></div></figure></div>
 </div></section>
 <section class="sez blu"><div class="wrap">
   <div class="testa"><div><h2>Come funziona</h2><p style="color:rgba(255,255,255,.82)">Tu hai un riferimento solo. Al resto pensa AncheSicura.</p></div></div>
@@ -182,7 +189,7 @@ h += f"""<section class="sez"><div class="wrap"><div class="griglia">
   <img src="{img('squadra')}" alt="Squadra AncheSicura in cantiere" loading="lazy">
 </div></section>
 <section class="sez"><div class="wrap">
-  <div class="banner"><img src="{img('hero-anchesicura')}" alt=""><div class="t"><p class="kicker">Gruppo AncheCasa</p><h2>Entri in AncheCasa.<br>La sicurezza è già in mano ad AncheSicura.</h2><p>Dall'apertura alla certificazione, in ogni regione.</p><div class="btns"><a class="btn" href="contatti.html">Chiedi un'offerta</a></div></div></div>
+  <div class="banner"><img src="img/pannelli/hero-anchesicura.jpg" alt=""><div class="t"><p class="kicker">Gruppo AncheCasa</p><h2>Entri in AncheCasa.<br>La sicurezza è già in mano ad AncheSicura.</h2><p>Dall'apertura alla certificazione, in ogni regione.</p><div class="btns"><a class="btn" href="contatti.html">Chiedi un'offerta</a></div></div></div>
 </div></section>
 """
 scrivi("index.html", "index", "AncheSicura · La sicurezza di AncheCasa", "AncheSicura, la divisione sicurezza del gruppo AncheCasa: sicurezza sul lavoro in tutta Italia, corsi online, cantieri, medicina del lavoro e certificazioni.", h)
@@ -211,10 +218,26 @@ p += f"""<section class="sez"><div class="wrap">
   <div class="griglia">{''.join(carta(None, f, t, d) for f, t, d in SETTORI_PUBBLICO)}</div>
 </div></section>
 <section class="sez"><div class="wrap">
-  <div class="banner"><img src="{img('cat-cantieri')}" alt=""><div class="t"><h2>Non trovi il tuo settore?</h2><p>Raccontaci dove lavori: ti diciamo come entra AncheSicura, con lo stesso metodo.</p><div class="btns"><a class="btn" href="contatti.html">Scrivici</a></div></div></div>
+  <div class="banner"><img src="img/pannelli/cat-cantieri.jpg" alt=""><div class="t"><h2>Non trovi il tuo settore?</h2><p>Raccontaci dove lavori: ti diciamo come entra AncheSicura, con lo stesso metodo.</p><div class="btns"><a class="btn" href="contatti.html">Scrivici</a></div></div></div>
 </div></section>
 """
 scrivi("progetti.html", "settori", "Settori · AncheSicura", "I settori in cui lavora AncheSicura: cantieri, industrie, navale, dighe, logistica, uffici, alberghi, ristorazione e strutture pubbliche.", p)
+
+CORSI_PREZZI = [
+  ("Lavoratori, parte generale (4 ore)", "Online", 29, 40), ("Generale + specifica rischio basso (8 ore)", "Online", 49, 70),
+  ("Lavoratori rischio medio (12 ore)", "Online + aula", 129, 180), ("Lavoratori rischio alto (16 ore)", "Online + aula", 159, 210),
+  ("Aggiornamento lavoratori (6 ore)", "Online", 45, 65), ("Dirigenti (12 ore)", "Online", 99, 143), ("Datore di lavoro RSPP (16 ore)", "Online", 129, 176),
+  ("Preposto (12 ore)", "Aula", 159, 220), ("Antincendio livello 1", "Aula", 139, 200), ("Antincendio livello 2", "Aula", 179, 250),
+  ("Primo soccorso gruppo B e C", "Aula", 179, 250), ("Primo soccorso gruppo A", "Aula", 239, 330), ("HACCP", "Online", 29, None),
+]
+SERVIZI_PREZZI = [("Visita medica", "da 29 €"), ("POS (piano operativo di sicurezza)", "da 59 €"), ("DUVRI", "da 69 €"), ("DVR", "da 199 €"), ("PSC", "da 199 €"), ("RSPP esterno", "su preventivo")]
+def euro(x): return ("%d €" % x) if x == int(x) else ("%.2f €" % x).replace(".", ",")
+def tab_corsi():
+    r = "".join(f'<tr><td>{n}</td><td>{m}</td><td class="num forte">{euro(p)}</td><td class="num barrato">{euro(q) if q else "—"}</td></tr>' for n, m, p, q in CORSI_PREZZI)
+    return f'<div class="tabella-box"><table class="listino"><thead><tr><th>Corso</th><th>Come</th><th class="num">AncheSicura</th><th class="num">Media di mercato</th></tr></thead><tbody>{r}</tbody></table></div>'
+def tab_servizi():
+    r = "".join(f'<tr><td>{n}</td><td class="num forte">{p}</td></tr>' for n, p in SERVIZI_PREZZI)
+    return f'<div class="tabella-box"><table class="listino"><thead><tr><th>Servizio</th><th class="num">Prezzo</th></tr></thead><tbody>{r}</tbody></table></div>'
 
 # ======================= CORSI =======================
 CORSI_ONLINE = [
@@ -245,6 +268,15 @@ c += f"""<section class="sez"><div class="wrap">
 <section class="sez"><div class="wrap">
   <div class="testa"><div><h2>Corsi in aula</h2><p>In aula o sul posto di lavoro, quando servono la prova pratica e le attrezzature.</p></div></div>
   <div class="griglia">{''.join(carta("contatti.html#servizio=formazione", f, t, d, "Chiedi informazioni", etichetta="In aula") for f, t, d in CORSI_AULA)}</div>
+</div></section>
+<section class="sez carta" id="listino"><div class="wrap">
+  <div class="testa"><div><h2>Listino corsi</h2><p>Prezzi a persona, IVA esclusa. A fianco la media di mercato, indicativa, dei corsi equivalenti.</p></div></div>
+  {tab_corsi()}
+  <div class="btns" style="margin-top:22px"><a class="btn" href="contatti.html#servizio=formazione">Chiedi un corso</a><a class="btn linea" href="app.html">Ordina dall'app</a></div>
+</div></section>
+<section class="sez"><div class="wrap duo" style="align-items:start">
+  <div><h2>Documenti e visite</h2><p>Per i documenti il prezzo finale dipende dall'azienda e dal cantiere: ti mandiamo il preventivo prima di partire.</p></div>
+  {tab_servizi()}
 </div></section>
 <section class="sez blu"><div class="wrap duo">
   <div><h2>Per le aziende<br>e per i loro dipendenti.</h2><p style="color:rgba(255,255,255,.82)">Iscrivi tutto il personale con una richiesta sola. Tu vedi chi ha finito e quando scade ogni attestato.</p>
@@ -307,6 +339,38 @@ it += f"""<section class="sez"><div class="wrap"><div class="griglia tre">
 """
 scrivi("italia.html", "italia", "Tutta Italia · AncheSicura", "AncheSicura lavora in tutta Italia con società della sicurezza selezionate in ogni regione.", it)
 
+# ======================= APP =======================
+def tel(n, didascalia):
+    return f'<figure class="tel-app"><div class="cornice"><img src="img/app/{n}.jpg" alt="{didascalia}" loading="lazy"></div><figcaption>{didascalia}</figcaption></figure>'
+ap = hero("svc-sicurezza", "App AncheSicura", 'La sicurezza della tua azienda,<br><span class="acc">nel telefono.</span>',
+          "Dipendenti, corsi, visite, scadenze e DPI in un posto solo. Ogni lavoratore ha il suo patentino sul telefono. Il consulente vede le aziende che segue.",
+          '<div class="btns"><a class="btn" href="#prezzi">Prezzi</a><a class="btn chiaro" href="contatti.html#servizio=rspp">Chiedi una prova</a></div>', alt="")
+ap += f"""<section class="sez"><div class="wrap">
+  <div class="testa"><div><h2>Come si vede</h2><p>Schermate vere dell'app, con dati di esempio.</p></div></div>
+  <div class="telefoni">{tel("as-sicurezza", "Il quadro della sicurezza")}{tel("as-dipendenti", "Dipendenti e scadenze")}{tel("as-corsi", "Corsi a prezzi sotto il mercato")}</div>
+</div></section>
+<section class="sez carta"><div class="wrap duo">
+  <div><p class="kicker">Per il lavoratore</p><h2>Il patentino<br>sempre in tasca.</h2>
+    {lista(["Corsi, visite e idoneità sempre aggiornati", "Il QR da mostrare all'ingresso del cantiere", "I DPI ricevuti si firmano col dito", "Le segnalazioni partono dal telefono"])}</div>
+  <div class="telefoni due-tel">{tel("as-patentino", "Il patentino del lavoratore")}{tel("as-lavoratore", "La home del lavoratore")}</div>
+</div></section>
+<section class="sez"><div class="wrap duo">
+  <div class="telefoni uno-tel">{tel("as-consulente", "Le aziende del consulente")}</div>
+  <div><p class="kicker">Per il consulente</p><h2>Tutte le aziende<br>che segui.</h2>
+    {lista(["L'azienda ti dà accesso e tu vedi le sue scadenze", "Verbali e sopralluoghi nello stesso fascicolo", "Avvisi prima che qualcosa scada"])}</div>
+</div></section>
+<section class="sez blu" id="prezzi"><div class="wrap">
+  <div class="testa"><div><h2>Prezzi</h2><p style="color:rgba(255,255,255,.82)">I moduli AncheSicura si aggiungono all'abbonamento Impresa AncheCasa (49 € al mese, Ufficio compreso). Prezzi al mese, IVA esclusa.</p></div></div>
+  <div class="griglia">
+    {box("Sicurezza · 9 € al mese", "Dipendenti, corsi, visite, scadenze, DPI firmati, segnalazioni. Patentino per ogni lavoratore.", None, ICO['scudo'])}
+    {box("Sicurezza Cantiere · 19 € al mese", "Ingressi con codice, verbali del coordinatore, checklist del preposto.", None, ICO['casco'])}
+    {box("Corsi", "Si ordinano dall'app ai prezzi del listino AncheSicura.", "corsi.html#listino", ICO['online'])}
+  </div>
+  <div class="btns" style="margin-top:26px"><a class="btn" href="https://www.anchecasa.it/iscriviti.html#azienda-impresa">Iscrivi l'azienda</a><a class="btn chiaro" href="contatti.html#servizio=rspp">Chiedi informazioni</a></div>
+</div></section>
+"""
+scrivi("app.html", "app", "App AncheSicura · Sicurezza nel telefono", "L'app AncheSicura: dipendenti, corsi, visite, scadenze, DPI firmati e patentino del lavoratore. Moduli da 9 € al mese.", ap)
+
 # ======================= ENTRA NELLA RETE =======================
 re_ = hero("chi-incontro", "Per le società della sicurezza", 'Cerchiamo società referenziate<br><span class="acc">in tutta Italia.</span>',
           "AncheSicura è la divisione sicurezza del gruppo AncheCasa. In ogni regione cerchiamo società della sicurezza serie, con esperienza e referenze, per affidare loro gli incarichi del gruppo e dei nostri clienti.",
@@ -322,7 +386,7 @@ re_ += f"""<section class="sez" id="requisiti"><div class="wrap duo" style="alig
   {passi([("Candidatura", "Ci mandi i dati della società, i servizi e le referenze."), ("Verifica", "Controlliamo documenti, figure e referenze."), ("Incontro", "Ci conosciamo e parliamo della tua zona."), ("Contratto", "Entri nella rete e ricevi i primi incarichi.")])}
 </div></section>
 <section class="sez carta" id="candidatura"><div class="wrap duo" style="align-items:start">
-  <div><h2>Candida la tua società</h2><p>Compila il modulo: si apre la tua mail con la candidatura già scritta per AncheSicura. Allega la presentazione della società e le referenze.</p>
+  <div><h2>Candida la tua società</h2><p>Compila il modulo: la candidatura arriva subito ad AncheSicura. Poi ci mandi per mail la presentazione della società e le referenze.</p>
     <img src="{img('squadra')}" alt="Squadra AncheSicura in cantiere" loading="lazy" style="margin-top:24px;border-radius:18px;width:100%"></div>
   <div class="pannello"><form class="modulo" id="f-rete" data-oggetto="AncheSicura · candidatura società della sicurezza">
     <label>Ragione sociale<input name="Ragione sociale" required type="text" autocomplete="organization"></label>
@@ -344,7 +408,7 @@ opz = "".join(f'<option value="{x[0]}">{x[1]}</option>' for x in SERVIZI)
 k = hero("hero-anchesicura", "Contatti", 'Scrivici.<br><span class="acc">Se è urgente, dillo subito.</span>',
          "Ti risponde AncheSicura, con l'azienda della rete più vicina al tuo lavoro.", "", alt="")
 k += f"""<section class="sez"><div class="wrap duo" style="align-items:start">
-  <div><h2>Chiedi un'offerta</h2><p>Compila il modulo: si apre la tua mail con la richiesta già scritta per AncheSicura.</p>
+  <div><h2>Chiedi un'offerta</h2><p>Compila il modulo: la richiesta arriva subito ad AncheSicura.</p>
     <div class="griglia" style="margin-top:24px">
       {box("Tutta Italia", "La stessa cura in ogni regione della rete AncheCasa.", None, ICO['zona'])}
       {box("Urgenze", "Se segni l'urgenza, la richiesta passa davanti.", None, ICO['orologio'])}
@@ -367,8 +431,34 @@ scrivi("contatti.html", "contatti", "Contatti · AncheSicura", "Chiedi un'offert
 open("js/sicura.js", "w", encoding="utf-8").write(open("js/sicura.src.js", encoding="utf-8").read().replace("__MAIL__", MAIL))
 
 open("css/sicura.css", "w", encoding="utf-8").write("""/* AncheSicura: solo le differenze rispetto al sistema AncheCasa */
-.marchio img { height: 52px; width: auto; }
-@media (max-width: 560px) { .marchio img { height: 40px; } }
+.sottobarra { background: #fff; border-bottom: 1px solid #e3e7ee; }
+.sottobarra .wrap { display: flex; align-items: center; gap: 22px; min-height: 64px; }
+.div-marchio { flex: 0 0 auto; display: block; line-height: 0; }
+.div-marchio img { height: 34px; width: auto; max-width: none; display: block; }
+.div-menu { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; flex: 1 1 auto; min-width: 0; }
+.div-menu::-webkit-scrollbar { display: none; }
+.div-menu .voce { white-space: nowrap; padding: 8px 12px; border-radius: 999px; font-weight: 600; font-size: 15px; color: #16304D; text-decoration: none; }
+.div-menu .voce:hover { background: #f1f4f8; }
+.div-menu .voce.on { background: #fdeee2; color: #c45d0c; }
+.div-btn { flex: 0 0 auto; }
+@media (max-width: 860px) { .sottobarra .wrap { flex-wrap: wrap; gap: 8px 14px; padding-block: 10px; } .div-btn { display: none; } .div-menu { flex-basis: 100%; order: 3; flex-wrap: wrap; overflow: visible; } .div-menu .voce { padding: 6px 10px; font-size: 14px; } .div-marchio img { height: 30px; } }
+.tabella-box { overflow-x: auto; background: #fff; border-radius: 18px; border: 1px solid #e3e7ee; }
+table.listino { width: 100%; border-collapse: collapse; font-size: 16px; min-width: 520px; }
+.listino th, .listino td { padding: 13px 18px; text-align: left; border-bottom: 1px solid #edf0f4; }
+.listino th { font-size: 13px; text-transform: uppercase; letter-spacing: .04em; color: #5b6676; background: #f6f8fb; }
+.listino .num { text-align: right; white-space: nowrap; }
+.listino .forte { font-weight: 700; color: #16304D; }
+.listino .barrato { color: #8a94a3; text-decoration: line-through; }
+.listino tr:last-child td { border-bottom: 0; }
+.telefoni { display: flex; gap: 28px; justify-content: center; flex-wrap: wrap; }
+.tel-app { margin: 0; width: 250px; text-align: center; }
+.tel-app .cornice { background: #0e1726; border-radius: 38px; padding: 10px; box-shadow: 0 18px 40px rgba(14,23,38,.22); }
+.tel-app img { display: block; width: 100%; border-radius: 30px; aspect-ratio: 390/844; object-fit: cover; object-position: top; }
+.due-tel .tel-app { width: 220px; }
+.tel-app figcaption { margin-top: 12px; font-weight: 600; color: #3a4556; }
+.sez.blu .tel-app figcaption { color: #fff; }
+@media (max-width: 600px) { .tel-app { width: 78%; } }
+
 .menu .solo-tel { display: none; }
 .testata .accedi { white-space: nowrap; }
 @media (max-width: 1180px) { .testata .accedi { display: none; } }

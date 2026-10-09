@@ -13,6 +13,140 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 2026-10-09 14:45 · Claude
+- anchecasa.it, barra in alto: il logo AncheCasa non si schiaccia più (tra 961 e 1180 px si riduceva fino a sparire). Il menu passa alle tre righe sotto i 1180 px (prima 960), perché il menu intero non sta nella barra sotto ~1160 px.
+- File: solo `sito/css/ac.css` (le due soglie 960 → 1180 e tre righe in fondo). Copia di prima: `_copie-sito-header-1437`. Il file coincide con il ac.css online (deploy dpl_4V4EPDEnw75Q69oU9S8jF4UMjs9x) più queste righe.
+- NON ancora pubblicato. Attenzione: `sito/magazine.html` e `sito/js/magazine.js` locali sono diversi da quelli online (PDF Check Bollette delle 13:37, mai pubblicato): con PUBBLICA-SITO-VERCEL.bat va online anche quello. Nel deploy online ci sono anche i file `.wrangler/cache/*`, che non servono al sito: da escludere.
+
+### 2026-10-09 14:50 · Claude
+- Magazine, Check Bollette (pag. 8) rifatto come modulo guidato, perché sembrava già compilato: campi VUOTI con esempio solo come suggerimento grigio; 3 passi numerati (1 Luce o Gas, 2 «Copia due numeri dalla bolletta» con indicazione di dove trovarli, 3 mesi della bolletta e persone in casa a pulsanti); barra «2 di 4 dati · manca il consumo»; il pulsante «Verifica la mia bolletta» si attiva solo a dati completi.
+- Il risultato si apre in una seconda schermata («Il risultato della tua bolletta», tasto «‹ Cambia i dati») con contatore, cifre, giudizi, «Scarica il report PDF» e «Confronta offerte». «Prova con un esempio» resta come link facoltativo e il risultato porta l'etichetta ESEMPIO.
+- Accetta numeri con la virgola (182,40). Corretto «il 11%» in «l'11%».
+- Ripristinata la variabile `PARTNER_ENERGIA = { nome, url }`: se compilata, il secondo pulsante porta all'azienda luce e gas partner.
+- Report PDF, copertina e altre pagine NON toccati.
+- File: `sito/js/magazine.js`, `sito/css/magazine.css`, `sito/magazine.html` (versioni `?v=16` e `?v=18`). Copia di prima: `_copie-magazine-1435`.
+- NON ancora pubblicato su anchecasa.it.
+
+### 2026-10-09 14:32 · Claude
+- AncheSicura, barra in alto: tolto il pulsante «AncheCasa» accanto a «Chiedi un'offerta» (ai link verso anchecasa.it pensa il piè di pagina). Con lo spazio liberato il menu intero sta nella barra fino a 1181 px: il passaggio alle tre righe torna sotto i 1180 px (era stato alzato a 1320 alle 14:25).
+- File: le 9 pagine HTML (riga del pulsante tolta, `sicura.css?v=` +1) e `css/sicura.css` (solo la soglia), in `sicura-DA-CARICARE-SU-CLOUDFLARE` e `sicura-nuovo`. La regola `.verso-casa` resta nel CSS, inutilizzata. Copia di prima: `_copie-sicura-menu-1427`.
+- NON ancora pubblicato su Cloudflare.
+
+### 2026-10-09 14:25 · Claude
+- AncheSicura, barra in alto: tolto il logo AncheSicura, al suo posto il logo AncheCasa (`assets/anchecasa-colore.png`, identico a `sito/assets/logo-colore.png`). Stessa altezza di anchecasa.it: barra 77 px, logo 46 px da computer e 36 px da telefono (tolta la regola che lo teneva a 36 px ovunque).
+- Il logo non si schiaccia più: `.testata .marchio` non si restringe (prima, con il menu lungo, il logo veniva compresso in larghezza e risultava deformato). Il menu passa alle tre righe sotto i 1320 px (prima 1200) perché logo intero e 8 voci non stavano nella barra tra 1200 e 1290 px.
+- File: le 9 pagine HTML (solo il logo e `sicura.css?v=` +1) e `css/sicura.css`, sia in `sicura-DA-CARICARE-SU-CLOUDFLARE` sia in `sicura-nuovo`. `sicura-nuovo/genera.py` NON è allineato (era già indietro rispetto alla modifica Cursor delle 12:57). Copia di prima: `_copie-sicura-header-1419`.
+- NON ancora pubblicato su Cloudflare.
+
+### 2026-10-09 14:18 · Cursor
+- Aggiornato Vercel: pubblicato https://anchecasa.it, progetto `anchecasa-pulito` (deployment `dpl_4V4EPDEnw75Q69oU9S8jF4UMjs9x`). Con questo invio è andato online anche il report PDF di Check Bollette su carta intestata, che alle 13:37 era ancora da pubblicare.
+- Aggiornato Cloudflare Pages: pubblicato https://sicura.anchecasa.it, progetto «sicura», ramo main, deployment `df91a1c4` (https://df91a1c4.sicura-212.pages.dev). Stessi file di `sicura-DA-CARICARE-SU-CLOUDFLARE`, senza `LEGGIMI.txt`.
+- Supabase non aggiornato: il token della CLI non è più valido e da qui il login automatico non parte. La migrazione `supabase/migrations/20261009100000_energia_offerte_proposte.sql` resta da applicare. Anche `app-anchecasa/sql/app-04-rete-italia.sql` resta da eseguire su Supabase.
+- File: `CLAUDE.md`.
+
+### 2026-10-09 13:50 · Claude
+- App 2.1: nuovo ruolo **Responsabile Rete Italia** (sopra i tre sviluppo rete). Vista sua nell'app: Italia (numeri di tutta la rete e le tre aree), Aree (regione per regione), Clienti, Report recensioni di tutta Italia, Guadagni, Squadra, accordo. Admin: il ruolo compare in Rete e nelle Impostazioni delle provvigioni.
+- Nuove quote della rete (decise da Nando il 09.10.2026): chi porta il cliente 70, sviluppo rete 17, capo area 8, Rete Italia 5; cantieri: segnala 10, chiude 25, segue 30, porta l'impresa 10, sviluppo 12, capo area 8, Rete Italia 5.
+- File: `app-anchecasa/js/*` (viste-rete, viste-admin, viste-comuni, main, q, db, config), `app-anchecasa/sql/app-04-rete-italia.sql` (da eseguire su Supabase dopo app-03), `sql/prove/04-prove.sql`, `LEGGIMI.md`. Copia di prima: `_copie-app-anchecasa-1343`.
+- In `ANCHECASA-LAVORO/file pdf`: presentazione riunione e AncheVoice rifatte (pptx + pdf), 4 contratti con le nuove quote e il nuovo contratto 5 Responsabile Rete Italia (bozza da far controllare). Copia di prima: `ANCHECASA-LAVORO/_copie-file-pdf-09-10-1331`.
+
+### 2026-10-09 13:37 · Claude
+- Magazine, report PDF «Check Bollette» rifatto su carta intestata AncheCasa come i contratti: logo AncheCasa a colori e dati di Palumbo Investment in alto, fascia blu con numero del report (AC-CB-data-ora), tre numeri grandi (costo medio, spesa annua, risparmio), contachilometri del prezzo, giudizi Prezzo e Consumi con bollino colorato, barre di confronto con una famiglia simile, dati della bolletta, «Cosa fare adesso», note e piè di pagina «Pag. 1 di 1». Nome del file: AncheCasa-report-bolletta-luce/gas.pdf.
+- File: `sito/js/magazine.js` (solo la funzione del PDF, sostituita), `sito/magazine.html` (versione `?v=15`). Copia di prima: `_copie-magazine-1336`. Il logo viene da `sito/assets/logo-colore.png`.
+- NON ancora pubblicato. Per Cursor: non rimettere la vecchia funzione `scaricaPdf`.
+
+### 2026-10-09 13:34 · Cursor
+- Magazine si apre sempre sulla copertina, da computer, tablet e telefono. Prima tornava all’ultima pagina aperta.
+- Con il dito, uno scorrimento a sinistra va avanti e uno a destra torna indietro. Un movimento in verticale non gira la pagina.
+- Pubblicato su https://anchecasa.it, progetto Vercel `anchecasa-pulito` (deployment `dpl_BNvaT61S47nNyKMEJBXxVSuJc6R6`).
+- File: `sito/js/magazine.js` (versione `?v=14`), `sito/css/magazine.css` (versione `?v=17`), `sito/magazine.html`, `CLAUDE.md`.
+
+### 2026-10-09 13:30 · Cursor
+- Check Bollette si usa per fare una verifica. In copertina c’è «Verifica la tua bolletta». A pagina 8 la scritta dice di mettere i numeri della propria bolletta e di premere «Verifica la mia bolletta». I numeri di partenza sono un esempio. Dopo la verifica compare il risultato e il tasto diventa «Scarica il report PDF».
+- Pubblicato su https://anchecasa.it, progetto Vercel `anchecasa-pulito` (deployment `dpl_759orQHCSfXq39d999HVNMWzPmRd`).
+- File: `sito/js/magazine.js` (versione `?v=13`), `sito/css/magazine.css` (versione `?v=16`), `sito/magazine.html`, `CLAUDE.md`.
+
+### 2026-10-09 13:21 · Cursor
+- Magazine usa la stessa barra del sito: logo AncheCasa, menu (Per la casa, Per le aziende, Lavora con noi, Come funziona, Prezzi, Magazine) e i tasti Accedi e Iscriviti. Prima, aprendo il Magazine, comparivano un altro logo e un altro menu.
+- La rivista riempie lo schermo sotto la barra, da computer, tablet e telefono.
+- Pubblicato su https://anchecasa.it, progetto Vercel `anchecasa-pulito` (deployment `dpl_DAD6TNeYkN6pVV3LGNZaoMcb5qc7`).
+- File: `sito/magazine.html`, `sito/css/magazine.css` (versione `?v=13`), `CLAUDE.md`.
+
+### 2026-10-09 13:17 · Cursor
+- Magazine si apre a schermo pieno da computer, da tablet e da telefono. Menu e piè di pagina restano nascosti. In alto a sinistra c'è il tasto Home per tornare al sito.
+- Pubblicato su https://anchecasa.it, progetto Vercel `anchecasa-pulito` (deployment `dpl_72VUqjqaPEAErfAxHiRnBZ89FQnh`).
+- File: `sito/css/magazine.css`, `sito/magazine.html` (versione file `?v=12`), `CLAUDE.md`.
+
+### 2026-10-09 13:16 · Cursor
+- Magazine nel menu del sito, da computer, tablet e telefono: voce «Magazine» dopo «Prezzi», dentro la barra e dentro il menu che si apre con le tre righe.
+- Pubblicato su https://anchecasa.it, progetto Vercel `anchecasa-pulito` (deployment `dpl_G5qo4qYgMAmFmuw1NL5WaHHePyWt`). Con questo invio è andato online anche SuperMastro al posto del tasto «Fai il video».
+- File: le 42 pagine HTML del menu in `sito/`, `CLAUDE.md`.
+
+### 2026-10-09 13:10 · Cursor
+- Al posto del tasto «Fai il video» c'è SuperMastro. In home il tasto e la fascia in alto portano a `/supermastro#usa`. Nella pagina SuperMastro lo strumento è lì: video di 5 secondi, poi problema, spiegazione e artigiano vicino.
+- Dopo il video i fotogrammi vanno a `sito/api/supermastro.js` (stessa logica del tecnico: problema, descrizione, mestiere, urgenza, fai da te o avvertenze). La chiave OpenAI resta sul server. Se la chiave manca, dopo il video si conferma cosa si vede e partono spiegazione e ricerca.
+- File: `sito/index.html`, `sito/supermastro.html`, `sito/trova.html`, `sito/js/ac.js`, `sito/api/supermastro.js`, `CLAUDE.md`. Da pubblicare su anchecasa.it con `PUBBLICA-SITO-VERCEL.bat`.
+
+### 2026-10-09 12:57 · Cursor
+- AncheSicura ha una sola barra: logo AncheSicura, menu (Servizi, Corsi online, App, Settori, Tutta Italia, Chi siamo, Contatti, Entra nella rete) e il tasto AncheCasa che porta a https://www.anchecasa.it/. Da telefono resta il menu a tendina e il tasto AncheCasa. Tolta la seconda barra di AncheCasa.
+- Pubblicato su https://sicura.anchecasa.it, progetto Cloudflare Pages «sicura», ramo main, deployment `70aab83b` (https://70aab83b.sicura-212.pages.dev). Senza `LEGGIMI.txt`.
+- File: le 9 pagine HTML e `css/sicura.css` in `sicura-DA-CARICARE-SU-CLOUDFLARE` e in `sicura-nuovo`, `CLAUDE.md`.
+
+### 2026-10-09 12:50 · Cursor
+- Pubblicato https://anchecasa.it sul progetto Vercel `anchecasa-pulito` (deployment `dpl_ArnCUtxvNvYZa2s7ThRFvyDYBYAS`). Magazine e rimandi delle pagine vecchie non modificati: `/magazine` risponde, `/privato` rimanda a `/come-funziona`.
+- Pubblicato https://sicura.anchecasa.it sul progetto Cloudflare Pages «sicura», ramo main, deployment `e6b08c75` (https://e6b08c75.sicura-212.pages.dev). Caricato il contenuto di `sicura-DA-CARICARE-SU-CLOUDFLARE`, senza `LEGGIMI.txt`. In linea c’è la barra di AncheCasa e, sotto, la barra AncheSicura.
+- Le copie di prima restano in `_copie-sito-1226` e `_copie-sicura-DA-CARICARE-SU-CLOUDFLARE-1226`.
+- File: `CLAUDE.md`. Nessuna pagina modificata in questo intervento.
+
+### 2026-10-09 12:43 · Cursor
+- SuperMastro da telefono, pagina Trova artigiano: registra un video di 5 secondi con la fotocamera, poi dice il problema e se si può fare da soli. Se serve un artigiano, elenca i più vicini, con Chiama quando c’è il numero e la scheda su Google Maps.
+- Aggiornati i tre passi nella pagina SuperMastro.
+- Pubblicato su https://anchecasa.it, progetto Vercel `anchecasa-pulito` (deployment `dpl_2FhjJDya5qz9kygVnU3f71bMXPRY`). Con questo invio è andata online anche la grafica preparata alle 12:30 (foto e barre), che era ancora da pubblicare.
+- File: `sito/trova.html`, `sito/supermastro.html`, `sito/js/ac.js`, `sito/css/ac.css`, `CLAUDE.md`.
+
+### 2026-10-09 12:30 · Claude
+- Sicura come divisione di AncheCasa: in alto la stessa barra di AncheCasa (menu, Accedi, Iscriviti, link a anchecasa.it), sotto una seconda barra AncheSicura (Servizi, Corsi, App, Settori, Tutta Italia, Chi siamo, Contatti, Entra nella rete). In fondo lo stesso piè di pagina di AncheCasa. Logo AncheSicura non più stirato.
+- Immagini rifatte su tutti e due i siti: nelle prime sezioni il testo sta sul blu e la foto a destra (da telefono sopra al testo), così testo e foto non si sovrappongono più. Nuove foto ritagliate in `img/pannelli`; le foto di `sito/img/foto` ritagliate in 16:10 per non tagliare loghi e persone (originali nella copia `_copie-sito-1226`).
+- File: `sito/css/ac.css`, `sito/*.html` (nuove), `sito/img/pannelli`, `sito/img/foto`; `sicura-DA-CARICARE-SU-CLOUDFLARE` rifatta; sorgenti in `sito-nuovo` e `sicura-nuovo`. Magazine e vercel.json non toccati.
+- Da pubblicare: anchecasa.it con PUBBLICA-SITO-VERCEL.bat, sicura su Cloudflare Pages (progetto «sicura»).
+
+### 2026-10-09 12:25 · Cursor
+- Magazine nel menu del sito, anche da telefono: voce «Magazine» dopo «Prezzi», dentro il menu che si apre con le tre righe. Prima c’era solo nel piè di pagina.
+- Pubblicato su https://anchecasa.it, progetto Vercel `anchecasa-pulito` (deployment `dpl_CnwUA8mg3rTzE9nMHBt3Uie1S1Y8`).
+- File: le 42 pagine HTML del menu in `sito/` (da `index.html` alle pagine app, servizi, contatti e legali), `CLAUDE.md`.
+
+### 2026-10-09 12:14 · Cursor
+- Pubblicato il sito nuovo su https://sicura.anchecasa.it, progetto Cloudflare Pages «sicura», ramo main, deployment `b7bbb993-a2cd-4faa-b358-9d09dbec966b` (anche https://b7bbb993.sicura-212.pages.dev). Caricato il contenuto di `sicura-DA-CARICARE-SU-CLOUDFLARE`, senza `LEGGIMI.txt`. La cartella `sicura` (versione di prima) non è stata toccata.
+- Controllato in linea: home, /corsi (listino e documenti), /app (schermate e prezzi 9 € e 19 €). Nessuna barra di anteprima. Le immagini rispondono.
+- Prova «Chiedi un'offerta» da https://sicura.anchecasa.it/contatti: nome «Prova pubblicazione Sicura», mail prova-pubblicazione@anchecasa.it, città Roma. Il sito ha risposto «Grazie, richiesta ricevuta». Da questa sessione non si apre l'elenco dell'area privata.
+- File: `CLAUDE.md`. Nessuna pagina del sito modificata in questo intervento.
+
+### 2026-10-09 12:12 · Claude
+- Nuovo sito sicura.anchecasa.it pronto in `sicura-DA-CARICARE-SU-CLOUDFLARE` (versione finale, senza barra anteprima): listino corsi con prezzi e media di mercato, documenti e visite con prezzi, nuova pagina App AncheSicura con schermate dell'app (moduli Sicurezza 9 €, Sicurezza Cantiere 19 €), moduli che scrivono in `marketplace.richieste_iscrizione` (mail di riserva rete@anchecasa.it). Istruzioni nel LEGGIMI.txt della cartella.
+- Sorgente aggiornata in `sicura-nuovo` (copia di prima in `_copie-sicura-nuovo-...`). La cartella `sicura` (versione online di prima) non è stata toccata.
+- NON ancora pubblicato: lo carica Nando su Cloudflare Pages, progetto «sicura».
+
+### 2026-10-09 12:06 · Cursor
+- Pubblicato il sito nuovo su https://anchecasa.it, progetto Vercel `anchecasa-pulito` (deployment `dpl_FhGxsRUWUsSkFzggK6Mae4SRypwt`). Homepage con ricerca e SuperMastro. Magazine ancora in versione 11. Gli indirizzi vecchi rimandano alle pagine nuove. Prezzi online: Artigiano 14,90 €, Impresa 49 €, Fornitore 99 €, tutti i moduli 69 €.
+- Prova di iscrizione inviata a `marketplace.richieste_iscrizione` (nome «Prova pubblicazione», mail prova-pubblicazione@anchecasa.it). Il database l’ha accettata. Da questa sessione non si apre l’elenco dell’area privata.
+- I tre file SQL dell’app (`app-01-supermastro.sql`, `app-02-completa.sql`, `app-03-siti.sql`) restano da eseguire nel SQL Editor di Supabase. Per il sito non servono.
+- Da qui in avanti il Magazine si lavora da solo. Le pagine nuove del sito non si rimettono com’erano.
+- File: `CLAUDE.md`. Nessuna pagina del sito modificata in questo intervento.
+
+### 2026-10-09 12:02 · Cursor
+- Codice GitHub accettato. Inviato il ramo main su https://github.com/anchecasa/anchecasapulito, con i tre commit già pronti, magazine compreso.
+- L’azione Supabase non è partita. Parte solo quando cambiano i file in `supabase/migrations`.
+- File: `CLAUDE.md`.
+
+### 2026-10-09 12:00 · Claude
+- Autorizzazione di Nando (09.10.2026 11:55): «autorizzo modifica pubblica su cartella anchecasapulita su vercel cloudflare e supabase». Scelta di Nando: nuovo sito + Magazine; Sicura dopo prezzi e app.
+- Cartella `sito`: messo il NUOVO sito (quello con barra di ricerca e SuperMastro video 5 secondi) sopra il vecchio. Il Magazine resta com'era (`magazine.html`, `magazine/`, `css/magazine.css`, `js/magazine.js`, `css/sito.css`, `js/sito.js` non toccati). Le vecchie pagine (privato, artigiano, impresa, login…) restano nella cartella ma `vercel.json` le rimanda alle pagine nuove.
+- Prezzi: Artigiano 14,90 €; Impresa 49 € con Ufficio compreso; Fornitore 99 €; moduli in più da 9 € (Sicurezza 9, Sicurezza Cantiere 19, Cantiere e SAL 29, Gare 29, Lotti 9, Centralino 19, Magazzino 9), tutti 69 €.
+- Moduli del sito (iscrizione, contatti, sopralluogo, agenti, partner, opportunità): scrivono in `marketplace.richieste_iscrizione` come il sito di prima; se non parte, si apre la mail a info@anchecasa.it.
+- Copia del sito di prima: `_copie-sito-prima-del-nuovo-1159`. Per tornare indietro: rimettere quella cartella al posto di `sito` oppure rollback su Vercel.
+- NON ancora pubblicato: lo pubblica Nando con `PUBBLICA-SITO-VERCEL.bat`.
+- Per Cursor: il Magazine si lavora come prima; non sovrascrivere `index.html`, `css/ac.css`, `js/ac.js` e le pagine nuove con quelle vecchie.
+
 ### 2026-10-09 11:42 · Cursor
 - Magazine, apertura: la pagina non si sposta più al primo disegno, l’angolo della copertina non si solleva da solo, e uno scorrimento del dito non gira la pagina.
 - Magazine da telefono e da tablet in verticale: la rivista copre tutto lo schermo, menu e piè di pagina restano nascosti, in alto a sinistra c’è il tasto Home per tornare al sito.

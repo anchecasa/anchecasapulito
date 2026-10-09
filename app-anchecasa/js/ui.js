@@ -26,6 +26,15 @@ export const I = {
   kit: P('<path d="M8 3l-5 4 3 3 2-1v12h8V9l2 1 3-3-5-4a4 4 0 0 1-8 0z"/>'),
   posizione: P('<circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><circle cx="12" cy="12" r="8"/>'),
   esci: P('<path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h11"/>'),
+  chat: P('<path d="M4 5h16v11H8l-4 4z"/>'),
+  euro: P('<path d="M18 7a7 7 0 1 0 0 10M4 10h10M4 14h10"/>'),
+  casco: P('<path d="M3 17h18M5 17v-3a7 7 0 0 1 14 0v3"/><path d="M10 7V5h4v2"/>'),
+  gru: P('<path d="M6 21V4l12 3"/><path d="M6 7h12M15 7v6M13 13h4v3h-4z M3 21h8"/>'),
+  gara: P('<path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M17 5h3a3 3 0 0 1-3 4M7 5H4a3 3 0 0 0 3 4"/>'),
+  lotti: P('<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M17.5 14v7M14 17.5h7"/>'),
+  calendario: P('<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>'),
+  griglia: P('<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>'),
+  corso: P('<path d="M2 8l10-5 10 5-10 5z"/><path d="M6 10v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/>'),
 };
 
 /** Toglie i caratteri pericolosi: tutto ciò che arriva da persone o dal database passa di qui. */
@@ -76,7 +85,7 @@ export function toast(testo, tipo) {
   d.className = "toast" + (tipo === "errore" ? " errore" : "");
   d.setAttribute("role", "status");
   d.textContent = testo;
-  document.getElementById("app").appendChild(d);
+  document.body.appendChild(d);
   clearTimeout(timerToast);
   timerToast = setTimeout(() => d.remove(), 3200);
 }

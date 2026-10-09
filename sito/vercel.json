@@ -1,4 +1,236 @@
 {
-  "cleanUrls": true,
-  "trailingSlash": false
+ "cleanUrls": true,
+ "trailingSlash": false,
+ "redirects": [
+  {
+   "source": "/agente",
+   "destination": "/agenti",
+   "permanent": false
+  },
+  {
+   "source": "/agente.html",
+   "destination": "/agenti",
+   "permanent": false
+  },
+  {
+   "source": "/candidatura-agente",
+   "destination": "/agenti",
+   "permanent": false
+  },
+  {
+   "source": "/candidatura-agente.html",
+   "destination": "/agenti",
+   "permanent": false
+  },
+  {
+   "source": "/agenzia",
+   "destination": "/app-agenzie-immobiliari",
+   "permanent": false
+  },
+  {
+   "source": "/agenzia.html",
+   "destination": "/app-agenzie-immobiliari",
+   "permanent": false
+  },
+  {
+   "source": "/albergo",
+   "destination": "/app-hotel",
+   "permanent": false
+  },
+  {
+   "source": "/albergo.html",
+   "destination": "/app-hotel",
+   "permanent": false
+  },
+  {
+   "source": "/apl",
+   "destination": "/servizi",
+   "permanent": false
+  },
+  {
+   "source": "/apl.html",
+   "destination": "/servizi",
+   "permanent": false
+  },
+  {
+   "source": "/artigiano",
+   "destination": "/app-artigiani",
+   "permanent": false
+  },
+  {
+   "source": "/artigiano.html",
+   "destination": "/app-artigiani",
+   "permanent": false
+  },
+  {
+   "source": "/azienda",
+   "destination": "/app",
+   "permanent": false
+  },
+  {
+   "source": "/azienda.html",
+   "destination": "/app",
+   "permanent": false
+  },
+  {
+   "source": "/certificazioni",
+   "destination": "https://sicura.anchecasa.it",
+   "permanent": false
+  },
+  {
+   "source": "/certificazioni.html",
+   "destination": "https://sicura.anchecasa.it",
+   "permanent": false
+  },
+  {
+   "source": "/condominio",
+   "destination": "/app-condominio",
+   "permanent": false
+  },
+  {
+   "source": "/condominio.html",
+   "destination": "/app-condominio",
+   "permanent": false
+  },
+  {
+   "source": "/fornitore",
+   "destination": "/app-materiali-edili",
+   "permanent": false
+  },
+  {
+   "source": "/fornitore.html",
+   "destination": "/app-materiali-edili",
+   "permanent": false
+  },
+  {
+   "source": "/funzioni",
+   "destination": "/app",
+   "permanent": false
+  },
+  {
+   "source": "/funzioni.html",
+   "destination": "/app",
+   "permanent": false
+  },
+  {
+   "source": "/hse",
+   "destination": "https://sicura.anchecasa.it",
+   "permanent": false
+  },
+  {
+   "source": "/hse.html",
+   "destination": "https://sicura.anchecasa.it",
+   "permanent": false
+  },
+  {
+   "source": "/impresa",
+   "destination": "/app-imprese-edili",
+   "permanent": false
+  },
+  {
+   "source": "/impresa.html",
+   "destination": "/app-imprese-edili",
+   "permanent": false
+  },
+  {
+   "source": "/industria",
+   "destination": "/app-capannoni-logistica",
+   "permanent": false
+  },
+  {
+   "source": "/industria.html",
+   "destination": "/app-capannoni-logistica",
+   "permanent": false
+  },
+  {
+   "source": "/login",
+   "destination": "https://areaprivata.anchecasa.it/",
+   "permanent": false
+  },
+  {
+   "source": "/login.html",
+   "destination": "https://areaprivata.anchecasa.it/",
+   "permanent": false
+  },
+  {
+   "source": "/logistica",
+   "destination": "/app-capannoni-logistica",
+   "permanent": false
+  },
+  {
+   "source": "/logistica.html",
+   "destination": "/app-capannoni-logistica",
+   "permanent": false
+  },
+  {
+   "source": "/negozio",
+   "destination": "/app-negozi",
+   "permanent": false
+  },
+  {
+   "source": "/negozio.html",
+   "destination": "/app-negozi",
+   "permanent": false
+  },
+  {
+   "source": "/privato",
+   "destination": "/come-funziona",
+   "permanent": false
+  },
+  {
+   "source": "/privato.html",
+   "destination": "/come-funziona",
+   "permanent": false
+  },
+  {
+   "source": "/professionista",
+   "destination": "/app-studi-tecnici",
+   "permanent": false
+  },
+  {
+   "source": "/professionista.html",
+   "destination": "/app-studi-tecnici",
+   "permanent": false
+  },
+  {
+   "source": "/pubblica",
+   "destination": "/bacheca",
+   "permanent": false
+  },
+  {
+   "source": "/pubblica.html",
+   "destination": "/bacheca",
+   "permanent": false
+  },
+  {
+   "source": "/sicura",
+   "destination": "https://sicura.anchecasa.it",
+   "permanent": false
+  },
+  {
+   "source": "/sicura.html",
+   "destination": "https://sicura.anchecasa.it",
+   "permanent": false
+  },
+  {
+   "source": "/sicurezza-armata",
+   "destination": "/servizi",
+   "permanent": false
+  },
+  {
+   "source": "/sicurezza-armata.html",
+   "destination": "/servizi",
+   "permanent": false
+  },
+  {
+   "source": "/strumenti",
+   "destination": "/app",
+   "permanent": false
+  },
+  {
+   "source": "/strumenti.html",
+   "destination": "/app",
+   "permanent": false
+  }
+ ]
 }

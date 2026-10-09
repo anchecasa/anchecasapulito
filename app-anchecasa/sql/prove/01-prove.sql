@@ -2,7 +2,7 @@
 \set ON_ERROR_STOP 0
 insert into auth.users values ('00000000-0000-0000-0000-00000000000a','p@x'),('00000000-0000-0000-0000-00000000000b','a@x'),('00000000-0000-0000-0000-00000000000c','b@x'),('00000000-0000-0000-0000-00000000000d','admin@x'),('00000000-0000-0000-0000-00000000000e','e@x');
 insert into marketplace.profiles values ('00000000-0000-0000-0000-00000000000a','Giulia Rossi');
-insert into marketplace.admins values ('00000000-0000-0000-0000-00000000000d');
+insert into marketplace.admins (id) values ('00000000-0000-0000-0000-00000000000d');
 create or replace function pg_temp.come(u text) returns void language plpgsql as $$ begin perform set_config('request.jwt.claim.sub', u, false); end $$;
 set role authenticated;
 -- 1 ruoli

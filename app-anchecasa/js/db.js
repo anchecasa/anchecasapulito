@@ -22,6 +22,8 @@ function motoreVero() {
 
   return {
     prova: false,
+    sb,
+    idUtente: () => uid,
     async sessione() {
       const { data } = await sb.auth.getSession();
       const u = data.session && data.session.user;
@@ -136,7 +138,7 @@ function motoreVero() {
 /* MOTORE PROVA (dati di esempio nel browser)                                 */
 /* ======================================================================== */
 function motoreProva() {
-  const CHIAVE = "anchecasa-app-prova-v1";
+  const CHIAVE = "anchecasa-app-prova-v3";
   const adesso = () => new Date().toISOString();
   const fa = (ore) => new Date(Date.now() - ore * 3600e3).toISOString();
   const nuovoId = () => "p-" + Math.random().toString(36).slice(2, 10);
@@ -144,9 +146,20 @@ function motoreProva() {
   const seme = () => ({
     utente: null,
     utenti: {
-      privato: { id: "u-privato", email: "privato@esempio.it", nome: "Giulia (esempio)", citta: "Roma", telefono: "", ruoli: ["privato"], admin: false },
-      artigiano: { id: "u-artigiano", email: "artigiano@esempio.it", nome: "Marco (esempio)", citta: "Roma", telefono: "", ruoli: ["artigiano"], admin: false },
-      admin: { id: "u-admin", email: "admin@esempio.it", nome: "Admin (esempio)", citta: "Roma", telefono: "", ruoli: [], admin: true },
+      privato: { id: "u-privato", email: "privato@esempio.it", nome: "Giulia (esempio)", citta: "Roma", telefono: "", ruoli: ["privato"], admin: false, etichetta: "Privato" },
+      artigiano: { id: "u-artigiano", email: "artigiano@esempio.it", nome: "Marco (esempio)", citta: "Roma", telefono: "", ruoli: ["artigiano"], admin: false, etichetta: "Artigiano" },
+      admin: { id: "u-admin", email: "admin@esempio.it", nome: "Admin (esempio)", citta: "Roma", telefono: "", ruoli: [], admin: true, etichetta: "Admin AncheCasa" },
+      impresa: { id: "u-impresa", email: "impresa@esempio.it", nome: "Roberto (esempio)", citta: "Roma", telefono: "000 000 0101", ruoli: [], admin: false, etichetta: "Impresa · titolare" },
+      operatore: { id: "u-operatore", email: "operatore@esempio.it", nome: "Luca (esempio)", citta: "Roma", telefono: "", ruoli: [], admin: false, etichetta: "Lavoratore" },
+      cliente: { id: "u-cliente", email: "cliente@esempio.it", nome: "Anna (esempio)", citta: "Roma", telefono: "000 000 0102", ruoli: ["privato"], admin: false, etichetta: "Proprietario del cantiere" },
+      partner: { id: "u-partner", email: "partner@esempio.it", nome: "Paolo (esempio)", citta: "Roma", telefono: "", ruoli: [], admin: false, etichetta: "Impresa partner" },
+      fornitore: { id: "u-fornitore", email: "fornitore@esempio.it", nome: "Sara (esempio)", citta: "Roma", telefono: "", ruoli: [], admin: false, etichetta: "Fornitore" },
+      consulente: { id: "u-consulente", email: "consulente@esempio.it", nome: "Elena (esempio)", citta: "Roma", telefono: "", ruoli: [], admin: false, etichetta: "Consulente AncheSicura" },
+      reteitalia: { id: "u-reteitalia", email: "reteitalia@esempio.it", nome: "Giulia R. (esempio)", citta: "Roma", telefono: "", ruoli: [], admin: false, etichetta: "Rete Italia" },
+      sviluppo: { id: "u-sviluppo", email: "sviluppo@esempio.it", nome: "Responsabile Centro (esempio)", citta: "Roma", telefono: "", ruoli: [], admin: false, etichetta: "Sviluppo rete" },
+      capoarea: { id: "u-capoarea", email: "capoarea@esempio.it", nome: "Luca C. (esempio)", citta: "Roma", telefono: "", ruoli: [], admin: false, etichetta: "Capoarea" },
+      agente: { id: "u-agente", email: "agente@esempio.it", nome: "Francesca (esempio)", citta: "Roma", telefono: "", ruoli: [], admin: false, etichetta: "Agente" },
+      subagente: { id: "u-subagente", email: "subagente@esempio.it", nome: "Marta (esempio)", citta: "Roma", telefono: "", ruoli: [], admin: false, etichetta: "Sub-agente" },
     },
     artigiani: [
       { utente: "u-artigiano", nome_attivita: "Idraulica Esempio", mestieri: ["idraulico", "caldaista"], telefono: "000 000 0001", citta: "Roma", lat: 41.876, lng: 12.462, raggio_km: 10, disponibile: true, orari: "Lun-Sab 8-19", piva: "00000000001", descrizione: "Artigiano di esempio per la prova dell'app.", stato: "verificato", creato: fa(400) },
@@ -181,7 +194,9 @@ function motoreProva() {
 
   return {
     prova: true,
-    accessiProva: ["privato", "artigiano", "admin"],
+    idUtente: () => uid(),
+    datiProva: () => db,
+    utentiProva: () => Object.entries(db.utenti).map(([k, u]) => ({ chiave: k, id: u.id, nome: u.nome, email: u.email, etichetta: u.etichetta || k })),
     async sessione() { const u = me(); return u ? { id: u.id, email: u.email, meta: {} } : null; },
     suCambio(cb) { ascolta.push(cb); },
     async entraProva(chi) { db.utente = chi; salva(); },

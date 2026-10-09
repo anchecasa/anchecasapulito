@@ -74,7 +74,7 @@
   /* Iscrizione azienda: tipo e piano precompilati dai prezzi (#azienda-impresa ecc.) */
   var tipo = $("#tipo-azienda");
   if (tipo) {
-    var PIANI = { artigiano: ["Artigiano", "14,90 € al mese", "Iscriviti come artigiano"], impresa: ["Imprese", "49 € al mese", "Iscrivi l'impresa"],
+    var PIANI = { artigiano: ["Artigiano", "14,90 € al mese", "Iscriviti come artigiano"], impresa: ["Imprese", "49 € al mese, Ufficio compreso", "Iscrivi l'impresa"],
       fornitore: ["Fornitori", "99 € al mese", "Iscriviti come fornitore"], gc: ["General contractor", "Richiesta di iscrizione all'albo appalti", "Richiedi l'iscrizione"] };
     var mostraPiano = function () {
       var p = PIANI[tipo.value];
@@ -87,12 +87,39 @@
     tipo.addEventListener("change", mostraPiano); mostraPiano();
   }
 
-  /* Moduli dell'anteprima: non inviano niente */
-  $$("form[data-anteprima]").forEach(function (f) {
+  /* Moduli: la richiesta va nella coda dell'amministrazione (marketplace.richieste_iscrizione),
+     la stessa che usava il sito di prima. Se non parte, si apre la mail a info@anchecasa.it. */
+  var SB = "https://edsvmnxojsmknjuhobqa.supabase.co", SBK = "sb_publishable_QbYv61SkMkjA9_GGb1hhOA_6v6GEw87";
+  var ANTEPRIMA = !/(^|\.)anchecasa\.it$/.test(location.hostname);
+  $$("form[data-invia]").forEach(function (f) {
     f.addEventListener("submit", function (e) {
       e.preventDefault();
       if (!f.checkValidity()) { f.reportValidity(); return; }
-      f.innerHTML = '<p class="esito">' + esc(f.getAttribute("data-anteprima")) + "</p>";
+      var parti = f.getAttribute("data-invia").split("|"), dati = { modulo: parti[1], pagina: location.pathname };
+      $$("input,select,textarea", f).forEach(function (c) {
+        if (c.type === "checkbox" || c.type === "submit" || c.type === "hidden") return;
+        var l = c.closest("label"), k = (l ? l.childNodes[0].textContent : c.name || c.id || "campo").trim();
+        var v = c.type === "file" ? (c.files && c.files[0] ? c.files[0].name : "") : c.value;
+        if (c.tagName === "SELECT" && c.selectedIndex >= 0) v = c.options[c.selectedIndex].text;
+        if (v) dati[k] = String(v).slice(0, 2000);
+        var std = c.type === "email" ? "email" : c.type === "tel" ? "telefono" : { name: "nome", "given-name": "nome", "family-name": "cognome", organization: "ragione" }[c.getAttribute("autocomplete")] || (/^(Regione|Zona|Città)/.test(k) ? "zona" : "");
+        if (v && std && !dati[std]) dati[std] = String(v).slice(0, 300);
+      });
+      dati.at = new Date().toISOString();
+      var btn = $("button[type=submit],button:not([type])", f); if (btn) btn.disabled = true;
+      var fatto = function () { f.innerHTML = '<p class="esito">' + esc(f.getAttribute("data-ok")) + "</p>"; };
+      var errore = function () {
+        if (btn) btn.disabled = false;
+        var testo = Object.keys(dati).map(function (k) { return k + ": " + dati[k]; }).join("\n");
+        var a = "mailto:info@anchecasa.it?subject=" + encodeURIComponent("Richiesta dal sito: " + parti[1]) + "&body=" + encodeURIComponent(testo);
+        var p = $(".esito-err", f) || f.appendChild(document.createElement("p")); p.className = "esito esito-err";
+        p.innerHTML = 'La richiesta non è partita. <a href="' + a + '" style="text-decoration:underline">Mandala per mail</a> a info@anchecasa.it.';
+      };
+      if (ANTEPRIMA) { fatto(); return; }
+      fetch(SB + "/rest/v1/richieste_iscrizione", { method: "POST",
+        headers: { apikey: SBK, Authorization: "Bearer " + SBK, "Content-Type": "application/json", "Content-Profile": "marketplace", Prefer: "return=minimal" },
+        body: JSON.stringify({ famiglia: parti[0], dati: dati }) })
+        .then(function (r) { if (r.ok) fatto(); else errore(); }).catch(errore);
     });
   });
 

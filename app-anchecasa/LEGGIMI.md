@@ -1,82 +1,111 @@
-# App AncheCasa — parte 1 (09.10.2026)
+# App AncheCasa — versione completa 2.0 (09.10.2026)
 
-L'app vera, costruita sul prototipo approvato da Nando.
-È un'app sola per tutti: si entra una volta e si passa da un profilo all'altro.
+Un'app sola per tutti, con un profilo per ogni modo di usarla. Chi ha più profili passa dall'uno all'altro con l'etichetta in alto.
 
-In questa parte ci sono:
-- **Accesso**: entra, crea l'account (privato o artigiano), password dimenticata.
-- **Privato**
-  - SuperMastro: video di 5 secondi → analisi → «Trova l'artigiano vicino a me» → mappa con prima gli **iscritti AncheCasa** (ricevono video e analisi) e poi i **5 più vicini su Google Maps** con «Chiama».
-  - Richieste con il loro stato, recensione con 5 voti, «Segnala ad AncheCasa», «Ristruttura con AncheCasa».
-- **Artigiano (pronto intervento)**
-  - Scheda, verificata da AncheCasa prima di comparire ai privati.
-  - Disponibile o in pausa, richieste ricevute con video e analisi.
-  - «Accetto»: da lì vede il telefono del cliente.
-  - Recensioni con il voto per ogni voce, «Passa a Impresa» se ha i requisiti.
-- **Admin**: cruscotto, verifica degli artigiani, passaggi a Impresa, segnalazioni dei privati.
-- **Altri profili** (impresa, agente, capoarea…): per ora una pagina «arriva nelle prossime versioni». Vanno costruiti uno alla volta.
+| Profilo | Cosa fa nell'app |
+|---|---|
+| **Privato** | SuperMastro: video del guasto → analisi → mappa. Prima gli iscritti AncheCasa, poi i 5 più vicini su Google con «Chiama». Richieste, recensioni, bacheca (vendita, affitto, studenti, lavoro), «Segnala ad AncheCasa» (è il segnalatore), «Ristruttura con AncheCasa», corsi AncheSicura. |
+| **Artigiano** (pronto intervento) | Scheda verificata da AncheCasa; disponibile o in pausa; richieste con video, «Accetto» e telefono del cliente; recensioni; «Passa a Impresa» quando ha i requisiti. |
+| **Impresa** (titolare o responsabile) | Moduli a pagamento: si chiede l'attivazione e AncheCasa li attiva dopo il pagamento. Oggi: cosa c'è da fare. Persone e inviti. Rivendita della sicurezza (30%). Recensioni ricevute. Offerte sui lotti degli altri. |
+| **Lavoratore** | Patentino con il codice per gli ingressi, corsi e visite, firma dei DPI, «Sono in cantiere oggi», segnala un pericolo, avvisi. |
+| **Proprietario del cantiere** | Avanzamento, fasi, foto dal giornale, SAL da approvare o contestare, pagamenti, garanzie (fideiussione e conto dedicato), segnala un problema, chat, recensione a fine lavori. |
+| **Impresa partner** | Cantieri AncheCasa assegnati: giornale, presenze, ingressi, SAL da proporre. Lotti e offerte, i propri moduli, kit del marchio. |
+| **Fornitore** | Richieste di fornitura e noleggio (lotti), offerte, listino prodotti. |
+| **Consulente AncheSicura** | Aziende seguite con il semaforo della sicurezza, sopralluoghi, agenda, schede sicurezza delle aziende. |
+| **Sviluppo rete → Capoarea → Agente → Sub-agente** | Codice personale, vendite e clienti, squadra con inviti al livello sotto, guadagni. Report recensioni (sviluppo: la sua area; capoarea: la sua regione). Accordo da firmare per lo sviluppo rete. |
+| **Admin** | Cruscotto con tutte le divisioni e una lista «Da fare» con tutto quello che aspetta una decisione. Aziende e moduli (attivazione), AncheCasa GC (cantieri, inviti a proprietari e partner), AncheSicura (ordini, rivendite, consulenti), SuperMastro (artigiani, passaggi, segnalazioni), AncheVoice, gare e lotti, rete commerciale (inviti, ruoli, aree, conferma vendite, pagamento provvigioni), economia, report recensioni con CSV per Excel, impostazioni (prezzi e percentuali). |
+
+**Moduli dell'impresa**
+- **Ufficio**: clienti, preventivi con le voci e il PDF, fatture, documenti.
+- **Sicurezza**: dipendenti con il semaforo delle scadenze, corsi e attestati, visite, DPI firmati, segnalazioni, avvisi, sopralluoghi.
+- **Sicurezza Cantiere**: ingressi con il codice del patentino, verbali, checklist del preposto.
+- **Cantiere e SAL**: giornale, presenze, SAL, cronoprogramma, DDT, foto, chat, proprietario e partner invitati.
+- **Gare**: analisi del bando PDF con l'IA, partecipa sì o no, esito e analisi dopo la gara, gara vinta → cantiere.
+- **Lotti e subappalti**: pubblicare un lotto, ricevere offerte, accettarne una.
+- **Centralino**: registro delle chiamate.
+- **Magazzino e mezzi**: scorta minima, scadenze, manutenzioni.
 
 ## Provarla senza toccare niente
+Modalità prova: `index.html?prova`, oppure un doppio clic su `PROVA-APP.bat`, oppure l'anteprima su claude.ai. Si entra con uno qualunque dei 13 profili di esempio. I dati sono finti e stanno solo nel browser.
 
-La modalità prova usa dati di ESEMPIO salvati nel browser: non tocca il database.
-- Aprire `index.html?prova` da un server locale. Basta un doppio clic su `PROVA-APP.bat`.
-- Oppure aprire l'anteprima su claude.ai.
+## Per accenderla (lo fa Nando, in quest'ordine)
 
-## Cosa c'è nella cartella
+**1. Database.** Supabase → progetto ANCHECASA → SQL Editor. Si eseguono quattro file, uno dopo l'altro:
+- `sql/app-01-supermastro.sql` → Run;
+- `sql/app-02-completa.sql` → Run;
+- `sql/app-03-siti.sql` → Run (richieste dai siti nella schermata Admin → Contatti);
+- `sql/app-04-rete-italia.sql` → Run (Responsabile Rete Italia e nuove quote della rete).
 
-| File | Cosa fa |
-|---|---|
-| `index.html`, `css/`, `js/`, `img/`, `vendor/` | L'app. È una web app installabile sul telefono. In seguito si impacchetta per gli store con Capacitor, senza riscriverla. |
-| `js/config.js` | Indirizzo di Supabase, chiave pubblica di Supabase e chiave pubblica di Google Maps. Sono chiavi fatte per stare nel telefono e non sono segrete. |
-| `sql/app-01-supermastro.sql` | Le tabelle nuove dell'app (tutte `app_…`) nello schema `marketplace`. **Non tocca niente dei siti.** |
-| `sql/prove/` | Le prove dei permessi, fatte su un Postgres locale. Da NON eseguire su Supabase. |
-| `supabase/functions/supermastro-analisi/index.ts` | La funzione che analizza il video. È nata da «diagnosi-video» delle viste, con in più il controllo dell'utente, il limite giornaliero e il salvataggio sicuro. |
+Prezzi (09.10.2026): abbonamento base + moduli. Artigiano 14,90 €; Impresa 49 € con Ufficio compreso; Fornitore 99 €; moduli in più da 9 €, tutti insieme 69 €. Si cambiano da Admin → Impostazioni.
 
-## Per accenderla davvero (in quest'ordine, li fa Nando)
+Si possono rilanciare senza danni. Aggiungono solo tabelle `app_…`: i siti e l'area privata non vengono toccati.
 
-**1. Database.** Supabase, progetto ANCHECASA → SQL Editor:
-- incollare tutto `sql/app-01-supermastro.sql` → Run;
-- si può rilanciare senza danni.
+**2. Due funzioni dell'intelligenza artificiale.** Supabase → Edge Functions → Deploy a new function → Via Editor:
+- `supermastro-analisi`: incollare `supabase/functions/supermastro-analisi/index.ts`;
+- `gare-analisi`: incollare `supabase/functions/gare-analisi/index.ts`.
 
-**2. Funzione dell'analisi.** Supabase → Edge Functions → Deploy a new function → Via Editor:
-- nome `supermastro-analisi`, incollare `supabase/functions/supermastro-analisi/index.ts` → Deploy;
-- «Verify JWT» si può lasciare spento: il controllo dell'utente lo fa la funzione.
-- Poi, in Edge Functions → Secrets, va messa **UNA** chiave dell'intelligenza artificiale:
-  - `GEMINI_API_KEY`: guarda il video intero, consigliata;
-  - `ANTHROPIC_API_KEY`: guarda i fotogrammi;
-  - `OPENAI_API_KEY`: guarda i fotogrammi.
-- Le chiavi si incollano solo lì, mai in chat o nei file.
-- Facoltativi:
-  - `DIAGNOSI_ORIGINI`, l'indirizzo dell'app, per esempio `https://app-anchecasa.vercel.app`;
-  - `ANALISI_AL_GIORNO`, predefinito 15 a persona;
-  - `ANALISI_TOTALI_AL_GIORNO`, predefinito 500.
-- Se l'app dice «configurazione mancante», aggiungere nei Secrets `AC_PUBLISHABLE_KEY` e `AC_SECRET_KEY`, prese da Project Settings → API Keys.
+Poi, in Edge Functions → Secrets, va messa **UNA** chiave dell'intelligenza artificiale. La stessa vale per tutte e due le funzioni:
+- `GEMINI_API_KEY`: consigliata, legge video e PDF;
+- `ANTHROPIC_API_KEY`: legge foto e PDF.
 
-**3. Accesso.** Supabase → Authentication → URL Configuration → Redirect URLs:
-- aggiungere l'indirizzo dell'app con `/**` in fondo, per esempio `https://app-anchecasa.vercel.app/**`;
-- serve per le mail di conferma e di nuova password.
+Le chiavi si incollano solo lì, mai in chat o nei file.
 
-**4. Google Maps.** console.cloud.google.com → progetto «anchecasa» → la chiave «AncheCasa area privata» → Restrizioni siti web:
-- aggiungere l'indirizzo dell'app;
-- senza questo, la mappa e i 5 artigiani di Google non compaiono.
+Facoltativi:
+- `DIAGNOSI_ORIGINI`: l'indirizzo dell'app;
+- `ANALISI_AL_GIORNO`: limite per persona, predefinito 15;
+- `ANALISI_TOTALI_AL_GIORNO`: limite per tutti, predefinito 500.
 
-**5. Pubblicazione** (progetto Vercel NUOVO, separato dai siti congelati). Da Cursor:
+Se l'app dice «configurazione mancante», aggiungere nei Secrets `AC_PUBLISHABLE_KEY` e `AC_SECRET_KEY` (Project Settings → API Keys).
+
+**3. Accesso.** Authentication:
+- URL Configuration → Redirect URLs: aggiungere l'indirizzo dell'app con `/**` in fondo;
+- lasciare attiva «Confirm email». Serve agli inviti: la mail deve essere davvero di chi la usa.
+
+**4. Admin.** L'admin dell'app è chi è già nella tabella `marketplace.admins`, cioè Nando. Dall'app:
+- crea «AncheCasa GC» (Cruscotto → AncheCasa GC);
+- invita il primo «Responsabile sviluppo rete» (Rete → Invita).
+
+**5. Google Maps.** Nella chiave «AncheCasa area privata» aggiungere il dominio dell'app tra i siti ammessi.
+
+**6. Pubblicazione** su un progetto Vercel NUOVO, separato dai siti congelati. Da Cursor:
 ```
 cd "C:\Users\palum\Desktop\ANCHECASA-PULITO\app-anchecasa"
 npx vercel deploy --prod --yes --scope anchecasas-projects
 ```
-- La prima volta crea il progetto `app-anchecasa`.
-- Il dominio `app.anchecasa.it` oggi punta al sito: spostarlo sull'app solo con «AUTORIZZO LA MODIFICA: dominio app.anchecasa.it».
+Per spostare `app.anchecasa.it` sull'app serve «AUTORIZZO LA MODIFICA: dominio app.anchecasa.it».
 
-**6. Prima di aprirla al pubblico**, in `js/config.js`:
-- `privacyUrl`: il link all'informativa privacy, con dentro anche i video del guasto e la posizione;
-- `premioSegnalazione`: il testo del premio per chi segnala;
-- `passaggio`: i requisiti da artigiano a Impresa. Oggi sono 20 lavori e una media di 4,5, ma sono solo un esempio.
+**7. Decisioni di Nando**, da mettere nell'app (Admin → Impostazioni) o in `js/config.js`:
+- prezzi dei moduli e listino AncheSicura. Oggi c'è la proposta del 09.10; il listino dei corsi è in `app_impostazioni` (`listino_anchesicura`);
+- percentuali delle provvigioni. Oggi: 20% sul venduto; sub-agente 70%, agente 30%; capoarea e sviluppo 0%. Sono di esempio;
+- premio per chi segnala;
+- requisiti del passaggio da artigiano a Impresa;
+- link all'informativa privacy (`privacyUrl` in `js/config.js`): deve parlare di video, posizione e documenti.
 
-## Sicurezza (controllata il 09.10.2026)
-- Ogni tabella ha i suoi permessi (RLS). Le prove sono in `sql/prove/01-prove.sql`. Una revisione indipendente ha trovato 2 problemi gravi e 7 medi, tutti corretti e riprovati.
-- L'analisi del video la salva solo la funzione, quindi non si può falsificare dal telefono.
-- Ci sono limiti alle analisi: per persona e in totale, al giorno.
-- Il telefono del privato lo vede solo l'artigiano che accetta. Prima di accettare vede solo la zona, non la posizione esatta.
-- Un artigiano non può verificarsi da solo, né recensirsi.
-- Nessuna chiave segreta è nei file.
+## Cosa NON fa ancora (va collegato a parte)
+- **Pagamenti**: l'app non incassa. L'admin attiva i moduli e conferma vendite, ordini e rivendite dopo il pagamento.
+- **Fattura elettronica allo SDI**: le fatture sono un registro.
+- **Centralino AncheVoice**: c'è il registro delle chiamate, non il collegamento telefonico.
+- **Mail automatiche degli inviti**: l'app crea il link e apre la mail già scritta. Il collegamento alla funzione mail esistente si fa dopo.
+- **Notifiche sul telefono (push)**: ci sono solo quelle dentro l'app (la campanella).
+- **App negli store**: si impacchetta questa stessa app con Capacitor (Android e iPhone).
+
+## Sicurezza
+- Ogni tabella ha i suoi permessi. Le prove sono in `sql/prove/`: 01 (SuperMastro), 02 (tutta l'app), 03 (attacchi).
+- Due revisioni indipendenti hanno trovato in tutto 6 problemi gravi e 16 medi, tutti corretti e riprovati. Tra questi:
+  - inviti modificati per darsi un ruolo;
+  - provvigioni doppie;
+  - SAL approvati a nome del cliente;
+  - recensioni false;
+  - prezzi decisi dal telefono;
+  - codice dannoso nelle pagine.
+- Prezzi di moduli e ordini, date, firme dei DPI, approvazioni dei SAL e provvigioni li decide il database, non il telefono.
+- Nessuna chiave segreta nei file.
+
+
+## Responsabile Rete Italia (09.10.2026)
+- Rete: Responsabile Rete Italia → sviluppo rete (Nord, Centro, Sud e isole) → capoarea → agente → sub-agente.
+- Lo crea l'admin: Admin → Rete → «Invita nella rete», ruolo «Responsabile Rete Italia». Lui invita gli sviluppo rete; l'area la assegna l'admin.
+- Nell'app ha la sua vista: Italia (numeri di tutta la rete, le tre aree), Aree (regione per regione: capo area, agenti, clienti, «da aprire»), Clienti di tutta la rete, Report recensioni di tutta Italia, Guadagni, Squadra, accordo da firmare.
+- Vede tutte le persone, le vendite e le provvigioni della rete.
+- Quote (Admin → Impostazioni → Provvigioni): chi porta il cliente 70, sviluppo rete 17, capo area 8, Rete Italia 5. Il sub-agente tiene il 70% della quota di chi porta il cliente, il 30% va al suo agente. La «quota della rete sul venduto» (20%) è di esempio: va messa quella vera.
+- Prove SQL: `sql/prove/04-prove.sql` (dopo 02-prove).

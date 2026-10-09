@@ -1,0 +1,18 @@
+SITO sicura.anchecasa.it - versione nuova del 09.10.2026 (pronta da caricare)
+
+Pagine: home, servizi, corsi online con LISTINO PREZZI, App AncheSicura (nuova), settori,
+tutta Italia, chi siamo, entra nella rete, contatti.
+
+COME CARICARLO (Cloudflare Pages, progetto "sicura"):
+1. Entra su dash.cloudflare.com -> Workers & Pages -> progetto "sicura".
+2. "Create deployment" / "Carica" -> trascina TUTTO il contenuto di questa cartella
+   (non la cartella stessa: i file index.html, css, img, js, assets...).
+3. Deploy. Controlla https://sicura.anchecasa.it (anche /corsi e /app).
+
+Per tornare indietro: ricarica la cartella "sicura" (la versione di prima)
+oppure Desktop\ANCHECASA-LAVORO\CONGELATO-NANDO-1\sicura.anchecasa.it.
+
+I moduli (Chiedi un'offerta, Entra nella rete) mandano la richiesta nell'area privata
+AncheCasa (richieste di iscrizione, famiglia "azienda", modulo "anchesicura ...").
+Se non parte, si apre la mail a rete@anchecasa.it.
+I prezzi di mercato nel listino sono una media indicativa.

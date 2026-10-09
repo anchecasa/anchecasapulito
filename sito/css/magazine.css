@@ -33,8 +33,7 @@
 }
 .mg-root:fullscreen .mg-stage { flex: 1 1 auto; min-height: 0; visibility: visible; }
 
-/* Colonna ferma: menu, rivista, piè di pagina. L'altezza non cresce dopo e non copre il footer.
-   Sul telefono il footer non c'è e l'altezza non viene riscritta a ogni movimento della barra. */
+/* La barra è quella del sito. La rivista riempie tutto lo schermo sotto la barra. */
 body[data-page="magazine"] {
   display: flex;
   flex-direction: column;
@@ -73,41 +72,15 @@ body[data-page="magazine"] .mg-stage {
 body[data-page="magazine"] .mg-root.is-ready .mg-stage { visibility: visible; }
 body[data-page="magazine"] .mg-controls,
 body[data-page="magazine"] .mg-hint { flex: none; }
-.mg-home { display: none; }
-@media (max-width: 899px) {
-  body[data-page="magazine"] .site-chrome,
-  body[data-page="magazine"] .site-footer,
-  body[data-page="magazine"] .mg-hint { display: none; }
-  body[data-page="magazine"] .mg-root {
-    position: fixed;
-    inset: 0;
-    z-index: 60;
-    width: 100%;
-    height: 100%;
-    height: 100dvh;
-    padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
-    background: #141c28;
-  }
-  .mg-home {
-    display: block;
-    position: absolute;
-    z-index: 30;
-    top: calc(8px + env(safe-area-inset-top));
-    left: 10px;
-    padding: 6px 12px;
-    border-radius: 999px;
-    background: rgba(26, 36, 50, .78);
-    color: #FBF8F3;
-    font-family: var(--mg-sans);
-    font-weight: 700;
-    font-size: 11px;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    text-decoration: none;
-  }
-}
+body[data-page="magazine"] .testata { flex: none; position: relative; }
+body[data-page="magazine"] .mg-hint,
+body[data-page="magazine"] .mg-home { display: none; }
+body[data-page="magazine"] .mg-root { background: #141c28; }
+body[data-page="magazine"] .mg-root img { max-width: none; }
 
-.mg-stage { position: relative; margin: 0 auto; touch-action: pan-y; }
+.mg-stage { position: relative; margin: 0 auto; touch-action: none; }
+.mg-stage input, .mg-stage select, .mg-stage textarea, .mg-stage button, .mg-stage a { touch-action: manipulation; }
+.is-single .mg-body { touch-action: pan-y; }
 .mg-scaler { position: absolute; top: 0; left: 50%; transform-origin: top center; }
 .mg-book {
   position: relative;
@@ -478,7 +451,7 @@ body[data-page="magazine"] .mg-hint { flex: none; }
 
 /* ===== app Check Bollette ===== */
 .mg-app-page { background: radial-gradient(ellipse at 15% 0%, #33496a 0%, #1a2432 60%, #121a26 100%); color: #fff; padding: 30px 30px 44px; box-sizing: border-box; }
-.is-single .mg-app-page { padding: 24px 18px 44px; }
+.is-single .mg-app-page { padding: 16px 16px 36px; }
 .mg-app-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
 .mg-app-head .mg-kicker { color: var(--mg-orange); } .mg-app-head .mg-kicker::after { display: none; }
 .mg-app-title { font-family: var(--mg-display); font-weight: 700; font-size: 40px; line-height: 1; margin: 6px 0 4px; color: #fff; }
@@ -491,6 +464,8 @@ body[data-page="magazine"] .mg-hint { flex: none; }
 .mg-app .mg-seg button { display: inline-flex; align-items: center; gap: 5px; border-radius: 999px; padding: 6px 14px; font-size: 12px; }
 .mg-app .mg-seg button[aria-pressed="true"] { background: var(--mg-navy); color: #fff; box-shadow: 0 2px 6px rgba(26,36,50,.3); }
 .mg-app .mg-example { font-size: 8.5px; color: var(--mg-ink-2); background: #fff4e9; color: #b45309; padding: 3px 8px; border-radius: 999px; letter-spacing: .06em; }
+.mg-check-prompt { font-size: 13px; line-height: 1.35; color: #1a2432; background: #fff4e9; border-radius: 10px; padding: 12px; margin: 8px 0 2px; }
+.mg-check-prompt b { color: #c2560a; }
 .mg-app .mg-fields { gap: 8px 10px; margin: 10px 0 8px; }
 .mg-app .mg-field label { font-size: 8.5px; letter-spacing: .1em; margin-bottom: 4px; color: #6b7280; }
 .mg-inp { display: flex; align-items: center; background: #f6f7f9; border: 1.5px solid #e5e7eb; border-radius: 10px; padding: 0 10px; transition: border-color .15s, box-shadow .15s; }
@@ -518,9 +493,9 @@ body[data-page="magazine"] .mg-hint { flex: none; }
 .mg-app .mg-tool-actions { margin-top: 9px; }
 .mg-cta.wide { flex: 1; justify-content: center; border-radius: 10px; padding: 11px 14px; box-shadow: 0 8px 18px rgba(229,107,16,.35); }
 .mg-app .mg-cta.ghost { border-radius: 10px; }
-.mg-app-note { font-family: var(--mg-sans); font-size: 8px; line-height: 1.4; color: rgba(255,255,255,.55); margin: 9px 2px 0; }
-.is-single .mg-app-res { grid-template-columns: 1fr; }
-.is-single .mg-tiles2 { grid-template-columns: repeat(3, 1fr); }
+.mg-app-note { font-family: var(--mg-sans); font-size: 8px; line-height: 1.35; color: rgba(255,255,255,.55); margin: 4px 2px 0; }
+.is-single .mg-app-res { grid-template-columns: 1.05fr 0.95fr; }
+.is-single .mg-tiles2 { grid-template-columns: 1fr; }
 .is-single .mg-app-title { font-size: 34px; }
 
 /* angolo che si solleva */
@@ -538,3 +513,43 @@ body[data-page="magazine"] .mg-hint { flex: none; }
 .is-single .mg-p17 > .mg-photo { width: 100% !important; height: 24% !important; }
 .is-single .mg-p17 > .mg-pad { padding: 18px 26px 44px !important; }
 .is-single .mg-p17 .mg-folio { left: 26px !important; }
+
+/* ===== Check Bollette: modulo guidato (09.10.2026 14:40) ===== */
+.mg-step { display: flex; align-items: center; gap: 8px; margin: 10px 0 6px; font-family: var(--mg-sans); }
+.mg-step:first-child { margin-top: 0; }
+.mg-step .n { width: 20px; height: 20px; border-radius: 50%; background: var(--mg-navy); color: #fff; display: grid; place-items: center; font-size: 11px; font-weight: 800; flex: none; }
+.mg-step .t { font-size: 13px; font-weight: 800; color: var(--mg-navy); }
+.mg-app .mg-seg.big { display: flex; width: 100%; }
+.mg-app .mg-seg.big button { flex: 1; justify-content: center; padding: 9px 12px; font-size: 13.5px; }
+.mg-app .mg-fields { margin: 0; }
+.mg-hint-f { display: block; font-family: var(--mg-sans); font-size: 10px; color: #6b7280; margin-top: 3px; line-height: 1.25; }
+.mg-inp input::placeholder { color: #b8bec9; font-weight: 600; }
+.mg-inp.ok { border-color: #3f9d63; background: #f3fbf6; }
+.mg-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 5px 0; font-family: var(--mg-sans); }
+.mg-row .l { font-size: 11.5px; font-weight: 700; color: #374151; white-space: nowrap; }
+.mg-chips { display: flex; gap: 5px; flex-wrap: wrap; justify-content: flex-end; }
+.mg-chips button { all: unset; box-sizing: border-box; cursor: pointer; min-width: 34px; text-align: center; padding: 6px 9px; border-radius: 999px; border: 1.5px solid #e5e7eb; background: #f6f7f9; font: 700 12px var(--mg-sans); color: var(--mg-navy); }
+.mg-chips button:hover { border-color: #cbd2dc; }
+.mg-chips button[aria-checked="true"] { background: var(--mg-navy); border-color: var(--mg-navy); color: #fff; }
+.mg-chips button:focus-visible { outline: 2px solid var(--mg-orange); outline-offset: 2px; }
+.mg-prog { display: flex; align-items: center; gap: 8px; margin: 10px 0 8px; font-family: var(--mg-sans); }
+.mg-prog .bar { flex: 1; height: 6px; border-radius: 999px; background: #eef0f4; overflow: hidden; }
+.mg-prog .bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #f2b33d, var(--mg-orange)); border-radius: 999px; transition: width .3s ease; }
+.mg-prog span { font-size: 10.5px; font-weight: 700; color: #6b7280; white-space: nowrap; }
+#mg-b-go { width: 100%; box-sizing: border-box; justify-content: center; }
+#mg-b-go:disabled { background: #d7dbe2; color: #6b7280; box-shadow: none; cursor: not-allowed; }
+.mg-demo { font-family: var(--mg-sans); font-size: 10.5px; color: #6b7280; text-align: center; margin: 8px 0 0; }
+.mg-demo button { all: unset; cursor: pointer; color: var(--mg-navy); font-weight: 700; text-decoration: underline; }
+.mg-demo button:focus-visible { outline: 2px solid var(--mg-orange); }
+.mg-res-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 6px; font-family: var(--mg-sans); }
+.mg-res-head > span { font-size: 13px; font-weight: 800; color: var(--mg-navy); display: flex; align-items: center; gap: 6px; }
+.mg-res-head button { all: unset; cursor: pointer; font-size: 11px; font-weight: 700; color: var(--mg-navy); padding: 4px 10px; border: 1.5px solid #e5e7eb; border-radius: 999px; }
+.mg-res-head button:hover { background: #f6f7f9; }
+.mg-tag-es { font-size: 9.5px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; background: #fff4e9; color: #b45309; padding: 2px 7px; border-radius: 999px; }
+.mg-app-sub { display: block; }
+.mg-app-note { font-size: 9.5px; }
+.is-single .mg-step .t { font-size: 13.5px; }
+.is-single .mg-hint-f, .is-single .mg-prog span, .is-single .mg-demo { font-size: 11px; }
+.is-single .mg-row .l { font-size: 12px; }
+.is-single .mg-chips button { padding: 6px 8px; min-width: 30px; }
+.is-single .mg-app-note { font-size: 10.5px; }

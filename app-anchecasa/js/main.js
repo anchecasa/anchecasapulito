@@ -3,10 +3,11 @@
 import { CONFIG } from "./config.js";
 import { DB } from "./db.js";
 import { I, esc, voce, lista, sez, stato, num, btn, campo, vuoto, avviso, stelle, virgola, km, telLink, quando, MESTIERI, nomeMestiere, toast, foglio, chiudiFoglio, spiegaErrore } from "./ui.js";
+import { Q } from "./q.js";
 import { filma, corpoAnalisi, dataUrlBlob, miaPosizione, coordinateDi, cercaGoogle, disegnaMappa, googleDiProva, mappaDiProva, kmTra } from "./sm.js";
 
 const app = document.getElementById("app");
-const S = { utente: null, profilo: null, ruoli: [], admin: false, ruolo: null, ricerca: null, recupero: false };
+const S = { utente: null, profilo: null, ruoli: [], admin: false, ruolo: null, base: null, org: null, profili: [], miei: null, ricerca: null, recupero: false, nonLette: 0 };
 const memo = {
   get(k) { try { return localStorage.getItem("ac-app-" + k); } catch (e) { return null; } },
   set(k, v) { try { localStorage.setItem("ac-app-" + k, v); } catch (e) { /* niente */ } },
@@ -21,10 +22,16 @@ const PROFILI = {
   admin: { nome: "Admin", tabs: [["ad-home", "grafico", "Cruscotto"], ["ad-artigiani", "kit", "Artigiani"], ["ad-passaggi", "ufficio", "Passaggi"], ["ad-segnalazioni", "rete", "Segnalazioni"], ["profilo", "utente", "Profilo"]] },
   altro: { nome: "", tabs: [["presto", "casa", "Home"], ["profilo", "utente", "Profilo"]] },
 };
-const NOMI_RUOLI = { privato: "Privato", artigiano: "Artigiano", admin: "Admin", impresa: "Impresa", fornitore: "Fornitore", cliente: "Proprietario del cantiere", operatore: "Lavoratore", agente: "Agente", subagente: "Sub-agente", capoarea: "Capoarea", sviluppo: "Sviluppo rete", consulente: "Consulente AncheSicura", partner: "Impresa partner" };
-const profiloDi = (r) => PROFILI[r] || PROFILI.altro;
-const ruoliDisponibili = () => [...S.ruoli, ...(S.admin ? ["admin"] : [])];
-const ACCESSO = ["benvenuto", "entra", "registrati", "recupera", "mail", "nuova-password"];
+const NOMI_RUOLI = { privato: "Privato", artigiano: "Artigiano", admin: "Admin", impresa: "Impresa", fornitore: "Fornitore", cliente: "Proprietario del cantiere", operatore: "Lavoratore", agente: "Agente", subagente: "Sub-agente", capoarea: "Capoarea", sviluppo: "Sviluppo rete", reteitalia: "Rete Italia", consulente: "Consulente AncheSicura", partner: "Impresa partner" };
+const profiloDi = (r) => PROFILI[String(r || "").split(":")[0]] || PROFILI.altro;
+const ruoliDisponibili = () => S.profili.map((p) => p.k);
+const nomeProfilo = (k) => (S.profili.find((p) => p.k === k) || {}).nome || NOMI_RUOLI[String(k).split(":")[0]] || k;
+const ACCESSO = ["benvenuto", "entra", "registrati", "recupera", "mail", "nuova-password", "invito"];
+const PREFERENZA = ["admin", "impresa", "fornitore", "partner", "consulente", "operatore", "cliente", "reteitalia", "sviluppo", "capoarea", "agente", "subagente", "artigiano", "privato"];
+function scegliProfilo(k) {
+  S.ruolo = k; S.base = String(k).split(":")[0]; S.org = String(k).split(":")[1] || null;
+  if (S.utente) memo.set("ruolo-" + S.utente.id, k);
+}
 
 /* ------------------------------------------------------------------------ */
 /* Navigazione                                                               */
@@ -48,8 +55,10 @@ async function render() {
   chiudiFoglio();
   const { nome, param } = rotta();
   if (S.recupero && nome !== "nuova-password") return vai("nuova-password", true);
+  if (!S.utente && nome === "invito" && param) { try { sessionStorage.setItem("ac-invito", param); } catch (e) { /* niente */ } return vai("benvenuto", true); }
   if (!S.utente && !ACCESSO.includes(nome)) return vai("benvenuto", true);
-  if (S.utente && !S.recupero && (ACCESSO.includes(nome) || !nome) && nome !== "mail") return vai(casa(), true);
+  if (S.utente && nome !== "invito") { let t = null; try { t = sessionStorage.getItem("ac-invito"); sessionStorage.removeItem("ac-invito"); } catch (e) { /* niente */ } if (t) return vai("invito/" + t, true); }
+  if (S.utente && !S.recupero && (ACCESSO.includes(nome) || !nome) && nome !== "mail" && nome !== "invito") return vai(casa(), true);
   const vista = V[nome];
   if (!vista) return vai(S.utente ? casa() : "benvenuto", true);
 
@@ -73,8 +82,10 @@ function disegna(v, tabs, attiva) {
     return;
   }
   const disp = ruoliDisponibili();
-  const chip = S.ruolo ? `<button type="button" class="chip-profilo" data-az="cambia-ruolo" ${disp.length > 1 ? "" : "disabled"}>${esc(NOMI_RUOLI[S.ruolo] || S.ruolo)}${disp.length > 1 ? " ▾" : ""}</button>` : "";
-  const testa = `<header class="alto">${v.back ? `<button type="button" class="indietro" data-az="indietro" aria-label="Indietro">${I.indietro}</button>` : ""}${v.t ? `<h1 class="tit">${esc(v.t)}</h1>` : `<img class="logo" src="img/logo-colore.png" alt="AncheCasa"><span class="tit"></span>`}${chip}</header>`;
+  const nomeChip = (S.profili.find((p) => p.k === S.ruolo) || {}).corto || NOMI_RUOLI[S.base] || S.ruolo;
+  const chip = S.ruolo ? `<button type="button" class="chip-profilo" data-az="cambia-ruolo" ${disp.length > 1 ? "" : "disabled"}>${esc(nomeChip)}${disp.length > 1 ? " ▾" : ""}</button>` : "";
+  const campana = `<button type="button" class="campana" data-go="notifiche" aria-label="Notifiche${S.nonLette ? ": " + S.nonLette + " da leggere" : ""}">${I.campana}${S.nonLette ? "<i></i>" : ""}</button>`;
+  const testa = `<header class="alto">${v.back ? `<button type="button" class="indietro" data-az="indietro" aria-label="Indietro">${I.indietro}</button>` : ""}${v.t ? `<h1 class="tit">${esc(v.t)}</h1>` : `<img class="logo" src="img/logo-colore.png" alt="AncheCasa"><span class="tit"></span>`}${chip}${campana}</header>`;
   const basso = tabs ? `<nav class="basso" aria-label="Menu">${tabs.map(([r, ico, et, centro]) => `<button type="button" data-tab="${r}" class="${r === attiva ? "on" : ""} ${centro ? "piu" : ""}" ${r === attiva ? 'aria-current="page"' : ""}>${centro ? `<span class="tondo">${I[ico]}</span>` : I[ico]}<span>${et}</span></button>`).join("")}</nav>` : "";
   app.innerHTML = `${fasciaProva}${testa}<main class="schermo" id="schermo">${v.h}</main>${basso}`;
 }
@@ -85,14 +96,45 @@ function disegna(v, tabs, attiva) {
 async function caricaUtente() {
   const u = await DB.sessione();
   S.utente = u;
-  if (!u) { S.ruoli = []; S.admin = false; S.ruolo = null; S.profilo = null; return; }
+  if (!u) { S.ruoli = []; S.admin = false; S.ruolo = null; S.base = null; S.org = null; S.profili = []; S.profilo = null; S.miei = null; return; }
   S.profilo = await DB.profilo(u.meta || {});
   const r = await DB.ruoli(u.meta || {}, S.profilo.famiglia);
   S.ruoli = r.ruoli; S.admin = r.admin;
+  await caricaProfili();
   const disp = ruoliDisponibili();
   const salvato = memo.get("ruolo-" + u.id);
-  S.ruolo = disp.includes(salvato) ? salvato : disp[0] || "privato";
-  if (!disp.length) S.ruoli = ["privato"];
+  const pref = PREFERENZA.map((b) => disp.find((k) => k.split(":")[0] === b)).find(Boolean);
+  scegliProfilo(disp.includes(salvato) ? salvato : pref || "privato");
+  aggiornaNonLette();
+}
+/** Tutti i profili di chi è entrato: privato/artigiano (parte 1) + aziende, cantieri, rete, admin (parte 2). */
+async function caricaProfili() {
+  const P = [];
+  let m = null;
+  try { m = await Q.rpc("app_miei_profili"); } catch (e) { console.warn("profili parte 2 non disponibili", e); }
+  S.miei = m || { ruoli: S.ruoli, admin: S.admin, org: [], accessi: [], rete: null };
+  if (m) S.admin = !!m.admin || S.admin;
+  S.ruoli.filter((x) => ["privato", "artigiano"].includes(x)).forEach((x) => P.push({ k: x, nome: NOMI_RUOLI[x], corto: NOMI_RUOLI[x] }));
+  (S.miei.org || []).forEach((o) => {
+    if (o.stato !== "attiva") return;
+    if (["titolare", "responsabile"].includes(o.ruolo)) {
+      const b = o.tipo === "fornitore" ? "fornitore" : o.tipo === "partner" ? "partner" : "impresa";
+      P.push({ k: b + ":" + o.id, nome: (o.tipo === "gc" ? "AncheCasa GC" : NOMI_RUOLI[b]) + " · " + o.nome, corto: o.tipo === "gc" ? "AncheCasa GC" : NOMI_RUOLI[b], org: o });
+    } else if (o.ruolo === "operatore") P.push({ k: "operatore:" + o.id, nome: "Lavoratore · " + o.nome, corto: "Lavoratore", org: o });
+  });
+  if ((S.miei.org || []).some((o) => o.ruolo === "consulente")) P.push({ k: "consulente", nome: NOMI_RUOLI.consulente, corto: "Consulente" });
+  if ((S.miei.accessi || []).some((a) => a.ruolo === "cliente")) P.push({ k: "cliente", nome: "Il mio cantiere", corto: "Il mio cantiere" });
+  if ((S.miei.accessi || []).some((a) => a.ruolo === "partner") && !P.some((p) => p.k.startsWith("partner:"))) P.push({ k: "partner", nome: NOMI_RUOLI.partner, corto: "Partner" });
+  if (S.miei.rete && S.miei.rete.stato === "attivo") P.push({ k: S.miei.rete.ruolo, nome: NOMI_RUOLI[S.miei.rete.ruolo], corto: NOMI_RUOLI[S.miei.rete.ruolo] });
+  if (S.admin) P.push({ k: "admin", nome: "Admin AncheCasa", corto: "Admin" });
+  if (!P.length) P.push({ k: "privato", nome: "Privato", corto: "Privato" });
+  S.profili = P;
+}
+async function aggiornaNonLette() {
+  try {
+    const n = (await Q.sel("app_notifiche", { eq: { utente: S.utente.id, letto: false }, lim: 50 })).length;
+    if (n !== S.nonLette) { S.nonLette = n; const c = document.querySelector(".alto .campana"); if (c) c.innerHTML = I.campana + (n ? "<i></i>" : ""); }
+  } catch (e) { /* tabella non ancora pronta */ }
 }
 async function avvia() {
   DB.suCambio(async (evento) => {
@@ -116,7 +158,7 @@ V.benvenuto = async () => ({
     <p>Fai un video del guasto: SuperMastro ti dice cosa succede e ti mostra gli artigiani vicini.</p>
     ${DB.prova
       ? `${avviso("Questa è la prova dell'app: scegli chi vuoi essere. Tutti i dati sono di esempio.")}<div style="height:14px"></div>
-         ${btn(I.utente + " Entra come privato", "prova:privato")}<div style="height:8px"></div>${btn(I.kit + " Entra come artigiano", "prova:artigiano", "blu")}<div style="height:8px"></div>${btn(I.grafico + " Entra come admin", "prova:admin", "chiaro")}
+         <div class="griglia-prova">${DB.utentiProva().map((u) => `<button type="button" class="btn chiaro" data-az="prova:${esc(u.chiave)}">${esc(u.etichetta)}</button>`).join("")}</div>
          <div style="height:14px"></div><button type="button" class="link" data-az="azzera-prova">Ricomincia la prova da capo</button>`
       : `${btn("Entra", "go:entra")}<div style="height:10px"></div>${btn("Crea un account", "go:registrati", "chiaro")}`}
     <p class="piede">AncheCasa · Costruiamo fiducia</p></div>`,
@@ -178,7 +220,8 @@ V.profilo = async () => {
       <div class="card"><div class="riga"><span class="ico blu">${I.utente}</span><div class="cresci"><b>${esc(p.nome || "Il tuo profilo")}</b><small>${esc(S.utente.email || "")}</small></div></div></div>
       <div style="height:14px"></div>
       ${sez("I tuoi dati", lista([voce("doc", "Nome, città e telefono", esc([p.citta, p.telefono].filter(Boolean).join(" · ") || "Da completare"), "dati")]))}
-      ${disp.length > 1 ? sez("I tuoi profili", lista(disp.map((r) => voce(r === "admin" ? "grafico" : r === "artigiano" ? "kit" : "utente", esc(NOMI_RUOLI[r] || r), r === S.ruolo ? "In uso adesso" : "Tocca per passare a questo profilo", r === S.ruolo ? null : "ruolo/" + r, r === S.ruolo ? "verde" : "blu")))) : ""}
+      ${disp.length > 1 ? sez("I tuoi profili", lista(disp.map((r) => voce(icoProfilo(r), esc(nomeProfilo(r)), r === S.ruolo ? "In uso adesso" : "Tocca per passare a questo profilo", r === S.ruolo ? null : "ruolo/" + r, r === S.ruolo ? "verde" : "blu")))) : ""}
+      ${PROFILO_EXTRA.map((f) => f()).join("")}
       ${S.ruoli.includes("privato") ? sez("Segnala ad AncheCasa", lista([voce("rete", "Segnala chi ha bisogno di noi", segn.length ? `${segn.length} segnalazion${segn.length === 1 ? "e" : "i"}` : "Chi deve ristrutturare, un'azienda, un artigiano", "segnala", "arancio")])) : ""}
       ${!S.ruoli.includes("artigiano") ? sez("Lavori come artigiano?", lista([voce("kit", "Attiva il profilo artigiano", "Pronto intervento: ricevi i clienti da SuperMastro", "attiva-artigiano")])) : ""}
       ${S.ruoli.includes("artigiano") ? sez("Cresci con AncheCasa", lista([voce("ufficio", "Passa a Impresa", "Se hai i requisiti: cantieri, lotti e moduli", "ar-up", "arancio")])) : ""}
@@ -187,7 +230,7 @@ V.profilo = async () => {
   };
 };
 V.ruolo = async (r) => {
-  if (ruoliDisponibili().includes(r)) { S.ruolo = r; memo.set("ruolo-" + S.utente.id, r); }
+  if (ruoliDisponibili().includes(r)) scegliProfilo(r);
   vai(casa(), true);
   return { h: "" };
 };
@@ -198,7 +241,7 @@ V["attiva-artigiano"] = async () => ({
 async function attivaArtigiano() {
   await DB.aggiungiRuolo("artigiano");
   if (!S.ruoli.includes("artigiano")) S.ruoli.push("artigiano");
-  S.ruolo = "artigiano"; memo.set("ruolo-" + S.utente.id, "artigiano");
+  await caricaProfili(); scegliProfilo("artigiano");
   vai("ar-scheda", true);
 }
 V.dati = async () => {
@@ -212,6 +255,9 @@ V.dati = async () => {
       <button class="btn" type="submit">Salva</button></form></div>`,
   };
 };
+const ICO_PROFILO = { admin: "grafico", artigiano: "kit", impresa: "ufficio", fornitore: "box", partner: "kit", operatore: "scudo", consulente: "scudo", cliente: "casa", reteitalia: "grafico", sviluppo: "rete", capoarea: "rete", agente: "rete", subagente: "rete" };
+const icoProfilo = (k) => ICO_PROFILO[String(k).split(":")[0]] || "utente";
+const PROFILO_EXTRA = [];
 V.presto = async () => ({
   t: NOMI_RUOLI[S.ruolo] || "AncheCasa",
   h: `<div class="pad"><div class="eroe"><h3>Arriva nelle prossime versioni</h3><p>La parte «${esc(NOMI_RUOLI[S.ruolo] || S.ruolo)}» dell'app è in costruzione. Intanto trovi tutto nell'area privata.</p>
@@ -234,6 +280,7 @@ V.home = async () => {
       <div class="eroe" style="margin-top:14px"><h3>Guasto in casa? 5 secondi.</h3><p>Fai un video del guasto: SuperMastro lo analizza, ti dice cosa fare subito e ti mostra gli artigiani vicini.</p>${btn(I.video + " Fai il video", "filma")}</div>
       <div style="height:16px"></div>
       ${aperte.length ? sez("Le tue richieste", lista(aperte.map((r) => voce("video", esc(r.problema || "Richiesta"), `${nomeMestiere(r.mestiere)} · ${quando(r.creato)}`, "richiesta/" + r.id, "", stato(...NOMI_STATO[r.stato])))), `<a data-go="richieste">Tutte</a>`) : ""}
+      ${sez("Bacheca", `<div class="griglia2">${[["casa", "Vendita", "Case in vendita", "vendita"], ["doc", "Affitto", "Case e stanze", "affitto"], ["corso", "Studenti", "Alloggi per studenti", "studenti"], ["ufficio", "Lavoro", "Cerco e offro", "lavoro"]].map(([ic, t, s2, k]) => `<div class="tile" data-go="bacheca/${k}" role="button" tabindex="0"><span class="ico blu">${I[ic]}</span><b>${t}</b><small>${s2}</small></div>`).join("")}</div>`, `<a data-go="bacheca">Apri</a>`)}
       ${sez("AncheCasa per te", lista([
         voce("casa", "Ristruttura con AncheCasa", "Un referente, imprese selezionate, l'app del tuo cantiere", "ristruttura", "blu"),
         voce("rete", "Segnala ad AncheCasa", "Conosci chi deve ristrutturare o un'azienda? Segnalalo", "segnala", "arancio"),
@@ -419,12 +466,16 @@ V.recensione = async (id) => ({
       <button class="btn" type="submit">Pubblica la recensione</button></form></div>`,
 });
 
+async function impostazione(chiave, predefinito) {
+  try { const r = await Q.uno("app_impostazioni", { chiave }); return r ? r.valore : predefinito; } catch (e) { return predefinito; }
+}
 V.segnala = async () => {
   const mie = await DB.mieSegnalazioni().catch(() => []);
+  const premio = (await impostazione("segnalazioni", {})).premio || CONFIG.premioSegnalazione;
   const ST = { inviata: ["blu", "Inviata"], in_corso: ["giallo", "In corso"], partita: ["verde", "Partita"], non_interessato: ["rosso", "Non interessato"] };
   return {
     t: "Segnala ad AncheCasa",
-    h: `<div class="pad"><div class="eroe"><h3>Conosci chi ha bisogno di noi?</h3><p>Chi deve ristrutturare, un'azienda che ha bisogno di sicurezza o di un'impresa seria. Lo chiamiamo noi e qui vedi com'è andata.${CONFIG.premioSegnalazione ? " " + esc(CONFIG.premioSegnalazione) : ""}</p></div><div style="height:14px"></div>
+    h: `<div class="pad"><div class="eroe"><h3>Conosci chi ha bisogno di noi?</h3><p>Chi deve ristrutturare, un'azienda che ha bisogno di sicurezza o di un'impresa seria. Lo chiamiamo noi e qui vedi com'è andata.${premio ? " " + esc(premio) : ""}</p></div><div style="height:14px"></div>
       <form data-form="segnala" novalidate>
         ${campo("Chi segnali", `<select name="tipo"><option value="ristrutturazione">Una persona che deve ristrutturare</option><option value="azienda">Un'azienda (sicurezza, corsi, app)</option><option value="artigiano">Un'impresa o un artigiano da iscrivere</option></select>`)}
         ${campo("Nome", `<input name="nome" maxlength="80" required placeholder="Nome e cognome o azienda">`)}
@@ -510,7 +561,7 @@ function formScheda(a, primaVolta) {
 }
 V["ar-scheda"] = async () => {
   const a = await scheda();
-  return { t: a ? "La tua scheda" : "La tua scheda di artigiano", h: `<div class="pad">${a ? "" : `<p class="sotto">Ti mostriamo ai privati vicini che hanno un guasto del tuo mestiere. AncheCasa controlla la scheda prima di pubblicarla.</p>`}${formScheda(a, !a)}</div>` };
+  return { t: a ? "La tua scheda" : "La tua scheda di artigiano", h: `<div class="pad">${a ? "" : `<p class="sotto">Ti mostriamo ai privati vicini che hanno un guasto del tuo mestiere. AncheCasa controlla la scheda, ti contatta per l'abbonamento (14,90 € al mese) e poi la pubblica.</p>`}${formScheda(a, !a)}</div>` };
 };
 V["ar-disp"] = async () => {
   const a = await scheda();
@@ -530,7 +581,7 @@ V["ar-recensioni"] = async () => {
 };
 V["ar-up"] = async () => {
   const [a, ric, rec, pass] = await Promise.all([scheda(), DB.ricevute().catch(() => []), DB.mieRecensioni().catch(() => []), DB.mieiPassaggi().catch(() => [])]);
-  const min = CONFIG.passaggio || { interventi: 20, media: 4.5 };
+  const min = await impostazione("passaggio_impresa", CONFIG.passaggio || { interventi: 20, media: 4.5 });
   const lavori = ric.filter((r) => r.stato_invio === "accettata").length;
   const media = rec.length ? rec.reduce((s, v) => s + Number(v.voto), 0) / rec.length : 0;
   const req = [
@@ -640,11 +691,16 @@ const AZIONI = {
   async indietro() { if (history.length > 1) history.back(); else vai(S.utente ? casa() : "benvenuto"); },
   ricarica() { render(); },
   async esci() { await DB.esci(); S.utente = null; vai("benvenuto"); },
-  async "prova:"(chi) { await DB.entraProva(chi); await caricaUtente(); if (chi === "admin") S.ruolo = "admin"; vai(casa(), true); },
-  async "azzera-prova"() { await DB.azzeraProva(); toast("Prova ricominciata da capo."); render(); },
+  async "prova:"(chi) {
+    await DB.entraProva(chi); await caricaUtente();
+    const preferito = { privato: "privato", artigiano: "artigiano", cliente: "cliente" }[chi];
+    if (preferito && ruoliDisponibili().includes(preferito)) scegliProfilo(preferito);
+    vai(casa(), true);
+  },
+  async "azzera-prova"() { await DB.azzeraProva(); if (Q.azzera) Q.azzera(); toast("Prova ricominciata da capo."); render(); },
   "go:"(r) { vai(r); },
   "cambia-ruolo"() {
-    foglio(`<h2>Cambia profilo</h2><p class="sotto">Un'app sola: scegli con quale profilo lavorare adesso.</p>${lista(ruoliDisponibili().map((r) => voce(r === "admin" ? "grafico" : r === "artigiano" ? "kit" : "utente", esc(NOMI_RUOLI[r] || r), r === S.ruolo ? "In uso" : "", "ruolo/" + r, r === S.ruolo ? "verde" : "blu")))}`);
+    foglio(`<h2>Cambia profilo</h2><p class="sotto">Un'app sola: scegli con quale profilo lavorare adesso.</p>${lista(ruoliDisponibili().map((r) => voce(icoProfilo(r), esc(nomeProfilo(r)), r === S.ruolo ? "In uso" : "", "ruolo/" + r, r === S.ruolo ? "verde" : "blu")))}`);
   },
   filma() { analizzaVideo(); },
   async "attiva-artigiano"() { try { await attivaArtigiano(); } catch (e) { toast(spiegaErrore(e), "errore"); } },
@@ -766,6 +822,7 @@ app.addEventListener("click", (e) => {
 });
 app.addEventListener("keydown", (e) => {
   if ((e.key === "Enter" || e.key === " ") && e.target.matches("[data-go][role=button]")) { e.preventDefault(); vai(e.target.dataset.go); }
+  else if ((e.key === "Enter" || e.key === " ") && e.target.matches("[data-az][role=button]")) { e.preventDefault(); esegui(e.target.dataset.az); }
 });
 app.addEventListener("submit", async (e) => {
   const f = e.target.closest("form[data-form]");
@@ -781,4 +838,6 @@ app.addEventListener("change", async (e) => {
   try { await DB.statoSegnalazione(s.dataset.segn, s.value); toast("Stato aggiornato."); } catch (err) { toast(spiegaErrore(err), "errore"); }
 });
 
-avvia();
+/* Il cuore dell'app, per i moduli delle altre parti (aziende, rete, admin…). */
+export const core = { S, V, AZIONI, FORM, PROFILI, NOMI_RUOLI, PROFILO_EXTRA, DB, Q, vai, render, casa, caricaUtente, caricaProfili, scegliProfilo, aggiornaNonLette, memo, blocchiAnalisi, VOCI };
+export { avvia };

@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#16304D">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-eval' https://maps.googleapis.com https://*.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob: https://*.supabase.co https://*.googleapis.com https://*.gstatic.com https://*.ggpht.com; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://*.googleapis.com https://*.gstatic.com; media-src 'self' blob:; worker-src 'self' blob:; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'">
 <meta name="description" content="AncheCasa: un'app sola per la casa e per il lavoro. SuperMastro analizza il video del guasto e ti mostra gli artigiani vicini.">
 <title>AncheCasa</title>
 <link rel="manifest" href="manifest.webmanifest">
@@ -18,11 +19,6 @@
 <div class="cornice"><div id="app" class="telefono"><main class="schermo"><div class="carico" aria-busy="true"><span></span></div></main></div></div>
 <noscript>Per usare AncheCasa serve JavaScript attivo.</noscript>
 <script src="vendor/supabase.js"></script>
-<script type="module" src="js/main.js"></script>
-<script>
-  if ("serviceWorker" in navigator && location.protocol === "https:" && !window.AC_PROVA) {
-    window.addEventListener("load", function () { navigator.serviceWorker.register("sw.js").catch(function () {}); });
-  }
-</script>
+<script type="module" src="js/app.js"></script>
 </body>
 </html>
