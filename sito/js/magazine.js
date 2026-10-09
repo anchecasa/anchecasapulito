@@ -128,7 +128,7 @@
     /* 1 · EDITORIALE */
     { html: function (i) {
       return '<div class="mg-page">' +
-        '<div class="mg-photo" style="height:52%">' + img("editoriale", "Una lettrice sfoglia AncheCasa Magazine sul divano") +
+        '<div class="mg-photo mg-ph-ed" style="height:52%">' + img("editoriale", "Una lettrice sfoglia AncheCasa Magazine sul divano") +
           '<div class="mg-shade-b"></div>' +
           '<div class="mg-opener" style="bottom:22px">' + kicker("Editoriale") +
           '<h1 class="mg-h1" style="font-size:44px">La casa, <em>finalmente</em> spiegata bene.</h1></div>' +
@@ -139,6 +139,11 @@
         '<p class="mg-p">Noi facciamo il contrario: ogni quindici giorni risposte chiare, numeri con la fonte accanto e strumenti gratuiti da usare subito. E quando serve una mano esperta, nella piazza di AncheCasa trovi chi lo fa nella tua zona.</p>' +
         '<p class="mg-sign">La redazione di AncheCasa</p>' +
         "</div></div>" +
+        '<div class="mg-inside" aria-label="In questo numero"><div class="t">In questo numero</div>' +
+          [[8, "Check Bollette: scopri se paghi troppo", "Gratis"], [4, "Bonus casa: gli ultimi 83 giorni al 50%", ""], [2, "L’app della raccolta, in arrivo", ""]].map(function (x) {
+            return '<button type="button" data-goto="' + x[0] + '" data-noflip><span>' + x[1] + (x[2] ? ' <em>' + x[2] + "</em>" : "") + "</span><b>" + x[0] + "</b></button>";
+          }).join("") +
+        "</div>" +
         '<p class="mg-small" style="border-top:1px solid var(--mg-rule);padding-top:6px;margin:0">N. ' + NUMERO.n + " · " + NUMERO.data + " · Gratuito su anchecasa.it · Dal " + NUMERO.prossimo + " esce ogni 15 giorni. Contenuti divulgativi: non sostituiscono il parere di un tecnico.</p>" +
         "</div>" + folio(i) + "</div>";
     } },
@@ -253,7 +258,7 @@
     /* 7 · LEGGERE LA BOLLETTA */
     { html: function (i) {
       return '<div class="mg-page">' +
-        '<div class="mg-photo" style="height:34%">' + img("bolletta", "Mani che tengono una bolletta e uno smartphone") +
+        '<div class="mg-photo mg-ph-boll" style="height:34%">' + img("bolletta", "Mani che tengono una bolletta e uno smartphone") +
           '<div class="mg-shade-b"></div><div class="mg-opener" style="bottom:16px">' + kicker("Bollette") +
           '<h2 class="mg-h1" style="font-size:36px;margin:6px 0 0">La bolletta, <em>smontata</em></h2></div></div>' +
         '<div class="mg-pad" style="padding-top:16px;flex:1;display:flex;flex-direction:column;min-height:0"><div class="mg-body">' +
@@ -285,7 +290,7 @@
         '<div class="mg-app-head">' +
           '<div><div class="mg-kicker">Strumento gratuito · 1 minuto</div>' +
           '<h2 class="mg-app-title">Check <em>Bollette</em></h2>' +
-          '<p class="mg-app-sub">Scrivi due numeri della tua ultima bolletta: i grafici si aggiornano mentre scrivi.</p></div>' +
+          '<p class="mg-app-sub">Scrivi due numeri della tua ultima bolletta e premi Analizza.</p></div>' +
           '<span class="mg-free">GRATIS</span>' +
         "</div>" +
         '<ol class="mg-cb-steps"><li><i>1</i>Luce o gas</li><li><i>2</i>Totale e consumo</li><li><i>3</i>Risultato e PDF</li></ol>' +
@@ -295,10 +300,13 @@
             '<span class="mg-cb-badge" id="mg-b-badge" role="status">Esempio</span>' +
           "</div>" +
           '<div class="mg-fields">' +
-            '<div class="mg-field"><label for="mg-b-importo"><i>2</i>Totale da pagare <small>in prima pagina</small></label><div class="mg-inp"><input id="mg-b-importo" type="text" inputmode="decimal" autocomplete="off" placeholder="es. 210"><span>€</span></div></div>' +
-            '<div class="mg-field"><label for="mg-b-consumo"><i>2</i>Consumo <small id="mg-b-hint-c">riquadro «Consumi»</small></label><div class="mg-inp"><input id="mg-b-consumo" type="text" inputmode="decimal" autocomplete="off" placeholder="es. 420"><span id="mg-b-unit">kWh</span></div></div>' +
-            '<div class="mg-field"><label for="mg-b-mesi">Periodo della bolletta</label><div class="mg-inp"><select id="mg-b-mesi">' + opz([["1", "1 mese"], ["2", "2 mesi"], ["3", "3 mesi"], ["6", "6 mesi"], ["12", "12 mesi"]], "2") + "</select></div></div>" +
+            '<div class="mg-field"><label for="mg-b-importo"><i>2</i>Totale da pagare <small>in prima pagina</small></label><div class="mg-inp"><input id="mg-b-importo" type="text" inputmode="decimal" autocomplete="off" placeholder="Scrivi qui"><span>€</span></div></div>' +
+            '<div class="mg-field"><label for="mg-b-consumo"><i>2</i>Consumo <small id="mg-b-hint-c">riquadro «Consumi»</small></label><div class="mg-inp"><input id="mg-b-consumo" type="text" inputmode="decimal" autocomplete="off" placeholder="Scrivi qui"><span id="mg-b-unit">kWh</span></div></div>' +
+          "</div>" +
+          '<div class="mg-cb-row2">' +
+            '<div class="mg-field"><label for="mg-b-mesi">Periodo</label><div class="mg-inp"><select id="mg-b-mesi">' + opz([["1", "1 mese"], ["2", "2 mesi"], ["3", "3 mesi"], ["6", "6 mesi"], ["12", "12 mesi"]], "2") + "</select></div></div>" +
             '<div class="mg-field"><label for="mg-b-persone">Persone in casa</label><div class="mg-inp"><select id="mg-b-persone">' + opz([["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5 o più"]], "3") + "</select></div></div>" +
+            '<button type="button" class="mg-cta mg-cb-go" id="mg-b-go">Analizza <span aria-hidden="true">›</span></button>' +
           "</div>" +
           '<div class="mg-cb-res" id="mg-b-out" aria-live="polite"></div>' +
           '<div class="mg-tool-actions">' +
@@ -345,7 +353,7 @@
     /* 11 · SERRAMENTI */
     { html: function (i) {
       return '<div class="mg-page">' +
-        '<div class="mg-photo" style="height:300px">' + img("finestra", "Finestra nuova affacciata sui tetti di un centro storico") + "</div>" +
+        '<div class="mg-photo mg-ph-grow2" style="height:300px">' + img("finestra", "Finestra nuova affacciata sui tetti di un centro storico") + "</div>" +
         '<div class="mg-pad" style="padding-top:20px;flex:1;display:flex;flex-direction:column;min-height:0">' + kicker("Serramenti") +
         '<h2 class="mg-h2">Finestre che isolano davvero</h2>' +
         '<div class="mg-body"><div class="mg-cols">' +
@@ -359,7 +367,7 @@
     /* 12 · CANTIERE: PREVENTIVO */
     { html: function (i) {
       return '<div class="mg-page">' +
-        '<div class="mg-photo" style="height:250px">' + img("cantiere", "Posa di un pavimento in un appartamento in ristrutturazione") + "</div>" +
+        '<div class="mg-photo mg-ph-grow2 mg-ph-cant" style="height:250px">' + img("cantiere", "Posa di un pavimento in un appartamento in ristrutturazione") + "</div>" +
         '<div class="mg-pad" style="padding-top:18px;flex:1;display:flex;flex-direction:column;min-height:0">' + kicker("Cantiere") +
         '<h2 class="mg-h2">Il preventivo blindato in sette mosse</h2>' +
         '<div class="mg-body"><div class="mg-cols"><ul class="mg-list">' +
@@ -408,7 +416,7 @@
     /* 15 · CUCINA */
     { html: function (i) {
       return '<div class="mg-page">' +
-        '<div class="mg-photo" style="height:290px">' + img("cucina", "Cucina ristrutturata con isola centrale") + "</div>" +
+        '<div class="mg-photo mg-ph-grow" style="height:290px">' + img("cucina", "Cucina ristrutturata con isola centrale") + "</div>" +
         '<div class="mg-pad" style="padding-top:20px;flex:1;display:flex;flex-direction:column;min-height:0">' + kicker("Abitare") +
         '<h2 class="mg-h2">Cucina, le misure che contano</h2>' +
         '<div class="mg-body"><div class="mg-cols">' +
@@ -422,7 +430,7 @@
     /* 16 · ESTERNI */
     { html: function (i) {
       return '<div class="mg-page">' +
-        '<div class="mg-photo" style="height:290px">' + img("pergola", "Terrazzo con pergola bioclimatica e piante mediterranee") + "</div>" +
+        '<div class="mg-photo mg-ph-grow" style="height:290px">' + img("pergola", "Terrazzo con pergola bioclimatica e piante mediterranee") + "</div>" +
         '<div class="mg-pad" style="padding-top:20px;flex:1;display:flex;flex-direction:column;min-height:0">' + kicker("Esterni") +
         '<h2 class="mg-h2">La pergola bioclimatica</h2>' +
         '<div class="mg-body"><div class="mg-cols">' +
@@ -530,7 +538,7 @@
     var mesi = parseInt(q("mg-b-mesi").value, 10) || 2;
     var persone = parseInt(q("mg-b-persone").value, 10) || 3;
     var r = RIF[bolletta.tipo];
-    var esempio = !(importo > 0) || !(consumo > 0);
+    var esempio = !bolletta.analizzato || !(importo > 0) || !(consumo > 0);
     var manca = !(importo > 0) && !(consumo > 0) ? "" : !(importo > 0) ? "il totale" : !(consumo > 0) ? "il consumo" : "";
     if (esempio) { importo = ESEMPIO_B[bolletta.tipo].importo; consumo = ESEMPIO_B[bolletta.tipo].consumo; mesi = 2; persone = 3; }
     var prezzo = importo / consumo;
@@ -593,7 +601,9 @@
     }[c.vPrezzo];
     out.className = "mg-cb-res" + (c.esempio ? " is-esempio" : "");
     out.innerHTML =
-      (c.esempio ? '<div class="mg-cb-ribbon">' + (c.manca ? "Manca " + c.manca + ": scrivilo qui sopra" : "Così vedrai la tua bolletta: scrivi i tuoi numeri qui sopra") + "</div>" : "") +
+      (c.esempio
+        ? '<div class="mg-cb-hint"><span class="tag">Esempio</span><span class="tx">' + (bolletta.avviso || "Scrivi <b>totale</b> e <b>consumo</b> qui sopra e premi <b>Analizza</b>") + "</span></div>"
+        : '<div class="mg-cb-hint is-tuo"><span class="tag">La tua bolletta</span><span class="tx">' + euro(c.importo, 2) + " · " + num(c.consumo) + " " + u + " · " + c.mesi + (c.mesi === 1 ? " mese" : " mesi") + "</span></div>") +
       '<div class="mg-cb-body">' +
         '<div class="mg-cb-big ' + c.vPrezzo + '"><b>' + titolo + "</b>" + (c.risparmio > 0 ? "<span>Puoi risparmiare circa <em>" + euro(c.risparmio, 0) + "</em> all’anno</span>" : "<span>Non stai pagando più del necessario</span>") + "</div>" +
         '<div class="mg-cb-grid">' +
@@ -631,8 +641,10 @@
     var c = calcolaBolletta();
     if (c.esempio) {
       var campo = document.getElementById(c.manca === "il consumo" ? "mg-b-consumo" : "mg-b-importo");
-      var rib = document.querySelector(".mg-cb-ribbon");
-      if (rib) { rib.textContent = "Per il report scrivi prima " + (c.manca || "il totale e il consumo") + " della tua bolletta"; rib.classList.remove("shake"); void rib.offsetWidth; rib.classList.add("shake"); }
+      bolletta.avviso = "Per il report scrivi " + (c.manca || "totale e consumo") + " e premi <b>Analizza</b>";
+      aggiornaBolletta();
+      var rib = document.querySelector(".mg-cb-hint");
+      if (rib) { rib.classList.remove("shake"); void rib.offsetWidth; rib.classList.add("shake"); }
       if (campo) campo.focus({ preventScroll: true });
       return;
     }
@@ -794,23 +806,60 @@
       var luce = bolletta.tipo === "luce";
       box.querySelectorAll("[data-tipo]").forEach(function (x) { x.setAttribute("aria-pressed", x.getAttribute("data-tipo") === bolletta.tipo ? "true" : "false"); });
       $("mg-b-unit").textContent = luce ? "kWh" : "Smc";
-      campi.consumo.placeholder = luce ? "es. 420" : "es. 210";
-      campi.importo.placeholder = luce ? "es. 210" : "es. 345";
+      campi.consumo.placeholder = "Scrivi qui";
+      campi.importo.placeholder = "Scrivi qui";
     }
     function segna() {
-      ["importo", "consumo"].forEach(function (k) { campi[k].closest(".mg-inp").classList.toggle("ok", leggiNumero(campi[k].value) > 0); });
+      ["importo", "consumo"].forEach(function (k) {
+        var pieno = leggiNumero(campi[k].value) > 0;
+        campi[k].closest(".mg-inp").classList.toggle("ok", pieno);
+        campi[k].closest(".mg-inp").classList.toggle("vuoto", !pieno);
+      });
+    }
+    function analizza() {
+      var mancaI = !(leggiNumero(campi.importo.value) > 0), mancaC = !(leggiNumero(campi.consumo.value) > 0);
+      if (mancaI || mancaC) {
+        bolletta.avviso = "Manca " + (mancaI && mancaC ? "il totale e il consumo" : mancaI ? "il totale" : "il consumo") + ": scrivilo nel riquadro arancio";
+        aggiornaBolletta();
+        var campo = mancaI ? campi.importo : campi.consumo;
+        var g = campo.closest(".mg-inp");
+        g.classList.remove("scuoti"); void g.offsetWidth; g.classList.add("scuoti");
+        campo.focus({ preventScroll: true });
+        return;
+      }
+      bolletta.analizzato = true;
+      bolletta.avviso = "";
+      aggiornaBolletta();
+      var res = $("mg-b-out");
+      res.classList.remove("appena"); void res.offsetWidth; res.classList.add("appena");
     }
     function salva() { bolletta.campi = { importo: campi.importo.value, consumo: campi.consumo.value, mesi: campi.mesi.value, persone: campi.persone.value }; }
-    function tutto() { segna(); aggiornaBolletta(); salva(); }
+    // Prima di "Analizza" i grafici restano sull'esempio; dopo, si aggiornano mentre si corregge.
+    function tutto() {
+      segna();
+      if (bolletta.analizzato) bolletta.avviso = "";
+      else {
+        var mI = !(leggiNumero(campi.importo.value) > 0), mC = !(leggiNumero(campi.consumo.value) > 0);
+        bolletta.avviso = !mI && !mC ? "Tutto pronto: premi <b>Analizza</b>"
+          : /^Manca/.test(bolletta.avviso || "") ? "Manca " + (mI && mC ? "il totale e il consumo" : mI ? "il totale" : "il consumo") + ": scrivilo nel riquadro arancio" : "";
+      }
+      aggiornaBolletta();
+      salva();
+    }
     box.querySelectorAll("[data-tipo]").forEach(function (b) {
       b.addEventListener("click", function () { bolletta.tipo = b.getAttribute("data-tipo"); aggiornaTipo(); tutto(); });
     });
     ["importo", "consumo"].forEach(function (k) {
       campi[k].addEventListener("input", tutto);
-      campi[k].addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); (k === "importo" ? campi.consumo : campi.importo).focus(); } });
+      campi[k].addEventListener("keydown", function (e) {
+        if (e.key !== "Enter") return;
+        e.preventDefault();
+        if (k === "importo" && !(leggiNumero(campi.consumo.value) > 0)) campi.consumo.focus(); else analizza();
+      });
     });
     ["mesi", "persone"].forEach(function (k) { campi[k].addEventListener("change", tutto); });
     $("mg-b-pdf").addEventListener("click", scaricaPdf);
+    $("mg-b-go").addEventListener("click", analizza);
     box.querySelectorAll(".mg-tool-actions a").forEach(function (a) {
       a.addEventListener("click", function () { STAT.traccia("offerte", null, PARTNER_ENERGIA.nome || "portale ARERA"); });
     });
@@ -819,7 +868,9 @@
       campi.mesi.value = bolletta.campi.mesi || "2"; campi.persone.value = bolletta.campi.persone || "3";
     }
     aggiornaTipo();
-    tutto();
+    segna();
+    aggiornaBolletta();
+    salva();
   }
 
   /* ---------------- iscrizione agli avvisi (app raccolta + nuovi numeri) ---------------- */
@@ -1012,7 +1063,7 @@
     var availH = stage.clientHeight;
     if (availH < 40) return;
     // Telefono: la capsula dei pulsanti galleggia sopra il fondo della pagina; ne copre solo il piè di pagina.
-    if (document.body.classList.contains("mg-phone")) availH = Math.max(40, availH - 22);
+    if (document.body.classList.contains("mg-phone")) availH = Math.max(40, availH - 30);
     var scale = Math.max(0.3, Math.min(availW / bookW, availH / sz.h, mode === "spread" ? 1.8 : 4));
     var drawnH = sz.h * scale;
     scaler.style.width = bookW + "px";

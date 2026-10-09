@@ -870,14 +870,6 @@ body[data-page="magazine"] .mg-root { background: radial-gradient(ellipse at 50%
 .mg-back-cta .mg-share-cta { margin-top: 0; }
 .mg-share-cta.is-orange { background: var(--mg-orange); border-color: var(--mg-orange); box-shadow: 0 8px 18px rgba(229,107,16,.4); }
 
-/* 2026-10-09 ~16:30 · copertina con il bambino: sul telefono i tre richiami vanno in alto a sinistra sul muro, "83" resta in basso e lascia libero il volto del bambino */
-.is-single .mg-cover .mg-coverlines { position: static; }
-.is-single .mg-cover .mg-coverlines > div:last-child { position: absolute; z-index: 3; top: 160px; left: 22px; width: 47%; }
-.is-single .mg-cover .mg-coverlines > div:last-child .mg-cl:first-child { margin-top: 0; }
-.is-single .mg-cover .mg-coverlines > div:last-child .mg-cl span { font-size: 12px; text-shadow: 0 1px 8px rgba(0,0,0,.35); }
-.is-single .mg-cover .mg-cl-big { position: absolute; z-index: 3; left: 22px; right: 22px; bottom: 38px; }
-.is-single .mg-cover .mg-cl-big .n { font-size: 66px; }
-.is-single .mg-cover .mg-cl-big .t { font-size: 19px; max-width: 330px; }
 
 /* ===== 2026-10-09 ~17:00 · Telefono: rivista a schermo pieno, capsula di pulsanti in vetro sopra la pagina ===== */
 .mg-only-phone { display: none !important; }
@@ -900,11 +892,6 @@ body.mg-phone .mg-controls .mg-share-btn { width: 40px; height: 40px; margin: 2p
 body.mg-phone .mg-controls .mg-share-btn svg { width: 18px; height: 18px; }
 body.mg-phone .mg-controls .mg-share-btn.is-on { background: rgba(229,107,16,.5); }
 body.mg-phone .mg-controls a.mg-only-phone { order: -1; }
-/* copertina sul telefono: "83 giorni" sale sopra la capsula, lo slogan in fondo resta nascosto sotto */
-body.mg-phone .is-single .mg-cover .mg-cl-big { bottom: 66px; }
-body.mg-phone .is-single .mg-cover .mg-cl-big .n { font-size: 58px; }
-body.mg-phone .is-single .mg-cover .mg-cl-big .t { font-size: 18px; }
-body.mg-phone .is-single .mg-cover .mg-slogan { display: none; }
 
 /* ===== 2026-10-09 ~17:10 · Pulsanti sempre in vetro quasi invisibile (PC e telefono) ===== */
 body[data-page="magazine"] .mg-controls .mg-btn.mg-glass {
@@ -931,3 +918,87 @@ body.mg-phone .mg-controls .mg-btn.mg-glass .ar { width: 40px; height: 40px; bor
 body.mg-phone .mg-controls .mg-share-btn { background: transparent; border: 1px solid rgba(255,255,255,.16); -webkit-backdrop-filter: none; backdrop-filter: none; }
 body.mg-phone .mg-controls .mg-share-btn svg { filter: drop-shadow(0 1px 4px rgba(0,0,0,.35)); }
 body.mg-phone .mg-controls .mg-share-btn.is-on { background: rgba(255,255,255,.14); }
+
+/* ===== 2026-10-09 ~17:20 · Copertina: disposizione di prima (richiami in basso), più leggibile ===== */
+.mg-cover .mg-shade-t { background: linear-gradient(180deg, rgba(8,12,22,.5) 0%, rgba(8,12,22,.2) 22%, rgba(8,12,22,0) 40%); }
+.mg-cover .mg-shade-b { background: linear-gradient(180deg, rgba(8,12,22,0) 55%, rgba(8,12,22,.32) 72%, rgba(8,12,22,.62) 90%, rgba(8,12,22,.72) 100%); }
+.mg-cover .mg-masthead .name { text-shadow: 0 2px 24px rgba(0,0,0,.35); }
+.mg-cover .mg-issue { text-shadow: 0 1px 6px rgba(0,0,0,.5); }
+.mg-cover .mg-coverlines, .mg-cover .mg-sticker { text-shadow: 0 1px 2px rgba(0,0,0,.6), 0 0 12px rgba(0,0,0,.35); }
+.mg-cover .mg-sticker::before { inset: -40px -36px -40px -70px; background: radial-gradient(ellipse at 72% 50%, rgba(12,18,28,.42), rgba(12,18,28,.16) 48%, rgba(12,18,28,0) 72%); }
+.mg-cover .mg-sticker .d { color: #fff; }
+.mg-cover .mg-cl span { color: #fff; font-size: 13.5px; }
+.mg-cover .mg-cl b { color: #ff9a4a; font-size: 10.5px; }
+.mg-cover .mg-cl-big .n { text-shadow: 0 2px 18px rgba(0,0,0,.45); }
+.is-single .mg-cover .mg-cl span { font-size: 13px; }
+body.mg-phone .is-single .mg-cover .mg-coverlines { bottom: 70px; gap: 10px; }
+body.mg-phone .is-single .mg-cover .mg-cl-big .n { font-size: 64px; }
+body.mg-phone .is-single .mg-cover .mg-cl { margin-top: 8px; }
+body.mg-phone .is-single .mg-cover .mg-slogan { bottom: 8px; opacity: 0; }
+/* telefono: foto spostata a destra e colonna dei richiami più stretta a sinistra, così i volti restano liberi */
+.is-single .mg-cover .mg-bleed img { object-position: 4% 50%; }
+.is-single .mg-cover .mg-coverlines { right: auto; width: 51%; }
+.is-single .mg-cover .mg-cl-big .t { font-size: 19px; }
+/* alone morbido solo dietro i blocchi di testo: la foto resta luminosa */
+.mg-cover .mg-sticker::before { background: radial-gradient(ellipse at 72% 52%, rgba(12,18,28,.5), rgba(12,18,28,.2) 50%, rgba(12,18,28,0) 74%); }
+.mg-cover .mg-coverlines::before { content: ""; position: absolute; z-index: -1; inset: -50px -40px -30px -40px; pointer-events: none;
+  background: radial-gradient(ellipse at 40% 60%, rgba(12,18,28,.42), rgba(12,18,28,.16) 52%, rgba(12,18,28,0) 75%); }
+
+/* ===== 2026-10-09 ~17:35 · Rifinitura impaginazione ===== */
+/* sillabazione italiana: niente buchi tra le parole nelle colonne giustificate */
+.mg-page p, .mg-page li { -webkit-hyphens: auto; hyphens: auto; hyphenate-limit-chars: 7 3 3; }
+/* PC: foto più grandi dove restava bianco in fondo */
+.is-spread .mg-ph-grow { height: 370px !important; }
+/* editoriale: "In questo numero" */
+.mg-inside { margin: 12px 0 10px; border-top: 2px solid var(--mg-navy); padding-top: 8px; }
+.mg-inside .t { font: 700 9.5px var(--mg-sans); letter-spacing: .2em; text-transform: uppercase; color: var(--mg-orange); margin-bottom: 4px; }
+.mg-inside button { all: unset; box-sizing: border-box; cursor: pointer; display: flex; align-items: baseline; gap: 10px; width: 100%; padding: 5px 0; border-bottom: 1px dotted rgba(26,36,50,.25); font-family: var(--mg-serif); font-size: 13.5px; color: var(--mg-ink); }
+.mg-inside button span { flex: 1; }
+.mg-inside button em { font-style: normal; font: 800 8px var(--mg-sans); letter-spacing: .14em; text-transform: uppercase; color: #fff; background: var(--mg-orange); padding: 2px 5px; border-radius: 2px; vertical-align: 2px; margin-left: 4px; }
+.mg-inside button b { font: 700 13px var(--mg-display); color: var(--mg-orange); min-width: 20px; text-align: right; }
+.mg-inside button:hover span { color: var(--mg-orange); }
+.mg-inside button:focus-visible { outline: 2px solid var(--mg-orange); outline-offset: 2px; }
+.is-single .mg-inside button { padding: 4px 0; font-size: 13px; }
+/* telefono: sul piè di pagina resta solo il numero, la capsula non si sovrappone a scritte */
+body.mg-phone .mg-folio span:last-child:not(:first-child) { visibility: hidden; }
+.is-spread .mg-ph-grow2 { height: 330px !important; }
+.mg-ph-ed { height: 40% !important; }
+.is-single .mg-ph-ed { height: 36% !important; }
+.is-single .mg-ph-boll { height: 28% !important; }
+.is-single .mg-ph-cant { height: 238px !important; }
+.mg-inside { margin: 8px 0 6px; padding-top: 6px; }
+
+/* ===== 2026-10-09 ~17:50 · Check Bollette: si capisce dove scrivere, pulsante Analizza, esempio più nitido ===== */
+.mg-cb-ribbon { display: none; }
+.mg-cb-res.is-esempio .mg-cb-body { opacity: .78; filter: saturate(.85); }
+.mg-cb-hint { display: flex; align-items: center; gap: 8px; margin: -1px 0 7px; font: 600 10.5px/1.3 var(--mg-sans); color: #4b5563; }
+.mg-cb-hint .tag { flex: none; font: 800 8.5px var(--mg-sans); letter-spacing: .14em; text-transform: uppercase; padding: 3px 7px; border-radius: 999px; background: #fff1e6; color: #b4520b; border: 1px dashed #e56b10; }
+.mg-cb-hint b { color: var(--mg-navy); }
+.mg-cb-hint.is-tuo .tag { background: #dcefe1; color: #1d5a32; border: 1px solid #b9dfc6; }
+.mg-cb-hint.shake { animation: mgShake2 .45s; }
+@keyframes mgShake2 { 20%,60% { transform: translateX(-5px); } 40%,80% { transform: translateX(5px); } }
+/* campi da riempire: bianchi, bordo arancio, si fanno notare */
+.mg-cb .mg-inp.vuoto { background: #fff; border: 2px solid #e56b10; box-shadow: 0 0 0 3px rgba(229,107,16,.12); animation: mgInvita 2.2s ease-in-out infinite; }
+.mg-cb .mg-inp.vuoto:focus-within { animation: none; box-shadow: 0 0 0 4px rgba(229,107,16,.2); }
+.mg-cb .mg-inp.vuoto input::placeholder { color: #e56b10; font-weight: 700; opacity: .75; }
+@keyframes mgInvita { 0%,100% { box-shadow: 0 0 0 3px rgba(229,107,16,.10); } 50% { box-shadow: 0 0 0 6px rgba(229,107,16,.22); } }
+.mg-cb .mg-inp.scuoti { animation: mgShake2 .45s; }
+@media (prefers-reduced-motion: reduce) { .mg-cb .mg-inp.vuoto { animation: none; } }
+/* riga 2: periodo, persone, Analizza */
+.mg-cb-row2 { display: grid; grid-template-columns: 1fr 1fr 1.15fr; gap: 8px; align-items: end; margin: 0 0 9px; }
+.mg-cb-row2 .mg-field label { font-size: 8.5px; letter-spacing: .08em; text-transform: uppercase; color: #6b7280; display: block; margin-bottom: 3px; font-weight: 600; }
+.mg-cb-go { justify-content: center; border-radius: 10px; height: 38px; padding: 0 14px; font-size: 14px; box-shadow: 0 8px 18px rgba(229,107,16,.35); }
+.mg-cb-go span { font-size: 18px; line-height: 1; }
+.mg-cb .mg-fields { margin-bottom: 6px; }
+.mg-cb-res.appena .mg-cb-body { animation: mgAppena .5s ease-out; }
+@keyframes mgAppena { from { opacity: .4; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+.is-single .mg-cb-row2 { grid-template-columns: 1fr .9fr 1.1fr; gap: 6px; }
+.is-single .mg-cb-go { font-size: 13px; padding: 0 8px; }
+/* Check Bollette: qualche pixel in meno per stare nella pagina */
+.mg-cb .mg-gauge { max-width: 132px; }
+.mg-cb .mg-gauge-v { font-size: 19px; }
+.mg-cb-steps { margin-bottom: 8px; }
+.mg-cb .mg-app { padding: 10px 13px 11px; }
+.mg-cb .mg-verdict { margin: 3px 0 2px; }
+.mg-cb-res { margin-bottom: 7px; }
+body.mg-phone .mg-cb .mg-app-note { display: none; }

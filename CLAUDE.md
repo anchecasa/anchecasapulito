@@ -13,6 +13,23 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 2026-10-09 ~17:55 · Claude — Copertina leggibile, rifinitura pagine, Check Bollette con "Analizza" (NON ancora pubblicato)
+- Copertina: torna la disposizione di prima (richiami in basso).
+  - Leggibilità con ombre sottili sotto le lettere e un alone morbido solo dietro i blocchi di testo; sfumature generali alleggerite su richiesta ("non esagerare con lo scuro").
+  - Telefono: foto spostata a destra (object-position 4%) e colonna dei richiami al 51%, così i volti restano liberi.
+- Rifinitura pagine:
+  - editoriale con "In questo numero" (3 voci cliccabili: pag. 8, 4, 2) e foto più bassa;
+  - sillabazione italiana (hyphens) nei testi giustificati;
+  - su PC foto più alte a pagina 11-12 (330 px) e 15-16 (370 px);
+  - telefono: pagina 7 e 12 senza righe tagliate, piè di pagina con il solo numero sotto la capsula.
+- Check Bollette:
+  - tolto il riquadro nero "Esempio" che copriva i grafici: ora c'è una riga leggera sopra i grafici ("Esempio · Scrivi totale e consumo qui sopra e premi Analizza");
+  - i campi vuoti sono bianchi con bordo arancio che pulsa piano e la scritta "Scrivi qui";
+  - nuovo pulsante "Analizza" accanto a periodo e persone: prima mostra l'esempio, dopo il risultato vero (badge "Il tuo risultato", riga "La tua bolletta: …"), poi si aggiorna mentre si correggono i dati;
+  - se manca un dato lo dice e scuote il campo; esempio meno sbiadito (opacity .78).
+- Controllo automatico di tutte le pagine (PC, telefono, telefono piccolo): nessun testo tagliato. La "A–Z" del glossario è solo decorazione.
+- Versioni css v=33, js v=31.
+
 ### 2026-10-09 16:22 · Cursor
 - Commit `6dc156268aefae81b99b3249857ebd4d33bb2223` sul ramo main di https://github.com/anchecasa/anchecasapulito. Messaggio: «Magazine: statistiche anonime e pagina admin Magazine, schermo pieno sul telefono, pulsanti in vetro, copertina con bambino, Check Bollette con grafici, retro solo app raccolta».
 - Pubblicato https://anchecasa.it, progetto Vercel `anchecasa-pulito` (deployment `dpl_HbiYZWxy3ZeKtJ7QMvjSxKRRgFSL`, alias https://anchecasa.it). Il push da solo non avvia Vercel. L’area privata non è stata ripubblicata in questo intervento.
