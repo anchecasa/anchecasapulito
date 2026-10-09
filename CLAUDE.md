@@ -13,6 +13,16 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 2026-10-09 18:09 · Cursor
+- `node --check` su `sito/js/*.js` e `sito/api/*.js`: tutti senza errori di sintassi.
+- Commit `67804e4` sul ramo main: «SuperMastro: guida fai da te con attrezzi, professionista solo al clic, Comuni d'Italia, video solo da telefono, solo problemi di casa, pollici per imparare». Nel commit è tornato in `sito/supermastro.html` il riquadro dei pollici (tolto alle 18:08) perché lo script e lo stile c’erano già.
+- Il push da solo non avvia Vercel. Pubblicata la cartella `sito` sul progetto `anchecasa-pulito`. Deployment `dpl_3qhEnerWrjfPoZwc39Gs6e8JPS99`, stato Ready, alias https://anchecasa.it. Area privata non ripubblicata. La migrazione `supabase/migrations/20261009183000_supermastro_voti.sql` è su GitHub e resta da applicare su Supabase.
+- Prova da telefono (390 px): «rubinetto» → Rubinetto che gocciola → «Tea» → Teano. Scheda «Puoi provarci tu», Tempo 20-40 minuti, Difficoltà facile, «Cosa ti serve» (6 attrezzi), «Come fare, passo per passo» (7 passi). La cartina era chiusa e si è aperta solo con «Cerca un idraulico vicino a te»: 4 idraulici.
+- «di che marca sono queste scarpe» → Chiedi a SuperMastro: la pagina ha scritto «Non ho capito bene» e il pulsante dell’artigiano è rimasto. `POST /api/supermastro` risponde 503 `motore_non_configurato`: sul progetto Vercel non c’è `OPENAI_API_KEY`, quindi la regola «solo problemi di casa» non parte.
+- Sotto la risposta del rubinetto, pollice in giù, correzione «Era il rubinetto del bidet, non del lavandino», Invia: compare «Grazie! Lo controlliamo e SuperMastro impara». `POST /api/supermastro-voto` risponde 502: la tabella dei voti non c’è ancora su Supabase.
+- Da PC (1280 px): «SuperMastro con il video funziona dal telefono» è visibile e il riquadro di registrazione è nascosto.
+- File annotato: `CLAUDE.md`.
+
 ### 2026-10-09 18:01 · Cursor
 - Commit `af752cb` sul ramo main: «SuperMastro: guida fai da te con attrezzi, professionista solo al clic, Comuni d'Italia, video solo da telefono». Poi `68f5d3e` (Photon con `lang=default`, perché `lang=it` rispondeva 400) e `46d40df` (tolto il riquadro dei voti ancora senza script).
 - Il push da solo non avvia Vercel. Pubblicata la cartella `sito` sul progetto `anchecasa-pulito`. Deployment `dpl_GTyFQB12rGqukdEwwXoxGrqZvf21`, stato Ready, alias https://anchecasa.it. Area privata non ripubblicata. Le voci delle 18:20 e delle 18:35 restano solo in locale.
