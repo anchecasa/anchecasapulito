@@ -13,6 +13,14 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 2026-10-09 16:22 · Cursor
+- Commit `6dc156268aefae81b99b3249857ebd4d33bb2223` sul ramo main di https://github.com/anchecasa/anchecasapulito. Messaggio: «Magazine: statistiche anonime e pagina admin Magazine, schermo pieno sul telefono, pulsanti in vetro, copertina con bambino, Check Bollette con grafici, retro solo app raccolta».
+- Pubblicato https://anchecasa.it, progetto Vercel `anchecasa-pulito` (deployment `dpl_HbiYZWxy3ZeKtJ7QMvjSxKRRgFSL`, alias https://anchecasa.it). Il push da solo non avvia Vercel. L’area privata non è stata ripubblicata in questo intervento.
+- GET https://anchecasa.it/api/mag risponde 405 con `{"error":"metodo_non_ammesso"}`.
+- Controllato https://anchecasa.it/magazine (da /magazine.html) a 390×844. La barra del sito è nascosta, la rivista occupa lo schermo, in basso c’è la capsula in vetro (Home, Indietro, Condividi, Avanti, Schermo intero). Copertina con il bambino e «83». css `?v=30`, js `?v=29`.
+- La migrazione `supabase/migrations/20261009170000_magazine_statistiche.sql` è nel commit e resta da applicare su Supabase.
+- File: `sito/` (tra cui `sito/api/mag.js`, `sito/js/magazine.js`, `sito/css/magazine.css`, `sito/magazine.html`), `area-privata/dashboard/` (tra cui `js/magazine-admin.js` e `css/magazine-admin.css`), `supabase/migrations/20261009170000_magazine_statistiche.sql`, `CLAUDE.md`.
+
 ### 2026-10-09 ~17:10 · Claude — Rivista a schermo pieno sul telefono + pulsanti in vetro quasi invisibile (NON ancora pubblicato)
 - Telefono (larghezza < 700 px o altezza < 520 px): `magazine.js` mette `body.mg-phone`.
   - La testata del sito sparisce e la rivista prende tutta l'altezza.
