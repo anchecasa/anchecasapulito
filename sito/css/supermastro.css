@@ -103,3 +103,22 @@
 .sm-link-tel { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin: 16px 0 6px; }
 .sm-link-tel span { font: 800 18px var(--display); color: var(--arancio-scuro); background: var(--arancio-chiaro); padding: 10px 16px; border-radius: 12px; }
 .sm-r-video-pc { margin: 10px 0 0; font-size: 14px; color: var(--grigio); }
+/* fuori tema (es. scarpe): risposta gentile, niente guida né ricerca */
+.sm-r-risposta.is-fuori { border-left-color: var(--blu-medio); }
+.sm-r-risposta.is-fuori .sm-r-chi strong { color: var(--blu-medio); }
+.sm-r-risposta.is-fuori .sm-r-problema { color: var(--grigio); font-weight: 600; }
+/* pollice: SuperMastro ha capito? (impara dalle correzioni approvate) */
+.sm-r-voto { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 10px; margin-top: 16px; padding: 12px 14px; background: var(--carta); border-radius: 14px; }
+.sm-r-voto .d { font-weight: 700; color: var(--blu); margin-right: auto; }
+.sm-r-voto [data-voto] { display: inline-flex; align-items: center; gap: 6px; border: 1.5px solid var(--linea); background: #fff; color: var(--blu); border-radius: 999px; padding: 7px 14px; font: 700 14px var(--testo); cursor: pointer; }
+.sm-r-voto [data-voto] svg { width: 18px; height: 18px; }
+.sm-r-voto [data-voto]:hover:not(:disabled) { border-color: var(--arancio); color: var(--arancio-scuro); }
+.sm-r-voto [data-voto].on { background: var(--blu); border-color: var(--blu); color: #fff; }
+.sm-r-voto [data-voto]:disabled:not(.on) { opacity: .4; cursor: default; }
+.sm-r-corr { flex-basis: 100%; }
+.sm-r-corr label { display: block; font-size: 14px; color: var(--ink); margin: 4px 0 6px; }
+.sm-r-corr div { display: flex; gap: 8px; }
+.sm-r-corr input { flex: 1; min-width: 0; border: 1.5px solid var(--linea); border-radius: 10px; padding: 0 12px; min-height: 44px; font: 600 15px var(--testo); }
+.sm-r-corr input:focus { outline: none; border-color: var(--arancio); }
+.sm-r-corr .btn { min-height: 44px; padding: 0 18px; font-size: 15px; }
+.sm-r-grazie { flex-basis: 100%; margin: 2px 0 0; color: #1f6b4a; font-weight: 700; }

@@ -74,6 +74,7 @@
   }
   // Risposta di SuperMastro (testo o video) -> dati della scheda. Se l'AI non dà passi o attrezzi, si usano quelli della guida.
   function daRispostaAI(d) {
+    if (d.fuori_tema === true) return { fuoriTema: true, problema: d.problema, descrizione: d.descrizione, mestiere: "", fai: false, passi: [], attrezzi: [], avvertenze: [] };
     var g = stato.guida, fai = d.fai_da_te === true && d.pericolo !== true;
     var passi = (d.passi || []).filter(Boolean), attrezzi = (d.attrezzi || []).filter(Boolean);
     return { fai: fai, pericolo: d.pericolo === true, urgenza: d.urgenza, mestiere: stato.mestiere, problema: d.problema, descrizione: d.descrizione,
@@ -87,6 +88,7 @@
     var r = P ? P.cerca(d.problema || "", 1) : [];
     stato.guida = r.length && r[0].g ? r[0].g : null;
     stato.testo = d.problema || "Il tuo video";
+    stato.fonte = "video";
     $("richiesta").hidden = false;
     $("r-titolo").textContent = stato.testo;
     $("r-dove").textContent = "Dal tuo video";
@@ -96,10 +98,12 @@
     $("richiesta").scrollIntoView({ behavior: "smooth", block: "start" });
   }
   function mostraRisposta(x) {
+    stato.ultima = { problema: x.problema || stato.testo, mestiere: nomeMestiere(x.mestiere), fuori: !!x.fuoriTema };
+    votoPronto();
     var nome = nomeMestiere(x.mestiere);
-    var v = x.pericolo ? "Attenzione: non farlo da solo" : x.fai ? "Puoi provarci tu" : x.mestiere ? "Serve un " + nome.toLowerCase() : "Vediamolo insieme";
+    var v = x.fuoriTema ? "Questo non è un problema di casa" : x.pericolo ? "Attenzione: non farlo da solo" : x.fai ? "Puoi provarci tu" : x.mestiere ? "Serve un " + nome.toLowerCase() : "Vediamolo insieme";
     $("r-verdetto").textContent = v;
-    $("r-risposta").className = "pannello sm-r-risposta " + (x.pericolo ? "is-pericolo" : x.fai ? "is-fai" : "is-chiama");
+    $("r-risposta").className = "pannello sm-r-risposta " + (x.fuoriTema ? "is-fuori" : x.pericolo ? "is-pericolo" : x.fai ? "is-fai" : "is-chiama");
     $("r-problema").textContent = x.problema || "";
     $("r-problema").hidden = !x.problema;
     $("r-desc").textContent = x.descrizione || "";
@@ -120,7 +124,9 @@
     $("r-avvisi").hidden = !avv.length;
     $("r-urgenza").textContent = x.urgenza ? "Urgenza " + x.urgenza : "";
     $("r-urgenza").hidden = !x.urgenza;
-    $("r-pro-titolo").textContent = x.fai ? "Preferisci che lo faccia un professionista?" : "Ti serve un professionista";
+    // Fuori tema: niente ricerca di artigiani, solo l'invito a mostrare un problema di casa.
+    $("r-cerca").hidden = !!x.fuoriTema;
+    $("r-pro-titolo").textContent = x.fuoriTema ? "Hai un problema in casa, in giardino, al prato o al recinto? Fammelo vedere." : x.fai ? "Preferisci che lo faccia un professionista?" : "Ti serve un professionista";
     $("r-cerca").textContent = x.mestiere ? "Cerca un " + nome.toLowerCase() + " vicino a te" : "Cerca un professionista";
   }
 
@@ -298,6 +304,38 @@
   });
   var f = $("a-citta-form");
   if (f) f.addEventListener("submit", function (e) { e.preventDefault(); var c = $("a-citta").value.trim(); if (!c) { $("a-citta").focus(); return; } daCitta(c); });
+
+  /* ---------- pollice: SuperMastro ha capito? (api/supermastro-voto.js) ---------- */
+  function votoPronto() {
+    var box = $("r-voto"); if (!box) return;
+    box.classList.remove("fatto");
+    Array.prototype.forEach.call(box.querySelectorAll("[data-voto]"), function (b) { b.disabled = false; b.classList.remove("on"); });
+    $("r-corr").hidden = true; $("r-grazie").hidden = true; $("r-corr-t").value = "";
+  }
+  function inviaVoto(voto, correzione) {
+    var u = stato.ultima || {};
+    var corpo = { voto: voto, fonte: stato.fonte || "testo", richiesta: stato.testo || "", problema: u.problema || "", mestiere: u.mestiere || "", correzione: correzione || "", citta: stato.citta || "" };
+    if (window.ACMagStat) { /* niente: le statistiche della rivista sono un'altra cosa */ }
+    return fetch("/api/supermastro-voto", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(corpo), keepalive: true }).catch(function () {});
+  }
+  (function () {
+    var box = $("r-voto"); if (!box) return;
+    box.addEventListener("click", function (e) {
+      var b = e.target.closest("[data-voto]"); if (!b || b.disabled) return;
+      var v = +b.getAttribute("data-voto");
+      Array.prototype.forEach.call(box.querySelectorAll("[data-voto]"), function (x) { x.disabled = true; x.classList.toggle("on", x === b); });
+      if (v === 1) { inviaVoto(1); box.classList.add("fatto"); $("r-grazie").textContent = "Grazie! Così SuperMastro diventa più bravo."; $("r-grazie").hidden = false; }
+      else { $("r-corr").hidden = false; $("r-corr-t").focus(); }
+    });
+    $("r-corr").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var t = $("r-corr-t").value.trim();
+      inviaVoto(-1, t);
+      $("r-corr").hidden = true; box.classList.add("fatto");
+      $("r-grazie").textContent = t ? "Grazie! Lo controlliamo e SuperMastro impara: la prossima volta lo riconosce." : "Grazie, ne teniamo conto.";
+      $("r-grazie").hidden = false;
+    });
+  })();
 
   window.ACTrova = { apri: apri, risposta: risposta };
   richiesta();
