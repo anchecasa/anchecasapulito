@@ -25,42 +25,85 @@
   -webkit-tap-highlight-color: transparent;
 }
 .mg-root.is-single { --mg-body: 13.6px; padding-block: 8px 8px; }
-.mg-root:fullscreen { display: flex; flex-direction: column; justify-content: center; }
+.mg-root:fullscreen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: radial-gradient(ellipse at 50% 30%, #3a4f6c 0%, #2a3c54 45%, #141c28 100%);
+}
+.mg-root:fullscreen .mg-stage { flex: 1 1 auto; min-height: 0; visibility: visible; }
 
-/* Telefono: la rivista occupa tutto lo schermo visibile, senza scorrere la pagina del sito. */
+/* Colonna ferma: menu, rivista, piè di pagina. L'altezza non cresce dopo e non copre il footer.
+   Sul telefono il footer non c'è e l'altezza non viene riscritta a ogni movimento della barra. */
+body[data-page="magazine"] {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  height: 100dvh;
+  overflow: hidden;
+  overscroll-behavior: none;
+  background: #141c28;
+}
+body[data-page="magazine"] #contenuto {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+body[data-page="magazine"] .mg-root {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+body[data-page="magazine"] .site-footer {
+  position: relative;
+  z-index: 2;
+  flex: none;
+}
+body[data-page="magazine"] .mg-stage {
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 0;
+  margin: 0;
+  animation: none;
+  visibility: hidden;
+}
+body[data-page="magazine"] .mg-root.is-ready .mg-stage { visibility: visible; }
+body[data-page="magazine"] .mg-controls,
+body[data-page="magazine"] .mg-hint { flex: none; }
+.mg-home { display: none; }
 @media (max-width: 899px) {
-  body[data-page="magazine"] {
-    overflow: hidden;
-    overscroll-behavior: none;
-    background: #141c28;
-  }
+  body[data-page="magazine"] .site-chrome,
   body[data-page="magazine"] .site-footer,
   body[data-page="magazine"] .mg-hint { display: none; }
   body[data-page="magazine"] .mg-root {
     position: fixed;
-    z-index: 30;
-    left: 0;
-    right: 0;
-    top: var(--head);
-    bottom: 0;
-    width: auto;
-    height: auto;
-    padding: 6px 0 calc(6px + env(safe-area-inset-bottom));
-    display: flex;
-    flex-direction: column;
-    box-sizing: border-box;
-    overscroll-behavior: none;
-  }
-  body[data-page="magazine"] .mg-stage {
-    flex: 1 1 auto;
+    inset: 0;
+    z-index: 60;
     width: 100%;
-    min-height: 0;
-    margin: 0;
-    animation: none;
+    height: 100%;
+    height: 100dvh;
+    padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+    background: #141c28;
   }
-  body[data-page="magazine"] .mg-controls {
-    flex: none;
-    margin-top: 6px;
+  .mg-home {
+    display: block;
+    position: absolute;
+    z-index: 30;
+    top: calc(8px + env(safe-area-inset-top));
+    left: 10px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(26, 36, 50, .78);
+    color: #FBF8F3;
+    font-family: var(--mg-sans);
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    text-decoration: none;
   }
 }
 
@@ -82,7 +125,6 @@
   transform-style: preserve-3d;
   transform-origin: left center;
   transition: transform .95s cubic-bezier(.45,.05,.2,1);
-  will-change: transform;
 }
 .mg-leaf.is-flipped { transform: rotateY(-180deg); }
 .mg-face {
@@ -202,9 +244,7 @@
 /* sommario */
 .mg-toc { list-style: none; margin: 8px 0 0; padding: 0; }
 .mg-toc li { border-bottom: 1px solid var(--mg-rule); }
-.mg-toc button { all: unset; box-sizing: border-box; width: 100%; display: grid; grid-template-columns: 34px 1fr 54px; gap: 10px; align-items: center; padding: 7px 0; cursor: pointer; }
-.mg-toc button:hover .tt { color: var(--mg-orange-ink); }
-.mg-toc button:focus-visible { outline: 2px solid var(--mg-orange); }
+.mg-toc .row { box-sizing: border-box; width: 100%; display: grid; grid-template-columns: 34px 1fr 54px; gap: 10px; align-items: center; padding: 7px 0; cursor: default; }
 .mg-toc .pg { font-family: var(--mg-display); font-size: 22px; font-weight: 600; color: var(--mg-orange-ink); }
 .mg-toc .tt { font-family: var(--mg-display); font-size: 15px; font-weight: 600; line-height: 1.1; color: var(--mg-navy); }
 .mg-toc .sec { display: block; font-family: var(--mg-sans); font-size: 8.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--mg-ink-2); margin-bottom: 2px; }
@@ -282,7 +322,7 @@
 .is-single .mg-counter { min-width: 0; font-size: 10px; letter-spacing: .06em; flex: 1; }
 .mg-opener .mg-kicker { text-shadow: 0 1px 6px rgba(0,0,0,.5); }
 
-.is-spread .mg-toc button { padding: 2px 0; grid-template-columns: 32px 1fr 42px; }
+.is-spread .mg-toc .row { padding: 2px 0; grid-template-columns: 32px 1fr 42px; }
 .is-spread .mg-toc img, .is-spread .mg-toc .noimg { width: 42px; height: 28px; }
 .is-spread .mg-toc .pg { font-size: 19px; }
 .is-spread .mg-toc .tt { font-size: 14px; }
@@ -487,14 +527,9 @@
 .mg-curl { position: absolute; bottom: 0; width: 0; height: 0; z-index: 9; pointer-events: none; transition: width .35s ease, height .35s ease; }
 .mg-face.front .mg-curl { right: 0; background: linear-gradient(315deg, transparent 50%, #f1efea 50%, #fff 62%, #d8d4cc 100%); box-shadow: -4px -4px 10px rgba(0,0,0,.18); border-top-left-radius: 8px; }
 .mg-face.back .mg-curl { left: 0; background: linear-gradient(45deg, transparent 50%, #f1efea 50%, #fff 62%, #d8d4cc 100%); box-shadow: 4px -4px 10px rgba(0,0,0,.18); border-top-right-radius: 8px; }
-.is-spread .mg-face:hover .mg-curl { width: 54px; height: 54px; }
-.mg-face.hint .mg-curl { animation: mg-curl-hint 2.4s ease 1.2s 2; }
-@keyframes mg-curl-hint { 0%, 100% { width: 0; height: 0; } 40%, 60% { width: 64px; height: 64px; } }
-
-/* entrata della rivista: solo un breve dissolvenza, senza spostamento */
-.mg-stage { animation: mg-enter .25s ease both; }
-@keyframes mg-enter { from { opacity: 0; } to { opacity: 1; } }
-@media (prefers-reduced-motion: reduce) { .mg-stage, .mg-face.hint .mg-curl { animation: none; } }
+@media (hover: hover) and (pointer: fine) {
+  .is-spread .mg-face:hover .mg-curl { width: 54px; height: 54px; }
+}
 
 .mg-folio span:last-child { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 .mg-folio { gap: 10px; }

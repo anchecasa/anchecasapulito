@@ -13,6 +13,17 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 2026-10-09 11:42 · Cursor
+- Magazine, apertura: la pagina non si sposta più al primo disegno, l’angolo della copertina non si solleva da solo, e uno scorrimento del dito non gira la pagina.
+- Magazine da telefono e da tablet in verticale: la rivista copre tutto lo schermo, menu e piè di pagina restano nascosti, in alto a sinistra c’è il tasto Home per tornare al sito.
+- Sommario: ogni voce ha la foto. Le voci non sono più pulsanti e non portano a un’altra pagina, così si può scorrere l’elenco. Il tasto Sommario in basso resta.
+- File: `sito/css/magazine.css`, `sito/js/magazine.js`, `sito/magazine.html` (versione file `?v=11`). Non ancora pubblicato su anchecasa.it.
+
+### 2026-10-09 11:33 · Cursor
+- Magazine da PC: il piè di pagina resta in fondo allo schermo, sopra la rivista. Non compare più dietro e non sparisce all’apertura.
+- Magazine da telefono: tolta la riscrittura dell’altezza a ogni movimento della barra. Al refresh la pagina si apre una volta sola, a schermo, senza i rimbalzi.
+- File: `sito/css/magazine.css`, `sito/js/magazine.js`, `sito/magazine.html` (versione file `?v=10`). Pubblicato su https://anchecasa.it.
+
 ### 2026-10-09 11:24 · Cursor
 - Il repository vero su GitHub è `anchecasa/anchecasapulito` (vuoto). Il nome con il trattino non esiste. Aggiornato il collegamento e `INVIA-SU-GITHUB.bat`.
 - Vercel è già in produzione con il magazine `?v=9` su https://anchecasa.it. Non serve un secondo invio.

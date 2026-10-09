@@ -91,11 +91,11 @@
     /* 2 · SOMMARIO */
     { html: function (i) {
       var voci = [
-        [3, "In cifre", "I numeri della casa", null],
+        [3, "In cifre", "I numeri della casa", "tetti"],
         [4, "Inchiesta", "Gli ultimi 83 giorni al 50%", "bonus"],
-        [6, "Guida", "Bonifico parlante e documenti", null],
-        [7, "Bollette", "Leggere la bolletta in 2 minuti", null],
-        [8, "Strumento gratuito", "Check Bollette: paghi troppo?", null],
+        [6, "Guida", "Bonifico parlante e documenti", "architetto"],
+        [7, "Bollette", "Leggere la bolletta in 2 minuti", "bolletta"],
+        [8, "Strumento gratuito", "Check Bollette: paghi troppo?", "bolletta"],
         [9, "Energia", "Cappotto e pompa di calore", "pompa-calore"],
         [11, "Serramenti", "Finestre che isolano davvero", "finestra"],
         [12, "Cantiere", "Il preventivo blindato", "cantiere"],
@@ -103,18 +103,18 @@
         [15, "Abitare", "Cucina, le misure che contano", "cucina"],
         [16, "Esterni", "La pergola bioclimatica", "pergola"],
         [17, "Cura della casa", "Il calendario d'autunno", "caldaia"],
-        [19, "Glossario", "Le parole della casa", null],
-        [20, "Servizio", "Trova chi lo fa nella tua zona", null]
+        [19, "Glossario", "Le parole della casa", "editoriale"],
+        [20, "Servizio", "Trova chi lo fa nella tua zona", "stretta-mano"]
       ];
       var li = voci.map(function (v) {
-        return '<li><button type="button" data-goto="' + v[0] + '"><span class="pg">' + v[0] + "</span>" +
+        return '<li><div class="row"><span class="pg">' + v[0] + "</span>" +
           '<span><span class="sec">' + v[1] + '</span><span class="tt">' + v[2] + "</span></span>" +
-          (v[3] ? '<img src="' + NUMERO.cartella + v[3] + '.jpg" alt="" draggable="false">' : '<span class="noimg"></span>') +
-          "</button></li>";
+          '<img src="' + NUMERO.cartella + v[3] + '.jpg" alt="" draggable="false">' +
+          "</div></li>";
       }).join("");
       return '<div class="mg-page mg-pad">' + kicker("Sommario · N. " + NUMERO.n) +
         '<h2 class="mg-h2">In questo numero</h2>' +
-        '<div class="mg-body"><ul class="mg-toc">' + li + "</ul></div>" + folio(i) + "</div>";
+        '<div class="mg-body" data-noflip><ul class="mg-toc">' + li + "</ul></div>" + folio(i) + "</div>";
     } },
 
     /* 3 · I NUMERI */
@@ -654,7 +654,6 @@
     if (p.cover) div.classList.add("is-cover");
     div.innerHTML = p.html(index);
     var curl = document.createElement("div"); curl.className = "mg-curl"; div.appendChild(curl);
-    if (index === 0) div.classList.add("hint");
     return div;
   }
 
@@ -687,15 +686,12 @@
     initBolletta();
     hint.textContent = mode === "spread" ? "Clicca sulla pagina o usa le frecce ← → per sfogliare" : "Scorri col dito o tocca il bordo della pagina per sfogliare";
     btnFs.hidden = mode !== "spread";
-    flipped = mode === "spread" ? Math.min(Math.ceil(pageIndex / 2), maxFlipped) : Math.min(pageIndex, maxFlipped);
-    // niente animazione al primo disegno
-    leaves.forEach(function (l) { l.style.transition = "none"; });
+    mosse = false;
     book.style.transition = "none";
+    leaves.forEach(function (l) { l.style.transition = "none"; });
+    flipped = mode === "spread" ? Math.min(Math.ceil(pageIndex / 2), maxFlipped) : Math.min(pageIndex, maxFlipped);
     render(null);
     fit();
-    void book.offsetWidth;
-    leaves.forEach(function (l) { l.style.transition = ""; });
-    book.style.transition = "";
   }
 
   function render(turning) {
@@ -736,6 +732,12 @@
   function setFlipped(n) {
     n = Math.max(0, Math.min(n, maxFlipped));
     if (n === flipped) return;
+    if (!mosse) {
+      mosse = true;
+      book.style.transition = "";
+      leaves.forEach(function (l) { l.style.transition = ""; });
+      void book.offsetWidth;
+    }
     var moving = n > flipped ? flipped : n;
     var salto = Math.abs(n - flipped) > 1;
     flipped = n;
@@ -758,52 +760,27 @@
   function fit() {
     var sz = size();
     var bookW = mode === "spread" ? sz.w * 2 : sz.w;
-    var isFs = document.fullscreenElement === root;
-    var headerEl = document.querySelector(".site-header");
-    var header = isFs ? 0 : (headerEl ? headerEl.offsetHeight : 86);
-
-    if (mode === "single" && !isFs) {
-      var vv = window.visualViewport;
-      var viewH = vv ? vv.height : window.innerHeight;
-      var viewTop = vv ? vv.offsetTop : 0;
-      root.style.top = (viewTop + header) + "px";
-      root.style.height = Math.max(0, viewH - header) + "px";
-      stage.style.width = "100%";
-      stage.style.height = "";
-      var availW = Math.max(1, stage.clientWidth - 8);
-      var availH = stage.clientHeight;
-      if (availH < 40) {
-        var controls = root.querySelector(".mg-controls");
-        availH = Math.max(40, viewH - header - (controls ? controls.offsetHeight : 48) - 16);
-      }
-      var scale = Math.max(0.3, Math.min(availW / bookW, availH / sz.h));
-      var drawnH = sz.h * scale;
-      scaler.style.width = bookW + "px";
-      scaler.style.height = sz.h + "px";
-      scaler.style.top = Math.max(0, (Math.max(availH, stage.clientHeight) - drawnH) / 2) + "px";
-      scaler.style.transform = "translateX(-50%) scale(" + scale + ")";
-      book.style.width = bookW + "px";
-      book.style.height = sz.h + "px";
-      return;
-    }
-
     root.style.top = "";
     root.style.height = "";
-    scaler.style.top = "0";
-    var availW = root.clientWidth - 48;
-    var availH = window.innerHeight - header - 120;
-    var scale = Math.max(0.3, Math.min(availW / bookW, availH / sz.h, 1.25));
-    stage.style.width = bookW * scale + "px";
-    stage.style.height = sz.h * scale + "px";
+    root.style.bottom = "";
+    stage.style.width = "";
+    stage.style.height = "";
+    var availW = Math.max(1, stage.clientWidth - (mode === "spread" ? 32 : 8));
+    var availH = stage.clientHeight;
+    if (availH < 40) return;
+    var scale = Math.max(0.3, Math.min(availW / bookW, availH / sz.h, mode === "spread" ? 1.25 : 4));
+    var drawnH = sz.h * scale;
     scaler.style.width = bookW + "px";
     scaler.style.height = sz.h + "px";
+    scaler.style.top = Math.max(0, (availH - drawnH) / 2) + "px";
     scaler.style.transform = "translateX(-50%) scale(" + scale + ")";
     book.style.width = bookW + "px";
     book.style.height = sz.h + "px";
+    root.classList.add("is-ready");
   }
 
-  // click e swipe
-  var down = null, swiped = false;
+  // click e swipe: uno scorrimento non gira la pagina
+  var down = null, swiped = false, mosse = false;
   stage.addEventListener("pointerdown", function (e) {
     if (e.target.closest(NO_FLIP)) return;
     down = { x: e.clientX, y: e.clientY };
@@ -813,8 +790,8 @@
     var d = down; down = null;
     if (!d) return;
     var dx = e.clientX - d.x, dy = e.clientY - d.y;
+    if (Math.abs(dx) > 10 || Math.abs(dy) > 10) swiped = true;
     if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.3) {
-      swiped = true;
       if (dx < 0) next(); else prev();
     }
   });
@@ -849,18 +826,20 @@
   document.addEventListener("fullscreenchange", fit);
 
   var resizeT = null;
+  var lastW = window.innerWidth;
+  var lastH = window.innerHeight;
   function onResize() {
-    if (currentMode() !== mode) { build(); return; }
-    if (mode === "single") { fit(); return; }
+    var w = window.innerWidth;
+    var h = window.innerHeight;
+    if (currentMode() !== mode) { lastW = w; lastH = h; build(); return; }
+    if (mode === "single" && Math.abs(w - lastW) < 30 && Math.abs(h - lastH) < 48) return;
+    lastW = w;
+    lastH = h;
     clearTimeout(resizeT);
     resizeT = setTimeout(fit, 120);
   }
   window.addEventListener("resize", onResize);
-  if (window.visualViewport) {
-    window.visualViewport.addEventListener("resize", onResize);
-    window.visualViewport.addEventListener("scroll", onResize);
-  }
 
   build();
-  requestAnimationFrame(function () { requestAnimationFrame(fit); });
+  if (!root.classList.contains("is-ready")) requestAnimationFrame(fit);
 })();
