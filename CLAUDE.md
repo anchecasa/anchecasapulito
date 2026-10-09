@@ -13,6 +13,21 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 2026-10-09 ~19:10 · Claude — SuperMastro da PC: solo "Come funziona" (NON ancora pubblicato)
+- `sito/supermastro.html`: sul PC (mouse e schermo ≥ 900 px) al posto del video c'è il riquadro "Come funziona SuperMastro" (`.sm-come`).
+  - Tre passi con icona: "Apri SuperMastro dal telefono", "Inquadra il problema per 5 secondi", "Ricevi la soluzione". Sotto: anchecasa.it/supermastro e "Copia il link".
+- Nascosti sul PC (classe `.sm-solo-tel`): titolo "Il guasto, da qui.", registrazione video, caricamento, riquadri del problema e dell'elenco vecchio. Nessuna foto né caricamento dal PC.
+- `css/supermastro.css` v=6 (resta in CRLF).
+
+### 2026-10-09 19:03 · Cursor
+- Le voci Claude ~19:00 e ~19:05 erano già nei file: non riscritte. `node --check` su `sito/js/ac.js` e `sito/js/trova-artigiano.js`: ok.
+- Commit `28ada77` sul ramo main: «SuperMastro: solo video, dopo il video sempre la scheda con guida o artigiano». Push su GitHub. La chiave OpenAI non è stata data, quindi `OPENAI_API_KEY` non è stata aggiunta.
+- Il push da solo non avvia Vercel. Pubblicata la cartella `sito` sul progetto `anchecasa-pulito`. Deployment `dpl_5HoTA8tpa5XLrV8vpLtxxMk5cWcG`, stato Ready, alias https://anchecasa.it. Area privata non ripubblicata. In questo invio non c’è il riquadro PC «Come funziona» delle 19:10, arrivato dopo.
+- Prova da telefono (390 px) su https://anchecasa.it/supermastro: `ac.js?v=7`, `trova-artigiano.js?v=6`, «Carica un video» accetta solo `video/*`. Il riquadro del computer è nascosto. «Registra 5 secondi» (fotocamera simulata, senza chiave): compare «Video pronto. Tocca quello che si vede.» con 26 problemi.
+- «Scarico intasato o lento» apre la scheda «Dal tuo video»: «Puoi provarci tu», Tempo 15-45 minuti, Difficoltà facile, «Cosa ti serve» (6 attrezzi, il primo è la ventosa), «Come fare, passo per passo» (6 passi). La cartina era chiusa. «Cerca un idraulico vicino a te» la apre su Teano: 4 idraulici.
+- «Carica un video» con una foto: «SuperMastro lavora solo con un video: registra 5 secondi sul guasto e riprova.» L’analisi non parte.
+- File annotato: `CLAUDE.md`.
+
 ### 2026-10-09 ~19:05 · Claude — SuperMastro: solo video, niente foto (NON ancora pubblicato)
 - `sito/supermastro.html`: "Carica un video" accetta solo video (`accept="video/*"`). ac.js v=7.
 - `sito/js/ac.js`: se arriva un'immagine, non parte l'analisi e compare "SuperMastro lavora solo con un video: registra 5 secondi sul guasto e riprova."
