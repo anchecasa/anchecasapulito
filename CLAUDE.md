@@ -13,6 +13,12 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 2026-10-09 ~16:00 · Claude — Magazine: telefono pagina 2 rifatto + pulsante Condividi (NON ancora pubblicato)
+- `rifiuti-casa.jpg`: il telefono adesso mostra un grande secchio blu con "STASERA · CARTA · 20:00–24:00", applicato dritto sullo schermo e leggibile da lontano.
+- Pagina 2: torna il riquadro trasparente sulla foto: "Comune di Bergamo · Stasera: Carta e cartone, dalle 20:00 alle 24:00 · Domani: Plastica e metalli".
+- Condividi: pulsante tondo in vetro tra Indietro e Avanti. Sul telefono apre il menu di condivisione del sistema; sul PC apre un pannello con WhatsApp, Facebook, Telegram, Email e Copia link. Sul retro c'è il pulsante "Ti è piaciuta? Condividila". Codice in fondo a `js/magazine.js`, stile in fondo a `css/magazine.css`.
+- `magazine.html`: og:image e og:url assoluti (https://anchecasa.it/...) e twitter:card, per l'anteprima con copertina su WhatsApp e Facebook. Versioni css/js v=24.
+
 ### 2026-10-09 15:32 · Cursor
 - Commit `0d482d60c1eb3205a1e58af7254853de20ff6da6` sul ramo main di https://github.com/anchecasa/anchecasapulito. Messaggio: «Magazine: pagina 2 'Cosa porto fuori stasera?' con app nel telefono, date ottobre/novembre, report bollette senza dati societari».
 - Il push non ha fatto partire Vercel da solo. Pubblicata la cartella `sito` sul progetto `anchecasa-pulito` in produzione. Deployment `dpl_FePsT4V2qwnVstzw3ty7f6JrtVvw`, stato Ready, indirizzo https://anchecasa.it.

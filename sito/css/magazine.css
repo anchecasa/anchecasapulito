@@ -697,3 +697,46 @@ body[data-page="magazine"] .mg-root { background: radial-gradient(ellipse at 50%
 .mg-p2app .mg-p2-glass { width: 236px; background: rgba(18,26,38,.62); }
 .mg-p2-head .mg-kicker { white-space: nowrap; }
 .is-single .mg-p2app .mg-p2-glass { width: 222px; }
+
+/* 2026-10-09 15:50 · Condividi: pulsante tondo in vetro tra Indietro e Avanti + pannello */
+.mg-controls .mg-share-btn { flex: none; width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; cursor: pointer; padding: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,.05)); border: 1px solid rgba(255,255,255,.22);
+  -webkit-backdrop-filter: blur(14px) saturate(160%); backdrop-filter: blur(14px) saturate(160%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.28), 0 10px 26px rgba(0,0,0,.35); color: #fff; transition: background .2s, border-color .2s, transform .15s; }
+.mg-controls .mg-share-btn svg { width: 19px; height: 19px; }
+.mg-controls .mg-share-btn:hover, .mg-controls .mg-share-btn[aria-expanded="true"] { background: linear-gradient(180deg, rgba(229,107,16,.55), rgba(229,107,16,.3)); border-color: rgba(255,170,100,.6); }
+.mg-controls .mg-share-btn:active { transform: translateY(1px); }
+.mg-controls .mg-share-btn:focus-visible { outline: 2px solid #ffd23f; outline-offset: 3px; }
+.is-single .mg-controls .mg-share-btn { width: 44px; height: 44px; }
+
+.mg-share { position: fixed; z-index: 1000; width: 300px; max-width: calc(100vw - 24px); padding: 14px 14px 10px; border-radius: 20px; color: #fff;
+  background: linear-gradient(180deg, rgba(36,48,66,.82), rgba(20,28,40,.86)); border: 1px solid rgba(255,255,255,.18);
+  -webkit-backdrop-filter: blur(18px) saturate(160%); backdrop-filter: blur(18px) saturate(160%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 24px 50px rgba(0,0,0,.45);
+  font-family: Montserrat, "Segoe UI", Arial, sans-serif; opacity: 0; transform: translateY(6px); transition: opacity .2s, transform .2s; }
+.mg-share.is-on { opacity: 1; transform: none; }
+.mg-share .t { margin: 0 0 10px; font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: #ffd23f; text-align: center; }
+.mg-share .g { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
+.mg-share .s { all: unset; box-sizing: border-box; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 6px 2px; border-radius: 12px; font-size: 10px; font-weight: 600; color: rgba(255,255,255,.9); text-align: center; }
+.mg-share .s svg { width: 22px; height: 22px; box-sizing: content-box; padding: 11px; border-radius: 50%; background: rgba(255,255,255,.1); color: #fff; transition: transform .15s; }
+.mg-share .s:hover svg, .mg-share .s:focus-visible svg { transform: scale(1.08); }
+.mg-share .s:focus-visible { outline: 2px solid #ffd23f; }
+.mg-share .s-wa svg { background: #25d366; }
+.mg-share .s-fb svg { background: #1877f2; }
+.mg-share .s-tg svg { background: #2aabee; }
+.mg-share .s-ml svg { background: var(--mg-orange, #e56b10); }
+.mg-share .ok { margin: 6px 0 0; min-height: 15px; font-size: 11px; text-align: center; color: #8ee6a8; }
+.mg-share-cta { all: unset; box-sizing: border-box; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; padding: 9px 16px; border-radius: 999px;
+  background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.3); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  color: #fff; font: 700 12px Montserrat, Arial, sans-serif; letter-spacing: .1em; text-transform: uppercase; }
+.mg-share-cta svg { width: 16px; height: 16px; }
+
+/* 15:58 · riquadro trasparente "Stasera / Domani" sulla foto */
+.mg-p2app .mg-p2-app { top: 37%; right: 18px; width: 176px; background: rgba(255,255,255,.66); border: 1px solid rgba(255,255,255,.55);
+  -webkit-backdrop-filter: blur(14px) saturate(150%); backdrop-filter: blur(14px) saturate(150%); box-shadow: 0 16px 34px rgba(10,16,28,.22); }
+.mg-p2app .mg-p2-app .hd { color: var(--mg-navy); margin-bottom: 4px; }
+.mg-p2app .mg-p2-app .it { align-items: start; }
+.mg-p2app .mg-p2-app .it i { margin-top: 2px; }
+.mg-p2app .mg-p2-app .it small:first-child { margin: 0 0 1px; font-size: 9px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--mg-orange); }
+.mg-p2app .mg-p2-app .it small { color: #4a5565; }
+.is-single .mg-p2app .mg-p2-app { top: 41%; right: 12px; width: 156px; }

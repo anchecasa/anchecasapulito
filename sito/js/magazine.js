@@ -95,6 +95,11 @@
     { cover: true, html: function (i) {
       return '<div class="mg-page mg-p2app">' +
         '<div class="mg-bleed mg-photo mg-p2-bg">' + img("rifiuti-casa", "Una donna nella sua cucina moderna, accanto ai contenitori di design per la differenziata, mostra sul telefono l’app AncheCasa con cosa portare fuori stasera") + '</div>' +
+        '<div class="mg-p2-app" aria-hidden="true">' +
+          '<div class="hd"><span class="dot"></span>Comune di Bergamo</div>' +
+          '<div class="it"><i style="background:#2f74d0"></i><span><small>Stasera</small><b>Carta e cartone</b><small>Dalle 20:00 alle 24:00</small></span></div>' +
+          '<div class="it"><i style="background:#f2c230"></i><span><small>Domani</small><b>Plastica e metalli</b></span></div>' +
+        '</div>' +
         '<div class="mg-p2-head">' +
           '<div class="mg-kicker">L’app gratuita · in arrivo</div>' +
           '<h2 class="mg-h1">Cosa porto fuori <em>stasera?</em></h2>' +
@@ -458,7 +463,8 @@
         '<div class="mg-opener" style="bottom:40px">' + kicker("Prossimo numero · " + NUMERO.prossimo) +
         '<h2 class="mg-h1" style="font-size:38px">Nel numero 2</h2>' +
         '<div class="mg-3steps"><div><i>›</i>L’app gratuita per la raccolta dei rifiuti, col calendario del tuo Comune</div><div><i>›</i>Il calcolatore gratuito del Bonus Casa, con il bonifico pronto</div><div><i>›</i>Muffa e condensa: prepararsi all’inverno</div><div><i>›</i>Fotovoltaico sul balcone: cosa si può fare</div></div>' +
-        '<p class="mg-small" style="color:rgba(255,255,255,.7);margin-top:12px">AncheCasa Magazine · gratuito su anchecasa.it, dal 1° novembre ogni 15 giorni</p></div>' +
+        '<p class="mg-small" style="color:rgba(255,255,255,.7);margin-top:12px">AncheCasa Magazine · gratuito su anchecasa.it, dal 1° novembre ogni 15 giorni</p>' +
+        '<button type="button" class="mg-share-cta" data-share data-noflip><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg>Ti è piaciuta? Condividila</button></div>' +
       "</div>";
     } }
   ];
@@ -1054,4 +1060,111 @@
 
   build();
   if (!root.classList.contains("is-ready")) requestAnimationFrame(fit);
+})();
+
+/* ===== Condividi la rivista (2026-10-09) =====
+   Telefono: menu di condivisione del sistema (WhatsApp, Telegram, messaggi…).
+   PC: pannello in vetro con WhatsApp, Facebook, Telegram, Email, Copia link. */
+(function () {
+  var URL_RIVISTA = "https://anchecasa.it/magazine.html";
+  var TITOLO = "AncheCasa Magazine";
+  var TESTO = "Ti consiglio AncheCasa Magazine: la rivista gratuita sulla casa, si sfoglia come una vera rivista. Dentro c’è anche il Check Bollette gratis.";
+  var ICO = {
+    wa: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.2-.2-.5-.3Z"/></svg>',
+    fb: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M13.5 22v-8h2.7l.4-3.2h-3.1V8.8c0-.9.3-1.5 1.6-1.5h1.7V4.4a22 22 0 0 0-2.5-.1c-2.4 0-4.1 1.5-4.1 4.2v2.3H7.5V14h2.7v8h3.3Z"/></svg>',
+    tg: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21.5 4.2 18.4 19c-.2 1-.8 1.3-1.7.8l-4.6-3.4-2.2 2.1c-.2.2-.4.4-.9.4l.3-4.7 8.5-7.7c.4-.3-.1-.5-.6-.2L6.7 12.9 2.2 11.5c-1-.3-1-1 .2-1.4L20.2 3.2c.8-.3 1.5.2 1.3 1Z"/></svg>',
+    ml: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>',
+    ln: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg>'
+  };
+  var pannello = null, aperto = false, ultimoBtn = null;
+
+  function link() {
+    return /(^|\.)anchecasa\.it$/.test(location.hostname) ? location.origin + location.pathname : URL_RIVISTA;
+  }
+  function voci() {
+    var u = encodeURIComponent(link()), t = encodeURIComponent(TESTO);
+    return [
+      ["wa", "WhatsApp", "https://wa.me/?text=" + t + "%20" + u],
+      ["fb", "Facebook", "https://www.facebook.com/sharer/sharer.php?u=" + u],
+      ["tg", "Telegram", "https://t.me/share/url?url=" + u + "&text=" + t],
+      ["ml", "Email", "mailto:?subject=" + encodeURIComponent(TITOLO + ": la rivista gratuita sulla casa") + "&body=" + t + "%0A%0A" + u]
+    ];
+  }
+  function crea() {
+    pannello = document.createElement("div");
+    pannello.className = "mg-share";
+    pannello.setAttribute("role", "dialog");
+    pannello.setAttribute("aria-label", "Condividi la rivista");
+    pannello.hidden = true;
+    pannello.innerHTML = '<p class="t">Condividi la rivista</p><div class="g">' +
+      voci().map(function (v) {
+        return '<a class="s s-' + v[0] + '" href="' + v[2] + '" target="_blank" rel="noopener">' + ICO[v[0]] + "<span>" + v[1] + "</span></a>";
+      }).join("") +
+      '<button type="button" class="s s-ln" data-copia>' + ICO.ln + "<span>Copia link</span></button></div>" +
+      '<p class="ok" role="status" aria-live="polite"></p>';
+    document.body.appendChild(pannello);
+    pannello.addEventListener("click", function (e) {
+      if (e.target.closest("[data-copia]")) { copia(); return; }
+      if (e.target.closest("a")) setTimeout(chiudi, 150);
+    });
+  }
+  function copia() {
+    var ok = pannello.querySelector(".ok");
+    var fatto = function () { ok.textContent = "Link copiato: incollalo dove vuoi."; setTimeout(function () { ok.textContent = ""; }, 2500); };
+    try {
+      if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(link()).then(fatto, vecchio); return; }
+    } catch (e) { /* uso il metodo vecchio */ }
+    vecchio();
+    function vecchio() {
+      var ta = document.createElement("textarea");
+      ta.value = link(); ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); fatto(); } catch (e2) { ok.textContent = link(); }
+      document.body.removeChild(ta);
+    }
+  }
+  function posiziona(btn) {
+    var r = btn.getBoundingClientRect();
+    var w = pannello.offsetWidth, h = pannello.offsetHeight;
+    var x = Math.max(12, Math.min(window.innerWidth - w - 12, r.left + r.width / 2 - w / 2));
+    var y = r.top - h - 12;
+    if (y < 12) y = r.bottom + 12;
+    pannello.style.left = x + "px";
+    pannello.style.top = y + "px";
+  }
+  function apri(btn) {
+    if (!pannello) crea();
+    ultimoBtn = btn;
+    pannello.hidden = false;
+    posiziona(btn);
+    requestAnimationFrame(function () { pannello.classList.add("is-on"); });
+    aperto = true;
+    btn.setAttribute("aria-expanded", "true");
+    var primo = pannello.querySelector(".s");
+    if (primo) primo.focus({ preventScroll: true });
+  }
+  function chiudi() {
+    if (!pannello || !aperto) return;
+    pannello.classList.remove("is-on");
+    pannello.hidden = true;
+    aperto = false;
+    if (ultimoBtn) ultimoBtn.setAttribute("aria-expanded", "false");
+  }
+  function condividi(btn) {
+    var tocco = window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
+    if (navigator.share && tocco) {
+      navigator.share({ title: TITOLO, text: TESTO, url: link() }).catch(function () { /* annullato */ });
+      return;
+    }
+    if (aperto) chiudi(); else apri(btn);
+  }
+
+  document.addEventListener("click", function (e) {
+    var btn = e.target.closest('[data-act="share"], [data-share]');
+    if (btn) { e.preventDefault(); e.stopPropagation(); condividi(btn); return; }
+    if (aperto && !e.target.closest(".mg-share")) chiudi();
+  }, true);
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") chiudi(); });
+  window.addEventListener("resize", chiudi);
+  window.addEventListener("scroll", chiudi, { passive: true });
 })();
