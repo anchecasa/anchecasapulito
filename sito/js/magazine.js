@@ -5,7 +5,7 @@
 (function () {
   "use strict";
 
-  var NUMERO = { n: 1, data: "9 ottobre 2026", prossimo: "23 ottobre 2026", cartella: "magazine/numero-1/" };
+  var NUMERO = { n: 1, data: "Ottobre 2026", prossimo: "1° novembre 2026", cartella: "magazine/numero-1/" };
   /* Azienda luce e gas della rete AncheCasa per il pulsante dello strumento: nome e link alla sua pagina.
      Vuoto = «Confronta offerte» (Portale Offerte ARERA). */
   var PARTNER_ENERGIA = { nome: "", url: "" };
@@ -55,7 +55,7 @@
         '<div class="mg-bleed mg-photo">' + img("copertina", "Una coppia nel soggiorno appena ristrutturato") + "</div>" +
         '<div class="mg-shade-t"></div><div class="mg-shade-b"></div>' +
         '<div class="mg-masthead"><div class="name">Anche<span>Casa</span></div><div class="sub">Magazine</div></div>' +
-        '<div class="mg-issue"><span>N. 1</span><span>' + NUMERO.data + '</span><span>Quindicinale · gratuito</span></div>' +
+        '<div class="mg-issue"><span>N. 1</span><span>' + NUMERO.data + '</span><span>Il primo numero · gratuito</span></div>' +
         '<div class="mg-coverlines">' +
           '<div class="mg-cl-big"><div class="n">83</div><div class="t">giorni per il bonus casa al 50%. Poi si scende.</div></div>' +
           "<div>" +
@@ -88,20 +88,19 @@
         '<p class="mg-p">Noi facciamo il contrario: ogni quindici giorni risposte chiare, numeri con la fonte accanto e strumenti gratuiti da usare subito. E quando serve una mano esperta, nella piazza di AncheCasa trovi chi lo fa nella tua zona.</p>' +
         '<p class="mg-sign">La redazione di AncheCasa</p>' +
         "</div></div>" +
-        '<p class="mg-small" style="border-top:1px solid var(--mg-rule);padding-top:6px;margin:0">N. ' + NUMERO.n + " · " + NUMERO.data + " · Quindicinale gratuito su anchecasa.it · Prossimo numero " + NUMERO.prossimo + ". Contenuti divulgativi: non sostituiscono il parere di un tecnico.</p>" +
+        '<p class="mg-small" style="border-top:1px solid var(--mg-rule);padding-top:6px;margin:0">N. ' + NUMERO.n + " · " + NUMERO.data + " · Gratuito su anchecasa.it · Dal " + NUMERO.prossimo + " esce ogni 15 giorni. Contenuti divulgativi: non sostituiscono il parere di un tecnico.</p>" +
         "</div>" + folio(i) + "</div>";
     } },
     /* 2 · IN ARRIVO: APP RACCOLTA RIFIUTI (09.10.2026). Testo sulla fascia blu, volto libero, modulo a scomparsa. */
     { cover: true, html: function (i) {
       return '<div class="mg-page mg-p2app">' +
-        '<div class="mg-p2-band">' +
-          '<div class="mg-kicker">In arrivo · con il numero 2</div>' +
-          '<h2 class="mg-h1">La raccolta, <em>senza pensieri</em></h2>' +
-          '<p class="mg-p2-dek">L’app gratuita di AncheCasa collegata al calendario del tuo Comune: ti dice <b>cosa</b> portare fuori, <b>che giorno</b> e <b>a che ora</b>. E la sera prima ti avvisa.</p>' +
-        "</div>" +
-        '<div class="mg-p2-photo mg-photo">' + img("rifiuti", "Una ragazza porta fuori la raccolta differenziata guardando l’app sul telefono") + "</div>" +
+        '<div class="mg-bleed mg-photo mg-p2-bg">' + img("rifiuti-casa", "Una donna nella sua cucina moderna, accanto ai contenitori di design per la differenziata, mostra sul telefono l’app AncheCasa con cosa portare fuori stasera") + '</div>' +
+        '<div class="mg-p2-head">' +
+          '<div class="mg-kicker">L’app gratuita · in arrivo</div>' +
+          '<h2 class="mg-h1">Cosa porto fuori <em>stasera?</em></h2>' +
+        '</div>' +
         '<div class="mg-p2-glass" data-noflip>' +
-          '<button type="button" class="mg-p2-open" aria-expanded="false"><span class="bell" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9a6 6 0 0 1 12 0c0 6 2.5 7.5 2.5 7.5h-17S6 15 6 9Z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg></span><span class="tx"><b>Avvisami gratis quando esce</b><small>e ricevi ogni nuovo numero</small></span><span class="go" aria-hidden="true">›</span></button>' +
+          '<button type="button" class="mg-p2-open" aria-expanded="false"><span class="bell" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9a6 6 0 0 1 12 0c0 6 2.5 7.5 2.5 7.5h-17S6 15 6 9Z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg></span><span class="tx"><b>Avvisami gratis quando esce</b><small>Cosa esporre e a che ora, nel tuo Comune</small></span><span class="go" aria-hidden="true">›</span></button>' +
           '<form class="mg-avvisi" novalidate hidden>' +
             '<div class="r"><input type="email" name="mail" placeholder="La tua mail" autocomplete="email" required aria-label="La tua mail"><input type="text" name="comune" placeholder="Comune" autocomplete="address-level2" aria-label="Il tuo Comune"><button type="submit" class="mg-p2-send" aria-label="Invia">›</button></div>' +
             '<label class="ok"><input type="checkbox" name="privacy" required><span>Ho letto l’<a href="privacy.html" target="_blank" rel="noopener">informativa privacy</a></span></label>' +
@@ -459,7 +458,7 @@
         '<div class="mg-opener" style="bottom:40px">' + kicker("Prossimo numero · " + NUMERO.prossimo) +
         '<h2 class="mg-h1" style="font-size:38px">Nel numero 2</h2>' +
         '<div class="mg-3steps"><div><i>›</i>L’app gratuita per la raccolta dei rifiuti, col calendario del tuo Comune</div><div><i>›</i>Il calcolatore gratuito del Bonus Casa, con il bonifico pronto</div><div><i>›</i>Muffa e condensa: prepararsi all’inverno</div><div><i>›</i>Fotovoltaico sul balcone: cosa si può fare</div></div>' +
-        '<p class="mg-small" style="color:rgba(255,255,255,.7);margin-top:12px">AncheCasa Magazine · gratuito ogni 15 giorni su anchecasa.it</p></div>' +
+        '<p class="mg-small" style="color:rgba(255,255,255,.7);margin-top:12px">AncheCasa Magazine · gratuito su anchecasa.it, dal 1° novembre ogni 15 giorni</p></div>' +
       "</div>";
     } }
   ];
@@ -588,8 +587,8 @@
     else { font("bold", 18); ink(NAVY); doc.text("AncheCasa", L, 17); }
     font("bold", 10); ink(NAVY); doc.text("anchecasa.it", R, 13, { align: "right" });
     font("normal", 7.2); ink(GRIGIO);
-    doc.text("Palumbo Investment S.r.l. · Via Giusti 22 – 81057 Teano (CE)", R, 17.5, { align: "right" });
-    doc.text("C.F. e P.IVA 04724830619 · REA CE-349941", R, 21, { align: "right" });
+    doc.text("info@anchecasa.it", R, 17.5, { align: "right" });
+    doc.text("© " + oggi.getFullYear() + " AncheCasa · Tutti i diritti riservati", R, 21, { align: "right" });
     draw(LINEA); doc.setLineWidth(0.3); doc.line(L, 25.5, R, 25.5);
 
     // ---- fascia titolo
@@ -703,7 +702,7 @@
     doc.text(doc.splitTextToSize("Riferimento prezzo: " + c.rif.fonte + ". Consumi di riferimento: stime AncheCasa su dati ARERA. Il costo medio include quote fisse e potenza impegnata: con consumi bassi risulta più alto. Stima indicativa a scopo informativo, non è una consulenza.", W), L, 276);
     draw(LINEA); doc.setLineWidth(0.3); doc.line(L, 283, R, 283);
     font("normal", 7.2); ink(GRIGIO);
-    doc.text("Palumbo Investment S.r.l. – AncheCasa · Report Check Bollette · AncheCasa Magazine N." + NUMERO.n, L, 288);
+    doc.text("© " + oggi.getFullYear() + " AncheCasa · info@anchecasa.it · Report Check Bollette · AncheCasa Magazine N." + NUMERO.n, L, 288);
     font("bold", 7.2); ink(NAVY); doc.text("anchecasa.it · Pag. 1 di 1", R, 288, { align: "right" });
     doc.save("AncheCasa-report-bolletta-" + (luce ? "luce" : "gas") + ".pdf");
   }
