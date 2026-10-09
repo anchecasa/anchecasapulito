@@ -122,3 +122,15 @@
 .sm-r-corr input:focus { outline: none; border-color: var(--arancio); }
 .sm-r-corr .btn { min-height: 44px; padding: 0 18px; font-size: 15px; }
 .sm-r-grazie { flex-basis: 100%; margin: 2px 0 0; color: #1f6b4a; font-weight: 700; }
+
+/* 09.10.2026 ~19:10 · PC: solo "Come funziona", niente video né foto */
+.sm-come h3 { font: 800 26px var(--display); color: var(--blu); margin: 0 0 6px; }
+.sm-come-sub { color: var(--grigio); margin: 0 0 22px; font-size: 17px; }
+.sm-come-passi { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; counter-reset: cp; }
+.sm-come-passi li { counter-increment: cp; position: relative; background: var(--carta); border-radius: 16px; padding: 22px 20px 20px; display: flex; flex-direction: column; gap: 6px; }
+.sm-come-passi li::before { content: counter(cp); position: absolute; top: 16px; right: 18px; font: 800 30px var(--display); color: rgba(22,48,77,.12); }
+.sm-come-passi i { width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center; background: var(--arancio); color: #fff; margin-bottom: 6px; }
+.sm-come-passi i svg { width: 24px; height: 24px; }
+.sm-come-passi b { font: 800 17px var(--display); color: var(--blu); }
+.sm-come-passi span { color: var(--ink); font-size: 15px; line-height: 1.45; }
+.sm-come .sm-link-tel { margin-top: 22px; }

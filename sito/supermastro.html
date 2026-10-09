@@ -15,7 +15,7 @@
 <link rel="stylesheet" href="css/ac.css?v=5">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <link rel="stylesheet" href="css/cerca-casa.css?v=3">
-<link rel="stylesheet" href="css/supermastro.css?v=5">
+<link rel="stylesheet" href="css/supermastro.css?v=6">
 </head>
 <body data-page="trova">
 <a class="skip" href="#contenuto">Vai al contenuto</a>
@@ -84,13 +84,17 @@
   <p class="sm-a-nota">In cima, con il segno blu, gli artigiani certificati DM 37/08 della rete. Gli altri vengono da OpenStreetMap.</p>
 </div></section>
 <section class="sez carta" id="usa"><div class="wrap sm">
-  <div class="testa"><div><p class="kicker">SuperMastro</p><h2>Il guasto, da qui.</h2><p>Cinque secondi di video. Poi il problema, la spiegazione e, se serve, l'artigiano vicino.</p></div></div>
-  <div class="pannello sm-solo-pc sm-video-pc">
-    <div class="passo-num"><b>1</b>Video di 5 secondi</div>
-    <h3>SuperMastro con il video funziona dal telefono</h3>
-    <p>Apri questa pagina sul cellulare, inquadra il guasto per 5 secondi e SuperMastro ti dice cos’è, come farlo da solo o chi chiamare.</p>
+  <div class="testa sm-solo-tel"><div><p class="kicker">SuperMastro</p><h2>Il guasto, da qui.</h2><p>Cinque secondi di video. Poi il problema, la spiegazione e, se serve, l'artigiano vicino.</p></div></div>
+  <!-- PC: niente video né foto, solo come funziona (09.10.2026 ~19:10) -->
+  <div class="pannello sm-solo-pc sm-come">
+    <h3>Come funziona SuperMastro</h3>
+    <p class="sm-come-sub">SuperMastro si usa dal telefono: un video di 5 secondi e hai la soluzione.</p>
+    <ol class="sm-come-passi">
+      <li><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg></i><b>Apri SuperMastro dal telefono</b><span>Vai su anchecasa.it/supermastro con il cellulare.</span></li>
+      <li><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="6" width="13" height="12" rx="2"/><path d="m15.5 10 6-3v10l-6-3"/></svg></i><b>Inquadra il problema per 5 secondi</b><span>Dentro o fuori casa: rubinetto, presa, serratura, tapparella, cancello, prato…</span></li>
+      <li><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-2.4 2.6-2.6Z"/></svg></i><b>Ricevi la soluzione</b><span>Se puoi farlo tu: attrezzi e passi. Se no: l’artigiano giusto vicino a te, sulla cartina.</span></li>
+    </ol>
     <div class="sm-link-tel"><span>anchecasa.it/supermastro</span><button type="button" class="btn linea" id="sm-copia-link">Copia il link</button></div>
-    <p class="sm-nota">Da qui puoi comunque scrivere il problema nella ricerca della home e cercare un professionista.</p>
   </div>
   <div class="pannello sm-solo-tel" id="sm-video">
     <div class="passo-num"><b>1</b>Video di 5 secondi</div>
@@ -107,7 +111,7 @@
     </div>
     <p class="sm-nota" id="sm-nota">Inquadra il guasto e tieni fermo il telefono. La registrazione si ferma da sola dopo 5 secondi.</p>
   </div>
-  <div class="pannello" id="sm-problema" hidden>
+  <div class="pannello sm-solo-tel" id="sm-problema" hidden>
     <div class="passo-num"><b>2</b>Il problema</div>
     <p id="sm-stato">SuperMastro sta guardando il video.</p>
     <p id="sm-chiedi" hidden>Il video è pronto. Tocca il problema che si vede: SuperMastro ti dice come farlo da solo, con gli attrezzi, oppure chi chiamare.</p>
@@ -116,7 +120,7 @@
     <div class="sm-fai" id="sm-fai" hidden></div>
     <div class="btns" id="sm-chiama" hidden style="margin-top:14px"></div>
   </div>
-  <div class="pannello" id="sm-lista-box" hidden>
+  <div class="pannello sm-solo-tel" id="sm-lista-box" hidden>
     <div class="passo-num"><b>3</b>Chi chiamare</div>
     <p id="sm-dove">Cerco gli artigiani vicini e apro l'elenco su Google Maps.</p>
     <div class="modulo" id="sm-citta-box" hidden style="margin-top:12px">
