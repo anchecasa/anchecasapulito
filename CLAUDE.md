@@ -13,6 +13,14 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 2026-10-09 19:07 · Cursor
+- Le voci Claude ~19:00, ~19:05 e ~19:10 erano già nei file: non riscritte.
+- Commit `be4ad5f` sul ramo main: «SuperMastro: solo video, da PC solo Come funziona, dopo il video sempre la scheda con guida o artigiano». Push su GitHub. File: `sito/supermastro.html`, `sito/css/supermastro.css`.
+- Il push da solo non avvia Vercel. Pubblicata la cartella `sito` sul progetto `anchecasa-pulito`. Deployment `dpl_GxzvUNPAHpQcFRwdrfrsxXjD7EM5`, stato Ready, alias https://anchecasa.it. Area privata non ripubblicata.
+- Prova da PC (1280 px): su `/supermastro` si vede «Come funziona SuperMastro», largo 720 px, con i tre passi «Apri SuperMastro dal telefono», «Inquadra il problema per 5 secondi», «Ricevi la soluzione», e il link anchecasa.it/supermastro. Il video, «Registra 5 secondi», «Carica un video» e «Il guasto, da qui.» sono nascosti. CSS `supermastro.css?v=6`.
+- Prova da telefono (390 px): il riquadro del computer è nascosto e c’è la registrazione. «Registra 5 secondi» (fotocamera simulata, senza chiave) apre «Video pronto. Tocca quello che si vede.» con 26 problemi. «Scarico intasato o lento» apre «Dal tuo video»: «Puoi provarci tu», Tempo 15-45 minuti, Difficoltà facile, 6 attrezzi e 6 passi, pulsante «Cerca un idraulico vicino a te». La cartina era chiusa e si è aperta con quel pulsante: 4 idraulici a Teano.
+- File annotato: `CLAUDE.md`.
+
 ### 2026-10-09 ~19:10 · Claude — SuperMastro da PC: solo "Come funziona" (NON ancora pubblicato)
 - `sito/supermastro.html`: sul PC (mouse e schermo ≥ 900 px) al posto del video c'è il riquadro "Come funziona SuperMastro" (`.sm-come`).
   - Tre passi con icona: "Apri SuperMastro dal telefono", "Inquadra il problema per 5 secondi", "Ricevi la soluzione". Sotto: anchecasa.it/supermastro e "Copia il link".
