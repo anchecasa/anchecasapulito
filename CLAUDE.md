@@ -13,6 +13,13 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 2026-10-09 15:20 · Cursor
+- Commit `fc6ef42a0d706d9b89c8b096aba93dbed8acc9d0` sul ramo main di https://github.com/anchecasa/anchecasapulito. Messaggio: «Magazine: pagina 2 raccolta, pulsanti vetro, date ottobre/novembre, report bollette senza dati societari».
+- Il push non ha fatto partire Vercel da solo. Pubblicata la cartella `sito` sul progetto `anchecasa-pulito` in produzione. Deployment `dpl_TfR6ii8r5tTCi59pHTbhJGE3DpxY`, stato Ready, indirizzo https://anchecasa.it.
+- Controllo su https://anchecasa.it/magazine.html (si apre come /magazine). Online: pulsanti «Indietro» e «Avanti» con classe vetro, pagina 2 «La raccolta, senza pensieri» e barra «Avvisami gratis quando esce». La pagina carica `magazine.css?v=20` e `magazine.js?v=19`.
+- Nel file pubblicato le date sono ancora «9 ottobre 2026» e «23 ottobre 2026», e il report PDF ha ancora Palumbo Investment, indirizzo, P.IVA e REA. Quei due punti del messaggio di commit non sono nel codice di `sito/js/magazine.js`.
+- File: `CLAUDE.md`.
+
 ### 2026-10-09 ~15:20 · Claude — Magazine: pagina 2, pulsanti vetro, date, report bollette (NON ancora pubblicato)
 - `sito/js/magazine.js`, `sito/css/magazine.css`, `sito/magazine.html` (css v=20, js v=20). Copia di sicurezza: `_copie-magazine-1520/`.
 - Pagina 2 "La raccolta, senza pensieri": titolo e testo in una fascia blu sopra la foto (il volto resta libero); modulo "Avvisami gratis" ridotto a una barra in vetro che si apre solo al tocco.
