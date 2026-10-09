@@ -13,6 +13,12 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 2026-10-09 15:37 · Cursor
+- Commit `43cf32e411940bafe27dbcba201f77348264a9bd` sul ramo main di https://github.com/anchecasa/anchecasapulito. Messaggio: «Magazine: pagina 2 con secchio nel telefono e riquadro stasera/domani, pulsante Condividi, anteprima WhatsApp/Facebook». La foto originale Canva era già nel commit precedente e non è cambiata.
+- Pubblicato https://anchecasa.it, progetto Vercel `anchecasa-pulito` (deployment `dpl_54jMsFC8SwdhB3EUaz1NFo323zVv`, alias https://anchecasa.it). Il push da solo non avvia Vercel.
+- Controllato https://anchecasa.it/magazine (da /magazine.html): pagina 2 «Cosa porto fuori stasera?», telefono con il secchio CARTA, riquadro Comune di Bergamo con Stasera (carta e cartone, 20:00–24:00) e Domani (plastica e metalli), pulsante Condividi tra Indietro e Avanti. Il pannello elenca WhatsApp, Facebook, Telegram, Email e Copia link. css e js `?v=24`. Anteprima: og:image assoluto sulla copertina.
+- File: `sito/js/magazine.js`, `sito/css/magazine.css`, `sito/magazine.html`, `sito/magazine/numero-1/rifiuti-casa.jpg`, `CLAUDE.md`.
+
 ### 2026-10-09 ~16:00 · Claude — Magazine: telefono pagina 2 rifatto + pulsante Condividi (NON ancora pubblicato)
 - `rifiuti-casa.jpg`: il telefono adesso mostra un grande secchio blu con "STASERA · CARTA · 20:00–24:00", applicato dritto sullo schermo e leggibile da lontano.
 - Pagina 2: torna il riquadro trasparente sulla foto: "Comune di Bergamo · Stasera: Carta e cartone, dalle 20:00 alle 24:00 · Domani: Plastica e metalli".
