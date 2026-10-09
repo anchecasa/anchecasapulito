@@ -13,6 +13,14 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 2026-10-09 16:33 · Cursor
+- Commit `a277a364d0cfbfc8d2742d1e1203449ae39edcdd` sul ramo main di https://github.com/anchecasa/anchecasapulito. Messaggio: «Magazine: copertina leggibile, Check Bollette con Analizza, rifinitura pagine, schermo pieno sul telefono, pulsanti in vetro, statistiche e pagina admin». In questo commit sono cambiati solo i file del Magazine e `CLAUDE.md`: area privata e migrazione erano già nel commit precedente.
+- Pubblicato https://anchecasa.it, progetto Vercel `anchecasa-pulito` (deployment `dpl_Epo8ApgpFBcqCGj2GSwsYnyPfZwN`, alias https://anchecasa.it). Il push da solo non avvia Vercel.
+- Controllato https://anchecasa.it/magazine (da /magazine.html). css `?v=33`, js `?v=31`.
+  - PC (1280×800): barra del sito visibile, rivista a due pagine. Check Bollette, pagine 7–8: a campi vuoti «Analizza» dice che mancano totale e consumo; con 182,40 € e 420 kWh il badge diventa «Il tuo risultato» e il PDF si accende.
+  - Telefono (390×844): barra del sito nascosta, copertina con la famiglia e i richiami in basso («83 giorni», Energia, Cantiere, Tendenze), capsula in vetro in basso (Home, Indietro, Condividi, Avanti, Schermo intero).
+- File: `sito/js/magazine.js`, `sito/css/magazine.css`, `sito/magazine.html`, `CLAUDE.md`.
+
 ### 2026-10-09 ~17:55 · Claude — Copertina leggibile, rifinitura pagine, Check Bollette con "Analizza" (NON ancora pubblicato)
 - Copertina: torna la disposizione di prima (richiami in basso).
   - Leggibilità con ombre sottili sotto le lettere e un alone morbido solo dietro i blocchi di testo; sfumature generali alleggerite su richiesta ("non esagerare con lo scuro").
