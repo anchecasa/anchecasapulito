@@ -39,7 +39,7 @@
       var q = input.value.trim();
       if (q.length < 2 || q === ultima) { if (q.length < 2) box.hidden = true; return; }
       ultima = q;
-      var url = "https://photon.komoot.io/api/?lang=it&limit=10&bbox=6.6,35.4,18.6,47.2&q=" + encodeURIComponent(q);
+      var url = "https://photon.komoot.io/api/?lang=default&limit=10&bbox=6.6,35.4,18.6,47.2&q=" + encodeURIComponent(q);
       fetch(url).then(function (r) { if (!r.ok) throw new Error(); return r.json(); }).then(function (j) {
         if (input.value.trim() !== q) return;
         var visti = {};

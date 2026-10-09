@@ -13,6 +13,28 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 2026-10-09 ~18:35 · Claude — SuperMastro impara dai pollici (NON ancora pubblicato)
+- Sotto ogni risposta di SuperMastro: "SuperMastro ha capito il problema?" con 👍 Sì / 👎 No. Con No compare "Cos'era invece? Così SuperMastro impara." (`supermastro.html`, `js/trova-artigiano.js`, `css/supermastro.css` v=5, trova-artigiano v=5).
+- NUOVO `sito/api/supermastro-voto.js`: salva voto, fonte (testo/video), richiesta, risposta data, mestiere, correzione e città in `marketplace.supermastro_voti` (solo INSERT, approvato sempre false).
+- NUOVO `supabase/migrations/20261009183000_supermastro_voti.sql` — DA APPLICARE DAL TECNICO (dopo 20261009170000, usa `magazine_e_admin()`).
+  - Tabella con RLS: scrivere tutti, leggere e approvare solo admin.
+  - Funzione `supermastro_esempi()`: le ultime 20 correzioni APPROVATE. Provato su Postgres 16: un visitatore non può approvarsi da solo né leggere i voti.
+- `api/supermastro.js`: prima di chiamare l'AI legge `supermastro_esempi()` (max 1,5 s; se Supabase non risponde, va avanti senza) e aggiunge le correzioni approvate al prompt come esempi: così SuperMastro impara.
+- Come si approva oggi: Supabase → tabella `supermastro_voti` → `approvato = true` sulle correzioni giuste. Si può aggiungere una pagina admin.
+- Tenuta la correzione di Cursor delle 18:05 (`comuni.js?v=2`).
+
+### 2026-10-09 18:05 · Cursor
+- Photon non accetta più `lang=it` (risponde 400) e la tendina dei Comuni restava vuota. In `sito/js/comuni.js` la lingua della richiesta è `default`: i nomi restano quelli italiani di OpenStreetMap. «Tea» propone Teano (Caserta) e Teana (Potenza).
+- Versione `comuni.js?v=2` in `sito/index.html` e `sito/supermastro.html`.
+- File: `sito/js/comuni.js`, `sito/index.html`, `sito/supermastro.html`, `CLAUDE.md`.
+
+### 2026-10-09 ~18:20 · Claude — SuperMastro si occupa solo dei problemi di casa (NON ancora pubblicato)
+- `api/supermastro.js`: nel prompt c'è la regola di supermastro.com "solo problemi della casa e della proprietà, dentro e fuori" (impianti, muri, infissi… tetto, cancello, recinzione, prato, giardino, piscina…).
+  - Se il video o il testo mostrano altro (oggetti come scarpe, persone, animali, auto, domande personali o di coppia…) il JSON ha `fuori_tema: true`, mestiere "altro", nessuna guida e nessun pericolo.
+  - In quel caso "problema" dice cosa si vede ("Un paio di scarpe da ginnastica") e "descrizione" è una risposta gentile in 2 frasi che riconosce la cosa e invita a inquadrare il guasto. `normalizza()` forza questi valori anche se l'AI sbaglia il mestiere.
+- `js/trova-artigiano.js` + `css/supermastro.css`: con `fuori_tema` la scheda dice "Questo non è un problema di casa", nasconde guida e "Cerca un professionista" e invita: "Hai un problema in casa, in giardino, al prato o al recinto? Fammelo vedere." (classe `.is-fuori`).
+- Versioni supermastro.css e trova-artigiano.js v=4.
+
 ### 2026-10-09 ~18:10 · Claude — SuperMastro: guida fai da te con attrezzi, ricerca solo al clic, Comuni d'Italia, video solo dal telefono (NON ancora pubblicato)
 - Unito SOPRA il lavoro di Cursor delle 17:33-17:36 (rete certificata `/api/rete-artigiani`, regole supermastro.com nel prompt): unione a tre vie, niente di Cursor è stato tolto.
 - `js/problemi.js`: guide fai da te per tutte le 25 voci che si possono fare da soli (campo `g`: `a` attrezzi e materiali, `p` passi dettagliati, `tm` tempo, `d` difficoltà).
