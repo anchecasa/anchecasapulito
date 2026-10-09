@@ -13,6 +13,47 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 2026-10-09 17:33 · Cursor — Logica di supermastro.com innestata nel sito
+- Lette le regole dal sito supermastro.com (Palumbo Investment): diagnosi video nella funzione `diagnose-video` (categorie idraulico, elettricista, fabbro, muratore, falegname, giardiniere; confidenza sotto 70 = video non chiaro; `faidate_consigliato` solo se è sicuro; artigiano certificato DM 37/08) e tabella pubblica `artigiani` (approvati, online, con certificazione, il più vicino entro 40 km).
+- `sito/api/rete-artigiani.js` (nuovo): restituisce `{ nome, lat, lng, tel, indirizzo, sito, rete: true }`. Nella tabella non ci sono telefono né sito, quindi quei campi restano vuoti. Il nome, se manca la ragione sociale, è «Idraulico certificato · Roma».
+- `sito/js/trova-artigiano.js`: `cercaArtigiani()`, commento RETE ANCHECASA, carica prima i certificati e li mette in cima, segno blu sulla cartina. Poi OpenStreetMap.
+- `sito/api/supermastro.js`: prompt aggiornato con quelle regole. La risposta JSON resta problema, descrizione, mestiere, urgenza, pericolo, fai_da_te, passi, avvertenze.
+- `sito/js/problemi.js`: `ACProblemi.cerca()` alza le voci della categoria SuperMastro («idr» resta sull’idraulico).
+- Grafica invariata, a parte il segno blu dei certificati. Versioni: problemi e trova-artigiano `?v=2`, supermastro.css `?v=2`.
+- File: `sito/api/rete-artigiani.js`, `sito/api/supermastro.js`, `sito/js/trova-artigiano.js`, `sito/js/problemi.js`, `sito/css/supermastro.css`, `sito/supermastro.html`, `sito/index.html`, `CLAUDE.md`.
+
+### 2026-10-09 ~17:45 · Claude — Check Bollette semplice + report PDF elegante con onde del marchio (NON ancora pubblicato)
+- Check Bollette (pagina 8 del magazine), su richiesta: "troppe cose, non si capisce". Ora ci sono due schermate (classe `.mg-cb2`).
+  - Prima schermata: Luce/Gas e tre domande numerate ("Quanto hai pagato?", "Quanto hai consumato?", "Di quanti mesi è?"), un pulsante "Analizza la mia bolletta" e una riga "Scoprirai…". Se manca un dato lo dice in rosso e scuote il campo.
+  - Seconda schermata (solo la risposta): "Paghi il 29% in più del giusto", "Puoi risparmiare circa 312 € all'anno", lancetta con "Paghi / Prezzo giusto", una riga sui consumi con "Quante persone siete? 1-5+", poi Scarica il PDF, Confronta offerte e "‹ Cambia i dati".
+  - Tolti striscia dei passi, esempio sbiadito, badge, barre e riquadri. Le persone in casa ora si scelgono nella risposta (campo nascosto `mg-b-persone`).
+- Report PDF (`creaPdf`) rifatto come carta AncheCasa elegante: foglio bianco, logo centrato, filo arancio, titolo "Report Check Bollette", sezioni con titoletto arancio e filo sottile, nessun riquadro scuro. In fondo due onde curve (arancio sotto, blu sopra) con anchecasa.it, info@, © e "Pagina 1 di 1".
+  - Provato con un simulatore di jsPDF su canvas: jsPDF da cdnjs qui non si scarica.
+- Nota: non ho trovato nel PC un contratto agente con i colori curvati (quelli in Projects/anchecasa-site sono in bianco e nero); le onde sono ricreate dalla descrizione.
+- Versioni js v=36, css v=37. Copia della versione precedente: /home/claude/magazine.pre-semplice.js (solo sessione).
+
+### 2026-10-09 ~17:30 · Claude — Home: ricerca intelligente dei problemi → SuperMastro → artigiano su cartina (NON ancora pubblicato)
+- `sito/index.html`: tolte le categorie "Più cercati" sotto la ricerca.
+  - Il form ha `data-nuova`; carica i NUOVI `js/problemi.js`, `js/cerca-casa.js` e `css/cerca-casa.css`.
+  - La sezione in alto non taglia più la tendina.
+- NUOVO `js/problemi.js` (`window.ACProblemi`): dizionario di circa 80 problemi in casa e fuori casa più 33 mestieri, con sinonimi e tag OpenStreetMap per mestiere.
+  - `cerca(testo)` capisce l'inizio delle parole ("idr"), più parole ("taglio erba"), piccoli errori ("idraulco") e frasi ("il cane ha rotto la zanzariera").
+- NUOVO `js/cerca-casa.js`: mentre scrivi suggerisce i problemi con il mestiere evidenziato, ultima voce "Chiedi a SuperMastro: «testo»"; frecce e Invio funzionano.
+  - Scelta → il cursore va su "Dove?"; Cerca → `supermastro.html?p=<id>&c=<città>#richiesta` (o `?q=<testo libero>`). La città viene ricordata.
+- `js/ac.js`: la vecchia ricerca parte solo se il form NON ha `data-nuova`. Su SuperMastro, `cerca(p)` usa la cartina se c'è `window.ACTrova`.
+- `sito/supermastro.html`:
+  - nuove sezioni `#richiesta` ("La tua richiesta": consiglio subito dal dizionario, poi la risposta di SuperMastro con passi e "Quando fermarti") e `#artigiani` (cartina Leaflet a metà schermo, elenco sotto con Chiama, segni numerati che aprono la scheda: nome, distanza, indirizzo, Chiama, Indicazioni, Sito);
+  - carica Leaflet 1.9.4 da cdnjs, `js/problemi.js`, NUOVO `js/trova-artigiano.js`, NUOVO `css/supermastro.css`;
+  - il video di 5 secondi resta sotto (#usa).
+- `api/supermastro.js`: ora risponde anche senza video, con `{ testo, citta }` → stesso JSON. Mestieri ampliati.
+- Dati artigiani per ora da OpenStreetMap (Overpass per tag craft=…, poi Nominatim). Cartina CARTO Voyager.
+  - Provato con dati simulati: questa sessione non raggiunge internet.
+- DA FARE (Cursor): innestare la logica di supermastro.com. Punti segnati nel codice:
+  1. `js/trova-artigiano.js` → `cercaArtigiani()`, commento "RETE ANCHECASA": prima di OpenStreetMap, gli artigiani certificati della rete (campi `{ nome, lat, lng, tel, indirizzo, sito, rete:true }`).
+  2. `api/supermastro.js` → prompt e regole di analisi del video/testo di supermastro.com.
+  3. `js/problemi.js` → `ACProblemi.cerca()` se supermastro.com ha un suo riconoscimento dei problemi.
+- Copia di sicurezza: `_copie-home-supermastro-1730/`.
+
 ### 2026-10-09 16:57 · Cursor
 - Commit `bad3db7cb6df38577d9568e67fcd73bd401f2879` sul ramo main di https://github.com/anchecasa/anchecasapulito. Messaggio: «Magazine: pagine grandi sul telefono con testata, Check Bollette con Analizza, copertina leggibile, statistiche e pagina admin». In questo commit sono cambiati solo i file del Magazine e `CLAUDE.md`.
 - Pubblicato https://anchecasa.it, progetto Vercel `anchecasa-pulito` (deployment `dpl_BxoA7TD7kDueTabrYEPKGRpni2Mq`, alias https://anchecasa.it). Il push da solo non avvia Vercel.

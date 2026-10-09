@@ -4,10 +4,18 @@
 const MESTIERI = [
   "idraulico", "elettricista", "fabbro", "muratore", "imbianchino", "falegname", "serramentista",
   "caldaista", "tecnico elettrodomestici", "tecnico condizionatori", "vetraio", "giardiniere",
-  "impresa di pulizie", "antennista", "altro"
+  "impresa di pulizie", "antennista", "lattoniere", "piastrellista", "tapparellista", "disinfestazione",
+  "spurgo", "traslochi", "spazzacamino", "impresa edile", "installatore fotovoltaico", "cancelli automatici",
+  "allarmi", "altro"
 ];
 
-const PROMPT = `Sei il tecnico di AncheCasa. Guardi alcune foto di un problema in una casa italiana, girato da un privato con il telefono.
+/* Regole di supermastro.com, funzione diagnose-video (video di 5 secondi o testo):
+   categorie idraulico, elettricista, fabbro, muratore, falegname, giardiniere;
+   se il video non si capisce (confidenza sotto 70) non si inventa;
+   faidate_consigliato solo se è sicuro, altrimenti specialista;
+   impianti elettrici, gas e lavori soggetti al DM 37/08 li fa un artigiano certificato.
+   La risposta resta il JSON di AncheCasa. */
+const PROMPT = `Sei SuperMastro. Analizzi un guasto in una casa italiana: o i fotogrammi di un video di 5 secondi girato dal privato, o il testo che ha scritto.
 Rispondi SOLO con un oggetto JSON, in italiano semplice, con questi campi:
 {
  "problema": "nome breve del problema, max 60 caratteri",
@@ -19,11 +27,14 @@ Rispondi SOLO con un oggetto JSON, in italiano semplice, con questi campi:
  "passi": ["massimo 6 passi brevi e sicuri per risolvere da solo; vuoto se fai_da_te è false"],
  "avvertenze": ["quando fermarsi e chiamare un professionista"]
 }
-Regole di sicurezza, obbligatorie:
-- Odore di gas, caldaia o fornelli con fiamma anomala, fumo, scintille, cavi bruciati, quadro elettrico, acqua vicino a prese o fili, crepe nei muri portanti o nei soffitti, lavori sul tetto o in altezza, amianto: pericolo=true e fai_da_te=false. Se c'è odore di gas scrivi di aprire le finestre, non toccare interruttori, uscire e chiamare il pronto intervento gas o il 112.
+Regole di supermastro.com, obbligatorie:
+- Prima scegli la categoria tra idraulico, elettricista, fabbro, muratore, falegname, giardiniere. Se il lavoro è un altro mestiere della lista, usa quello.
+- Se il video è scuro, mosso, lontano o non si capisce il guasto, non inventare: mestiere "altro", fai_da_te false, problema "Problema da verificare", descrizione che chiede di rifare il video più vicino al guasto.
+- fai_da_te true solo quando un privato può farlo in sicurezza (pulire un filtro, sfiatare un termosifone, cambiare una lampadina a corrente staccata). Impianti elettrici, gas, caldaie, quadri, tubi in pressione, tetti, altezza, crepe strutturali e tutto ciò che richiede un'impresa abilitata DM 37/08: fai_da_te false.
+- Odore di gas, fiamma anomala, fumo, scintille, cavi bruciati, acqua vicino a prese o fili, amianto: pericolo true, urgenza alta, fai_da_te false. Se c'è odore di gas: aprire le finestre, non toccare interruttori, uscire e chiamare il pronto intervento gas o il 112.
 - Su impianti a gas e quadri elettrici non dare mai passi di riparazione.
-- Se non riconosci il problema: mestiere "altro", fai_da_te false. Non inventare.
-- Niente marche, niente prezzi.`;
+- Se serve anche un secondo mestiere, scrivilo in avvertenze ("Può servire anche un muratore").
+- Niente marche, niente prezzi, niente nomi di persone.`;
 
 function testo(v, max) {
   return String(v == null ? "" : v).replace(/\s+/g, " ").trim().slice(0, max);
@@ -66,7 +77,10 @@ module.exports = async function handler(req, res) {
   const foto = frames.map(String).filter(function (f) {
     return f.length > 20 && f.length < 1500000 && /^[A-Za-z0-9+/=]+$/.test(f);
   }).slice(0, 3);
-  if (!foto.length) {
+  // 09.10.2026: anche solo testo (dalla ricerca della home): "testo" = il problema scritto, "citta" facoltativa.
+  const testo = body && typeof body.testo === "string" ? body.testo.replace(/\s+/g, " ").trim().slice(0, 300) : "";
+  const citta = body && typeof body.citta === "string" ? body.citta.replace(/\s+/g, " ").trim().slice(0, 80) : "";
+  if (!foto.length && testo.length < 3) {
     res.status(400).json({ error: "manca_il_video" });
     return;
   }
@@ -81,14 +95,20 @@ module.exports = async function handler(req, res) {
         response_format: { type: "json_object" },
         messages: [
           { role: "system", content: PROMPT },
-          {
-            role: "user",
-            content: [
-              { type: "text", text: "Fotogrammi del video del guasto, in ordine. Rispondi solo con il JSON." }
-            ].concat(foto.map(function (f) {
-              return { type: "image_url", image_url: { url: "data:image/jpeg;base64," + f, detail: "low" } };
-            }))
-          }
+          foto.length
+            ? {
+              role: "user",
+              content: [
+                { type: "text", text: "Fotogrammi del video del guasto, in ordine." + (testo ? " Il privato scrive: «" + testo + "»." : "") + " Rispondi solo con il JSON." }
+              ].concat(foto.map(function (f) {
+                return { type: "image_url", image_url: { url: "data:image/jpeg;base64," + f, detail: "low" } };
+              }))
+            }
+            : {
+              role: "user",
+              content: "Non c'è il video: il privato ha scritto il problema. «" + testo + "»" + (citta ? " (si trova a " + citta + ")" : "") +
+                ". Se è un lavoro e non un guasto (es. tagliare l'erba, imbiancare, traslocare), descrivi il lavoro e il mestiere giusto. Rispondi solo con il JSON."
+            }
         ]
       })
     });

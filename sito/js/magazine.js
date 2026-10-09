@@ -282,41 +282,40 @@
         '<p class="mg-small" style="margin-top:6px">Le proporzioni delle voci sono illustrative. Fonte aumento: ARERA, settembre 2026.</p>' +
         "</div></div>" + folio(i) + "</div>";
     } },
-    /* 8 · STRUMENTO CHECK BOLLETTE (09.10.2026 ~16:10): una schermata sola come la prima versione.
-       Dati in alto, grafici sotto che si aggiornano mentre scrivi; a campi vuoti i grafici mostrano un esempio sbiadito. */
+    /* 8 · STRUMENTO CHECK BOLLETTE (09.10.2026 ~17:20, versione semplice): due schermate.
+       1) tre domande e un pulsante "Analizza"; 2) solo la risposta: quanto paghi in più, quanto risparmi, lancetta, consumi. */
     { cover: true, html: function (i) {
       var opz = function (voci, sel) { return voci.map(function (v) { return '<option value="' + v[0] + '"' + (v[0] === sel ? " selected" : "") + ">" + v[1] + "</option>"; }).join(""); };
-      return '<div class="mg-page mg-app-page mg-cb">' +
+      return '<div class="mg-page mg-app-page mg-cb2">' +
         '<div class="mg-app-head">' +
-          '<div><div class="mg-kicker">Strumento gratuito · 1 minuto</div>' +
+          '<div><div class="mg-kicker">Strumento gratuito</div>' +
           '<h2 class="mg-app-title">Check <em>Bollette</em></h2>' +
-          '<p class="mg-app-sub">Scrivi due numeri della tua ultima bolletta e premi Analizza.</p></div>' +
+          '<p class="mg-app-sub">Scopri in un minuto se paghi troppo luce o gas.</p></div>' +
           '<span class="mg-free">GRATIS</span>' +
         "</div>" +
-        '<ol class="mg-cb-steps"><li><i>1</i>Luce o gas</li><li><i>2</i>Totale e consumo</li><li><i>3</i>Risultato e PDF</li></ol>' +
         '<div class="mg-app" data-noflip id="mg-bolletta">' +
-          '<div class="mg-cb-top">' +
-            '<div class="mg-seg" role="group" aria-label="Tipo di bolletta"><button type="button" data-tipo="luce" aria-pressed="true">' + ICO.sun.replace('<svg', '<svg width="14" height="14"') + ' Luce</button><button type="button" data-tipo="gas" aria-pressed="false">' + ICO.flame.replace('<svg', '<svg width="14" height="14"') + ' Gas</button></div>' +
-            '<span class="mg-cb-badge" id="mg-b-badge" role="status">Esempio</span>' +
+          '<div id="mg-b-dati">' +
+            '<div class="mg-seg big" role="group" aria-label="Tipo di bolletta"><button type="button" data-tipo="luce" aria-pressed="true">' + ICO.sun.replace('<svg', '<svg width="16" height="16"') + ' Luce</button><button type="button" data-tipo="gas" aria-pressed="false">' + ICO.flame.replace('<svg', '<svg width="16" height="16"') + ' Gas</button></div>' +
+            '<label class="mg-q" for="mg-b-importo"><span class="n">1</span><span class="d"><b>Quanto hai pagato?</b><small>Il totale, in prima pagina</small></span><span class="mg-inp"><input id="mg-b-importo" type="text" inputmode="decimal" autocomplete="off" placeholder="0,00"><span>€</span></span></label>' +
+            '<label class="mg-q" for="mg-b-consumo"><span class="n">2</span><span class="d"><b>Quanto hai consumato?</b><small id="mg-b-hint-c">Nel riquadro «Consumi»</small></span><span class="mg-inp"><input id="mg-b-consumo" type="text" inputmode="decimal" autocomplete="off" placeholder="0"><span id="mg-b-unit">kWh</span></span></label>' +
+            '<label class="mg-q" for="mg-b-mesi"><span class="n">3</span><span class="d"><b>Di quanti mesi è?</b><small>Lo dice il periodo in alto</small></span><span class="mg-inp"><select id="mg-b-mesi">' + opz([["1", "1 mese"], ["2", "2 mesi"], ["3", "3 mesi"], ["6", "6 mesi"], ["12", "12 mesi"]], "2") + "</select></span></label>" +
+            '<p class="mg-b-msg" id="mg-b-msg" role="status"></p>' +
+            '<button type="button" class="mg-cta wide mg-b-go" id="mg-b-go">Analizza la mia bolletta</button>' +
+            '<p class="mg-b-cosa"><b>Scoprirai</b> se il prezzo è giusto, quanto puoi risparmiare e avrai il report in PDF.</p>' +
           "</div>" +
-          '<div class="mg-fields">' +
-            '<div class="mg-field"><label for="mg-b-importo"><i>2</i>Totale da pagare <small>in prima pagina</small></label><div class="mg-inp"><input id="mg-b-importo" type="text" inputmode="decimal" autocomplete="off" placeholder="Scrivi qui"><span>€</span></div></div>' +
-            '<div class="mg-field"><label for="mg-b-consumo"><i>2</i>Consumo <small id="mg-b-hint-c">riquadro «Consumi»</small></label><div class="mg-inp"><input id="mg-b-consumo" type="text" inputmode="decimal" autocomplete="off" placeholder="Scrivi qui"><span id="mg-b-unit">kWh</span></div></div>' +
+          '<div id="mg-b-res" hidden>' +
+            '<div id="mg-b-out" aria-live="polite"></div>' +
+            '<div class="mg-tool-actions">' +
+              '<button type="button" class="mg-cta wide" id="mg-b-pdf">' + ICO.arrow.replace('<svg', '<svg width="15" height="15" style="transform:rotate(90deg)"') + ' Scarica il PDF</button>' +
+              (PARTNER_ENERGIA.url
+                ? '<a class="mg-cta ghost" href="' + PARTNER_ENERGIA.url + '" target="_blank" rel="noopener">Offerta da ' + PARTNER_ENERGIA.nome + "</a>"
+                : '<a class="mg-cta ghost" href="https://www.ilportaleofferte.it/" target="_blank" rel="noopener">Confronta offerte</a>') +
+            "</div>" +
+            '<button type="button" class="mg-b-edit" id="mg-b-edit">‹ Cambia i dati</button>' +
           "</div>" +
-          '<div class="mg-cb-row2">' +
-            '<div class="mg-field"><label for="mg-b-mesi">Periodo</label><div class="mg-inp"><select id="mg-b-mesi">' + opz([["1", "1 mese"], ["2", "2 mesi"], ["3", "3 mesi"], ["6", "6 mesi"], ["12", "12 mesi"]], "2") + "</select></div></div>" +
-            '<div class="mg-field"><label for="mg-b-persone">Persone in casa</label><div class="mg-inp"><select id="mg-b-persone">' + opz([["1", "1"], ["2", "2"], ["3", "3"], ["4", "4"], ["5", "5 o più"]], "3") + "</select></div></div>" +
-            '<button type="button" class="mg-cta mg-cb-go" id="mg-b-go">Analizza <span aria-hidden="true">›</span></button>' +
-          "</div>" +
-          '<div class="mg-cb-res" id="mg-b-out" aria-live="polite"></div>' +
-          '<div class="mg-tool-actions">' +
-            '<button type="button" class="mg-cta wide" id="mg-b-pdf">' + ICO.arrow.replace('<svg', '<svg width="15" height="15" style="transform:rotate(90deg)"') + ' Scarica il report PDF</button>' +
-            (PARTNER_ENERGIA.url
-              ? '<a class="mg-cta ghost" href="' + PARTNER_ENERGIA.url + '" target="_blank" rel="noopener">Offerta da ' + PARTNER_ENERGIA.nome + "</a>"
-              : '<a class="mg-cta ghost" href="https://www.ilportaleofferte.it/" target="_blank" rel="noopener">Confronta offerte</a>') +
-          "</div>" +
+          '<input type="hidden" id="mg-b-persone" value="3">' +
         "</div>" +
-        '<p class="mg-app-note" id="mg-b-fonte"></p>' +
+        '<p class="mg-app-note" id="mg-b-fonte">I tuoi dati restano sul tuo dispositivo. Stima su dati ARERA, ottobre 2026.</p>' +
         '<div class="mg-folio on-photo" style="bottom:12px"><span><b>' + i + '</b></span><span></span></div>' + "</div>";
     } },
     /* 9 · APERTURA ENERGIA */
@@ -571,16 +570,15 @@
     return { tPrezzo: tPrezzo, tCons: tCons, ePrezzo: etichetta[c.vPrezzo], eCons: etichetta[c.vCons] };
   }
 
+  // Risultato (solo dopo "Analizza"): una frase grande, il risparmio, la lancetta e una riga sui consumi.
   function aggiornaBolletta() {
     var out = document.getElementById("mg-b-out");
-    if (!out) return;
+    if (!out || !bolletta.analizzato) return;
     var c = calcolaBolletta();
+    if (c.esempio) return;
     var r = c.rif, u = r.unita;
-    document.getElementById("mg-b-fonte").textContent =
-      "I tuoi dati restano sul tuo dispositivo · Stima indicativa su dati ARERA, ottobre 2026 · Fonti complete nel report PDF";
-    var badge = document.getElementById("mg-b-badge");
-    if (badge) { badge.textContent = c.esempio ? "Esempio" : "Il tuo risultato"; badge.className = "mg-cb-badge" + (c.esempio ? "" : " is-tuo"); }
-    var t = testiVerdetto(c);
+    var pct = Math.round((c.rP - 1) * 100);
+    var titolo = { bad: "Paghi " + art(pct) + "% in più del giusto", warn: "Il tuo prezzo è nella media", ok: "Il tuo prezzo è buono" }[c.vPrezzo];
     var ratio = Math.max(0.6, Math.min(1.4, c.rP));
     var ang = (ratio - 1) / 0.4 * 90;
     var arc = function (a0, a1, cls) {
@@ -588,42 +586,24 @@
       var A = p(a0), B = p(a1);
       return '<path class="' + cls + '" d="M' + A[0].toFixed(1) + " " + A[1].toFixed(1) + " A80 80 0 0 1 " + B[0].toFixed(1) + " " + B[1].toFixed(1) + '"/>';
     };
-    var gauge = '<svg class="mg-gauge" viewBox="0 0 200 118" role="img" aria-label="Il prezzo per ' + u + ' rispetto al riferimento">' +
+    var gauge = '<svg class="mg-gauge" viewBox="0 0 200 112" role="img" aria-label="Il tuo prezzo rispetto al giusto">' +
       arc(-90, -11.25, "g-ok") + arc(-11.25, 22.5, "g-warn") + arc(22.5, 90, "g-bad") +
-      '<g transform="rotate(' + ang.toFixed(1) + ' 100 100)"><line x1="100" y1="100" x2="100" y2="34" class="g-needle"/></g><circle cx="100" cy="100" r="6" class="g-hub"/>' +
-      '<text x="18" y="116" class="g-l">paghi meno</text><text x="182" y="116" text-anchor="end" class="g-l">paghi di più</text></svg>';
-    var max = Math.max(c.annuo, c.rifConsumo) * 1.08;
-    var w1 = Math.max(6, c.annuo / max * 100), w2 = Math.max(6, c.rifConsumo / max * 100);
-    var titolo = {
-      bad: "Paghi " + art(Math.round((c.rP - 1) * 100)) + "% in più del giusto",
-      warn: "Il tuo prezzo è nella media",
-      ok: "Il tuo prezzo è buono"
-    }[c.vPrezzo];
-    out.className = "mg-cb-res" + (c.esempio ? " is-esempio" : "");
+      '<g transform="rotate(' + ang.toFixed(1) + ' 100 100)"><line x1="100" y1="100" x2="100" y2="34" class="g-needle"/></g><circle cx="100" cy="100" r="6" class="g-hub"/></svg>';
+    var cons = { ok: "meno di", warn: "come", bad: "più di" }[c.vCons];
+    var p = c.persone;
     out.innerHTML =
-      (c.esempio
-        ? '<div class="mg-cb-hint"><span class="tag">Esempio</span><span class="tx">' + (bolletta.avviso || "Scrivi <b>totale</b> e <b>consumo</b> qui sopra e premi <b>Analizza</b>") + "</span></div>"
-        : '<div class="mg-cb-hint is-tuo"><span class="tag">La tua bolletta</span><span class="tx">' + euro(c.importo, 2) + " · " + num(c.consumo) + " " + u + " · " + c.mesi + (c.mesi === 1 ? " mese" : " mesi") + "</span></div>") +
-      '<div class="mg-cb-body">' +
-        '<div class="mg-cb-big ' + c.vPrezzo + '"><b>' + titolo + "</b>" + (c.risparmio > 0 ? "<span>Puoi risparmiare circa <em>" + euro(c.risparmio, 0) + "</em> all’anno</span>" : "<span>Non stai pagando più del necessario</span>") + "</div>" +
-        '<div class="mg-cb-grid">' +
-          '<div class="mg-cb-card mg-gauge-box"><span class="t">Prezzo per ' + u + "</span>" + gauge +
-            '<div class="mg-gauge-v">' + euro(c.prezzo, 3) + "<small>riferimento " + euro(r.prezzo, 3) + "</small></div></div>" +
-          '<div class="mg-cb-side">' +
-            '<div class="mg-cb-card mg-cb-bars"><span class="t">Consumo in un anno</span>' +
-              '<div class="br"><span>Tu</span><div class="tr"><i class="' + c.vCons + '" style="width:' + w1.toFixed(0) + '%"></i></div><b>' + num(c.annuo) + "</b></div>" +
-              '<div class="br"><span>Famiglia tipo</span><div class="tr"><i class="ref" style="width:' + w2.toFixed(0) + '%"></i></div><b>' + num(c.rifConsumo) + "</b></div>" +
-              '<small class="u">' + u + " all’anno</small>" +
-            "</div>" +
-            '<div class="mg-cb-tiles"><div><b>' + euro(c.spesaAnnua, 0) + "</b><span>spesa in un anno</span></div><div class=\"" + (c.risparmio > 0 ? "save" : "") + '"><b>' + (c.risparmio > 0 ? euro(c.risparmio, 0) : "0 €") + "</b><span>risparmio possibile</span></div></div>" +
-          "</div>" +
-        "</div>" +
-        '<div class="mg-verdict"><span class="mg-chip ' + c.vPrezzo + '">' + t.ePrezzo + "</span><span><b>Prezzo.</b> " + t.tPrezzo + "</span></div>" +
-        '<div class="mg-verdict"><span class="mg-chip ' + c.vCons + '">' + t.eCons + "</span><span><b>Consumi.</b> " + t.tCons + "</span></div>" +
-      "</div>";
-    var pdf = document.getElementById("mg-b-pdf");
-    if (pdf) pdf.classList.toggle("is-off", c.esempio);
-    if (!c.esempio) STAT.traccia("bollette_uso", null, bolletta.tipo);
+      '<p class="mg-r-cosa">La tua bolletta ' + (bolletta.tipo === "luce" ? "della luce" : "del gas") + "</p>" +
+      '<div class="mg-r-big ' + c.vPrezzo + '">' + titolo + "</div>" +
+      (c.risparmio > 0
+        ? '<div class="mg-r-save"><span>Puoi risparmiare circa</span><b>' + euro(c.risparmio, 0) + "</b><span>all’anno</span></div>"
+        : '<div class="mg-r-save ok"><span>Non stai pagando più del necessario.</span></div>') +
+      '<div class="mg-r-gauge">' + gauge +
+        '<div class="mg-r-prezzi"><div><small>Paghi</small><b>' + euro(c.prezzo, 2) + "</b><small>al " + u + '</small></div><div class="giusto"><small>Prezzo giusto</small><b>' + euro(r.prezzo, 2) + "</b><small>al " + u + "</small></div></div>" +
+      "</div>" +
+      '<div class="mg-r-cons"><p>Consumi <b>' + cons + "</b> una famiglia di " + (p >= 5 ? "5 o più persone" : p + (p === 1 ? " persona" : " persone")) + " <small>(" + num(c.annuo) + " " + u + " l’anno)</small></p>" +
+        '<div class="mg-r-pers" role="group" aria-label="Quante persone siete?"><span>Quante persone siete?</span>' +
+        [1, 2, 3, 4, 5].map(function (n) { return '<button type="button" data-pers="' + n + '" aria-pressed="' + (n === p) + '">' + (n === 5 ? "5+" : n) + "</button>"; }).join("") +
+        "</div></div>";
   }
 
   /* Report PDF su carta intestata AncheCasa (come i contratti): logo, intestazione, numeri grandi, grafici, consigli. */
@@ -639,15 +619,7 @@
 
   function scaricaPdf() {
     var c = calcolaBolletta();
-    if (c.esempio) {
-      var campo = document.getElementById(c.manca === "il consumo" ? "mg-b-consumo" : "mg-b-importo");
-      bolletta.avviso = "Per il report scrivi " + (c.manca || "totale e consumo") + " e premi <b>Analizza</b>";
-      aggiornaBolletta();
-      var rib = document.querySelector(".mg-cb-hint");
-      if (rib) { rib.classList.remove("shake"); void rib.offsetWidth; rib.classList.add("shake"); }
-      if (campo) campo.focus({ preventScroll: true });
-      return;
-    }
+    if (c.esempio) return;
     STAT.traccia("bollette_pdf", null, bolletta.tipo);
     if (!window.jspdf || !window.jspdf.jsPDF) {
       var out = document.getElementById("mg-b-out");
@@ -657,143 +629,143 @@
     caricaLogo(function (logo, ratio) { creaPdf(c, logo, ratio); });
   }
 
+  /* Report PDF (09.10.2026 ~17:40): carta AncheCasa elegante e pulita, come i documenti del marchio.
+     Foglio bianco, logo centrato, niente riquadri scuri; in fondo le onde curve blu e arancio con i contatti. */
   function creaPdf(c, logo, ratio) {
     var t = testiVerdetto(c);
     var u = c.rif.unita;
     var luce = bolletta.tipo === "luce";
     var doc = new window.jspdf.jsPDF({ unit: "mm", format: "a4" });
-    var NAVY = [22, 48, 77], NOTTE = [11, 26, 44], ARANCIO = [229, 107, 16], GRIGIO = [91, 102, 118], CHIARO = [243, 245, 248], LINEA = [223, 228, 235];
-    var COL = { ok: [31, 157, 85], warn: [222, 160, 20], bad: [214, 69, 65] };
+    var NAVY = [22, 48, 77], ARANCIO = [229, 107, 16], GRIGIO = [107, 117, 131], INK = [33, 41, 52], LINEA = [226, 231, 238], TENUE = [246, 248, 251];
+    var COL = { ok: [47, 125, 77], warn: [196, 132, 18], bad: [194, 65, 43] };
     var fill = function (k) { doc.setFillColor(k[0], k[1], k[2]); };
     var draw = function (k) { doc.setDrawColor(k[0], k[1], k[2]); };
     var ink = function (k) { doc.setTextColor(k[0], k[1], k[2]); };
     var font = function (stile, size) { doc.setFont("helvetica", stile); doc.setFontSize(size); };
     var oggi = new Date();
     var codice = "AC-CB-" + oggi.getFullYear() + String(oggi.getMonth() + 1).padStart(2, "0") + String(oggi.getDate()).padStart(2, "0") + "-" + String(oggi.getHours()).padStart(2, "0") + String(oggi.getMinutes()).padStart(2, "0");
-    var L = 16, R = 194, W = R - L;
+    var L = 20, R = 190, W = R - L, MID = 105;
+    var titolo = function (testo, y) { font("bold", 8); ink(ARANCIO); doc.text(testo.toUpperCase(), L, y, { charSpace: 0.6 }); draw(LINEA); doc.setLineWidth(0.25); doc.line(L, y + 2.2, R, y + 2.2); };
 
-    // ---- carta intestata
-    if (logo) doc.addImage(logo, "PNG", L, 9, 11 * ratio, 11);
-    else { font("bold", 18); ink(NAVY); doc.text("AncheCasa", L, 17); }
-    font("bold", 10); ink(NAVY); doc.text("anchecasa.it", R, 13, { align: "right" });
-    font("normal", 7.2); ink(GRIGIO);
-    doc.text("info@anchecasa.it", R, 17.5, { align: "right" });
-    doc.text("© " + oggi.getFullYear() + " AncheCasa · Tutti i diritti riservati", R, 21, { align: "right" });
-    draw(LINEA); doc.setLineWidth(0.3); doc.line(L, 25.5, R, 25.5);
+    // ---- intestazione: logo centrato, titolo, sottotitolo
+    if (logo) { var lh = 13, lw = lh * ratio; doc.addImage(logo, "PNG", MID - lw / 2, 14, lw, lh); }
+    else { font("bold", 18); ink(NAVY); doc.text("AncheCasa", MID, 24, { align: "center" }); }
+    fill(ARANCIO); doc.rect(MID - 8, 31, 16, 0.8, "F");
+    font("bold", 17); ink(NAVY); doc.text("Report Check Bollette", MID, 40, { align: "center" });
+    font("normal", 9); ink(GRIGIO);
+    doc.text("Bolletta " + (luce ? "della luce" : "del gas") + "  ·  analisi del " + oggi.toLocaleDateString("it-IT") + "  ·  report n. " + codice, MID, 46, { align: "center" });
 
-    // ---- fascia titolo
-    fill(NOTTE); doc.roundedRect(L, 30, W, 27, 3, 3, "F");
-    font("bold", 7.5); ink(ARANCIO); doc.text("CHECK BOLLETTE · REPORT N. " + codice, L + 7, 37.5);
-    font("bold", 18); ink([255, 255, 255]); doc.text("La tua bolletta " + (luce ? "della luce" : "del gas"), L + 7, 46);
-    font("normal", 9); ink([201, 211, 223]);
-    doc.text("Analisi del " + oggi.toLocaleDateString("it-IT") + " · periodo di " + c.mesi + (c.mesi === 1 ? " mese" : " mesi") + " · " + (c.persone === 5 ? "5 o più persone" : c.persone + (c.persone === 1 ? " persona" : " persone")) + " in casa", L + 7, 52.5);
+    // ---- il risultato in una frase
+    var y = 58;
+    titolo("Il risultato", y);
+    var pct = Math.round((c.rP - 1) * 100);
+    var frase = { bad: "Paghi " + art(pct) + "% in più del giusto", warn: "Il tuo prezzo è nella media", ok: "Il tuo prezzo è buono" }[c.vPrezzo];
+    font("bold", 20); ink(COL[c.vPrezzo]); doc.text(frase, L, y + 13);
+    font("normal", 10); ink(INK);
+    if (c.risparmio > 0) {
+      doc.text("Allineandoti al prezzo giusto puoi risparmiare circa", L, y + 21);
+      font("bold", 24); ink(ARANCIO); doc.text(euro(c.risparmio, 0), L, y + 32);
+      var wv = doc.getTextWidth(euro(c.risparmio, 0));
+      font("normal", 11); ink(GRIGIO); doc.text("all’anno", L + wv + 3, y + 32);
+    } else {
+      doc.text("Non stai pagando più del necessario: tieni d’occhio le prossime bollette.", L, y + 21);
+    }
 
-    // ---- tre numeri
-    var y = 63, cw = (W - 8) / 3;
-    var kpi = [
-      [euro(c.prezzo, 3), "costo medio per " + u, "riferimento " + euro(c.rif.prezzo, 3), COL[c.vPrezzo]],
-      [euro(c.spesaAnnua, 0), "spesa annua stimata", num(c.annuo) + " " + u + " all'anno", NAVY],
-      [c.risparmio > 0 ? euro(c.risparmio, 0) : "0 €", "risparmio possibile all'anno", c.risparmio > 0 ? "allineandoti al riferimento" : "stai già pagando bene", c.risparmio > 0 ? ARANCIO : COL.ok]
-    ];
-    kpi.forEach(function (k, i) {
-      var x = L + i * (cw + 4);
-      fill(CHIARO); doc.roundedRect(x, y, cw, 26, 2.5, 2.5, "F");
-      fill(k[3]); doc.circle(x + 6, y + 7, 1.6, "F");
-      font("normal", 7.5); ink(GRIGIO); doc.text(k[1].toUpperCase(), x + 9.5, y + 8);
-      font("bold", 17); ink(k[3] === NAVY ? NAVY : k[3]); doc.text(k[0], x + 5, y + 17);
-      font("normal", 7.8); ink(GRIGIO); doc.text(k[2], x + 5, y + 22.5);
-    });
-
-    // ---- contachilometri del prezzo + giudizi
-    y = 96;
-    font("bold", 11); ink(NAVY); doc.text("Il tuo prezzo rispetto al riferimento", L, y);
-    var cx = L + 34, cy = y + 34, rr = 25;
+    // ---- lancetta + prezzi
+    y = 104;
+    titolo("Il prezzo che paghi", y);
+    var cx = L + 30, cy = y + 33, rr = 22;
     var pt = function (a, r) { var rad = (a - 90) * Math.PI / 180; return [cx + r * Math.cos(rad), cy + r * Math.sin(rad)]; };
-    doc.setLineWidth(6.5); doc.setLineCap && doc.setLineCap("butt");
+    doc.setLineWidth(4.2); if (doc.setLineCap) doc.setLineCap("butt");
     for (var a = -90; a < 90; a += 1.5) {
-      var k = a < -11.25 ? COL.ok : a < 22.5 ? COL.warn : COL.bad;
-      draw(k); var p1 = pt(a, rr), p2 = pt(Math.min(90, a + 1.7), rr); doc.line(p1[0], p1[1], p2[0], p2[1]);
+      var kk = a < -11.25 ? COL.ok : a < 22.5 ? COL.warn : COL.bad;
+      draw(kk); var p1 = pt(a, rr), p2 = pt(Math.min(90, a + 1.7), rr); doc.line(p1[0], p1[1], p2[0], p2[1]);
     }
     var ratioP = Math.max(0.6, Math.min(1.4, c.rP));
-    var ang = (ratioP - 1) / 0.4 * 90;
-    var tip = pt(ang, rr - 6);
-    draw(NOTTE); doc.setLineWidth(1.1); doc.line(cx, cy, tip[0], tip[1]);
-    fill(NOTTE); doc.circle(cx, cy, 2.2, "F");
-    font("normal", 7.5); ink(GRIGIO); doc.text("paghi meno", cx - rr - 3, cy + 6); doc.text("paghi di più", cx + rr + 3, cy + 6, { align: "right" });
-    font("bold", 13); ink(NAVY); doc.text(euro(c.prezzo, 3) + " / " + u, cx, cy + 13, { align: "center" });
-    font("normal", 7.8); ink(GRIGIO); doc.text("riferimento " + euro(c.rif.prezzo, 3) + " / " + u, cx, cy + 18, { align: "center" });
+    var tip = pt((ratioP - 1) / 0.4 * 90, rr - 5);
+    draw(NAVY); doc.setLineWidth(0.9); doc.line(cx, cy, tip[0], tip[1]);
+    fill(NAVY); doc.circle(cx, cy, 1.8, "F");
+    font("normal", 7); ink(GRIGIO); doc.text("paghi meno", cx - rr - 2, cy + 5); doc.text("paghi di più", cx + rr + 2, cy + 5, { align: "right" });
+    var px = L + 70;
+    font("bold", 16);
+    var v1 = euro(c.prezzo, 3), v2 = euro(c.rif.prezzo, 3);
+    fill(COL[c.vPrezzo]); doc.rect(px, y + 12, 1.2, 13, "F");
+    font("normal", 8.5); ink(GRIGIO); doc.text("Tu paghi, tutto compreso", px + 5, y + 16);
+    font("bold", 16); ink(NAVY); doc.text(v1 + " / " + u, px + 5, y + 23);
+    fill(COL.ok); doc.rect(px, y + 30, 1.2, 13, "F");
+    font("normal", 8.5); ink(GRIGIO); doc.text("Prezzo giusto di riferimento", px + 5, y + 34);
+    font("bold", 16); ink(NAVY); doc.text(v2 + " / " + u, px + 5, y + 41);
+    font("normal", 8.4); ink(GRIGIO);
+    doc.text(doc.splitTextToSize("Il prezzo giusto è il riferimento ARERA per una famiglia come la tua, con tasse e quote fisse comprese.", R - (px + 62)), px + 62, y + 16);
 
-    function giudizio(x, yy, w, titolo, etichetta, vk, testo) {
-      font("normal", 8.6);
-      var linee = doc.splitTextToSize(testo, w - 10);
-      var h = 13 + linee.length * 4.3;
-      fill([255, 255, 255]); draw(LINEA); doc.setLineWidth(0.3); doc.roundedRect(x, yy, w, h, 2.5, 2.5, "FD");
-      fill(COL[vk]); doc.roundedRect(x + 5, yy + 4.5, 22, 6, 3, 3, "F");
-      font("bold", 7.8); ink([255, 255, 255]); doc.text(etichetta, x + 16, yy + 8.6, { align: "center" });
-      font("bold", 10); ink(NAVY); doc.text(titolo, x + 30, yy + 8.8);
-      font("normal", 8.6); ink([29, 39, 51]); doc.text(linee, x + 5, yy + 15.5);
-      return h;
-    }
-    var gx = L + 74, gw = R - gx;
-    var h1 = giudizio(gx, y + 4, gw, "Prezzo", t.ePrezzo, c.vPrezzo, t.tPrezzo);
-    giudizio(gx, y + 8 + h1, gw, "Consumi", t.eCons, c.vCons, t.tCons);
+    // ---- consumi
+    y = 158;
+    titolo("I tuoi consumi", y);
+    font("normal", 9.5); ink(INK);
+    doc.text(doc.splitTextToSize(t.tCons, W), L, y + 9);
+    var max = Math.max(c.annuo, c.rifConsumo) * 1.1, bw = W - 70;
+    [["Tu", c.annuo, c.vCons === "bad" ? COL.bad : ARANCIO], ["Famiglia come la tua", c.rifConsumo, [176, 187, 201]]].forEach(function (r, i) {
+      var by = y + 17 + i * 8;
+      font("normal", 8.5); ink(GRIGIO); doc.text(r[0], L, by + 3.2);
+      fill(TENUE); doc.roundedRect(L + 40, by, bw, 4, 2, 2, "F");
+      fill(r[2]); doc.roundedRect(L + 40, by, Math.max(4, bw * r[1] / max), 4, 2, 2, "F");
+      font("bold", 9); ink(NAVY); doc.text(num(r[1]) + " " + u, R, by + 3.3, { align: "right" });
+    });
 
-    // ---- confronto a barre
-    y = 160;
-    font("bold", 11); ink(NAVY); doc.text("Confronto con una famiglia come la tua", L, y);
-    function barre(yy, titolo, tu, rif, fmt) {
-      var max = Math.max(tu, rif) * 1.12, bw = W - 62;
-      font("bold", 8.5); ink(NAVY); doc.text(titolo, L, yy);
-      [["Tu", tu, tu > rif * 1.1 ? COL.bad : ARANCIO], ["Riferimento", rif, [138, 155, 176]]].forEach(function (r, i) {
-        var by = yy + 3 + i * 7.5;
-        font("normal", 8); ink(GRIGIO); doc.text(r[0], L, by + 4);
-        fill(CHIARO); doc.roundedRect(L + 24, by, bw, 5, 1.2, 1.2, "F");
-        fill(r[2]); doc.roundedRect(L + 24, by, Math.max(2, bw * r[1] / max), 5, 1.2, 1.2, "F");
-        font("bold", 8.5); ink(NAVY); doc.text(fmt(r[1]), R, by + 4, { align: "right" });
-      });
-    }
-    barre(y + 7, "Prezzo medio tutto compreso (€/" + u + ")", c.prezzo, c.rif.prezzo, function (v) { return euro(v, 3); });
-    barre(y + 30, "Consumo annuo (" + u + ")", c.annuo, c.rifConsumo, function (v) { return num(v) + " " + u; });
-
-    // ---- i dati che hai inserito
-    y = 212;
-    font("bold", 11); ink(NAVY); doc.text("I dati della bolletta", L, y);
+    // ---- i dati della bolletta
+    y = 196;
+    titolo("I dati che hai inserito", y);
     var dati = [
-      ["Totale bolletta", euro(c.importo, 2)], ["Consumo nel periodo", num(c.consumo) + " " + u],
+      ["Totale della bolletta", euro(c.importo, 2)], ["Consumo nel periodo", num(c.consumo) + " " + u],
       ["Periodo", c.mesi + (c.mesi === 1 ? " mese" : " mesi")], ["Persone in casa", c.persone === 5 ? "5 o più" : String(c.persone)],
-      ["Consumo annuo stimato", num(c.annuo) + " " + u], ["Consumo di riferimento", num(c.rifConsumo) + " " + u + "/anno"]
+      ["Spesa annua stimata", euro(c.spesaAnnua, 0)], ["Consumo annuo stimato", num(c.annuo) + " " + u]
     ];
-    var colw = (W - 6) / 2;
+    var colw = (W - 12) / 2;
     dati.forEach(function (d, i) {
-      var x = L + (i % 2) * (colw + 6), yy = y + 4 + Math.floor(i / 2) * 6.5;
-      if (Math.floor(i / 2) % 2 === 0) { fill(CHIARO); doc.rect(x, yy, colw, 6.5, "F"); }
-      font("normal", 8.3); ink(GRIGIO); doc.text(d[0], x + 2.5, yy + 4.4);
-      font("bold", 8.3); ink(NAVY); doc.text(d[1], x + colw - 2.5, yy + 4.4, { align: "right" });
+      var x = L + (i % 2) * (colw + 12), yy = y + 9 + Math.floor(i / 2) * 7;
+      font("normal", 9); ink(GRIGIO); doc.text(d[0], x, yy);
+      font("bold", 9); ink(NAVY); doc.text(d[1], x + colw, yy, { align: "right" });
+      draw(LINEA); doc.setLineWidth(0.2); doc.line(x, yy + 2.4, x + colw, yy + 2.4);
     });
 
     // ---- cosa fare adesso
-    y = 241;
-    font("bold", 11); ink(NAVY); doc.text("Cosa fare adesso", L, y);
+    y = 226;
+    titolo("Cosa fare adesso", y);
     var passi = [
-      "Confronta le offerte con POD o PDR alla mano: anche sul Portale Offerte ARERA (ilportaleofferte.it).",
-      "Controlla che la lettura in bolletta sia reale e non stimata; se serve, comunica l'autolettura.",
-      "Se i consumi sono alti, un check di impianti e isolamento vale più di un cambio di tariffa: su anchecasa.it trovi i tecnici della tua zona."
+      "Confronta le offerte con il codice POD o PDR alla mano, anche sul Portale Offerte ARERA (ilportaleofferte.it).",
+      "Controlla che la lettura in bolletta sia reale e non stimata; se serve, comunica l’autolettura.",
+      "Se i consumi sono alti, un controllo di impianti e isolamento vale più di un cambio di tariffa: su anchecasa.it trovi i tecnici della tua zona."
     ];
-    var yy = y + 4;
+    var yy = y + 8;
     passi.forEach(function (p, i) {
-      fill(ARANCIO); doc.circle(L + 3, yy + 2.6, 2.8, "F");
-      font("bold", 8.5); ink([255, 255, 255]); doc.text(String(i + 1), L + 3, yy + 3.7, { align: "center" });
-      var ll = doc.splitTextToSize(p, W - 12); font("normal", 8.8); ink([29, 39, 51]); doc.text(ll, L + 9, yy + 3.6);
-      yy += ll.length * 4.2 + 3;
+      font("bold", 10); ink(ARANCIO); doc.text(String(i + 1), L + 1, yy + 0.2);
+      var ll = doc.splitTextToSize(p, W - 8); font("normal", 9); ink(INK); doc.text(ll, L + 7, yy);
+      yy += ll.length * 4.1 + 2.2;
     });
 
-    // ---- note e piè di pagina
-    font("normal", 6.8); ink(GRIGIO);
-    doc.text(doc.splitTextToSize("Riferimento prezzo: " + c.rif.fonte + ". Consumi di riferimento: stime AncheCasa su dati ARERA. Il costo medio include quote fisse e potenza impegnata: con consumi bassi risulta più alto. Stima indicativa a scopo informativo, non è una consulenza.", W), L, 276);
-    draw(LINEA); doc.setLineWidth(0.3); doc.line(L, 283, R, 283);
-    font("normal", 7.2); ink(GRIGIO);
-    doc.text("© " + oggi.getFullYear() + " AncheCasa · info@anchecasa.it · Report Check Bollette · AncheCasa Magazine N." + NUMERO.n, L, 288);
-    font("bold", 7.2); ink(NAVY); doc.text("anchecasa.it · Pag. 1 di 1", R, 288, { align: "right" });
+    // ---- nota
+    font("normal", 6.6); ink(GRIGIO);
+    doc.text(doc.splitTextToSize("Prezzo di riferimento: " + c.rif.fonte + ". Consumi di riferimento: stime AncheCasa su dati ARERA. Il prezzo medio include quote fisse e potenza impegnata: con consumi bassi risulta più alto. Stima indicativa a scopo informativo, non è una consulenza.", W), L, 262);
+
+    // ---- piede: onde curve nei colori AncheCasa
+    function onda(y0, y1, ampiezza, colore) {
+      var passi = 48, pts = [], x0 = 0, x1 = 210;
+      for (var i = 0; i <= passi; i++) {
+        var x = x0 + (x1 - x0) * i / passi;
+        var tt = i / passi;
+        pts.push([x, y0 + (y1 - y0) * tt - ampiezza * Math.sin(Math.PI * tt)]);
+      }
+      pts.push([210, 297], [0, 297]);
+      var seg = [];
+      for (var j = 1; j < pts.length; j++) seg.push([pts[j][0] - pts[j - 1][0], pts[j][1] - pts[j - 1][1]]);
+      fill(colore); doc.lines(seg, pts[0][0], pts[0][1], [1, 1], "F", true);
+    }
+    onda(281, 272, 5, ARANCIO);
+    onda(284.5, 276, 5.5, NAVY);
+    font("bold", 8.5); ink([255, 255, 255]); doc.text("anchecasa.it", L, 290);
+    font("normal", 7.5); ink([205, 215, 228]);
+    doc.text("info@anchecasa.it  ·  © " + oggi.getFullYear() + " AncheCasa  ·  Report Check Bollette, AncheCasa Magazine N." + NUMERO.n, L + 22, 290);
+    doc.text("Pagina 1 di 1", R, 290, { align: "right" });
     doc.save("AncheCasa-report-bolletta-" + (luce ? "luce" : "gas") + ".pdf");
   }
 
@@ -806,60 +778,50 @@
       var luce = bolletta.tipo === "luce";
       box.querySelectorAll("[data-tipo]").forEach(function (x) { x.setAttribute("aria-pressed", x.getAttribute("data-tipo") === bolletta.tipo ? "true" : "false"); });
       $("mg-b-unit").textContent = luce ? "kWh" : "Smc";
-      campi.consumo.placeholder = "Scrivi qui";
-      campi.importo.placeholder = "Scrivi qui";
-    }
-    function segna() {
-      ["importo", "consumo"].forEach(function (k) {
-        var pieno = leggiNumero(campi[k].value) > 0;
-        campi[k].closest(".mg-inp").classList.toggle("ok", pieno);
-        campi[k].closest(".mg-inp").classList.toggle("vuoto", !pieno);
-      });
-    }
-    function analizza() {
-      var mancaI = !(leggiNumero(campi.importo.value) > 0), mancaC = !(leggiNumero(campi.consumo.value) > 0);
-      if (mancaI || mancaC) {
-        bolletta.avviso = "Manca " + (mancaI && mancaC ? "il totale e il consumo" : mancaI ? "il totale" : "il consumo") + ": scrivilo nel riquadro arancio";
-        aggiornaBolletta();
-        var campo = mancaI ? campi.importo : campi.consumo;
-        var g = campo.closest(".mg-inp");
-        g.classList.remove("scuoti"); void g.offsetWidth; g.classList.add("scuoti");
-        campo.focus({ preventScroll: true });
-        return;
-      }
-      bolletta.analizzato = true;
-      bolletta.avviso = "";
-      aggiornaBolletta();
-      var res = $("mg-b-out");
-      res.classList.remove("appena"); void res.offsetWidth; res.classList.add("appena");
     }
     function salva() { bolletta.campi = { importo: campi.importo.value, consumo: campi.consumo.value, mesi: campi.mesi.value, persone: campi.persone.value }; }
-    // Prima di "Analizza" i grafici restano sull'esempio; dopo, si aggiornano mentre si corregge.
-    function tutto() {
-      segna();
-      if (bolletta.analizzato) bolletta.avviso = "";
-      else {
-        var mI = !(leggiNumero(campi.importo.value) > 0), mC = !(leggiNumero(campi.consumo.value) > 0);
-        bolletta.avviso = !mI && !mC ? "Tutto pronto: premi <b>Analizza</b>"
-          : /^Manca/.test(bolletta.avviso || "") ? "Manca " + (mI && mC ? "il totale e il consumo" : mI ? "il totale" : "il consumo") + ": scrivilo nel riquadro arancio" : "";
+    function vista(res) { $("mg-b-dati").hidden = res; $("mg-b-res").hidden = !res; }
+    function msg(t) { $("mg-b-msg").textContent = t || ""; }
+    function analizza() {
+      var mI = !(leggiNumero(campi.importo.value) > 0), mC = !(leggiNumero(campi.consumo.value) > 0);
+      ["importo", "consumo"].forEach(function (k) { campi[k].closest(".mg-q").classList.remove("manca"); });
+      if (mI || mC) {
+        var k = mI ? "importo" : "consumo";
+        msg(mI && mC ? "Scrivi quanto hai pagato e quanto hai consumato." : mI ? "Scrivi quanto hai pagato." : "Scrivi quanto hai consumato.");
+        var q = campi[k].closest(".mg-q");
+        q.classList.add("manca"); void q.offsetWidth;
+        campi[k].focus({ preventScroll: true });
+        return;
       }
+      msg("");
+      bolletta.analizzato = true;
       aggiornaBolletta();
+      vista(true);
+      STAT.traccia("bollette_uso", null, bolletta.tipo);
       salva();
     }
     box.querySelectorAll("[data-tipo]").forEach(function (b) {
-      b.addEventListener("click", function () { bolletta.tipo = b.getAttribute("data-tipo"); aggiornaTipo(); tutto(); });
+      b.addEventListener("click", function () { bolletta.tipo = b.getAttribute("data-tipo"); aggiornaTipo(); });
     });
     ["importo", "consumo"].forEach(function (k) {
-      campi[k].addEventListener("input", tutto);
+      campi[k].addEventListener("input", function () { campi[k].closest(".mg-q").classList.remove("manca"); msg(""); salva(); });
       campi[k].addEventListener("keydown", function (e) {
         if (e.key !== "Enter") return;
         e.preventDefault();
-        if (k === "importo" && !(leggiNumero(campi.consumo.value) > 0)) campi.consumo.focus(); else analizza();
+        if (k === "importo") campi.consumo.focus(); else analizza();
       });
     });
-    ["mesi", "persone"].forEach(function (k) { campi[k].addEventListener("change", tutto); });
-    $("mg-b-pdf").addEventListener("click", scaricaPdf);
+    campi.mesi.addEventListener("change", salva);
     $("mg-b-go").addEventListener("click", analizza);
+    $("mg-b-edit").addEventListener("click", function () { bolletta.analizzato = false; vista(false); campi.importo.focus({ preventScroll: true }); });
+    $("mg-b-out").addEventListener("click", function (e) {
+      var b = e.target.closest("[data-pers]");
+      if (!b) return;
+      campi.persone.value = b.getAttribute("data-pers");
+      salva();
+      aggiornaBolletta();
+    });
+    $("mg-b-pdf").addEventListener("click", scaricaPdf);
     box.querySelectorAll(".mg-tool-actions a").forEach(function (a) {
       a.addEventListener("click", function () { STAT.traccia("offerte", null, PARTNER_ENERGIA.nome || "portale ARERA"); });
     });
@@ -868,9 +830,7 @@
       campi.mesi.value = bolletta.campi.mesi || "2"; campi.persone.value = bolletta.campi.persone || "3";
     }
     aggiornaTipo();
-    segna();
-    aggiornaBolletta();
-    salva();
+    if (bolletta.analizzato && !calcolaBolletta().esempio) { aggiornaBolletta(); vista(true); } else { bolletta.analizzato = false; vista(false); }
   }
 
   /* ---------------- iscrizione agli avvisi (app raccolta + nuovi numeri) ---------------- */

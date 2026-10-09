@@ -39,7 +39,8 @@
     return VOCI.filter(function (x) { return slug(x[0]).indexOf(v) >= 0 || slug(x[1]).indexOf(v) >= 0; }).slice(0, 7);
   }
   var form = $("#cerca");
-  if (form) {
+  // 09.10.2026: la home usa la nuova ricerca dei problemi (js/problemi.js + js/cerca-casa.js), segnata con data-nuova.
+  if (form && !form.hasAttribute("data-nuova")) {
     var q = $("#q", form), dove = $("#dove", form), sugg = $("#sugg", form);
     function conCitta(href) { var c = slug(dove.value); return c && href.indexOf("trova.html") === 0 ? href + "&c=" + c : href; }
     function mostra() {
@@ -407,6 +408,8 @@
         .catch(function () { disegna(p, pos, []); });
     }
     function cerca(p) {
+      // 09.10.2026: se c'è la ricerca su cartina (js/trova-artigiano.js) si usa quella.
+      if (window.ACTrova) { window.ACTrova.apri({ mestiere: p.mestiere, titolo: p.problema || p.voce || "" }); return; }
       var box = $("#sm-lista-box");
       box.hidden = false;
       $("#sm-maps").href = mapsUrl(p.q, null);

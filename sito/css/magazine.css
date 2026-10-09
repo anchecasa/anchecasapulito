@@ -1032,3 +1032,55 @@ body.mg-phone .is-single .mg-cover .mg-cl { margin-top: 6px; }
 body.mg-phone .is-single .mg-cover .mg-cl span { font-size: 12.5px; line-height: 1.25; }
 body.mg-phone .is-single .mg-cover .mg-slogan { opacity: 0; }
 body.mg-phone .is-single .mg-cover .mg-coverlines { width: 47%; }
+
+/* ===== 2026-10-09 ~17:20 · Check Bollette SEMPLICE: tre domande, un pulsante, poi solo la risposta ===== */
+.mg-cb2 .mg-app-head { margin-bottom: 14px; }
+.mg-cb2 .mg-app-sub { display: block; font-size: 13px; }
+.mg-cb2 .mg-app { padding: 16px 16px 14px; }
+.mg-cb2 .mg-seg.big { display: flex; width: 100%; margin-bottom: 12px; }
+.mg-cb2 .mg-seg.big button { flex: 1; justify-content: center; padding: 9px 12px; font-size: 14px; }
+.mg-q { display: grid; grid-template-columns: 26px 1fr 128px; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid #eef0f4; cursor: text; }
+.mg-q .n { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; background: var(--mg-orange); color: #fff; font: 800 12px var(--mg-sans); }
+.mg-q .d b { display: block; font: 700 14.5px/1.2 var(--mg-sans); color: var(--mg-navy); }
+.mg-q .d small { display: block; font: 500 11px/1.3 var(--mg-sans); color: #8a94a3; margin-top: 2px; }
+.mg-q .mg-inp { background: #fff; border: 2px solid #d9dee6; border-radius: 10px; }
+.mg-q .mg-inp:focus-within { border-color: var(--mg-orange); box-shadow: 0 0 0 3px rgba(229,107,16,.15); }
+.mg-q .mg-inp input, .mg-q .mg-inp select { width: 100%; text-align: right; padding: 8px 0 !important; font-size: 17px !important; }
+.mg-q .mg-inp select { text-align: left; font-size: 15px !important; cursor: pointer; }
+.mg-q .mg-inp input::placeholder { color: #c3c9d3; font-weight: 600; }
+.mg-q.manca .mg-inp { border-color: #d64b2a; animation: mgShake2 .45s; }
+.mg-b-msg { min-height: 18px; margin: 8px 0 4px; font: 700 12.5px var(--mg-sans); color: #c0392b; }
+.mg-b-go { width: 100%; box-sizing: border-box; justify-content: center; font-size: 16px !important; padding: 14px 16px !important; }
+.mg-b-cosa { margin: 12px 0 0; font: 500 12px/1.45 var(--mg-sans); color: #6b7280; text-align: center; }
+.mg-b-cosa b { color: var(--mg-navy); }
+/* risultato */
+.mg-r-cosa { margin: 0 0 2px; font: 700 10px var(--mg-sans); letter-spacing: .14em; text-transform: uppercase; color: #8a94a3; }
+.mg-r-big { font: 700 25px/1.12 var(--mg-display); color: var(--mg-navy); margin-bottom: 8px; }
+.mg-r-big.bad { color: #c2412b; } .mg-r-big.ok { color: #2f7d4d; }
+.mg-r-save { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 8px; background: #effaf2; border-radius: 12px; padding: 10px 12px; font: 600 13px var(--mg-sans); color: #2f5a40; }
+.mg-r-save b { font: 700 28px/1 var(--mg-display); color: #2f7d4d; }
+.mg-r-save.ok { background: #f3f5f8; color: #4b5563; }
+.mg-r-gauge { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 8px; margin: 12px 0 6px; }
+.mg-cb2 .mg-gauge { max-width: 170px; }
+.mg-r-prezzi { display: grid; gap: 8px; }
+.mg-r-prezzi div { border-left: 3px solid #c2412b; padding-left: 10px; }
+.mg-r-prezzi div.giusto { border-left-color: #3f9d63; }
+.mg-r-prezzi small { display: block; font: 600 10.5px var(--mg-sans); color: #8a94a3; }
+.mg-r-prezzi b { display: block; font: 700 21px/1.1 var(--mg-display); color: var(--mg-navy); }
+.mg-r-cons { border-top: 1px solid #eef0f4; padding-top: 10px; margin-bottom: 12px; }
+.mg-r-cons p { margin: 0 0 8px; font: 500 13px/1.4 var(--mg-sans); color: #374151; }
+.mg-r-cons p b { color: var(--mg-navy); }
+.mg-r-cons small { color: #8a94a3; }
+.mg-r-pers { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+.mg-r-pers span { font: 600 11.5px var(--mg-sans); color: #6b7280; margin-right: 4px; }
+.mg-r-pers button { all: unset; cursor: pointer; min-width: 30px; height: 28px; border-radius: 999px; display: grid; place-items: center; font: 700 12px var(--mg-sans); color: var(--mg-navy); background: #eef0f4; }
+.mg-r-pers button[aria-pressed="true"] { background: var(--mg-navy); color: #fff; }
+.mg-cb2 .mg-tool-actions { display: flex; gap: 8px; }
+.mg-cb2 .mg-tool-actions .mg-cta { font-size: 13.5px; }
+.mg-cb2 .mg-tool-actions .mg-cta.ghost { justify-content: center; padding: 10px 14px; }
+.mg-b-edit { all: unset; cursor: pointer; display: block; margin: 10px auto 0; font: 700 12.5px var(--mg-sans); color: #6b7280; }
+.mg-b-edit:hover { color: var(--mg-orange); }
+.is-single .mg-q { grid-template-columns: 24px 1fr 112px; gap: 8px; }
+.is-single .mg-r-big { font-size: 23px; }
+.mg-corto .mg-cb2 .mg-app-sub { display: none; }
+.mg-corto .mg-q { padding: 8px 0; }
