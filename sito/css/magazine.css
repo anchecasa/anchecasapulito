@@ -740,3 +740,141 @@ body[data-page="magazine"] .mg-root { background: radial-gradient(ellipse at 50%
 .mg-p2app .mg-p2-app .it small:first-child { margin: 0 0 1px; font-size: 9px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--mg-orange); }
 .mg-p2app .mg-p2-app .it small { color: #4a5565; }
 .is-single .mg-p2app .mg-p2-app { top: 41%; right: 12px; width: 156px; }
+
+/* 2026-10-09 16:10 · Check Bollette: schermata "cosa scopri / cosa vedrai", guida sulla bolletta, verdetto grande */
+#mg-b-intro .mg-cta.wide, #mg-b-form .mg-cta.wide { width: 100%; box-sizing: border-box; }
+.mg-b-lab { margin: 2px 0 8px; font: 700 10.5px var(--mg-sans); letter-spacing: .14em; text-transform: uppercase; color: var(--mg-orange); }
+.mg-b-promise { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+.mg-b-promise > div { display: grid; grid-template-columns: 34px 1fr; gap: 9px; align-items: start; background: #f6f7fa; border-radius: 12px; padding: 10px; }
+.mg-b-promise i { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; background: var(--mg-navy); color: #fff; }
+.mg-b-promise i svg { width: 19px; height: 19px; }
+.mg-b-promise > div:nth-child(3) i { background: #3f9d63; }
+.mg-b-promise > div:nth-child(4) i { background: var(--mg-orange); }
+.mg-b-promise b { display: block; font-size: 12.5px; line-height: 1.2; color: var(--mg-navy); }
+.mg-b-promise small { display: block; font-size: 10.5px; line-height: 1.3; color: #5b6575; margin-top: 2px; }
+.mg-b-preview { all: unset; box-sizing: border-box; cursor: pointer; position: relative; width: 100%; display: grid; grid-template-columns: 96px 1fr; grid-template-rows: auto auto; column-gap: 12px; align-items: center;
+  padding: 12px 14px 10px; border-radius: 14px; background: linear-gradient(135deg, #1f2c3d, #2c3e57); color: #fff; box-shadow: 0 10px 22px rgba(26,36,50,.25); margin-bottom: 12px; transition: transform .15s; }
+.mg-b-preview:hover { transform: translateY(-1px); }
+.mg-b-preview:focus-visible { outline: 2px solid var(--mg-orange); outline-offset: 2px; }
+.mg-b-preview .tag { position: absolute; top: 8px; right: 10px; font: 700 9px var(--mg-sans); letter-spacing: .12em; text-transform: uppercase; background: rgba(255,255,255,.14); padding: 3px 7px; border-radius: 6px; }
+.mg-b-preview .mini { width: 96px; height: auto; grid-row: 1 / span 2; }
+.mg-b-preview .mini path { fill: none; stroke-width: 16; }
+.mg-b-preview .mini .g-ok { stroke: #3f9d63; } .mg-b-preview .mini .g-warn { stroke: #f2b33d; } .mg-b-preview .mini .g-bad { stroke: #e0533d; }
+.mg-b-preview .mini .g-needle { stroke: #fff; stroke-width: 5; stroke-linecap: round; } .mg-b-preview .mini .g-hub { fill: #fff; }
+.mg-b-preview .tx b { display: block; font-size: 16px; font-weight: 800; color: #ffb27a; }
+.mg-b-preview .tx small { display: block; font-size: 10.5px; color: rgba(255,255,255,.75); margin-top: 2px; }
+.mg-b-preview .tx em { display: block; font-style: normal; font-size: 12px; font-weight: 700; margin-top: 5px; color: #8ee6a8; }
+.mg-b-preview .go { grid-column: 2; font-size: 11px; font-weight: 700; color: #ffd23f; margin-top: 6px; }
+.mg-b-need { display: flex; flex-wrap: wrap; gap: 6px 14px; justify-content: center; margin-bottom: 10px; font-size: 11px; font-weight: 600; color: #4a5565; }
+.mg-b-need span { display: inline-flex; align-items: center; gap: 5px; }
+.mg-b-need svg { width: 14px; height: 14px; color: #3f9d63; }
+.mg-b-back { all: unset; cursor: pointer; font: 700 11px var(--mg-sans); color: #6b7686; margin: -2px 0 6px; display: inline-block; }
+.mg-b-back:hover { color: var(--mg-orange); }
+.mg-b-bill { display: grid; grid-template-columns: 104px 1fr; gap: 12px; align-items: center; background: #f6f7fa; border-radius: 12px; padding: 8px 10px; margin: 2px 0 10px; }
+.mg-b-bill svg { width: 104px; height: auto; display: block; }
+.mg-b-bill p { margin: 0; font-size: 11px; line-height: 1.35; color: #4a5565; }
+.mg-b-bill p > b { display: block; font-size: 12px; color: var(--mg-navy); margin-bottom: 3px; }
+.mg-b-bill p span { display: grid; grid-template-columns: 18px 1fr; gap: 4px; align-items: start; margin-top: 3px; }
+.mg-b-bill i, .mg-b-ab { width: 15px; height: 15px; border-radius: 50%; display: inline-grid; place-items: center; font: 700 9px Arial, sans-serif; font-style: normal; color: #fff; }
+.mg-b-bill i.a, .mg-b-ab.a { background: var(--mg-orange); } .mg-b-bill i.b, .mg-b-ab.b { background: #2f74d0; }
+.mg-b-ab { margin-right: 5px; vertical-align: -3px; }
+.mg-b-big { border-radius: 12px; padding: 10px 12px; margin-bottom: 10px; text-align: center; }
+.mg-b-big b { display: block; font: 800 19px var(--mg-sans); line-height: 1.15; }
+.mg-b-big span { display: block; font-size: 12px; margin-top: 3px; }
+.mg-b-big.bad { background: #fdecea; color: #8a1f12; } .mg-b-big.warn { background: #fff4e0; color: #7a4300; } .mg-b-big.ok { background: #e6f4ea; color: #1d5a32; }
+.is-single .mg-b-promise { gap: 6px; }
+.is-single .mg-b-promise > div { grid-template-columns: 1fr; gap: 6px; padding: 9px; }
+.is-single .mg-b-promise i { width: 30px; height: 30px; }
+.is-single .mg-b-preview { grid-template-columns: 78px 1fr; padding: 10px 12px; }
+.is-single .mg-b-preview .mini { width: 78px; }
+.is-single .mg-b-preview .tx b { font-size: 15px; }
+.is-single .mg-b-bill { grid-template-columns: 86px 1fr; }
+.is-single .mg-b-bill svg { width: 86px; }
+
+/* ===== 2026-10-09 ~16:10 · Check Bollette: una schermata sola, grafici dal vivo (come la prima versione) ===== */
+.mg-cb .mg-app-head { margin-bottom: 8px; }
+.mg-cb .mg-app-sub { max-width: 330px; }
+.mg-cb-steps { list-style: none; display: flex; gap: 6px; margin: 0 0 10px; padding: 0; font: 600 10.5px var(--mg-sans); color: rgba(255,255,255,.82); }
+.mg-cb-steps li { display: flex; align-items: center; gap: 6px; flex: 1; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.12); border-radius: 999px; padding: 4px 9px 4px 4px; white-space: nowrap; }
+.mg-cb-steps i { font-style: normal; width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center; background: var(--mg-orange); color: #fff; font: 800 10px var(--mg-sans); flex: none; }
+.mg-cb .mg-app { padding: 12px 14px 12px; }
+.mg-cb-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.mg-cb-badge { font: 800 9px var(--mg-sans); letter-spacing: .14em; text-transform: uppercase; padding: 5px 9px; border-radius: 999px; background: #eef0f4; color: #6b7280; transition: background .25s, color .25s; }
+.mg-cb-badge.is-tuo { background: #dcefe1; color: #1d5a32; }
+.mg-cb .mg-fields { margin: 9px 0 8px; gap: 7px 10px; }
+.mg-cb .mg-field label { display: flex; align-items: center; gap: 5px; font-size: 8.5px; letter-spacing: .08em; }
+.mg-cb .mg-field label i { font-style: normal; width: 14px; height: 14px; border-radius: 50%; display: grid; place-items: center; background: var(--mg-orange); color: #fff; font: 800 8px var(--mg-sans); letter-spacing: 0; }
+.mg-cb .mg-field label small { margin-left: auto; font-size: 8px; letter-spacing: 0; text-transform: none; color: #9ca3af; font-weight: 600; }
+.mg-cb .mg-inp select { width: 100%; cursor: pointer; appearance: auto; }
+.mg-cb .mg-inp input { width: 100%; }
+.mg-cb .mg-inp input { min-width: 0; }
+
+.mg-cb-res { position: relative; border-radius: 12px; background: #f7f8fa; padding: 9px 10px 6px; margin-bottom: 9px; }
+.mg-cb-body { transition: opacity .3s, filter .3s; }
+.mg-cb-res.is-esempio .mg-cb-body { opacity: .42; filter: saturate(.55); }
+.mg-cb-ribbon { position: absolute; z-index: 2; left: 50%; top: 42%; transform: translate(-50%, -50%); width: 84%; text-align: center;
+  background: var(--mg-navy); color: #fff; font: 700 11.5px/1.35 var(--mg-sans); padding: 9px 12px; border-radius: 10px; box-shadow: 0 10px 24px rgba(26,36,50,.3); }
+.mg-cb-ribbon::before { content: "ESEMPIO"; display: block; font-size: 8.5px; letter-spacing: .18em; color: #ffd23f; margin-bottom: 2px; }
+.mg-cb-ribbon.shake { animation: mgShake .45s; }
+@keyframes mgShake { 20%,60% { transform: translate(calc(-50% - 5px), -50%); } 40%,80% { transform: translate(calc(-50% + 5px), -50%); } }
+.mg-cb-big { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; margin-bottom: 7px; }
+.mg-cb-big b { font: 700 17px var(--mg-display); color: var(--mg-navy); }
+.mg-cb-big.bad b { color: #c2412b; } .mg-cb-big.ok b { color: #2f7d4d; }
+.mg-cb-big span { font: 600 11px var(--mg-sans); color: #4b5563; }
+.mg-cb-big span em { font-style: normal; font-weight: 800; color: #2f7d4d; }
+.mg-cb-grid { display: grid; grid-template-columns: 1fr 1.15fr; gap: 8px; }
+.mg-cb-card { background: #fff; border-radius: 10px; padding: 7px 9px; box-shadow: 0 1px 0 rgba(0,0,0,.04), 0 0 0 1px #eceef2; }
+.mg-cb-card .t { display: block; font: 700 8.5px var(--mg-sans); letter-spacing: .1em; text-transform: uppercase; color: #6b7280; margin-bottom: 3px; text-align: left; }
+.mg-cb .mg-gauge { max-width: 150px; }
+.mg-cb .mg-gauge .g-l { font-size: 9px; text-transform: none; }
+.mg-cb .mg-gauge-v { font-size: 21px; }
+.mg-cb-side { display: flex; flex-direction: column; gap: 8px; }
+.mg-cb-bars .br { display: grid; grid-template-columns: 62px 1fr 40px; align-items: center; gap: 6px; margin: 5px 0; font: 600 9.5px/1.15 var(--mg-sans); color: #374151; }
+.mg-cb-bars .tr { height: 10px; border-radius: 999px; background: #eef0f4; overflow: hidden; }
+.mg-cb-bars .tr i { display: block; height: 100%; border-radius: 999px; transition: width .6s cubic-bezier(.3,1.2,.5,1); }
+.mg-cb-bars .tr i.ok { background: #3f9d63; } .mg-cb-bars .tr i.warn { background: #f2b33d; } .mg-cb-bars .tr i.bad { background: #e0533d; }
+.mg-cb-bars .tr i.ref { background: #9aa6b8; }
+.mg-cb-bars .br b { font: 800 11px var(--mg-sans); color: var(--mg-navy); text-align: right; font-variant-numeric: tabular-nums; }
+.mg-cb-bars .u { display: block; text-align: right; font: 600 8.5px var(--mg-sans); color: #9ca3af; }
+.mg-cb-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.mg-cb-tiles div { background: #fff; border-radius: 10px; padding: 7px 9px; box-shadow: 0 0 0 1px #eceef2; }
+.mg-cb-tiles b { display: block; font: 700 17px var(--mg-display); color: var(--mg-navy); font-variant-numeric: tabular-nums; }
+.mg-cb-tiles span { display: block; font: 600 8.5px var(--mg-sans); color: #6b7280; text-transform: uppercase; letter-spacing: .06em; margin-top: 1px; }
+.mg-cb-tiles .save { background: #effaf2; box-shadow: 0 0 0 1px #cde9d6; } .mg-cb-tiles .save b { color: #2f7d4d; }
+.mg-cb .mg-verdict { margin: 6px 0 2px; font-size: 10.5px; line-height: 1.38; }
+.mg-cb .mg-tool-actions { display: flex; gap: 8px; }
+.mg-cb .mg-tool-actions .mg-cta { font-size: 13px; }
+.mg-cb .mg-tool-actions .mg-cta.ghost { justify-content: center; padding: 10px 14px; }
+.mg-cb #mg-b-pdf.is-off { opacity: .55; box-shadow: none; }
+.is-single .mg-cb-steps { font-size: 9.5px; gap: 4px; }
+.is-single .mg-cb-steps li { padding-right: 6px; gap: 4px; }
+.is-single .mg-cb .mg-app { padding: 10px 11px; }
+.is-single .mg-cb-grid { grid-template-columns: 1fr 1.2fr; gap: 6px; }
+.is-single .mg-cb-bars .br { grid-template-columns: 48px 1fr 36px; gap: 4px; font-size: 9px; }
+.is-single .mg-cb-tiles b { font-size: 15px; }
+.is-single .mg-cb .mg-tool-actions .mg-cta { font-size: 12px; padding: 10px 10px; }
+/* compattazione per stare nella pagina */
+.mg-cb .mg-app-sub { display: none; }
+.mg-cb .mg-app-head { margin-bottom: 10px; }
+.mg-cb .mg-inp input, .mg-cb .mg-inp select { padding: 6px 0 !important; font-size: 15px !important; }
+.mg-cb .mg-field label { margin-bottom: 3px; }
+.mg-cb .mg-fields { margin: 8px 0 7px; gap: 6px 10px; }
+.mg-cb-res { padding: 8px 9px 4px; margin-bottom: 8px; }
+.mg-cb-big { margin-bottom: 6px; }
+.mg-cb .mg-verdict { margin: 4px 0 3px; font-size: 10px; line-height: 1.32; }
+.mg-cb .mg-app-note { font-size: 8.5px; margin-top: 5px; }
+.is-single .mg-cb .mg-app-note { font-size: 9px; padding-right: 22px; }
+.is-single .mg-cb .mg-app-sub { display: block; font-size: 12px; }
+/* retro: solo l'app della raccolta */
+.mg-back-cta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.mg-back-cta .mg-share-cta { margin-top: 0; }
+.mg-share-cta.is-orange { background: var(--mg-orange); border-color: var(--mg-orange); box-shadow: 0 8px 18px rgba(229,107,16,.4); }
+
+/* 2026-10-09 ~16:30 · copertina con il bambino: sul telefono i tre richiami vanno in alto a sinistra sul muro, "83" resta in basso e lascia libero il volto del bambino */
+.is-single .mg-cover .mg-coverlines { position: static; }
+.is-single .mg-cover .mg-coverlines > div:last-child { position: absolute; z-index: 3; top: 160px; left: 22px; width: 47%; }
+.is-single .mg-cover .mg-coverlines > div:last-child .mg-cl:first-child { margin-top: 0; }
+.is-single .mg-cover .mg-coverlines > div:last-child .mg-cl span { font-size: 12px; text-shadow: 0 1px 8px rgba(0,0,0,.35); }
+.is-single .mg-cover .mg-cl-big { position: absolute; z-index: 3; left: 22px; right: 22px; bottom: 38px; }
+.is-single .mg-cover .mg-cl-big .n { font-size: 66px; }
+.is-single .mg-cover .mg-cl-big .t { font-size: 19px; max-width: 330px; }

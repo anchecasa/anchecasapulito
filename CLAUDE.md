@@ -13,6 +13,21 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 2026-10-09 ~16:35 · Claude — Copertina con il bambino (NON ancora pubblicato)
+- `copertina.jpg` sostituita con la stessa foto modificata in Canva: stessa coppia e stesso soggiorno, in più un bambino davanti ai genitori. Originale: `copertina-senza-bambino.jpg`; file scaricato da Canva: `copertina-con-bambino-canva.jpg`.
+- Telefono (pagina singola): i tre richiami Energia/Cantiere/Tendenze vanno in alto a sinistra sul muro e "83 giorni" resta in basso, così il volto del bambino resta libero. PC invariato. Testo alternativo aggiornato ("Una famiglia…"). Versioni css/js v=27.
+
+### 2026-10-09 ~16:20 · Claude — Check Bollette su una schermata con grafici dal vivo + retro solo app raccolta (NON ancora pubblicato)
+- Pagina 8, Check Bollette: tornato al layout della prima versione, su una sola schermata.
+  - Striscia con i 3 passi "Luce o gas → Totale e consumo → Risultato e PDF".
+  - Campi vuoti; periodo e persone sono menu con valori di partenza "2 mesi" e "3".
+  - Sotto, i grafici: lancetta del prezzo, barre "Tu / Famiglia tipo" sul consumo annuo, spesa annua e risparmio, più i due giudizi.
+  - A campi vuoti i grafici mostrano un ESEMPIO sbiadito (210 € / 420 kWh, paga il 15% in più) con l'etichetta "Così vedrai la tua bolletta". Scrivendo i propri numeri i grafici si colorano e il badge passa a "Il tuo risultato".
+  - Il PDF parte solo con i dati veri.
+  - Nel codice: `calcolaBolletta()` restituisce `esempio`/`manca`; `aggiornaBolletta()` e `initBolletta()` sono riscritti; `creaPdf()` non è toccata. Copia della versione precedente: /home/claude/magazine.pre-cb.js (solo sessione).
+- Retro: "Nel numero 2" parla solo dell'app della raccolta (tolti calcolatore bonus, muffa e fotovoltaico). Pulsanti "Avvisami quando esce" (porta a pagina 2) e "Condividi la rivista".
+- Versioni css/js v=26.
+
 ### 2026-10-09 15:37 · Cursor
 - Commit `43cf32e411940bafe27dbcba201f77348264a9bd` sul ramo main di https://github.com/anchecasa/anchecasapulito. Messaggio: «Magazine: pagina 2 con secchio nel telefono e riquadro stasera/domani, pulsante Condividi, anteprima WhatsApp/Facebook». La foto originale Canva era già nel commit precedente e non è cambiata.
 - Pubblicato https://anchecasa.it, progetto Vercel `anchecasa-pulito` (deployment `dpl_54jMsFC8SwdhB3EUaz1NFo323zVv`, alias https://anchecasa.it). Il push da solo non avvia Vercel.
