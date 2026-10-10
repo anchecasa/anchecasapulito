@@ -13,6 +13,24 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 10.10.2026 10:11 · Cursor — magazine.anchecasa.it ancora non si apre: manca il DNS
+- GitHub: il sito è già su main, commit `582f7dd`. Il collegamento Vercel al repo non parte: manca l'app https://github.com/apps/vercel. Questa nota è il commit successivo.
+- Vercel: il progetto `magazine-anchecasa` (`prj_uKAwJ23AFZdRYZDg0ocWXNf45ucC`) è in produzione, Root Directory `magazine-sito`, dominio `magazine.anchecasa.it` collegato. `anchecasa-pulito` non è stato toccato.
+- Supabase: la CLI risponde `Invalid access token`. Rilanciata l'azione «Supabase · applica migrazioni» (run `38037004701`): il segreto `SUPABASE_DB_URL` non c'è, quindi lo SQL non parte. L'iscrizione del Magazine aveva già risposto `{"ok":true}` sulla funzione `/api/mag`.
+- Cloudflare: il nome `magazine.anchecasa.it` non esiste. `www.anchecasa.it` è un CNAME verso `cname.vercel-dns.com`. La scrittura del record con l'accesso wrangler risponde 403 (può leggere la zona, non i DNS). Il pannello Cloudflare chiede la password di Google e non si entra.
+- Resta questo record, nuvola grigia: CNAME `magazine` → `2c102f38e8c25313.vercel-dns-017.com`.
+- File annotato: `CLAUDE.md`.
+
+### 10.10.2026 09:58 · Cursor — magazine.anchecasa.it aggiornato: sito chiaro, Check Bollette, condivisione
+- Le voci Claude ~09:35 e ~10:05 erano già nei file: non riscritte. I file di `magazine-sito` non sono stati rifatti.
+- Commit `582f7dd` sul ramo main: «magazine.anchecasa.it: sito chiaro, Check Bollette, Cosa è cambiato, condivisione WhatsApp, statistiche». Push su GitHub (`ccc49d7..582f7dd`). File: `magazine-sito/` e `CLAUDE.md`.
+- Stesso progetto Vercel già creato `magazine-anchecasa` (id `prj_uKAwJ23AFZdRYZDg0ocWXNf45ucC`), Root Directory `magazine-sito`, nessun comando di build. Non è stato creato un secondo progetto e non è stato toccato `anchecasa-pulito`. Pubblicazione `dpl_4vSaktssvXFwJtHWi1Vdk92cxKtX`, stato Ready. Il collegamento a GitHub non è riuscito: manca l'app https://github.com/apps/vercel.
+- Il DNS non è ancora a posto. https://magazine.anchecasa.it non risolve (curl: host sconosciuto). Vercel indica il CNAME `magazine` → `2c102f38e8c25313.vercel-dns-017.com`, solo DNS, senza proxy. La scrittura del record su Cloudflare risponde ancora 403.
+- https://anchecasa.it/magazine risponde 200.
+- Prova sui file pubblicati: sfondo chiaro (`color-scheme: light`, fondo della pagina bianco). `/check-bollette` con Luce, 228,40 € e 420 kWh, 2 mesi: «Paghi il 25% in più del giusto», PDF `AncheCasa-report-bolletta-luce.pdf` di una pagina. Gas, stessi numeri: «Il tuo prezzo è buono», unità Smc, PDF `AncheCasa-report-bolletta-gas.pdf` di una pagina. Articolo `/articoli/la-bolletta-smontata`: «Cosa è cambiato» e «Condividi su WhatsApp» in testa e in fondo, link con `?da=whatsapp`. Iscrizione `POST /api/mag` con prova-magazine-chiaro@anchecasa.it e Comune Teano: `{"ok":true}`, il modulo scrive «Fatto: ti scriviamo quando esce il prossimo numero.»
+- Resta da fare, in Cloudflare: CNAME `magazine` → `2c102f38e8c25313.vercel-dns-017.com` (nuvola grigia).
+- File annotato: `CLAUDE.md`.
+
 ### 10.10.2026 ~10:05 · Claude — magazine.anchecasa.it migliorato (NON ancora pubblicato)
 - Niente sfondo scuro (richiesta di Nando): tolta la modalità scura, il sito è sempre chiaro; fascia «App gratuite» e sezione AncheStudio su fondo chiaro. Blu resta solo il piede con la curva del marchio.
 - Pulsanti più leggibili: arancio #B9530A con testo bianco (contrasto 4,9:1, prima 3,3:1).
