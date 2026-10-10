@@ -30,7 +30,7 @@ APP = [
     {"id": "check-bollette", "nome": "Check Bollette", "stato": "Disponibile",
      "cosa": "Scrivi quanto hai pagato, quanto hai consumato e di quanti mesi è la bolletta. In un minuto sai se paghi troppo luce o gas, quanto puoi risparmiare in un anno e scarichi il report in PDF.",
      "punti": ["Luce e gas", "I dati restano sul tuo telefono", "Report PDF gratuito"],
-     "link": "https://anchecasa.it/magazine", "tasto": "Apri Check Bollette", "nota": "È a pagina 8 della rivista sfogliabile."},
+     "link": "/check-bollette", "tasto": "Apri Check Bollette", "nota": "Funziona dal telefono e dal PC, senza scaricare niente."},
     {"id": "supermastro", "nome": "SuperMastro", "stato": "Disponibile",
      "cosa": "Inquadri il problema di casa con il telefono per cinque secondi: rubinetto che gocciola, tapparella bloccata, muffa, crepa. SuperMastro ti dice cos’è, se puoi sistemarlo da solo con attrezzi e passaggi, oppure quale artigiano serve.",
      "punti": ["Dentro e fuori casa, prato compreso", "Guida passo passo con gli attrezzi", "Solo se vuoi, l’artigiano vicino"],
@@ -69,6 +69,7 @@ ARTICOLI = [
 },
 {
  "slug": "bonus-casa-2026-gli-ultimi-giorni-al-50", "numero": 1, "rubrica": "bonus", "ordine": 1, "copertina": True,
+ "novita": [["2026-10-10", "Confermato: il 50% sulla casa dove abiti vale per i pagamenti fino al 31 dicembre 2026. Dal 2027 si scende al 36%, salvo proroghe nella Legge di Bilancio 2027."]],
  "titolo": "Bonus casa: gli ultimi giorni al 50%",
  "sommario": "Dal 1° gennaio 2027 le detrazioni per la casa scendono. Chi paga i lavori entro il 31 dicembre recupera di più: ecco quanto, e come non perdere nulla.",
  "img": "bonus.jpg", "alt": "Chiavi, fatture e calcolatrice sul tavolo di casa", "lettura": 5,
@@ -144,6 +145,7 @@ ARTICOLI = [
 },
 {
  "slug": "la-bolletta-smontata", "numero": 1, "rubrica": "bollette", "ordine": 3, "strumento": "check-bollette",
+ "novita": [["2026-10-01", "Da ottobre la bolletta della luce dei clienti vulnerabili aumenta del 37,3% (ARERA)."], ["2026-01-01", "La soglia ISEE per il bonus sociale su luce, gas e acqua sale a 9.796 euro."]],
  "titolo": "La bolletta, smontata",
  "sommario": "Quattro voci, due codici, un numero da controllare. Come leggere la bolletta della luce in due minuti e capire se paghi troppo.",
  "img": "bolletta.jpg", "alt": "Mani che tengono una bolletta e uno smartphone", "lettura": 5,

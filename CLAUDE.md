@@ -13,6 +13,26 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 10.10.2026 ~10:05 · Claude — magazine.anchecasa.it migliorato (NON ancora pubblicato)
+- Niente sfondo scuro (richiesta di Nando): tolta la modalità scura, il sito è sempre chiaro; fascia «App gratuite» e sezione AncheStudio su fondo chiaro. Blu resta solo il piede con la curva del marchio.
+- Pulsanti più leggibili: arancio #B9530A con testo bianco (contrasto 4,9:1, prima 3,3:1).
+- NUOVA pagina `check-bollette` con lo strumento completo (luce e gas, lancetta, persone in casa, report PDF uguale alla rivista): `js/check-bollette.js` (calcoli e PDF copiati da sito/js/magazine.js: se cambiano i prezzi di riferimento, aggiornarli in tutti e due). Loghi del PDF in `img/logo-colore.png` e `img/anchecasa-payoff-negativo.png`.
+- Riquadro «Cosa è cambiato» negli articoli (campo `novita` in contenuti.py): bonus casa e bolletta.
+- Condividi su WhatsApp e «Copia il link» in testa e in fondo a ogni articolo (link con ?da=whatsapp / ?da=link).
+- Statistiche anonime come la rivista (api/mag.js): aperture, pagine, Check Bollette, PDF, condivisioni, iscrizioni; attive solo su magazine.anchecasa.it; la provenienza comincia con «sito ·» per distinguerle dalla rivista sfogliabile nella pagina Magazine dell'area admin.
+
+### 10.10.2026 09:50 · Cursor — Nuovo sito magazine.anchecasa.it su un progetto Vercel nuovo
+- La voce Claude ~09:35 era già nei file: non riscritta. I file di `magazine-sito` non sono stati rifatti.
+- Commit `ccc49d7` sul ramo main: «Nuovo sito magazine.anchecasa.it: AncheCasa Magazine N.1». Push su GitHub (`6db10ab..ccc49d7`). File: `magazine-sito/` e `CLAUDE.md`.
+- Nuovo progetto Vercel `magazine-anchecasa` (team anchecasas-projects), id `prj_uKAwJ23AFZdRYZDg0ocWXNf45ucC`. Root Directory `magazine-sito`. Framework Other, nessun comando di build impostato: non c'è un package.json, la pubblicazione statica è finita in 255 ms e `api/mag.js` è la funzione `/api/mag`.
+- Il collegamento al repo GitHub non è riuscito: sull'account Vercel non c'è l'app GitHub (https://github.com/apps/vercel). Il progetto non è collegato a anchecasa/anchecasapulito. La pubblicazione in produzione è l'invio della cartella `magazine-sito`. Deployment `dpl_Fg45rwPhZde2sf2GDJGZa4s2gjV2`, stato Ready, alias https://magazine-anchecasa.vercel.app (protetto dall'accesso Vercel; i domini propri di produzione no).
+- Dominio `magazine.anchecasa.it` aggiunto al progetto, proprietà verificata. Il DNS non è ancora a posto. Vercel indica il CNAME `magazine` → `2c102f38e8c25313.vercel-dns-017.com`, solo DNS, senza il proxy arancione di Cloudflare. Il secondo valore, meno preciso, è `cname.vercel-dns.com`.
+- Il record non è stato scritto: la zona Cloudflare `anchecasa.it` (nameserver collins.ns.cloudflare.com e elmo.ns.cloudflare.com) si legge, la modifica dei record DNS risponde 403. Nel browser Cloudflare e GitHub chiedono l'accesso. https://magazine.anchecasa.it non risolve ancora.
+- Il progetto `anchecasa-pulito` non è stato toccato. https://anchecasa.it/magazine risponde 200.
+- Prova sulla pubblicazione, gli stessi file: home con la copertina del N.1 e il bollino «82 giorni per il bonus casa al 50%»; `/articoli/la-bolletta-smontata` si apre, titolo «La bolletta, smontata». Iscrizione `POST /api/mag` con prova-magazine-sito@anchecasa.it e Comune Teano: risposta `{"ok":true}`. Con quella risposta il modulo in fondo scrive «Fatto: ti scriviamo quando esce il prossimo numero.»
+- Resta da fare, da chi entra in Cloudflare: CNAME `magazine` → `2c102f38e8c25313.vercel-dns-017.com` (nuvola grigia). Per i prossimi invii automatici: installare l'app GitHub di Vercel sul repo anchecasa/anchecasapulito e collegare il progetto.
+- File annotato: `CLAUDE.md`.
+
 ### 10.10.2026 ~09:35 · Claude — NUOVO sito magazine.anchecasa.it (cartella `magazine-sito/`, NON ancora pubblicato)
 - Sito ufficiale di AncheCasa Magazine, solo per i cittadini, senza imprese né pubblicità; per chi fa i lavori sempre e solo anchecasa.it. anchecasa.it/magazine (rivista sfogliabile, cartella `sito/`) resta com'è e il nuovo sito ci rimanda con «Sfoglia il numero».
 - Pagine: home (testata AncheCasa Magazine, copertina vera del N.1 con il conto alla rovescia dei giorni per il bonus al 50%, «In questo numero», fascia «App gratuite, per sempre», «Da leggere», «Perché esiste questa rivista»), 15 articoli completi del N.1 in `articoli/`, 6 rubriche in `rubriche/`, `app-gratuite` (Check Bollette, SuperMastro, app della raccolta; sezione «Fatte da AncheStudio»), `numeri` (archivio), `chi-siamo` (indipendenza, editore), `404`, `sitemap.xml`, `robots.txt`.

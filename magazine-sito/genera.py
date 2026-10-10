@@ -102,7 +102,7 @@ def piede():
   <p class="p-legale">© {datetime.date.today().year} AncheCasa · Editore: Palumbo Investment S.r.l., Via Giusti 22, 81057 Teano (CE), P.IVA 04724830619 · App sviluppate da AncheStudio. Contenuti divulgativi: non sostituiscono il parere di un tecnico.</p>
 </footer>'''
 
-def pagina(nome_file, titolo, descr, corpo, attiva="", og_img="copertina-n1-1600.jpg", tipo="website", ld=None, canon=None):
+def pagina(nome_file, titolo, descr, corpo, attiva="", og_img="copertina-n1-1600.jpg", tipo="website", ld=None, canon=None, script=""):
     url = SITO + (canon if canon is not None else "/" + nome_file.replace("index.html", "").replace(".html", ""))
     ldj = f'<script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>' if ld else ""
     doc = f'''<!DOCTYPE html>
@@ -128,7 +128,7 @@ def pagina(nome_file, titolo, descr, corpo, attiva="", og_img="copertina-n1-1600
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;0,6..96,700;1,6..96,500;1,6..96,600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/stile.css?v=1">
+<link rel="stylesheet" href="/css/stile.css?v=2">
 {ldj}
 </head>
 <body>
@@ -138,7 +138,8 @@ def pagina(nome_file, titolo, descr, corpo, attiva="", og_img="copertina-n1-1600
 </main>
 {iscriviti()}
 {piede()}
-<script src="/js/sito.js?v=1" defer></script>
+<script src="/js/sito.js?v=2" defer></script>
+{script}
 </body>
 </html>
 '''
@@ -235,6 +236,13 @@ def articolo(a):
     if a.get("strumento"):
         x = next(x for x in C.APP if x["id"] == a["strumento"])
         strumento = f'<aside class="box-app"><p class="ba-tit">Strumento gratuito</p><h2>{e(x["nome"])}</h2><p>{e(x["cosa"])}</p><a class="tasto" href="{x["link"]}">{e(x["tasto"])}</a><p class="ba-nota">{e(x["nota"])}</p></aside>'
+    novita = ""
+    if a.get("novita"):
+        novita = '<aside class="novita" aria-label="Cosa è cambiato"><p class="nv-tit">Cosa è cambiato</p><ul>' + "".join(f'<li><time datetime="{d}">{data_it(d)}</time> {e(x)}</li>' for d, x in a["novita"]) + "</ul></aside>"
+    url = f"{SITO}/articoli/{a['slug']}"
+    import urllib.parse
+    wa = "https://wa.me/?text=" + urllib.parse.quote(a["titolo"] + " · AncheCasa Magazine\n\n" + url + "?da=whatsapp")
+    condividi = f'<div class="condividi"><a class="cd-wa" href="{wa}" target="_blank" rel="noopener" data-canale="whatsapp"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8c.1.2 1.9 2.9 4.6 4 1.7.7 2.4.8 3.2.7.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.2-.2-.4-.3Z"/></svg>Condividi su WhatsApp</a><button type="button" class="cd-copia" data-url="{url}">Copia il link</button><span class="cd-ok" role="status" aria-live="polite"></span></div>'
     rubrica_link = f'<a class="rub" href="/rubriche/{a["rubrica"]}">{e(rub_nome(a))}</a>' if a["rubrica"] in dict((r[0], 1) for r in C.RUBRICHE) else f'<span class="rub">{e(rub_nome(a))}</span>'
     corpo = f'''
 <article class="art">
@@ -243,10 +251,12 @@ def articolo(a):
     <h1>{e(a["titolo"])}</h1>
     <p class="art-som">{e(a["sommario"])}</p>
     <p class="art-meta">Numero {N["n"]} · Controllato il <time datetime="{C.AGGIORNATO}">{data_it(C.AGGIORNATO)}</time> · {a["lettura"]} min di lettura</p>
+    {condividi}
   </header>
   <figure class="art-foto">{foto(a["img"], a["alt"], lazy=False, sizes="(min-width: 1100px) 1040px, 100vw")}</figure>
   <div class="art-corpo">
-    {a["corpo"]}
+    {novita}
+    <div class="testo">{a["corpo"]}</div>
     {strumento}
     <aside class="box-ac">
       <p class="bac-tit">Ti serve qualcuno che lo faccia?</p>
@@ -254,6 +264,7 @@ def articolo(a):
       <a class="tasto" href="https://anchecasa.it">Vai su anchecasa.it</a>
     </aside>
     {fonti}
+    {condividi.replace('class="condividi"', 'class="condividi cd-fondo"')}
     <p class="art-avviso">Contenuto divulgativo: non sostituisce il parere di un tecnico o di un commercialista. Hai trovato un dato da aggiornare? Scrivici a <a href="mailto:info@anchecasa.it">info@anchecasa.it</a>.</p>
   </div>
 </article>
@@ -321,12 +332,35 @@ def chi_siamo():
 </div>'''
     pagina("chi-siamo.html", "Chi siamo · AncheCasa Magazine", "Chi fa AncheCasa Magazine, per chi scrive e perché nessuna impresa paga per comparire.", corpo, attiva="chi")
 
+def check_bollette():
+    corpo = '''<section class="pag-testa"><p class="pt-sopra">Strumento gratuito, per sempre</p><h1>Check Bollette</h1>
+<p>Scopri in un minuto se paghi troppo luce o gas. Ti servono tre numeri della bolletta. I conti si fanno sul tuo telefono: i tuoi dati non vengono inviati a nessuno.</p></section>
+<section class="cb" id="cb" data-persone="3" aria-label="Check Bollette">
+  <div id="cb-dati" class="cb-carta">
+    <div class="cb-tipo" role="group" aria-label="Tipo di bolletta"><button type="button" data-tipo="luce" aria-pressed="true">Luce</button><button type="button" data-tipo="gas" aria-pressed="false">Gas</button></div>
+    <label class="cb-q" for="cb-importo"><span class="cb-n">1</span><span class="cb-d"><b>Quanto hai pagato?</b><small>Il totale, in prima pagina</small></span><span class="cb-in"><input id="cb-importo" type="text" inputmode="decimal" autocomplete="off" placeholder="0,00"><span>€</span></span></label>
+    <label class="cb-q" for="cb-consumo"><span class="cb-n">2</span><span class="cb-d"><b>Quanto hai consumato?</b><small>Nel riquadro «Consumi»</small></span><span class="cb-in"><input id="cb-consumo" type="text" inputmode="decimal" autocomplete="off" placeholder="0"><span id="cb-unit">kWh</span></span></label>
+    <label class="cb-q" for="cb-mesi"><span class="cb-n">3</span><span class="cb-d"><b>Di quanti mesi è?</b><small>Lo dice il periodo in alto</small></span><span class="cb-in"><select id="cb-mesi"><option value="1">1 mese</option><option value="2" selected>2 mesi</option><option value="3">3 mesi</option><option value="6">6 mesi</option><option value="12">12 mesi</option></select></span></label>
+    <p class="cb-msg" id="cb-msg" role="status" aria-live="polite"></p>
+    <button type="button" class="tasto cb-go" id="cb-go">Analizza la mia bolletta</button>
+  </div>
+  <div id="cb-res" class="cb-carta" hidden>
+    <div id="cb-out" aria-live="polite"></div>
+    <div class="cb-azioni"><button type="button" class="tasto" id="cb-pdf">Scarica il report PDF</button><a class="tasto tasto-vuoto" href="https://www.ilportaleofferte.it/" rel="noopener">Confronta le offerte</a></div>
+    <button type="button" class="cb-edit" id="cb-edit">Cambia i dati</button>
+  </div>
+  <p class="cb-fonte">Prezzi di riferimento: luce, ARERA, tutela vulnerabili dal 1° ottobre 2026, tasse incluse; gas, stima Unione Nazionale Consumatori su dati ARERA, ottobre 2026. Stima indicativa, non è una consulenza. Per capire ogni voce leggi <a href="/articoli/la-bolletta-smontata">La bolletta, smontata</a>.</p>
+</section>'''
+    pagina("check-bollette.html", "Check Bollette: paghi troppo luce o gas? · AncheCasa Magazine",
+           "Scopri gratis in un minuto se paghi troppo luce o gas, quanto puoi risparmiare e scarica il report PDF. I tuoi dati restano sul tuo telefono.",
+           corpo, attiva="app", script='<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>\n<script src="/js/check-bollette.js?v=1" defer></script>')
+
 def non_trovata():
     corpo = '<section class="pag-testa"><h1>Questa pagina non c’è</h1><p>Forse l’articolo ha cambiato indirizzo. Torna alla <a href="/">copertina</a> o sfoglia le <a href="/rubriche/bonus">rubriche</a>.</p></section>'
     pagina("404.html", "Pagina non trovata · AncheCasa Magazine", "Pagina non trovata.", corpo)
 
 def mappa():
-    urls = ["/", "/app-gratuite", "/numeri", "/chi-siamo"] + [f"/rubriche/{r[0]}" for r in C.RUBRICHE] + [link_art(a) for a in articoli()]
+    urls = ["/", "/check-bollette", "/app-gratuite", "/numeri", "/chi-siamo"] + [f"/rubriche/{r[0]}" for r in C.RUBRICHE] + [link_art(a) for a in articoli()]
     x = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(
         f"  <url><loc>{SITO}{u}</loc><lastmod>{C.AGGIORNATO}</lastmod></url>\n" for u in urls) + "</urlset>\n"
     open(os.path.join(QUI, "sitemap.xml"), "w", encoding="utf-8").write(x)
@@ -337,5 +371,5 @@ if __name__ == "__main__":
     home()
     for a in C.ARTICOLI: articolo(a)
     for r in C.RUBRICHE: rubrica(*r)
-    app_gratuite(); numeri(); chi_siamo(); non_trovata(); mappa()
+    app_gratuite(); check_bollette(); numeri(); chi_siamo(); non_trovata(); mappa()
     print("Fatto:", len(C.ARTICOLI), "articoli,", len(C.RUBRICHE), "rubriche.")
