@@ -42,7 +42,6 @@ def foto(nome, alt, cls="", sizes="100vw", lazy=True, w=1600, h=1067):
             f'width="{w}" height="{h}" alt="{e(alt)}"' + (' loading="lazy" decoding="async"' if lazy else ' fetchpriority="high"') + '>')
 
 # ------------------------------------------------------------------ pezzi comuni
-ICONA_CASA = '<svg viewBox="0 0 40 30" aria-hidden="true"><path d="M3 15 20 3l17 12" fill="none" stroke="currentColor" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"/><rect x="15" y="17" width="10" height="10" rx="2.2" fill="#E56B10"/></svg>'
 
 def testata(attiva=""):
     voci = [("/#numero", "Il numero", "numero"), ("/rubriche/bonus", "Rubriche", "rubriche"), ("/app-gratuite", "App gratuite", "app"), ("/numeri", "Archivio", "numeri"), ("/chi-siamo", "Chi siamo", "chi")]
@@ -51,7 +50,7 @@ def testata(attiva=""):
     return f'''<a class="salta" href="#contenuto">Vai al contenuto</a>
 <header class="testata">
   <div class="testata-in">
-    <a class="marchio" href="/" aria-label="AncheCasa Magazine, home">{ICONA_CASA}<span class="m-nome">Anche<b>Casa</b></span><span class="m-mag">Magazine</span></a>
+    <a class="marchio" href="/" aria-label="AncheCasa Magazine, home"><img src="/img/logo-anchecasa-560.png" srcset="/img/logo-anchecasa-560.png 1x, /img/logo-anchecasa-1120.png 2x" width="168" height="33" alt="AncheCasa, Costruiamo fiducia"><span class="m-mag">Magazine</span></a>
     <nav class="menu" aria-label="Menu principale"><ul>{li}</ul></nav>
     <a class="t-iscr" href="#iscriviti">Iscriviti gratis</a>
     <button class="t-apri" type="button" aria-expanded="false" aria-controls="cassetto"><span></span><span></span><span class="vh">Apri il menu</span></button>
@@ -99,7 +98,7 @@ def piede():
     <div><p class="p-tit">Il magazine</p><ul><li><a href="/numeri">Archivio dei numeri</a></li><li><a href="/app-gratuite">App gratuite</a></li><li><a href="/chi-siamo">Chi siamo</a></li><li><a href="https://anchecasa.it">anchecasa.it</a></li></ul></div>
     <div><p class="p-tit">Contatti</p><ul><li><a href="mailto:info@anchecasa.it">info@anchecasa.it</a></li><li><a href="https://anchecasa.it/privacy">Privacy</a></li></ul></div>
   </div>
-  <p class="p-legale">© {datetime.date.today().year} AncheCasa · Editore: Palumbo Investment S.r.l., Via Giusti 22, 81057 Teano (CE), P.IVA 04724830619 · App sviluppate da AncheStudio. Contenuti divulgativi: non sostituiscono il parere di un tecnico.</p>
+  <p class="p-legale">© {datetime.date.today().year} Palumbo Investment S.r.l.</p>
 </footer>'''
 
 def pagina(nome_file, titolo, descr, corpo, attiva="", og_img="copertina-n1-1600.jpg", tipo="website", ld=None, canon=None, script=""):
@@ -176,7 +175,7 @@ def home():
     corpo = f'''
 <section class="apertura" aria-labelledby="ap-t">
   <div class="ap-testo">
-    <h1 id="ap-t" class="ap-mast"><span>Anche</span><span>Casa</span><em>Magazine</em></h1>
+    <h1 id="ap-t" class="ap-mast"><img src="/img/logo-anchecasa-1120.png" width="560" height="110" alt="AncheCasa"><em>Magazine</em></h1>
     <p class="ap-num">Numero {N["n"]} · {e(N["data"])} · gratuito</p>
     <p class="ap-lead">La casa spiegata in modo semplice: bonus, bollette, lavori e diritti, con la fonte accanto a ogni numero. Ogni quindici giorni, per chi ci abita.</p>
     <div class="ap-tasti"><a class="tasto" href="{N["sfoglia"]}">Sfoglia il numero {N["n"]}</a><a class="tasto tasto-vuoto" href="#numero">Leggi gli articoli</a></div>
@@ -328,7 +327,7 @@ def chi_siamo():
 <h2>Le app</h2>
 <p>Gli strumenti della rivista sono sviluppati da AncheStudio, la società di software di AncheCasa, che ha realizzato anche tutti i programmi della piattaforma. Sono gratuiti per sempre.</p>
 <h2>Editore e contatti</h2>
-<p>AncheCasa · Palumbo Investment S.r.l., Via Giusti 22, 81057 Teano (CE), P.IVA 04724830619.<br>Per segnalazioni e domande alla redazione: <a href="mailto:info@anchecasa.it">info@anchecasa.it</a>.</p>
+<p>Palumbo Investment S.r.l.<br>Per segnalazioni e domande alla redazione: <a href="mailto:info@anchecasa.it">info@anchecasa.it</a>.</p>
 </div>'''
     pagina("chi-siamo.html", "Chi siamo · AncheCasa Magazine", "Chi fa AncheCasa Magazine, per chi scrive e perché nessuna impresa paga per comparire.", corpo, attiva="chi")
 

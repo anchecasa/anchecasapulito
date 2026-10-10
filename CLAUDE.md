@@ -13,6 +13,36 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 10.10.2026 10:50 · Cursor — da anchecasa.it, Magazine apre magazine.anchecasa.it
+- Nel menu e nel piede di anchecasa.it la voce Magazine porta a https://magazine.anchecasa.it/. Prima apriva la rivista sfogliabile su anchecasa.it/magazine. Quella pagina resta dov’è.
+- Pubblicata la cartella `sito` sul progetto `anchecasa-pulito`. Deployment `dpl_6vuYxuyur1Co5wrqAXLwefYchsLY`, alias https://anchecasa.it. Il progetto `magazine-anchecasa` non è stato toccato.
+- Prova: su https://anchecasa.it il clic su Magazine apre https://magazine.anchecasa.it/, titolo «AncheCasa Magazine · la casa spiegata bene, gratis». https://anchecasa.it/magazine risponde ancora 200.
+- File: le 43 pagine HTML del menu in `sito/`, `sito/js/sito.js`, `CLAUDE.md`.
+
+### 10.10.2026 ~10:50 · Claude — magazine.anchecasa.it: logo originale, piede solo «Palumbo Investment S.r.l.», testata in prima pagina più piccola (NON ancora pubblicato)
+- Testata del sito e prima pagina: logo originale AncheCasa (da `assets/logo-colore.png`, ritagliato in `img/logo-anchecasa-560.png` e `-1120.png`) al posto della casetta ridisegnata, con «Magazine» accanto/sotto.
+- Prima pagina: «AncheCasa Magazine» più piccolo (logo 400 px su PC, 230 px sul telefono) e Bodoni con tratti più spessi (opsz 24) in tutti i titoli: niente filetti sottilissimi.
+- Piede: riga legale solo «© 2026 Palumbo Investment S.r.l.» (tolti indirizzo, P.IVA, AncheStudio); in «Chi siamo» editore solo «Palumbo Investment S.r.l.» e la mail della redazione.
+
+### 10.10.2026 10:40 · Cursor — Chrome apriva «Impossibile raggiungere questa pagina»
+- Lo schermo di Chrome diceva `DNS_PROBE_FINISHED_NXDOMAIN` su https://magazine.anchecasa.it. Il nome sul computer risolveva già. Il servizio di rete di Chrome era partito alle 07:14 e teneva la risposta vecchia del modem.
+- Riavviato solo quel servizio. Chrome ha aperto la pagina: titolo «AncheCasa Magazine · la casa spiegata bene, gratis».
+- File annotato: `CLAUDE.md`.
+
+### 10.10.2026 10:37 · Cursor — magazine.anchecasa.it si apre su questo computer
+- Il record e il certificato c’erano già. Il DNS cifrato (Google e Cloudflare, porta 853) risponde con il CNAME e gli indirizzi. Il modem Fastgate di questa rete (`192.168.1.254`, myfastgate.nexxt) alla domanda dell’indirizzo risponde vuoto, quindi il browser non apriva il nome. `www.anchecasa.it` da quel modem si apre.
+- DNS del Wi-Fi di questo computer: prima `192.168.1.254` e `2001:b07:ae5:7831:e67:14ff:fee5:caf0`. Ora `1.1.1.1` e `8.8.8.8`, e in IPv6 `2606:4700:4700::1111` e `2001:4860:4860::8888`, con DNS cifrato e senza ripiego sulla porta 53.
+- https://magazine.anchecasa.it risponde 200. Pagina aperta: sfondo bianco, «82 giorni per il bonus casa al 50%», copertina del numero 1. `anchecasa-pulito` non è stato toccato.
+- Un telefono collegato allo stesso Wi-Fi usa ancora il modem e può non aprire il nome. Con la rete mobile il DNS pubblico lo risolve.
+- File annotato: `CLAUDE.md`.
+
+### 10.10.2026 10:24 · Cursor — magazine.anchecasa.it online: CNAME su Cloudflare e certificato
+- Il record c’è. I nameserver di Cloudflare e il DNS di Google rispondono: CNAME `magazine.anchecasa.it` → `2c102f38e8c25313.vercel-dns-017.com`, poi gli indirizzi `216.198.79.65` e `64.29.17.65`. Nuvola grigia.
+- Vercel, progetto `magazine-anchecasa`: verifica del dominio `configured_correctly`. Il certificato HTTPS mancava e la connessione sicura si chiudeva. Certificato emesso. https://magazine.anchecasa.it risponde 200. `anchecasa-pulito` non è stato toccato. https://anchecasa.it/magazine risponde ancora 200.
+- Prova sul sito pubblicato: home «AncheCasa Magazine», copertina, conto al 31.12.2026, sfondo chiaro (`color-scheme: light`). Articolo `/articoli/la-bolletta-smontata`: «Condividi su WhatsApp» in testa e in fondo, riquadro «Cosa è cambiato». `/check-bollette` risponde 200 e il file è identico a quello già provato (luce e gas, PDF di una pagina). Iscrizione `prova-magazine-dns@anchecasa.it`, Comune Teano: `{"ok":true}`.
+- Su questo computer il router risponde vuoto alla domanda dell’indirizzo, quindi il browser di questa macchina non apre il nome. Il DNS pubblico sì.
+- File annotato: `CLAUDE.md`.
+
 ### 10.10.2026 10:11 · Cursor — magazine.anchecasa.it ancora non si apre: manca il DNS
 - GitHub: il sito è già su main, commit `582f7dd`. Il collegamento Vercel al repo non parte: manca l'app https://github.com/apps/vercel. Questa nota è il commit successivo.
 - Vercel: il progetto `magazine-anchecasa` (`prj_uKAwJ23AFZdRYZDg0ocWXNf45ucC`) è in produzione, Root Directory `magazine-sito`, dominio `magazine.anchecasa.it` collegato. `anchecasa-pulito` non è stato toccato.
