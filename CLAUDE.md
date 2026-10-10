@@ -13,6 +13,25 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 10.10.2026 ~08:25 · Claude — Curva del marchio identica alla mail approvata, nel report bollette e in footer-curva.png (NON ancora pubblicato)
+- REGOLA DI MARCHIO (Nando): la fascia curva in fondo alla mail d'invito approvata (arancio chiaro, arancio, blu: quasi piatta a sinistra, sale verso destra) si ripete sempre uguale su tutti i documenti AncheCasa.
+- Misurata pixel per pixel sulla mail approvata (larghezza 600): bordi y = ((a·t+b)·t+c)·t+d, t da 0 (sinistra) a 1 (destra). Arancio chiaro [3.1335, -42.8382, 10.2674, 33.5524]; arancio [-1.3827, -26.5596, 1.7325, 40.8033]; blu [0.6414, -21.6553, 2.0786, 47.9497]. Colori: #F49B50, #E56B10, #16304D. Usare questi numeri per ogni nuovo documento.
+- `sito/assets/logo/footer-curva.png` rifatta con questa formula (1200×104): è l'immagine che le mail d'invito caricano da anchecasa.it.
+- `sito/js/magazine.js`: piede del report PDF con la stessa formula (600 px = 210 mm) e il logo bianco con «Casa» e quadrato arancio come nella mail: nuovo `sito/assets/logo/anchecasa-payoff-negativo.png` (ricavato da `assets/logo-colore.png`, blu → bianco).
+
+### 10.10.2026 08:10 · Cursor — Mail del marchio online: curva sul sito e tre mail d'invito nell'area privata
+- Commit `5ac6d1d` sul ramo main: «Mail del marchio: le tre mail d'invito nuove al posto delle vecchie». Push su GitHub. File: `mail/area-privata-online/dashboard/js/mail-modelli-nuove.js`, `sito/assets/logo/footer-curva.png`, `CLAUDE.md`. Le mail in `mail/invito/` non sono state modificate.
+- Pubblicata la cartella `sito` sul progetto Vercel `anchecasa-pulito`. Deployment `dpl_DhNuqm4z51ziixJq3EX2CWvyLZXY`, stato Ready, alias https://anchecasa.it. https://anchecasa.it/assets/logo/footer-curva.png risponde 200, immagine png, 9458 byte.
+- Con questo invio è andata online anche la correzione già presente nella cartella del Magazine (condivisione WhatsApp, `magazine.js?v=37`): su https://anchecasa.it/magazine il file è `magazine.js?v=37`. Il report PDF rifatto alle ~08:15 (`magazine.js?v=38`) non c'era ancora al momento dell'invio e online non c'è.
+- Area privata: partiti dai file già online (deployment `dpl_7hUi9789so9M5JSiTNN2yMiYkAP1`). Aggiunti solo `dashboard/js/mail-modelli-nuove.js` e, in `dashboard/index.html`, `<script src="js/mail-modelli-nuove.js"></script>` subito dopo `js/mail-modelli.js`. Pubblicato sul progetto `area-privata-produzione`. Deployment `dpl_7rRMon1Sz6og8CBF9Vaha5djX7e6`, stato Ready, alias https://areaprivata.anchecasa.it. Login, icona e il resto della dashboard restano quelli già online.
+- Prova: la pagina https://areaprivata.anchecasa.it/dashboard/#/admin/admin-mail chiede l'accesso. Con gli script ora online, gli stessi dati di prova della pagina (invitato da Paola Neri), Privato, Azienda e Agente con «Riceve il link per iscriversi» mostrano le mail nuove: «La tua casa, con le persone giuste.», «Nuovi clienti nella sua zona.», «Costruisci la tua rete con AncheCasa.», con la curva in fondo. Le mail «Si iscrive dal sito» restano quelle di prima.
+
+### 10.10.2026 ~08:15 · Claude — Magazine: report PDF Check Bollette rifatto, piede con la stessa curva delle mail (NON ancora pubblicato)
+- `sito/js/magazine.js`: eliminato il vecchio report (`caricaLogo` + vecchio `creaPdf` con logo centrato e onde). Al suo posto il report nuovo nello stile delle mail d'invito: testata con logo a sinistra e anchecasa.it a destra, filo arancio, etichetta «REPORT CHECK BOLLETTE · LUCE/GAS», titolo «La tua bolletta della luce, letta.», risultato, lancetta e prezzi, consumi, dati inseriti, riquadro blu «Cosa fare adesso» con i numeri arancio come «Come funziona» della mail.
+- Piede: la STESSA curva di `sito/assets/logo/footer-curva.png` usata dalle mail (stessa formula: fascia arancio chiaro, arancio, blu, 1200×80 px → 210×14 mm), poi blu con logo bianco (`assets/logo/anchecasa-payoff-bianco.png`), «AncheCasa · Costruiamo fiducia · anchecasa.it», info@anchecasa.it, © e numero della rivista. Nessun dato societario.
+- `sito/magazine.html`: magazine.js?v=38.
+- Provato con jsPDF 2.5.1 vero: report luce (228,40 € / 420 kWh) e gas (365 € / 210 Smc) su una pagina A4, nessun errore.
+
 ### 10.10.2026 ~08:00 · Claude — «Mail del marchio» dell'area privata: al posto delle mail d'invito vecchie, le tre mail nuove (NON ancora pubblicato)
 - Le tre mail nuove sono quelle già pronte in `mail/invito/` (`ufficiali/invito-agente.html`, `invito-azienda.html`, `invito-privato.html`, generate da `mail-invito.js`). NON sono state modificate: annullata una mia modifica delle ~07:55 (file rimessi identici).
 - La pagina https://areaprivata.anchecasa.it/dashboard/#/admin/admin-mail (e l'anteprima di «Genera link») le disegna con `dashboard/js/mail-modelli.js`, che esiste solo nella versione online (Vercel `area-privata-produzione`).

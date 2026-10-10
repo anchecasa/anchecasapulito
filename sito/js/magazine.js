@@ -606,15 +606,23 @@
         "</div></div>";
   }
 
-  /* Report PDF su carta intestata AncheCasa (come i contratti): logo, intestazione, numeri grandi, grafici, consigli. */
-  function caricaLogo(cb) {
+  /* Report PDF Check Bollette (10.10.2026, rifatto): stesso stile delle mail d'invito AncheCasa.
+     Testata con logo a sinistra e anchecasa.it a destra, filo arancio; etichetta, titolo; riquadro blu «Cosa fare adesso»
+     con i numeri arancio; in fondo la STESSA curva della mail (assets/logo/footer-curva.png: fascia chiara, arancio, blu)
+     e il piede blu con il logo bianco e arancio (assets/logo/anchecasa-payoff-negativo.png). Solo contatti AncheCasa, niente dati societari. */
+  function caricaImg(src, cb) {
     var im = new Image();
     im.onload = function () {
-      try { var cv = document.createElement("canvas"); cv.width = im.naturalWidth; cv.height = im.naturalHeight; cv.getContext("2d").drawImage(im, 0, 0); cb(cv.toDataURL("image/png"), im.naturalWidth / im.naturalHeight); }
+      try { var cv = document.createElement("canvas"); cv.width = im.naturalWidth; cv.height = im.naturalHeight; cv.getContext("2d").drawImage(im, 0, 0); cb({ data: cv.toDataURL("image/png"), r: im.naturalWidth / im.naturalHeight }); }
       catch (e) { cb(null); }
     };
     im.onerror = function () { cb(null); };
-    im.src = "assets/logo-colore.png";
+    im.src = src;
+  }
+  function caricaLoghi(cb) {
+    caricaImg("assets/logo-colore.png", function (colore) {
+      caricaImg("assets/logo/anchecasa-payoff-negativo.png", function (bianco) { cb({ colore: colore, bianco: bianco }); });
+    });
   }
 
   function scaricaPdf() {
@@ -626,17 +634,17 @@
       if (out) out.insertAdjacentHTML("beforeend", '<p class="mg-error">Il PDF non si è caricato. Controlla la connessione e riprova.</p>');
       return;
     }
-    caricaLogo(function (logo, ratio) { creaPdf(c, logo, ratio); });
+    caricaLoghi(function (loghi) { creaPdf(c, loghi); });
   }
 
-  /* Report PDF (09.10.2026 ~17:40): carta AncheCasa elegante e pulita, come i documenti del marchio.
-     Foglio bianco, logo centrato, niente riquadri scuri; in fondo le onde curve blu e arancio con i contatti. */
-  function creaPdf(c, logo, ratio) {
+  function creaPdf(c, loghi) {
     var t = testiVerdetto(c);
     var u = c.rif.unita;
     var luce = bolletta.tipo === "luce";
     var doc = new window.jspdf.jsPDF({ unit: "mm", format: "a4" });
-    var NAVY = [22, 48, 77], ARANCIO = [229, 107, 16], GRIGIO = [107, 117, 131], INK = [33, 41, 52], LINEA = [226, 231, 238], TENUE = [246, 248, 251];
+    // colori delle mail AncheCasa
+    var NAVY = [22, 48, 77], NAVY2 = [44, 74, 110], ARANCIO = [229, 107, 16], BOTTONE = [196, 93, 12], CHIARO = [255, 241, 228], PESCA = [255, 210, 173],
+      ARANCIO_CHIARO = [244, 155, 80], TESTO = [36, 56, 76], MUTO = [102, 117, 138], LINEA = [228, 235, 243], TENUE = [243, 246, 250], PIEDE = [213, 222, 234];
     var COL = { ok: [47, 125, 77], warn: [196, 132, 18], bad: [194, 65, 43] };
     var fill = function (k) { doc.setFillColor(k[0], k[1], k[2]); };
     var draw = function (k) { doc.setDrawColor(k[0], k[1], k[2]); };
@@ -644,39 +652,45 @@
     var font = function (stile, size) { doc.setFont("helvetica", stile); doc.setFontSize(size); };
     var oggi = new Date();
     var codice = "AC-CB-" + oggi.getFullYear() + String(oggi.getMonth() + 1).padStart(2, "0") + String(oggi.getDate()).padStart(2, "0") + "-" + String(oggi.getHours()).padStart(2, "0") + String(oggi.getMinutes()).padStart(2, "0");
-    var L = 20, R = 190, W = R - L, MID = 105;
-    var titolo = function (testo, y) { font("bold", 8); ink(ARANCIO); doc.text(testo.toUpperCase(), L, y, { charSpace: 0.6 }); draw(LINEA); doc.setLineWidth(0.25); doc.line(L, y + 2.2, R, y + 2.2); };
+    var L = 20, R = 190, W = R - L;
+    var sezione = function (testo, y) { font("bold", 8); ink(ARANCIO); doc.text(testo.toUpperCase(), L, y, { charSpace: 0.6 }); draw(LINEA); doc.setLineWidth(0.25); doc.line(L, y + 2.2, R, y + 2.2); };
 
-    // ---- intestazione: logo centrato, titolo, sottotitolo
-    if (logo) { var lh = 13, lw = lh * ratio; doc.addImage(logo, "PNG", MID - lw / 2, 14, lw, lh); }
-    else { font("bold", 18); ink(NAVY); doc.text("AncheCasa", MID, 24, { align: "center" }); }
-    fill(ARANCIO); doc.rect(MID - 8, 31, 16, 0.8, "F");
-    font("bold", 17); ink(NAVY); doc.text("Report Check Bollette", MID, 40, { align: "center" });
-    font("normal", 9); ink(GRIGIO);
-    doc.text("Bolletta " + (luce ? "della luce" : "del gas") + "  ·  analisi del " + oggi.toLocaleDateString("it-IT") + "  ·  report n. " + codice, MID, 46, { align: "center" });
+    // ---- testata come la mail: logo a sinistra, anchecasa.it a destra, filo arancio
+    var lg = loghi && loghi.colore;
+    if (lg) { var lh = 11; doc.addImage(lg.data, "PNG", L, 13, lh * lg.r, lh); }
+    else { font("bold", 18); ink(NAVY); doc.text("AncheCasa", L, 22); }
+    font("bold", 9.5); ink(NAVY); doc.text("anchecasa.it", R, 20.5, { align: "right" });
+    fill(ARANCIO); doc.rect(L, 28.5, W, 0.7, "F");
 
-    // ---- il risultato in una frase
-    var y = 58;
-    titolo("Il risultato", y);
+    // ---- etichetta e titolo
+    var et = "REPORT CHECK BOLLETTE · " + (luce ? "LUCE" : "GAS");
+    font("bold", 7.5); var ew = doc.getTextWidth(et) + et.length * 0.35 + 8;
+    fill(CHIARO); doc.roundedRect(L, 35, ew, 6, 3, 3, "F");
+    ink(BOTTONE); doc.text(et, L + 4, 39.1, { charSpace: 0.35 });
+    font("bold", 18); ink(NAVY); doc.text("La tua bolletta " + (luce ? "della luce" : "del gas") + ", letta.", L, 51);
+    font("normal", 9); ink(MUTO); doc.text("Analisi del " + oggi.toLocaleDateString("it-IT") + "  ·  report n. " + codice, L, 57);
+
+    // ---- il risultato
+    var y = 66;
+    sezione("Il risultato", y);
     var pct = Math.round((c.rP - 1) * 100);
     var frase = { bad: "Paghi " + art(pct) + "% in più del giusto", warn: "Il tuo prezzo è nella media", ok: "Il tuo prezzo è buono" }[c.vPrezzo];
-    font("bold", 20); ink(COL[c.vPrezzo]); doc.text(frase, L, y + 13);
-    font("normal", 10); ink(INK);
+    font("bold", 19); ink(COL[c.vPrezzo]); doc.text(frase, L, y + 12);
     if (c.risparmio > 0) {
-      doc.text("Allineandoti al prezzo giusto puoi risparmiare circa", L, y + 21);
-      font("bold", 24); ink(ARANCIO); doc.text(euro(c.risparmio, 0), L, y + 32);
+      font("normal", 10); ink(TESTO); doc.text("Allineandoti al prezzo giusto puoi risparmiare circa", L, y + 19.5);
+      font("bold", 24); ink(ARANCIO); doc.text(euro(c.risparmio, 0), L, y + 30);
       var wv = doc.getTextWidth(euro(c.risparmio, 0));
-      font("normal", 11); ink(GRIGIO); doc.text("all’anno", L + wv + 3, y + 32);
+      font("normal", 11); ink(MUTO); doc.text("all’anno", L + wv + 3, y + 30);
     } else {
-      doc.text("Non stai pagando più del necessario: tieni d’occhio le prossime bollette.", L, y + 21);
+      font("normal", 10); ink(TESTO); doc.text("Non stai pagando più del necessario: tieni d’occhio le prossime bollette.", L, y + 19.5);
     }
 
-    // ---- lancetta + prezzi
-    y = 104;
-    titolo("Il prezzo che paghi", y);
-    var cx = L + 30, cy = y + 33, rr = 22;
+    // ---- lancetta e prezzi
+    y = 107;
+    sezione("Il prezzo che paghi", y);
+    var cx = L + 30, cy = y + 31, rr = 21;
     var pt = function (a, r) { var rad = (a - 90) * Math.PI / 180; return [cx + r * Math.cos(rad), cy + r * Math.sin(rad)]; };
-    doc.setLineWidth(4.2); if (doc.setLineCap) doc.setLineCap("butt");
+    doc.setLineWidth(4); if (doc.setLineCap) doc.setLineCap("butt");
     for (var a = -90; a < 90; a += 1.5) {
       var kk = a < -11.25 ? COL.ok : a < 22.5 ? COL.warn : COL.bad;
       draw(kk); var p1 = pt(a, rr), p2 = pt(Math.min(90, a + 1.7), rr); doc.line(p1[0], p1[1], p2[0], p2[1]);
@@ -685,36 +699,34 @@
     var tip = pt((ratioP - 1) / 0.4 * 90, rr - 5);
     draw(NAVY); doc.setLineWidth(0.9); doc.line(cx, cy, tip[0], tip[1]);
     fill(NAVY); doc.circle(cx, cy, 1.8, "F");
-    font("normal", 7); ink(GRIGIO); doc.text("paghi meno", cx - rr - 2, cy + 5); doc.text("paghi di più", cx + rr + 2, cy + 5, { align: "right" });
+    font("normal", 7); ink(MUTO); doc.text("paghi meno", cx - rr - 2, cy + 5); doc.text("paghi di più", cx + rr + 2, cy + 5, { align: "right" });
     var px = L + 70;
-    font("bold", 16);
-    var v1 = euro(c.prezzo, 3), v2 = euro(c.rif.prezzo, 3);
-    fill(COL[c.vPrezzo]); doc.rect(px, y + 12, 1.2, 13, "F");
-    font("normal", 8.5); ink(GRIGIO); doc.text("Tu paghi, tutto compreso", px + 5, y + 16);
-    font("bold", 16); ink(NAVY); doc.text(v1 + " / " + u, px + 5, y + 23);
-    fill(COL.ok); doc.rect(px, y + 30, 1.2, 13, "F");
-    font("normal", 8.5); ink(GRIGIO); doc.text("Prezzo giusto di riferimento", px + 5, y + 34);
-    font("bold", 16); ink(NAVY); doc.text(v2 + " / " + u, px + 5, y + 41);
-    font("normal", 8.4); ink(GRIGIO);
-    doc.text(doc.splitTextToSize("Il prezzo giusto è il riferimento ARERA per una famiglia come la tua, con tasse e quote fisse comprese.", R - (px + 62)), px + 62, y + 16);
+    fill(COL[c.vPrezzo]); doc.rect(px, y + 10, 1.2, 13, "F");
+    font("normal", 8.5); ink(MUTO); doc.text("Tu paghi, tutto compreso", px + 5, y + 14);
+    font("bold", 16); ink(NAVY); doc.text(euro(c.prezzo, 3) + " / " + u, px + 5, y + 21);
+    fill(COL.ok); doc.rect(px, y + 28, 1.2, 13, "F");
+    font("normal", 8.5); ink(MUTO); doc.text("Prezzo giusto di riferimento", px + 5, y + 32);
+    font("bold", 16); ink(NAVY); doc.text(euro(c.rif.prezzo, 3) + " / " + u, px + 5, y + 39);
+    font("normal", 8.2); ink(MUTO);
+    doc.text(doc.splitTextToSize("Il prezzo giusto è il riferimento ARERA per una famiglia come la tua, con tasse e quote fisse comprese.", R - (px + 62)), px + 62, y + 14);
 
     // ---- consumi
-    y = 158;
-    titolo("I tuoi consumi", y);
-    font("normal", 9.5); ink(INK);
-    doc.text(doc.splitTextToSize(t.tCons, W), L, y + 9);
+    y = 152;
+    sezione("I tuoi consumi", y);
+    font("normal", 9.5); ink(TESTO);
+    doc.text(doc.splitTextToSize(t.tCons, W), L, y + 8.5);
     var max = Math.max(c.annuo, c.rifConsumo) * 1.1, bw = W - 70;
     [["Tu", c.annuo, c.vCons === "bad" ? COL.bad : ARANCIO], ["Famiglia come la tua", c.rifConsumo, [176, 187, 201]]].forEach(function (r, i) {
-      var by = y + 17 + i * 8;
-      font("normal", 8.5); ink(GRIGIO); doc.text(r[0], L, by + 3.2);
+      var by = y + 13.5 + i * 7.5;
+      font("normal", 8.5); ink(MUTO); doc.text(r[0], L, by + 3.2);
       fill(TENUE); doc.roundedRect(L + 40, by, bw, 4, 2, 2, "F");
       fill(r[2]); doc.roundedRect(L + 40, by, Math.max(4, bw * r[1] / max), 4, 2, 2, "F");
       font("bold", 9); ink(NAVY); doc.text(num(r[1]) + " " + u, R, by + 3.3, { align: "right" });
     });
 
-    // ---- i dati della bolletta
-    y = 196;
-    titolo("I dati che hai inserito", y);
+    // ---- i dati inseriti
+    y = 186;
+    sezione("I dati che hai inserito", y);
     var dati = [
       ["Totale della bolletta", euro(c.importo, 2)], ["Consumo nel periodo", num(c.consumo) + " " + u],
       ["Periodo", c.mesi + (c.mesi === 1 ? " mese" : " mesi")], ["Persone in casa", c.persone === 5 ? "5 o più" : String(c.persone)],
@@ -722,50 +734,56 @@
     ];
     var colw = (W - 12) / 2;
     dati.forEach(function (d, i) {
-      var x = L + (i % 2) * (colw + 12), yy = y + 9 + Math.floor(i / 2) * 7;
-      font("normal", 9); ink(GRIGIO); doc.text(d[0], x, yy);
+      var x = L + (i % 2) * (colw + 12), yy = y + 8.5 + Math.floor(i / 2) * 6.6;
+      font("normal", 9); ink(MUTO); doc.text(d[0], x, yy);
       font("bold", 9); ink(NAVY); doc.text(d[1], x + colw, yy, { align: "right" });
-      draw(LINEA); doc.setLineWidth(0.2); doc.line(x, yy + 2.4, x + colw, yy + 2.4);
+      draw(LINEA); doc.setLineWidth(0.2); doc.line(x, yy + 2.3, x + colw, yy + 2.3);
     });
 
-    // ---- cosa fare adesso
-    y = 226;
-    titolo("Cosa fare adesso", y);
+    // ---- cosa fare adesso: riquadro blu come «Come funziona» della mail
+    y = 213;
+    fill(NAVY2); doc.roundedRect(L, y, W, 36, 3.5, 3.5, "F");
+    font("bold", 8); ink(PESCA); doc.text("COSA FARE ADESSO", 105, y + 7, { align: "center", charSpace: 0.5 });
     var passi = [
-      "Confronta le offerte con il codice POD o PDR alla mano, anche sul Portale Offerte ARERA (ilportaleofferte.it).",
-      "Controlla che la lettura in bolletta sia reale e non stimata; se serve, comunica l’autolettura.",
-      "Se i consumi sono alti, un controllo di impianti e isolamento vale più di un cambio di tariffa: su anchecasa.it trovi i tecnici della tua zona."
+      "Confronta le offerte con il codice POD o PDR alla mano, anche su ilportaleofferte.it (ARERA).",
+      "Controlla che la lettura sia reale e non stimata; se serve, comunica l’autolettura.",
+      "Consumi alti? Un controllo di impianti e isolamento vale più di un cambio di tariffa: su anchecasa.it trovi i tecnici della tua zona."
     ];
-    var yy = y + 8;
+    var cw = W / 3;
     passi.forEach(function (p, i) {
-      font("bold", 10); ink(ARANCIO); doc.text(String(i + 1), L + 1, yy + 0.2);
-      var ll = doc.splitTextToSize(p, W - 8); font("normal", 9); ink(INK); doc.text(ll, L + 7, yy);
-      yy += ll.length * 4.1 + 2.2;
+      var xc = L + cw * i + cw / 2;
+      fill(ARANCIO); doc.circle(xc, y + 14, 3.3, "F");
+      font("bold", 9); ink([255, 255, 255]); doc.text(String(i + 1), xc, y + 15.3, { align: "center" });
+      font("normal", 7.6); doc.text(doc.splitTextToSize(p, cw - 9), xc, y + 22, { align: "center", lineHeightFactor: 1.3 });
     });
 
-    // ---- nota
-    font("normal", 6.6); ink(GRIGIO);
-    doc.text(doc.splitTextToSize("Prezzo di riferimento: " + c.rif.fonte + ". Consumi di riferimento: stime AncheCasa su dati ARERA. Il prezzo medio include quote fisse e potenza impegnata: con consumi bassi risulta più alto. Stima indicativa a scopo informativo, non è una consulenza.", W), L, 262);
+    // ---- nota sulle fonti
+    font("normal", 6.4); ink(MUTO);
+    doc.text(doc.splitTextToSize("Prezzo di riferimento: " + c.rif.fonte + ". Consumi di riferimento: stime AncheCasa su dati ARERA. Il prezzo medio include quote fisse e potenza impegnata: con consumi bassi risulta più alto. Stima indicativa a scopo informativo, non è una consulenza.", W), L, 252.5);
 
-    // ---- piede: onde curve nei colori AncheCasa
-    function onda(y0, y1, ampiezza, colore) {
-      var passi = 48, pts = [], x0 = 0, x1 = 210;
-      for (var i = 0; i <= passi; i++) {
-        var x = x0 + (x1 - x0) * i / passi;
-        var tt = i / passi;
-        pts.push([x, y0 + (y1 - y0) * tt - ampiezza * Math.sin(Math.PI * tt)]);
-      }
+    // ---- piede: la curva del marchio AncheCasa, identica a quella delle mail (assets/logo/footer-curva.png).
+    // Misurata sulla mail approvata: tre bordi (arancio chiaro, arancio, blu) quasi piatti a sinistra che salgono a destra.
+    // y = ((a·t + b)·t + c)·t + d in pixel su 600 di larghezza; t = 0 a sinistra, 1 a destra. 600 px = 210 mm.
+    var CURVA = { chiaro: [3.1335, -42.8382, 10.2674, 33.5524], arancio: [-1.3827, -26.5596, 1.7325, 40.8033], blu: [0.6414, -21.6553, 2.0786, 47.9497] };
+    var CY = 255, K = 210 / 600;
+    function curva(cf, colore) {
+      var n = 80, pts = [];
+      for (var i = 0; i <= n; i++) { var tt = i / n; pts.push([210 * tt, CY + (((cf[0] * tt + cf[1]) * tt + cf[2]) * tt + cf[3]) * K]); }
       pts.push([210, 297], [0, 297]);
       var seg = [];
       for (var j = 1; j < pts.length; j++) seg.push([pts[j][0] - pts[j - 1][0], pts[j][1] - pts[j - 1][1]]);
       fill(colore); doc.lines(seg, pts[0][0], pts[0][1], [1, 1], "F", true);
     }
-    onda(281, 272, 5, ARANCIO);
-    onda(284.5, 276, 5.5, NAVY);
-    font("bold", 8.5); ink([255, 255, 255]); doc.text("anchecasa.it", L, 290);
-    font("normal", 7.5); ink([205, 215, 228]);
-    doc.text("info@anchecasa.it  ·  © " + oggi.getFullYear() + " AncheCasa  ·  Report Check Bollette, AncheCasa Magazine N." + NUMERO.n, L + 22, 290);
-    doc.text("Pagina 1 di 1", R, 290, { align: "right" });
+    curva(CURVA.chiaro, ARANCIO_CHIARO);
+    curva(CURVA.arancio, ARANCIO);
+    curva(CURVA.blu, NAVY);
+    var lb = loghi && loghi.bianco;
+    if (lb) { var bh = 7; doc.addImage(lb.data, "PNG", L, 275.5, bh * lb.r, bh); }
+    else { font("bold", 12); ink([255, 255, 255]); doc.text("AncheCasa", L, 281); }
+    font("bold", 8.5); ink([255, 255, 255]); doc.text("AncheCasa · Costruiamo fiducia · anchecasa.it", L, 287.5);
+    font("normal", 7.6); ink(PIEDE);
+    doc.text("Domande? Scrivi a info@anchecasa.it  ·  © " + oggi.getFullYear() + " AncheCasa  ·  Report Check Bollette, AncheCasa Magazine N." + NUMERO.n, L, 292.5);
+    doc.text("Pagina 1 di 1", R, 292.5, { align: "right" });
     doc.save("AncheCasa-report-bolletta-" + (luce ? "luce" : "gas") + ".pdf");
   }
 
@@ -1157,7 +1175,7 @@
    Telefono: menu di condivisione del sistema (WhatsApp, Telegram, messaggi…).
    PC: pannello in vetro con WhatsApp, Facebook, Telegram, Email, Copia link. */
 (function () {
-  var URL_RIVISTA = "https://anchecasa.it/magazine.html";
+  var URL_RIVISTA = "https://anchecasa.it/magazine";
   var TITOLO = "AncheCasa Magazine";
   var TESTO = "Ti consiglio AncheCasa Magazine: la rivista gratuita sulla casa, si sfoglia come una vera rivista. Dentro c’è anche il Check Bollette gratis.";
   var ICO = {
@@ -1169,6 +1187,8 @@
   };
   var pannello = null, aperto = false, ultimoBtn = null;
 
+  // Dal telefono il link va DENTRO il testo, su una riga sua: se testo e url vanno separati, WhatsApp li incolla
+  // senza spazio ("…gratis.https://…") o perde il link, e il messaggio arriva con un link che non si apre.
   // Il link porta "?da=canale": nelle statistiche si vede da quale condivisione arrivano i nuovi lettori.
   function link(da) {
     var base = /(^|\.)anchecasa\.it$/.test(location.hostname) ? location.origin + location.pathname : URL_RIVISTA;
@@ -1178,7 +1198,7 @@
   function voci() {
     var u = function (da) { return encodeURIComponent(link(da)); }, t = encodeURIComponent(TESTO);
     return [
-      ["wa", "WhatsApp", "https://wa.me/?text=" + t + "%20" + u("whatsapp")],
+      ["wa", "WhatsApp", "https://wa.me/?text=" + t + "%0A%0A" + u("whatsapp")],
       ["fb", "Facebook", "https://www.facebook.com/sharer/sharer.php?u=" + u("facebook")],
       ["tg", "Telegram", "https://t.me/share/url?url=" + u("telegram") + "&text=" + t],
       ["ml", "Email", "mailto:?subject=" + encodeURIComponent(TITOLO + ": la rivista gratuita sulla casa") + "&body=" + t + "%0A%0A" + u("email")]
@@ -1248,7 +1268,7 @@
   function condividi(btn) {
     var tocco = window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
     if (navigator.share && tocco) {
-      navigator.share({ title: TITOLO, text: TESTO, url: link("condiviso") }).then(function () { conta("menu telefono"); }).catch(function () { /* annullato */ });
+      navigator.share({ title: TITOLO, text: TESTO + "\n\n" + link("condiviso") }).then(function () { conta("menu telefono"); }).catch(function () { /* annullato */ });
       return;
     }
     if (aperto) chiudi(); else apri(btn);
