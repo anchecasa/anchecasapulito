@@ -13,7 +13,6 @@
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } }
-h1, h2, h3, .bod, blockquote, .num-lista .t, .conto b, ul.cifre b, ul.numeri span, dl.glossario dt, .cb-big, .cb-save b, .cb-prezzi b, .bac-tit { font-variation-settings: "opsz" 24; }
 body { margin: 0; background: var(--fondo); color: var(--testo); font-family: var(--sans); font-size: 16px; line-height: 1.5; }
 img { max-width: 100%; height: auto; display: block; }
 a { color: inherit; }
@@ -57,9 +56,9 @@ a { color: inherit; }
 
 /* ---------- apertura (home) ---------- */
 .apertura { max-width: var(--larg); margin: 0 auto; padding: clamp(28px, 6vw, 72px) var(--gut) clamp(40px, 6vw, 80px); display: grid; grid-template-columns: 1.15fr .85fr; gap: clamp(28px, 5vw, 72px); align-items: center; }
-.ap-mast { margin: 0; color: var(--navy); }
-.ap-mast img { width: min(100%, 400px); height: auto; }
-.ap-mast em { display: block; font-family: var(--display); font-style: italic; font-weight: 600; font-size: clamp(36px, 4.2vw, 52px); line-height: 1; letter-spacing: -.01em; margin: 8px 0 0 4px; color: var(--navy); font-variation-settings: "opsz" 24; }
+.ap-mast { margin: 0; font-family: var(--display); font-weight: 700; line-height: .86; letter-spacing: -.035em; color: var(--navy); font-size: clamp(64px, 10.5vw, 148px); font-variation-settings: "opsz" 20; }
+.ap-mast span:nth-child(2) { color: var(--or); }
+.ap-mast em { display: block; font-style: italic; font-weight: 600; letter-spacing: -.015em; font-size: .52em; margin-top: .14em; color: var(--testo); }
 .ap-num { margin: 26px 0 0; font-weight: 700; font-size: 14px; color: var(--or-testo); }
 .ap-lead { margin: 14px 0 0; max-width: 34em; font-family: var(--serif); font-size: clamp(19px, 1.9vw, 22px); line-height: 1.5; color: var(--testo); }
 .ap-tasti { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
@@ -71,8 +70,7 @@ a { color: inherit; }
 .conto span { font-size: 11px; font-weight: 700; line-height: 1.25; padding: 4px 14px 0; }
 @media (max-width: 900px) {
   .apertura { grid-template-columns: 1fr; }
-  .ap-cop { order: -1; width: min(64%, 290px); }
-  .ap-mast img { width: min(64%, 230px); } .ap-mast em { font-size: 34px; margin-top: 4px; }
+  .ap-cop { order: -1; width: min(78%, 360px); }
   .conto { right: -20px; width: 112px; height: 112px; } .conto b { font-size: 42px; }
 }
 

@@ -17,8 +17,10 @@
   if (conto) {
     var p = conto.getAttribute("data-scadenza").split("-");
     var n = new Date();
-    var g = Math.round((Date.UTC(+p[0], +p[1] - 1, +p[2]) - Date.UTC(n.getFullYear(), n.getMonth(), n.getDate())) / 86400000);
+    // giorni interi che restano prima del 31 dicembre, senza contare oggi né il 31 (9 ottobre = 82, 10 ottobre = 81)
+    var g = Math.round((Date.UTC(+p[0], +p[1] - 1, +p[2]) - Date.UTC(n.getFullYear(), n.getMonth(), n.getDate())) / 86400000) - 1;
     if (g > 0) { conto.querySelector(".conto-n").textContent = g; if (g === 1) conto.querySelector("span").textContent = "giorno per il bonus casa al 50%"; conto.hidden = false; }
+    else if (g >= -1) { conto.querySelector(".conto-n").textContent = g === 0 ? "1" : "Oggi"; conto.querySelector("span").textContent = g === 0 ? "giorno per il bonus casa al 50%" : "l’ultimo giorno del bonus al 50%"; conto.hidden = false; }
   }
 
   /* statistiche anonime, come la rivista (api/mag.js → Supabase, pagina «Magazine» dell'area admin):

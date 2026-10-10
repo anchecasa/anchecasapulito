@@ -13,6 +13,42 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 10.10.2026 ~11:30 · Claude — magazine.anchecasa.it: «AncheCasa Magazine» in prima pagina di nuovo grande come prima (NON ancora pubblicato)
+- `css/stile.css` (v=3): testata in prima pagina alla misura di prima (fino a 148 px), restano i tratti sottili più spessi (opsz 20).
+
+### 10.10.2026 ~11:25 · Claude — magazine.anchecasa.it: copertina identica alla rivista, giorni del bonus corretti (NON ancora pubblicato)
+- Copertina del N.1 rifatta dai file attuali della rivista (sito/magazine.html, css/magazine.css, js/magazine.js di oggi), con i suoi caratteri: identica a quella che si vede su anchecasa.it/magazine (controllata nel browser). Prima veniva da una copia vecchia. File: `sorgenti-img/copertina-n1.jpg` → `img/copertina-n1-1600.jpg` e `-800.jpg`.
+- Bollino dei giorni: conta i giorni interi che restano prima del 31 dicembre, senza oggi né il 31 (9 ottobre = 82, 10 ottobre = 81), come vuole Nando; il 30 dicembre «1», il 31 «Oggi, l'ultimo giorno». `js/sito.js` (v=3).
+- Nota: la copertina della rivista (sito/js/magazine.js) ha ancora scritto «83» fisso, dal 9 ottobre.
+
+### 10.10.2026 ~11:20 · Claude — app-anchecasa 2.2: chi entra nella rete lo decidete insieme (NON ancora su Supabase)
+- Regola di Nando: tutti propongono; decidono insieme admin, Responsabile Rete Italia e sviluppo rete dell'area. Basta un no per respingere. Passata la proposta, l'invito nasce da solo.
+- L'admin invita direttamente solo il Responsabile Rete Italia; nessun altro invita senza proposta approvata.
+- Nuovo `sql/app-05-proposte-rete.sql` (da eseguire dopo app-04) e prove `sql/prove/05-prove.sql`.
+- Nuove schermate: «Proponi una persona», «Proposte», «La catena» (admin e RRI vedono tutta la rete: clienti, vendite del mese, provvigioni, chi è fermo da più di 30 giorni).
+- File: js/viste-rete.js, js/viste-admin.js, js/q.js, LEGGIMI.md. Copia di prima: _copie-app-1012.
+
+### 10.10.2026 ~11:15 · Claude — magazine.anchecasa.it: prima pagina ripristinata come prima (NON ancora pubblicato)
+- Su richiesta di Nando: in prima pagina torna la scritta «AncheCasa Magazine» nel carattere della rivista (Bodoni: Anche blu, Casa arancio, Magazine corsivo), al posto del logo; più piccola di prima (max 104 px) e con i tratti sottili più spessi (opsz 20).
+- Annullato il cambio di carattere sugli altri titoli (tornano come prima). Copertina sul telefono di nuovo grande come prima.
+- Restano: logo originale AncheCasa nella barra in alto, piede solo «© 2026 Palumbo Investment S.r.l.».
+
+### 10.10.2026 11:09 · Cursor — prima pagina del Magazine di nuovo con il titolo grande
+- Su https://magazine.anchecasa.it la prima pagina torna com’era: titolo grande «Anche» blu, «Casa» arancio, «Magazine» sotto. Copertina del N.1 e bollino dei giorni al 50% restano.
+- In fondo resta solo «© 2026 Palumbo Investment S.r.l.», senza indirizzo, P.IVA e AncheStudio. «Chi siamo» resta «Palumbo Investment S.r.l.» e la mail.
+- Prova: titolo 148 px, «Casa» arancio #E56B10, fondo bianco, riga legale esatta. Pubblicazione `dpl_GP1vLudygnfr91X4zHFw34EjhPCM` sul progetto `magazine-anchecasa`. anchecasa.it e l’area privata non sono stati toccati.
+- File: `magazine-sito/index.html`, `magazine-sito/css/stile.css`, `magazine-sito/genera.py`, `CLAUDE.md`.
+
+### 10.10.2026 10:59 · Cursor — magazine.anchecasa.it pubblicato con logo originale, Check Bollette, condivisione e iscrizione
+- I file di `magazine-sito` erano già pronti: non rifatti e non rigenerati. Commit `bfd444d` sul ramo main: «magazine.anchecasa.it: AncheCasa Magazine N.1 con logo originale, Check Bollette, Cosa è cambiato, condivisione WhatsApp, statistiche». Push su GitHub (`adeada9..bfd444d`).
+- Il dominio `magazine.anchecasa.it` è già del progetto Vercel `magazine-anchecasa` (`prj_uKAwJ23AFZdRYZDg0ocWXNf45ucC`). Non è stato creato un secondo progetto. Il collegamento a GitHub non è riuscito: `vercel git connect` su anchecasa/anchecasapulito risponde che manca l’accesso al repository. Root Directory `magazine-sito`, nessun comando di build. Pubblicazione `dpl_2GN9RyNi5SbxHTJzpqmipAfP7QFt`, stato Ready, alias https://magazine.anchecasa.it.
+- DNS già a posto: CNAME `magazine` → `2c102f38e8c25313.vercel-dns-017.com`, configurazione corretta, certificato già attivo. Il progetto `anchecasa-pulito`, https://anchecasa.it/magazine e l’area privata non sono stati toccati.
+- Prove su https://magazine.anchecasa.it: prima pagina chiara (fondo bianco, `color-scheme: light`), logo originale `img/logo-anchecasa-1120.png`, copertina del N.1, bollino «82 giorni» per il bonus al 50%. In fondo solo «© 2026 Palumbo Investment S.r.l.».
+- `/check-bollette`: Gas, 365 €, 210 Smc, 2 mesi. «Analizza la mia bolletta» scrive «Paghi il 21% in più del giusto». «Scarica il report PDF» scarica `AncheCasa-report-bolletta-gas.pdf`, una pagina.
+- `/articoli/la-bolletta-smontata`: riquadro «Cosa è cambiato» e «Condividi su WhatsApp» in testa e in fondo.
+- Iscrizione in fondo con prova-magazine-logo@anchecasa.it e Comune Teano: «Fatto: ti scriviamo quando esce il prossimo numero.»
+- File annotato: `CLAUDE.md`.
+
 ### 10.10.2026 10:50 · Cursor — da anchecasa.it, Magazine apre magazine.anchecasa.it
 - Nel menu e nel piede di anchecasa.it la voce Magazine porta a https://magazine.anchecasa.it/. Prima apriva la rivista sfogliabile su anchecasa.it/magazine. Quella pagina resta dov’è.
 - Pubblicata la cartella `sito` sul progetto `anchecasa-pulito`. Deployment `dpl_6vuYxuyur1Co5wrqAXLwefYchsLY`, alias https://anchecasa.it. Il progetto `magazine-anchecasa` non è stato toccato.

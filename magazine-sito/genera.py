@@ -127,7 +127,7 @@ def pagina(nome_file, titolo, descr, corpo, attiva="", og_img="copertina-n1-1600
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;0,6..96,700;1,6..96,500;1,6..96,600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/stile.css?v=2">
+<link rel="stylesheet" href="/css/stile.css?v=3">
 {ldj}
 </head>
 <body>
@@ -137,7 +137,7 @@ def pagina(nome_file, titolo, descr, corpo, attiva="", og_img="copertina-n1-1600
 </main>
 {iscriviti()}
 {piede()}
-<script src="/js/sito.js?v=2" defer></script>
+<script src="/js/sito.js?v=3" defer></script>
 {script}
 </body>
 </html>
@@ -175,7 +175,7 @@ def home():
     corpo = f'''
 <section class="apertura" aria-labelledby="ap-t">
   <div class="ap-testo">
-    <h1 id="ap-t" class="ap-mast"><img src="/img/logo-anchecasa-1120.png" width="560" height="110" alt="AncheCasa"><em>Magazine</em></h1>
+    <h1 id="ap-t" class="ap-mast"><span>Anche</span><span>Casa</span><em>Magazine</em></h1>
     <p class="ap-num">Numero {N["n"]} · {e(N["data"])} · gratuito</p>
     <p class="ap-lead">La casa spiegata in modo semplice: bonus, bollette, lavori e diritti, con la fonte accanto a ogni numero. Ogni quindici giorni, per chi ci abita.</p>
     <div class="ap-tasti"><a class="tasto" href="{N["sfoglia"]}">Sfoglia il numero {N["n"]}</a><a class="tasto tasto-vuoto" href="#numero">Leggi gli articoli</a></div>
