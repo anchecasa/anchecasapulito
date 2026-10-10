@@ -13,6 +13,23 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 10.10.2026 ~09:35 · Claude — NUOVO sito magazine.anchecasa.it (cartella `magazine-sito/`, NON ancora pubblicato)
+- Sito ufficiale di AncheCasa Magazine, solo per i cittadini, senza imprese né pubblicità; per chi fa i lavori sempre e solo anchecasa.it. anchecasa.it/magazine (rivista sfogliabile, cartella `sito/`) resta com'è e il nuovo sito ci rimanda con «Sfoglia il numero».
+- Pagine: home (testata AncheCasa Magazine, copertina vera del N.1 con il conto alla rovescia dei giorni per il bonus al 50%, «In questo numero», fascia «App gratuite, per sempre», «Da leggere», «Perché esiste questa rivista»), 15 articoli completi del N.1 in `articoli/`, 6 rubriche in `rubriche/`, `app-gratuite` (Check Bollette, SuperMastro, app della raccolta; sezione «Fatte da AncheStudio»), `numeri` (archivio), `chi-siamo` (indipendenza, editore), `404`, `sitemap.xml`, `robots.txt`.
+- Contenuti verificati il 10.10.2026: bonus 50% prima casa / 36% altri fino al 31.12.2026, nel 2027 36% / 30%, dal 2028 30%; +37,3% luce vulnerabili IV trimestre 2026 (ARERA); soglia ISEE bonus sociale 9.796 € (20.000 € con 4 figli). Ogni articolo ha data di controllo e fonti.
+- Generatore: `magazine-sito/genera.py` + `contenuti.py` (vedi `magazine-sito/LEGGIMI.md`); foto leggere create in `img/` da `sorgenti-img/`. Iscrizione: `magazine-sito/api/mag.js` (copia di `sito/api/mag.js`, stessa tabella Supabase). Piede con la curva del marchio identica a mail e report.
+- Pubblicazione: nuovo progetto Vercel con Root Directory `magazine-sito` e dominio magazine.anchecasa.it (DNS: CNAME magazine → cname.vercel-dns.com).
+
+### 10.10.2026 08:51 · Cursor — Sei mail del marchio online: immagini sul sito e script nell'area privata
+- La voce Claude ~08:35 era già nei file: non riscritta.
+- Commit `6db10ab` sul ramo main: «Sei mail del marchio leggere: inviti e iscrizioni dal sito». Push su GitHub. File: `sito/assets/mail/` (logo.png, logo-negativo.png, curva.png, privato.jpg, azienda.jpg, agente.jpg), `mail/` (invito, iscrizione, area-privata-online), `CLAUDE.md`.
+- Il push da solo non avvia Vercel. Pubblicata la cartella `sito` sul progetto `anchecasa-pulito`. Deployment `dpl_HuGJoTTiE1puPt8F3tyF3t2TUT3A`, stato Ready, alias https://anchecasa.it.
+- Le sei immagini si aprono, tutte 200: logo.png (png, 4515 byte, 380×97), logo-negativo.png (png, 3315 byte, 340×87), curva.png (png, 2038 byte, 1200×104, fascia arancio chiaro/arancio/blu), privato.jpg, azienda.jpg e agente.jpg (jpeg, 900×450).
+- Area privata: partiti dai file già online (deployment `dpl_7rRMon1Sz6og8CBF9Vaha5djX7e6`). Sostituito solo `dashboard/js/mail-modelli-nuove.js` con `mail/area-privata-online/dashboard/js/mail-modelli-nuove.js`. Pubblicato sul progetto `area-privata-produzione`. Deployment `dpl_99A6NpH9URcSfvZHwsK6Gm89pqRs`, stato Ready, alias https://areaprivata.anchecasa.it. Login, icona e il resto della dashboard restano quelli già online. Lo script online è 21637 byte e contiene le sei mail.
+- Prova: https://areaprivata.anchecasa.it/dashboard/#/admin/admin-mail rimanda al login. Con gli script ora online e i dati di prova della pagina (invitato da Paola Neri; Marta Riva, Edil Nord Srl, Marco Sala), Privato, Azienda e Agente con «Riceve il link per iscriversi» e con «Si iscrive dal sito» mostrano le mail nuove, con la curva e il logo negativo. Titoli: «La tua casa, con le persone giuste.», «Benvenuto, Marta Riva. Sei dei nostri.», «Nuovi clienti nella sua zona.», «Benvenuti su AncheCasa.», «Costruisci la tua rete con AncheCasa.», «Grazie, Marco Sala: richiesta ricevuta.»
+- Supabase resta da fare: il token della CLI non è valido (`Invalid access token`), da qui non si entra. a) Edge Functions → `invia-invito-marketplace`: incollare `mail/invito/funzione-caricata-invia-invito-marketplace.ts` e Deploy. b) Authentication → Email Templates → Confirm signup: incollare `mail/iscrizione/supabase-conferma-iscrizione.html`, oggetto «Conferma la tua mail · AncheCasa», salva.
+- File annotato: `CLAUDE.md`.
+
 ### 10.10.2026 08:26 · Cursor — Report bollette con la curva del marchio, online su anchecasa.it
 - Le voci Claude ~08:15 e ~08:25 erano già nei file: non riscritte.
 - Commit `6930f96` sul ramo main: «Report bollette nuovo con la curva del marchio identica alle mail». Push su GitHub. File: `sito/js/magazine.js`, `sito/magazine.html`, `sito/assets/logo/footer-curva.png`, `sito/assets/logo/anchecasa-payoff-negativo.png`, `CLAUDE.md`. `mail/area-privata-online` era già nel commit precedente, niente di nuovo da aggiungere.
