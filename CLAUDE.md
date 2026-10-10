@@ -13,6 +13,23 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 10.10.2026 ~08:00 · Claude — «Mail del marchio» dell'area privata: al posto delle mail d'invito vecchie, le tre mail nuove (NON ancora pubblicato)
+- Le tre mail nuove sono quelle già pronte in `mail/invito/` (`ufficiali/invito-agente.html`, `invito-azienda.html`, `invito-privato.html`, generate da `mail-invito.js`). NON sono state modificate: annullata una mia modifica delle ~07:55 (file rimessi identici).
+- La pagina https://areaprivata.anchecasa.it/dashboard/#/admin/admin-mail (e l'anteprima di «Genera link») le disegna con `dashboard/js/mail-modelli.js`, che esiste solo nella versione online (Vercel `area-privata-produzione`).
+- Nuovo `mail/area-privata-online/dashboard/js/mail-modelli-nuove.js`: copia identica di `mail/invito/mail-invito.js` + collegamento: per Privato, Azienda, Agente «Riceve il link» la pagina mostra la mail nuova (oggetto, anteprima, HTML). Le mail «Si iscrive dal sito» restano. Va caricato subito DOPO `js/mail-modelli.js` in `dashboard/index.html` online.
+- Nuova immagine `sito/assets/logo/footer-curva.png`: la curva arancio del piede che `mail-invito.js` carica da https://anchecasa.it/assets/logo/footer-curva.png e che online non esisteva.
+### 10.10.2026 07:49 · Cursor — Area privata: favicon uguale a anchecasa.it
+- https://areaprivata.anchecasa.it usava ancora l’icona vecchia (tetto a triangolo e pallino arancio). Ora è la stessa di anchecasa.it: fondo blu, tetto bianco, quadrato arancio.
+- Pubblicata solo l’icona sul progetto Vercel `area-privata-produzione`, deployment `dpl_7hUi9789so9M5JSiTNN2yMiYkAP1`, alias https://areaprivata.anchecasa.it. Login, dashboard e il resto dell’area privata restano quelli già online.
+- File dell’icona: `/favicon.svg`, `/favicon.ico`, `/favicon-32x32.png`, `/apple-touch-icon.png`. Il file `/favicon.svg` è identico a quello di anchecasa.it (stesso codice). La dashboard continua a caricare profilo, aste e le altre sezioni.
+- Nella cartella `area-privata` le pagine puntano alla stessa icona: `index.html`, `dashboard/index.html`, `iscriviti.html`, `benvenuto.html`, `candidatura-agente.html`, `nuova-password.html`, più i file `favicon.svg`, `favicon.ico`, `favicon-32x32.png`, `apple-touch-icon.png` e le altre misure.
+
+### 09.10.2026 ~19:40 · Claude — Magazine: il link condiviso su WhatsApp ora si apre (NON ancora pubblicato)
+- Causa: dal telefono il pulsante Condividi passava a WhatsApp testo e link separati (navigator.share text+url): WhatsApp li incollava senza spazio ("…gratis.https://…") o perdeva il link, e il messaggio arrivava con un link che non si apre.
+- `sito/js/magazine.js` (v=37): navigator.share manda solo `text` = frase + riga vuota + link; anche il pulsante WhatsApp (wa.me) mette il link su una riga sua (%0A%0A); URL_RIVISTA = https://anchecasa.it/magazine (senza .html, che fa un reindirizzamento).
+- `sito/magazine.html`: og:url e canonical = https://anchecasa.it/magazine (prima .html → redirect, l'anteprima di WhatsApp a volte non esce); aggiunti og:image:width/height/type; magazine.js?v=37.
+- Provato: sul telefono simulato il testo condiviso è "Ti consiglio… gratis.\n\nhttps://anchecasa.it/magazine?da=condiviso". Sito live controllato: /magazine e /magazine?da=whatsapp rispondono 200, copertina 150 KB.
+
 ### 2026-10-09 19:07 · Cursor
 - Le voci Claude ~19:00, ~19:05 e ~19:10 erano già nei file: non riscritte.
 - Commit `be4ad5f` sul ramo main: «SuperMastro: solo video, da PC solo Come funziona, dopo il video sempre la scheda con guida o artigiano». Push su GitHub. File: `sito/supermastro.html`, `sito/css/supermastro.css`.
