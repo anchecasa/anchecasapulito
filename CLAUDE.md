@@ -13,6 +13,23 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 10.10.2026 08:26 · Cursor — Report bollette con la curva del marchio, online su anchecasa.it
+- Le voci Claude ~08:15 e ~08:25 erano già nei file: non riscritte.
+- Commit `6930f96` sul ramo main: «Report bollette nuovo con la curva del marchio identica alle mail». Push su GitHub. File: `sito/js/magazine.js`, `sito/magazine.html`, `sito/assets/logo/footer-curva.png`, `sito/assets/logo/anchecasa-payoff-negativo.png`, `CLAUDE.md`. `mail/area-privata-online` era già nel commit precedente, niente di nuovo da aggiungere.
+- Il push da solo non avvia Vercel. Pubblicata la cartella `sito` sul progetto `anchecasa-pulito`. Deployment `dpl_Akg3xzsLNYwghbKzfER4qfbj5gxp`, stato Ready, alias https://anchecasa.it. Area privata non ripubblicata.
+- https://anchecasa.it/assets/logo/footer-curva.png risponde 200, immagine png, 10687 byte, 1200×104. Fascia arancio chiaro, arancio e blu, quasi piatta a sinistra, sale verso destra.
+- Prova su https://anchecasa.it/magazine, pagine 7–8, `magazine.js?v=38`. Luce, 228,40 €, 420 kWh, 2 mesi: «Paghi il 25% in più del giusto», risparmio circa 276 €. «Scarica il PDF» scarica `AncheCasa-report-bolletta-luce.pdf`, una pagina. In fondo la curva arancio chiaro, arancio e blu come la mail, più alta a destra, e il logo bianco con «Casa» arancio, «AncheCasa · Costruiamo fiducia · anchecasa.it».
+- Rifatto con Gas, stessi numeri (228,40 € e 420 Smc): «La tua bolletta del gas, letta.», file `AncheCasa-report-bolletta-gas.pdf`, una pagina, stessa curva e stesso logo bianco.
+- File annotato: `CLAUDE.md`.
+
+### 10.10.2026 ~08:35 · Claude — Sei mail del marchio con il look approvato, leggere: 3 inviti + 3 iscrizioni dal sito (NON ancora pubblicato)
+- `mail/invito/mail-invito.js` riscritto (fonte unica): `MailInvito.crea(famiglia, {link, invitante, categoria})` per gli inviti e NUOVO `MailInvito.iscrizione(famiglia, {link, nome})` per chi si iscrive dal sito. Stesso look della mail approvata: logo a sinistra e anchecasa.it, filo arancio, foto, etichetta, spunte su cerchio chiaro, pulsante, riquadro blu con 3 passi, curva del marchio, piede blu con logo bianco e «Casa» arancio, dati società corretti «Palumbo Investment S.r.l. · Via Giusti 22, 81057 Teano (CE) · P.IVA 04724830619» (prima c'erano 87057 e 04724810619, sbagliati).
+- Iscrizione dal sito: privato e azienda si iscrivono subito (confermano ed entrano); agente = «Richiesta di collaborazione»: conferma la mail, completa il profilo, AncheCasa lo valuta e approva.
+- Leggere: immagini nuove in `sito/assets/mail/` (privato.jpg 41 KB, azienda.jpg 52 KB, agente.jpg 45 KB 900×450; logo.png 4 KB, logo-negativo.png 3 KB, curva.png 2 KB) invece delle foto da ~300 KB; larghezza/altezza scritte e colore di fondo, la mail compare subito.
+- Copie: blocco MAIL-INVITO in `funzione-caricata-invia-invito-marketplace.ts` (da incollare e distribuire su Supabase); `mail/invito/ufficiali/invito-*.html` rigenerate; NUOVE `mail/iscrizione/iscrizione-agente.html`, `-azienda.html`, `-privato.html`.
+- NUOVO `mail/iscrizione/supabase-conferma-iscrizione.html`: modello per Supabase → Authentication → Email Templates → «Confirm signup». Una sola mail che cambia con `{{ .Data.famiglia }}` (agente / azienda / privato, il dato che mette l'iscrizione nel signUp) e usa `{{ .ConfirmationURL }}`.
+- `mail/area-privata-online/dashboard/js/mail-modelli-nuove.js` aggiornato: la pagina «Mail del marchio» mostra tutte e sei le mail nuove (anche «Si iscrive dal sito»).
+
 ### 10.10.2026 ~08:25 · Claude — Curva del marchio identica alla mail approvata, nel report bollette e in footer-curva.png (NON ancora pubblicato)
 - REGOLA DI MARCHIO (Nando): la fascia curva in fondo alla mail d'invito approvata (arancio chiaro, arancio, blu: quasi piatta a sinistra, sale verso destra) si ripete sempre uguale su tutti i documenti AncheCasa.
 - Misurata pixel per pixel sulla mail approvata (larghezza 600): bordi y = ((a·t+b)·t+c)·t+d, t da 0 (sinistra) a 1 (destra). Arancio chiaro [3.1335, -42.8382, 10.2674, 33.5524]; arancio [-1.3827, -26.5596, 1.7325, 40.8033]; blu [0.6414, -21.6553, 2.0786, 47.9497]. Colori: #F49B50, #E56B10, #16304D. Usare questi numeri per ogni nuovo documento.
