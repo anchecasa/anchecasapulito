@@ -47,7 +47,7 @@ function qVero() {
 /* MOTORE PROVA                                                              */
 /* ======================================================================== */
 function qProva() {
-  const CHIAVE = "anchecasa-app-prova2-v3";
+  const CHIAVE = "anchecasa-app-prova2-v6";
   const adesso = () => new Date().toISOString();
   const giorni = (n) => new Date(Date.now() + n * 864e5).toISOString().slice(0, 10);
   const fa = (ore) => new Date(Date.now() - ore * 3600e3).toISOString();
@@ -59,6 +59,7 @@ function qProva() {
     const T = (n, righe) => { t[n] = righe; };
     T("app_impostazioni", [
       { chiave: "prezzi_moduli", valore: { base_impresa: 49, base_fornitore: 99, base_partner: 49, base_artigiano: 14.9, ufficio: 0, sicurezza: 9, sicantiere: 19, cantieri: 29, gare: 29, lotti: 9, centralino: 19, magazzino: 9, pacchetto: 69 } },
+      { chiave: "cantieri", valore: { rete: 40, tranche: [30, 30, 40], segnala: 10, chiude: 25, segue: 30, impresa: 10, sviluppo: 12, capoarea: 8, reteitalia: 5 } },
       { chiave: "provvigioni", valore: { percentuale_vendita: 20, chi_porta: 70, sviluppo: 17, capoarea: 8, reteitalia: 5, subagente: 70, agente: 30, nota: "Quote della rete del 09.10.2026: 70 chi porta il cliente, 17 sviluppo rete, 8 capo area, 5 Rete Italia. La quota sul venduto (20%) è di esempio." } },
       { chiave: "rivendita", valore: { percentuale: 30 } },
       { chiave: "segnalazioni", valore: { premio: "" } },
@@ -141,9 +142,11 @@ function qProva() {
       { utente: "u-ag-camp", ruolo: "agente", superiore: "u-reteitalia", nome: "Rosa N. (esempio)", area: "Sud e isole", regione: "Campania", codice: "AGR008", stato: "attivo", accordo_firmato: fa(200), creato: fa(200) },
     ]);
     T("app_vendite", [
-      { id: "ve-1", venditore: "u-subagente", cliente_nome: "Bar Centrale (esempio)", cliente_contatto: "", cliente_regione: "Lazio", cosa: "corso", dettaglio: "HACCP per 3 persone", importo: 87, tipo_importo: "una_tantum", stato: "attiva", creato: fa(100), attivata: fa(90) },
+      { id: "ve-1", venditore: "u-subagente", cliente_nome: "Bar Centrale (esempio)", cliente_contatto: "", cliente_regione: "Lazio", cliente_tipo: "azienda", cosa: "corso", dettaglio: "HACCP per 3 persone", importo: 87, tipo_importo: "una_tantum", stato: "attiva", creato: fa(100), attivata: fa(90) },
       { id: "ve-3", venditore: "u-ag-mi", cliente_nome: "Impresa Brianza (esempio)", cliente_contatto: "", cliente_regione: "Lombardia", cosa: "pacchetto", dettaglio: "Impresa completa", importo: 69, tipo_importo: "mese", stato: "attiva", creato: fa(60), attivata: fa(55) },
       { id: "ve-4", venditore: "u-ag-camp", cliente_nome: "Edil Napoli (esempio)", cliente_contatto: "", cliente_regione: "Campania", cosa: "modulo", dettaglio: "Sicurezza Cantiere", importo: 19, tipo_importo: "mese", stato: "proposta", creato: fa(8), attivata: null },
+      { id: "ve-5", venditore: "u-agente", cliente_nome: "Studio Tecnico Riva (esempio)", cliente_contatto: "", cliente_regione: "Lazio", cliente_tipo: "azienda", cosa: "modulo", dettaglio: "Cantiere e SAL", importo: 29, tipo_importo: "mese", stato: "attiva", creato: fa(30), attivata: fa(1) },
+      { id: "ve-6", venditore: "u-agente", cliente_nome: "Studio Verdi (esempio, dal sito)", cliente_contatto: "000 000 0901", cliente_regione: "Lazio", cliente_tipo: "azienda", cliente_piva: "", affidato: true, cosa: "modulo", dettaglio: "Abbonamento Impresa", importo: 49, tipo_importo: "mese", stato: "proposta", creato: fa(60), attivata: null },
       { id: "ve-2", venditore: "u-agente", cliente_nome: "Hotel Sole (esempio)", cliente_contatto: "000 000 0501", cliente_regione: "Lazio", cosa: "modulo", dettaglio: "Sicurezza", importo: 9, tipo_importo: "mese", stato: "proposta", creato: fa(10), attivata: null },
     ]);
     T("app_provvigioni", [
@@ -156,6 +159,47 @@ function qProva() {
       { id: "pv-7", vendita: "ve-3", beneficiario: "u-ca-lomb", ruolo: "capoarea", importo: 1.1, mese: giorni(-5).slice(0, 8) + "01", stato: "maturata", creato: fa(90) },
       { id: "pv-8", vendita: "ve-3", beneficiario: "u-sv-nord", ruolo: "sviluppo", importo: 2.35, mese: giorni(-5).slice(0, 8) + "01", stato: "maturata", creato: fa(90) },
       { id: "pv-9", vendita: "ve-3", beneficiario: "u-reteitalia", ruolo: "reteitalia", importo: 0.69, mese: giorni(-5).slice(0, 8) + "01", stato: "maturata", creato: fa(90) },
+      ...[["u-agente", "segnala", 180], ["u-capoarea", "chiude", 450], ["u-agente", "segue", 540], ["u-capoarea", "capoarea", 144], ["u-sviluppo", "sviluppo", 216], ["u-reteitalia", "reteitalia", 90]].map(([b, r, i], k) => ({ id: "pv-a" + k, vendita: null, affare: "af-1", tranche: 1, beneficiario: b, ruolo: r, importo: i, mese: giorni(-5).slice(0, 8) + "01", stato: "maturata", creato: fa(28) })),
+    ]);
+    const mese1 = adesso().slice(0, 8) + "01";
+    T("app_affari", [
+      { id: "af-1", segnalato_da: "u-agente", cliente_nome: "Famiglia Verdi (esempio)", cliente_tipo: "privato", cliente_contatto: "000 000 0801", cliente_regione: "Lazio", descrizione: "Ristrutturazione appartamento 90 mq (esempio)", valore: 60000, chiude: "u-capoarea", segue: "u-agente", impresa_da: null, cantiere: null, stato: "firmato", creato: fa(400), firmato: fa(30), chiuso: null },
+      { id: "af-2", segnalato_da: "u-subagente", cliente_nome: "Condominio Aurora (esempio)", cliente_tipo: "condominio", cliente_contatto: "", cliente_regione: "Lazio", descrizione: "Rifacimento facciata e tetto (esempio)", valore: 120000, chiude: null, segue: null, impresa_da: null, cantiere: null, stato: "proposta", creato: fa(50), firmato: null, chiuso: null },
+    ]);
+    T("app_affari_margine", [{ affare: "af-1", margine: 15000, aggiornato: fa(30) }]);
+    T("app_affari_tranche", [
+      { affare: "af-1", n: 1, nome: "Firma e acconto", quota: 30, incassato: 18000, incassato_il: fa(28), stato: "incassata" },
+      { affare: "af-1", n: 2, nome: "Metà lavori", quota: 30, incassato: 0, incassato_il: null, stato: "attesa" },
+      { affare: "af-1", n: 3, nome: "Collaudo", quota: 40, incassato: 0, incassato_il: null, stato: "attesa" },
+    ]);
+    T("app_obiettivi", [
+      { id: "ob-1", utente: null, mese: mese1, aziende: 40, canoni: 2000, lavori: 6, valore: 400000, nota: "Obiettivi di ESEMPIO", fissato_da: "u-admin", aggiornato: fa(200) },
+      { id: "ob-2", utente: "u-sviluppo", mese: mese1, aziende: 15, canoni: 800, lavori: 3, valore: 200000, nota: "", fissato_da: "u-reteitalia", aggiornato: fa(200) },
+      { id: "ob-3", utente: "u-capoarea", mese: mese1, aziende: 8, canoni: 300, lavori: 2, valore: 120000, nota: "", fissato_da: "u-reteitalia", aggiornato: fa(200) },
+      { id: "ob-4", utente: "u-agente", mese: mese1, aziende: 4, canoni: 150, lavori: 1, valore: 50000, nota: "Esempio: 1 azienda a settimana", fissato_da: "u-reteitalia", aggiornato: fa(200) },
+      { id: "ob-5", utente: "u-subagente", mese: mese1, aziende: 2, canoni: 60, lavori: 1, valore: 30000, nota: "", fissato_da: "u-reteitalia", aggiornato: fa(200) },
+    ]);
+    T("app_strategie", [
+      { id: "st-1", aperta_da: "u-capoarea", titolo: "Puntare sugli impiantisti del Lazio (esempio)", testo: "Esempio. Nel Lazio arrivano molte richieste di impianti e abbiamo pochi impiantisti iscritti. Propongo un mese dedicato: ogni agente porta 2 impiantisti.", tema: "zone", linea: "Novembre: ogni agente del Lazio porta 2 impiantisti. Il capo area fa il punto ogni lunedì.", voto_admin: null, voto_reteitalia: "si", serve_reteitalia: true,
+        commenti: [{ utente: "u-sviluppo", nome: "Responsabile Centro (esempio)", ruolo: "sviluppo", testo: "D'accordo. Partiamo da Roma e Latina, dove abbiamo più richieste.", quando: fa(30) }, { utente: "u-reteitalia", nome: "Giulia R. (esempio)", ruolo: "reteitalia", voto: "si", testo: "Sì, con il punto del lunedì.", linea: "Novembre: ogni agente del Lazio porta 2 impiantisti. Il capo area fa il punto ogni lunedì.", quando: fa(20) }],
+        stato: "aperta", creato: fa(50), aggiornato: fa(20), deciso: null },
+      { id: "st-2", aperta_da: "u-sv-nord", titolo: "Mese della sicurezza (esempio)", testo: "Esempio.", tema: "prodotti", linea: "Esempio: a ottobre ogni cliente con il modulo Sicurezza riceve un corso preposto in omaggio. Lo propone ogni agente nelle prime visite.", voto_admin: "si", voto_reteitalia: "si", serve_reteitalia: true, commenti: [], stato: "decisa", creato: fa(300), aggiornato: fa(240), deciso: fa(240) },
+    ]);
+    const DOC = (id, tipo, titolo, testo, file, ruoli) => ({ id, tipo, titolo, testo, file, ruoli, richiede_firma: true, versione: "10.10.2026", attivo: true, creato_da: "u-admin", pubblicato: fa(2) });
+    T("app_documenti", [
+      DOC("doc-1", "circolare", "Circolare n. 1/2026 · Nuove regole della rete", "Dal 10 ottobre 2026: chi porta tiene, il cliente è di chi lo registra per primo, clienti fuori zona, iscrizioni dal sito, clienti di AncheCasa affidati, privati, territorio. Firmandola accetti le nuove regole (Allegato C).", "docs/AncheCasa-Circolare-1-2026-Nuove-regole.pdf", []),
+      DOC("doc-2", "regolamento", "Regolamento della rete AncheCasa", "Le figure, come si guadagna e le regole uguali per tutti.", "docs/AncheCasa-Regolamento-della-rete.pdf", []),
+      DOC("doc-3", "contratto", "Contratto Responsabile Rete Italia", "Il tuo contratto, con gli Allegati A, B e C.", "docs/AncheCasa-5Contratto-Responsabile-Rete-Italia.pdf", ["reteitalia"]),
+      DOC("doc-4", "contratto", "Contratto Responsabile sviluppo rete", "Il tuo contratto, con gli Allegati A, B e C.", "docs/AncheCasa-1Contratto-Assistente-Sviluppo-Rete.pdf", ["sviluppo"]),
+      DOC("doc-5", "contratto", "Contratto Capo area", "Il tuo contratto, con gli Allegati A, B e C.", "docs/AncheCasa-2Contratto-Capo-Area.pdf", ["capoarea"]),
+      DOC("doc-6", "contratto", "Contratto Agente", "Il tuo contratto, con gli Allegati A, B e C.", "docs/AncheCasa-3Contratto-Agente.pdf", ["agente"]),
+      DOC("doc-7", "contratto", "Contratto Sub-agente", "Il tuo contratto, con gli Allegati A, B e C.", "docs/AncheCasa-4Contratto-Subagente.pdf", ["subagente"]),
+    ]);
+    const FIRMA_ES = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAAAyCAYAAAAZUZThAAAAeklEQVR4nO3BMQEAAADCoPVPbQhfoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOAMGqcAAWvJ+0wAAAAASUVORK5CYII=";
+    T("app_firme", [{ id: "fi-1", documento: "doc-5", utente: "u-capoarea", nome: "Luca C. (esempio)", firma: FIRMA_ES, impronta: "esempio", dispositivo: "esempio", firmato: fa(1) }]);
+    T("app_proposte_rete", [
+      { id: "pr-1", proposto_da: "u-capoarea", ruolo: "agente", nome: "Stefano B. (esempio)", email: "stefano@esempio.it", telefono: "", regione: "Lazio", area: "Centro", superiore: "u-capoarea", note: "Ex agente immobiliare, conosce le imprese di Latina.", voto_admin: null, voto_reteitalia: "si", voto_sviluppo: null, serve_reteitalia: true, serve_sviluppo: true, commenti: [{ chi: "reteitalia", voto: "si", nota: "Profilo buono.", quando: fa(2) }], stato: "proposta", invito: null, creato: fa(3), deciso: null },
+      { id: "pr-2", proposto_da: "u-agente", ruolo: "subagente", nome: "Chiara P. (esempio)", email: "chiara@esempio.it", telefono: "", regione: "Lazio", area: "Centro", superiore: "u-agente", note: "", voto_admin: "no", voto_reteitalia: null, voto_sviluppo: null, serve_reteitalia: true, serve_sviluppo: true, commenti: [{ chi: "admin", voto: "no", nota: "Manca la partita IVA.", quando: fa(20) }], stato: "respinta", invito: null, creato: fa(25), deciso: fa(20) },
     ]);
     T("app_ordini", [{ id: "or-1", utente: "u-impresa", org: "o-imp", voce: "Preposto (12 ore) · Aula", quantita: 1, prezzo: 159, codice_venditore: "", note: "Per Marco R.", stato: "richiesto", creato: fa(30) }]);
     T("app_rivendite", [{ id: "rv-1", org: "o-imp", cliente_nome: "Hotel Sole (esempio)", cliente_contatto: "", servizio: "DVR", importo: 199, percentuale: 30, stato: "richiesta", creato: fa(50) }]);
@@ -203,6 +247,13 @@ function qProva() {
   const notifica = (utente, testo, link) => tab("app_notifiche").unshift({ id: id("n"), utente, testo, link, letto: false, creato: adesso() });
   const gestori = (org) => tab("app_org_membri").filter((m) => m.org === org && ["titolare", "responsabile"].includes(m.ruolo)).map((m) => m.utente);
   const provvigioni = (v) => {
+    if (v.cliente_tipo === "privato") return; // 10.10.2026: sui privati niente provvigioni, solo sui lavori
+    if (v.affidato) { // cliente di AncheCasa affidato: metà della quota di chi porta, e basta (Allegato C.5)
+      const p0 = (tab("app_impostazioni").find((x) => x.chiave === "provvigioni") || {}).valore || {};
+      const m0 = Math.round(v.importo * (p0.percentuale_vendita || 0)) / 100;
+      if (m0 > 0) tab("app_provvigioni").push({ id: id("pv"), vendita: v.id, beneficiario: v.venditore, ruolo: "affidato", importo: Math.round(m0 * (p0.chi_porta ?? 70) / 2) / 100, mese: adesso().slice(0, 8) + "01", stato: "maturata", creato: adesso() });
+      notifica(v.venditore, "Vendita confermata: " + v.cliente_nome, "rete-vendite"); return;
+    }
     const p = (tab("app_impostazioni").find((x) => x.chiave === "provvigioni") || {}).valore || {};
     const monte = Math.round(v.importo * (p.percentuale_vendita || 0)) / 100;
     if (monte <= 0) return;
@@ -219,7 +270,34 @@ function qProva() {
     if (!pagati.includes("reteitalia")) { const ri = tab("app_rete").find((x) => x.ruolo === "reteitalia" && x.stato === "attivo"); const q = monte * (p.reteitalia || 0) / 100; if (ri && q > 0) add(ri.utente, "reteitalia", q); }
     notifica(v.venditore, "Vendita confermata: " + v.cliente_nome, "rete-vendite");
   };
+  const esitoProposta = (p) => {
+    if (p.stato !== "proposta") return p.stato;
+    if ([p.voto_admin, p.voto_reteitalia, p.voto_sviluppo].includes("no")) { p.stato = "respinta"; p.deciso = adesso(); notifica(p.proposto_da, "Proposta non accolta: " + p.nome, "rete-proposte"); return "respinta"; }
+    if (p.voto_admin === "si" && (!p.serve_reteitalia || p.voto_reteitalia === "si") && (!p.serve_sviluppo || p.voto_sviluppo === "si")) {
+      const inv = { id: id("in"), token: Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2), cosa: "rete", target: null, ruolo: p.ruolo, email: p.email, nome: p.nome, stato: "inviato", creato_da: p.proposto_da, creato: adesso() };
+      tab("app_inviti").unshift(inv); p.stato = "approvata"; p.deciso = adesso(); p.invito = inv.id;
+      notifica(p.proposto_da, "Approvata: " + p.nome + ". Manda il link d'invito.", "rete-proposte"); return "approvata";
+    }
+    return "proposta";
+  };
+  const cifre = (x) => String(x || "").replace(/\D/g, "");
+  const normC = (x) => { x = String(x || ""); return x.includes("@") ? x.trim().toLowerCase() : cifre(x).length >= 6 ? cifre(x).slice(-10) : ""; };
+  const clienteDiAltri = (u, tipo, piva, cont) => {
+    const pv = cifre(piva), c = normC(cont), d90 = Date.now() - 90 * 864e5, d12 = Date.now() - 365 * 864e5;
+    const righe = [...tab("app_vendite").map((v) => ({ chi: v.venditore, piva: v.cliente_piva, cont: v.cliente_contatto, creato: v.creato, ok: v.stato === "attiva" || (v.stato === "proposta" && new Date(v.creato) > d90), vivo: v.stato !== "persa" })),
+      ...tab("app_affari").map((a) => ({ chi: a.segnalato_da, piva: a.cliente_piva, cont: a.cliente_contatto, creato: a.creato, ok: ["firmato", "chiuso"].includes(a.stato) || (a.stato === "proposta" && new Date(a.creato) > d90), vivo: a.stato !== "perso" }))];
+    if (pv.length >= 11) { const x = righe.filter((r) => cifre(r.piva) === pv && r.chi !== u && r.ok).sort((a, b) => (a.creato > b.creato ? 1 : -1))[0]; return x ? x.chi : null; }
+    if (["privato", "condominio"].includes(tipo) && c) { const x = righe.filter((r) => normC(r.cont) === c && r.vivo && new Date(r.creato) > d12).sort((a, b) => (a.creato < b.creato ? 1 : -1))[0]; return x && x.chi !== u ? x.chi : null; }
+    return null;
+  };
   const DOPO_INS = {
+    app_vendite(r) {
+      if (r.affidato && !isAdmin()) throw new Error("solo_admin_affida");
+      if (!isAdmin() && clienteDiAltri(r.venditore, r.cliente_tipo, r.cliente_piva, r.cliente_contatto)) throw new Error("cliente_di_un_collega");
+      if (r.affidato) notifica(r.venditore, "Ti è stato affidato un cliente di AncheCasa: chiama " + r.cliente_nome + " entro 48 ore", "re-vendita/" + r.id);
+    },
+    app_affari(r) { if (!isAdmin() && clienteDiAltri(r.segnalato_da, r.cliente_tipo, r.cliente_piva, r.cliente_contatto)) throw new Error("cliente_di_un_collega"); },
+    app_documenti(r) { if (r.attivo) tab("app_rete").filter((x) => x.stato === "attivo" && (!(r.ruoli || []).length || r.ruoli.includes(x.ruolo))).forEach((x) => notifica(x.utente, (r.richiede_firma ? "Da firmare: " : "Nuovo documento: ") + r.titolo, "documento/" + r.id)); },
     app_org(r) { tab("app_org_membri").push({ org: r.id, utente: r.titolare, ruolo: "titolare", nome: "", creato: adesso() }); },
     app_record(r) {
       r.modulo = moduloDi(r.tipo);
@@ -235,14 +313,19 @@ function qProva() {
     app_record(r, prima) {
       if (r.tipo === "sal" && r.stato === "inviato" && prima.stato !== "inviato") tab("app_accessi").filter((a) => a.record === r.rif && a.ruolo === "cliente").forEach((a) => notifica(a.utente, "SAL da approvare: " + r.titolo, "scheda/" + r.id));
     },
-    app_vendite(r, prima) { if (r.stato === "attiva" && prima.stato !== "attiva") { r.attivata = adesso(); provvigioni(r); } },
+    app_vendite(r, prima) {
+      if (r.stato === "attiva" && prima.stato !== "attiva") { r.attivata = adesso(); provvigioni(r); }
+      if (r.affidato && r.venditore !== prima.venditore) notifica(r.venditore, "Ti è stato affidato un cliente di AncheCasa: chiama " + r.cliente_nome + " entro 48 ore", "re-vendita/" + r.id);
+    },
     app_moduli(r, prima) { if (r.stato === "attivo" && prima.stato !== "attivo") gestori(r.org).forEach((u) => notifica(u, "Modulo attivo: " + r.modulo, "moduli")); },
   };
   const PREDEF = {
     app_record: () => ({ id: id("r"), titolo: "", stato: "", data: null, scadenza: null, importo: null, rif: null, dati: {}, pubblico: false, creato_da: io(), creato: adesso(), aggiornato: adesso() }),
     app_org: () => ({ id: id("o"), piva: "", citta: "", regione: "", telefono: "", email: "", descrizione: "", titolare: io(), stato: "attiva", tipo: "impresa", creato: adesso() }),
     app_inviti: () => ({ id: id("i"), token: id("t") + id("t"), stato: "inviato", creato_da: io(), creato: adesso(), nome: "" }),
-    app_vendite: () => ({ id: id("ve"), venditore: io(), cliente_contatto: "", cliente_regione: "", dettaglio: "", tipo_importo: "mese", stato: "proposta", creato: adesso(), attivata: null }),
+    app_affari: () => ({ id: id("af"), segnalato_da: io(), cliente_tipo: "privato", cliente_piva: "", cliente_contatto: "", cliente_regione: "", descrizione: "", valore: 0, chiude: null, segue: null, impresa_da: null, cantiere: null, stato: "proposta", creato: adesso(), firmato: null, chiuso: null }),
+    app_documenti: () => ({ id: id("doc"), tipo: "circolare", testo: "", file: "", ruoli: [], richiede_firma: true, versione: "", attivo: true, creato_da: io(), pubblicato: adesso() }),
+    app_vendite: () => ({ id: id("ve"), venditore: io(), cliente_tipo: "azienda", cliente_piva: "", affidato: false, cliente_contatto: "", cliente_regione: "", dettaglio: "", tipo_importo: "mese", stato: "proposta", creato: adesso(), attivata: null }),
     app_ordini: () => ({ id: id("or"), utente: io(), org: null, quantita: 1, codice_venditore: "", note: "", stato: "richiesto", creato: adesso() }),
     app_rivendite: () => ({ id: id("rv"), cliente_contatto: "", percentuale: 30, stato: "richiesta", creato: adesso() }),
     app_offerte: () => ({ id: id("of"), tempi: "", note: "", stato: "inviata", creato: adesso() }),
@@ -253,6 +336,7 @@ function qProva() {
   };
   const membro = (org, u) => tab("app_org_membri").find((m) => m.org === org && m.utente === (u || io()));
   const isAdmin = () => !!((DB.datiProva().utenti.admin || {}).id === io());
+  const dirigenteProva = () => isAdmin() || tab("app_rete").some((r) => r.utente === io() && r.stato === "attivo" && ["reteitalia", "sviluppo", "capoarea"].includes(r.ruolo));
 
   const RPC = {
     app_miei_profili() {
@@ -299,7 +383,7 @@ function qProva() {
       if (!i || i.stato !== "inviato") throw new Error("invito_non_valido");
       if (i.cosa === "org") { const m = membro(i.target); if (m) { if (m.ruolo !== "titolare") m.ruolo = i.ruolo; } else tab("app_org_membri").push({ org: i.target, utente: io(), ruolo: i.ruolo, nome: i.nome, creato: adesso() }); }
       else if (i.cosa === "cantiere") { if (!tab("app_accessi").some((a) => a.record === i.target && a.utente === io())) tab("app_accessi").push({ record: i.target, utente: io(), ruolo: i.ruolo, creato: adesso() }); }
-      else { const s = tab("app_rete").find((r) => r.utente === i.creato_da) || {}; const vecchio = tab("app_rete").find((r) => r.utente === io()); const riga = { utente: io(), ruolo: i.ruolo, superiore: s.utente || null, nome: i.nome, area: s.area || "", regione: s.regione || "", codice: Math.random().toString(36).slice(2, 8).toUpperCase(), stato: "attivo", accordo_firmato: null, creato: adesso() }; if (vecchio) Object.assign(vecchio, riga, { codice: vecchio.codice }); else tab("app_rete").push(riga); }
+      else { const pr = tab("app_proposte_rete").find((x) => x.invito === i.id); const s = pr ? { utente: pr.superiore, area: pr.area, regione: pr.regione } : (tab("app_rete").find((r) => r.utente === i.creato_da) || {}); const vecchio = tab("app_rete").find((r) => r.utente === io()); const riga = { utente: io(), ruolo: i.ruolo, superiore: s.utente || null, nome: i.nome, area: s.area || "", regione: s.regione || "", codice: Math.random().toString(36).slice(2, 8).toUpperCase(), stato: "attivo", accordo_firmato: null, creato: adesso() }; if (vecchio) Object.assign(vecchio, riga, { codice: vecchio.codice }); else tab("app_rete").push(riga); }
       i.stato = "accettato";
       return { cosa: i.cosa, ruolo: i.ruolo, target: i.target };
     },
@@ -334,6 +418,118 @@ function qProva() {
       const ok = !!sc && sc >= adesso().slice(0, 10);
       tab("app_record").unshift(Object.assign(PREDEF.app_record(), { org: c.org, modulo: "sicantiere", tipo: "ingresso", rif: c.id, titolo: d.titolo, data: adesso().slice(0, 10), stato: ok ? "in regola" : "non in regola", dati: { codice: String(p_codice).toUpperCase() } }));
       return { nome: d.titolo, in_regola: ok, scadenza: sc };
+    },
+    app_proponi_rete({ p_ruolo, p_nome, p_email, p_telefono, p_regione, p_note }) {
+      const me = tab("app_rete").find((r) => r.utente === io() && r.stato === "attivo");
+      if (!isAdmin() && !me) throw new Error("non_autorizzato");
+      if (tab("app_proposte_rete").some((x) => x.email === String(p_email).toLowerCase() && x.stato === "proposta")) throw new Error("gia_proposto");
+      const AR = { Nord: ["Piemonte", "Valle d'Aosta", "Lombardia", "Trentino-Alto Adige", "Veneto", "Friuli-Venezia Giulia", "Liguria", "Emilia-Romagna"], Centro: ["Toscana", "Umbria", "Marche", "Lazio"], "Sud e isole": ["Abruzzo", "Molise", "Campania", "Puglia", "Basilicata", "Calabria", "Sicilia", "Sardegna"] };
+      const area = Object.keys(AR).find((a) => AR[a].includes(p_regione)) || (me && me.area) || "";
+      const liv = ["reteitalia", "sviluppo", "capoarea", "agente", "subagente"];
+      const ri = tab("app_rete").find((r) => r.ruolo === "reteitalia" && r.stato === "attivo");
+      const sv = tab("app_rete").find((r) => r.ruolo === "sviluppo" && r.stato === "attivo" && r.area === area && area);
+      const p = { id: id("pr"), proposto_da: io(), ruolo: p_ruolo, nome: p_nome, email: String(p_email).toLowerCase(), telefono: p_telefono || "", regione: p_regione || "", area, superiore: me && liv.indexOf(me.ruolo) === liv.indexOf(p_ruolo) - 1 ? io() : null, note: p_note || "",
+        serve_reteitalia: !!ri, serve_sviluppo: !!sv && p_ruolo !== "sviluppo", voto_admin: isAdmin() ? "si" : null, voto_reteitalia: me && me.ruolo === "reteitalia" ? "si" : null, voto_sviluppo: me && me.ruolo === "sviluppo" && p_ruolo !== "sviluppo" ? "si" : null, commenti: [], stato: "proposta", invito: null, creato: adesso(), deciso: null };
+      tab("app_proposte_rete").unshift(p);
+      tab("app_notifiche"); if (ri && ri.utente !== io()) notifica(ri.utente, "Proposta da decidere: " + p_nome, "rete-proposte");
+      esitoProposta(p); return p.id;
+    },
+    app_vota_proposta({ p_id, p_si, p_nota }) {
+      const p = tab("app_proposte_rete").find((x) => x.id === p_id);
+      if (!p || p.stato !== "proposta") throw new Error("proposta_chiusa");
+      const me = tab("app_rete").find((r) => r.utente === io() && r.stato === "attivo") || {};
+      const chi = isAdmin() ? "admin" : me.ruolo === "reteitalia" ? "reteitalia" : me.ruolo === "sviluppo" && me.area === p.area && p.serve_sviluppo ? "sviluppo" : null;
+      if (!chi) throw new Error("non_autorizzato");
+      p["voto_" + chi] = p_si ? "si" : "no";
+      p.commenti = (p.commenti || []).concat([{ chi, voto: p_si ? "si" : "no", nota: p_nota || "", quando: adesso() }]);
+      return esitoProposta(p);
+    },
+    app_strategia_apri({ p_titolo, p_testo, p_tema }) {
+      if (!dirigenteProva()) throw new Error("non_autorizzato");
+      const s = { id: id("st"), aperta_da: io(), titolo: String(p_titolo).trim(), testo: String(p_testo || "").trim(), tema: p_tema || "altro", linea: "", voto_admin: null, voto_reteitalia: null, serve_reteitalia: tab("app_rete").some((r) => r.ruolo === "reteitalia" && r.stato === "attivo"), commenti: [], stato: "aperta", creato: adesso(), aggiornato: adesso(), deciso: null };
+      tab("app_strategie").unshift(s);
+      notifica("u-admin", "Sala strategia: " + s.titolo, "strategia/" + s.id);
+      tab("app_rete").filter((r) => r.stato === "attivo" && ["reteitalia", "sviluppo", "capoarea"].includes(r.ruolo) && r.utente !== io()).forEach((r) => notifica(r.utente, "Sala strategia: " + s.titolo, "strategia/" + s.id));
+      return s.id;
+    },
+    app_strategia_commenta({ p_id, p_testo }) {
+      if (!dirigenteProva()) throw new Error("non_autorizzato");
+      const s = tab("app_strategie").find((x) => x.id === p_id);
+      if (!s || s.stato !== "aperta") throw new Error("argomento_chiuso");
+      const me = tab("app_rete").find((r) => r.utente === io()) || {};
+      s.commenti = (s.commenti || []).concat([{ utente: io(), nome: me.nome || (isAdmin() ? "Admin" : ""), ruolo: me.ruolo || (isAdmin() ? "admin" : ""), testo: String(p_testo).trim(), quando: adesso() }]); s.aggiornato = adesso();
+      if (s.aperta_da !== io()) notifica(s.aperta_da, "Nuovo commento: " + s.titolo, "strategia/" + s.id);
+    },
+    app_strategia_decidi({ p_id, p_si, p_linea, p_nota }) {
+      const me = tab("app_rete").find((r) => r.utente === io() && r.stato === "attivo") || {};
+      const chi = isAdmin() ? "admin" : me.ruolo === "reteitalia" ? "reteitalia" : null;
+      if (!chi) throw new Error("non_autorizzato");
+      const s = tab("app_strategie").find((x) => x.id === p_id);
+      if (!s || s.stato !== "aperta") throw new Error("argomento_chiuso");
+      const linea = String(p_linea || "").trim();
+      s.commenti = (s.commenti || []).concat([{ utente: io(), nome: me.nome || "Admin", ruolo: chi, voto: p_si ? "si" : "no", testo: String(p_nota || "").trim(), linea, quando: adesso() }]); s.aggiornato = adesso();
+      if (!p_si) { s["voto_" + chi] = "no"; s.stato = "scartata"; s.deciso = adesso(); notifica(s.aperta_da, "Sala strategia, non passa: " + s.titolo, "strategia/" + s.id); return "scartata"; }
+      if (linea && linea !== s.linea) { s.linea = linea; s[chi === "admin" ? "voto_reteitalia" : "voto_admin"] = null; }
+      s["voto_" + chi] = "si"; if (!s.linea) s.linea = s.titolo;
+      if (s.voto_admin === "si" && (!s.serve_reteitalia || s.voto_reteitalia === "si")) { s.stato = "decisa"; s.deciso = adesso(); tab("app_rete").filter((r) => r.stato === "attivo").forEach((r) => notifica(r.utente, "Nuova linea decisa: " + s.titolo, "linee")); return "decisa"; }
+      return "in_attesa";
+    },
+    app_linee_decise() { return tab("app_strategie").filter((s) => s.stato === "decisa").sort((a, b) => (a.deciso < b.deciso ? 1 : -1)).map((s) => ({ id: s.id, titolo: s.titolo, linea: s.linea, tema: s.tema, deciso: s.deciso })); },
+    app_affare_firma({ p_affare, p_valore, p_margine, p_chiude, p_segue, p_impresa_da }) {
+      if (!isAdmin()) throw new Error("non_autorizzato");
+      const a = tab("app_affari").find((x) => x.id === p_affare);
+      if (!a || !["proposta", "firmato"].includes(a.stato)) throw new Error("lavoro_non_modificabile");
+      const prima = a.stato;
+      Object.assign(a, { valore: Number(p_valore) || 0, chiude: p_chiude, segue: p_segue, impresa_da: p_impresa_da, stato: "firmato", firmato: a.firmato || adesso() });
+      const m = tab("app_affari_margine").find((x) => x.affare === p_affare); if (m) { m.margine = Number(p_margine); m.aggiornato = adesso(); } else tab("app_affari_margine").push({ affare: p_affare, margine: Number(p_margine), aggiornato: adesso() });
+      const q = ((tab("app_impostazioni").find((x) => x.chiave === "cantieri") || {}).valore || {}).tranche || [30, 30, 40];
+      ["Firma e acconto", "Metà lavori", "Collaudo"].forEach((nome, k) => { if (!tab("app_affari_tranche").some((t) => t.affare === p_affare && t.n === k + 1)) tab("app_affari_tranche").push({ affare: p_affare, n: k + 1, nome, quota: q[k], incassato: 0, incassato_il: null, stato: "attesa" }); });
+      if (prima === "proposta") notifica(a.segnalato_da, "Lavoro firmato: " + a.cliente_nome, "re-lavoro/" + a.id);
+    },
+    app_tranche_incassata({ p_affare, p_n, p_incasso }) {
+      if (!isAdmin()) throw new Error("non_autorizzato");
+      const a = tab("app_affari").find((x) => x.id === p_affare);
+      if (!a || a.stato !== "firmato") throw new Error("lavoro_non_firmato");
+      const t = tab("app_affari_tranche").find((x) => x.affare === p_affare && x.n === Number(p_n));
+      if (!t || t.stato !== "attesa") throw new Error("tranche_gia_incassata");
+      const p = (tab("app_impostazioni").find((x) => x.chiave === "cantieri") || {}).valore || {};
+      const marg = (tab("app_affari_margine").find((x) => x.affare === p_affare) || {}).margine || 0;
+      const atteso = a.valore * t.quota / 100;
+      const fr = atteso > 0 ? Math.min(1, Number(p_incasso) / atteso) : 1;
+      const monte = Math.round(marg * (p.rete ?? 40) / 100 * t.quota / 100 * fr * 100) / 100;
+      Object.assign(t, { incassato: Number(p_incasso), incassato_il: adesso(), stato: "incassata" });
+      if (t.n === 3) { a.stato = "chiuso"; a.chiuso = adesso(); }
+      if (monte <= 0) return 0;
+      const add = (b, ruolo, q) => { const imp = Math.round(monte * (q || 0)) / 100; if (b && imp > 0) tab("app_provvigioni").push({ id: id("pv"), vendita: null, affare: a.id, tranche: t.n, beneficiario: b, ruolo, importo: imp, mese: adesso().slice(0, 8) + "01", stato: "maturata", creato: adesso() }); };
+      const pv = (tab("app_impostazioni").find((x) => x.chiave === "provvigioni") || {}).valore || {};
+      const ruolo = (b, r, q) => { const rr = tab("app_rete").find((x) => x.utente === b); if (rr && rr.ruolo === "subagente" && rr.superiore) { add(b, r, (q || 0) * (pv.subagente ?? 70) / 100); add(rr.superiore, r + "_agente", (q || 0) * (pv.agente ?? 30) / 100); } else add(b, r, q); };
+      ruolo(a.segnalato_da, "segnala", p.segnala); ruolo(a.chiude, "chiude", p.chiude); ruolo(a.segue, "segue", p.segue); ruolo(a.impresa_da, "impresa", p.impresa);
+      const pagati = []; let cur = a.segnalato_da;
+      for (let i = 0; i < 7 && cur; i++) { const r = tab("app_rete").find((x) => x.utente === cur); if (!r) break; if (r.stato === "attivo" && ["capoarea", "sviluppo", "reteitalia"].includes(r.ruolo) && !pagati.includes(r.ruolo)) { add(r.utente, r.ruolo, p[r.ruolo]); pagati.push(r.ruolo); } cur = r.superiore; }
+      if (!pagati.includes("reteitalia")) { const ri = tab("app_rete").find((x) => x.ruolo === "reteitalia" && x.stato === "attivo"); if (ri) add(ri.utente, "reteitalia", p.reteitalia); }
+      [...new Set(tab("app_provvigioni").filter((x) => x.affare === a.id && x.tranche === t.n).map((x) => x.beneficiario))].forEach((b) => notifica(b, "Incassata la tranche " + t.n + " di " + a.cliente_nome + ": provvigioni maturate", "re-guadagni"));
+      return monte;
+    },
+    app_fissa_obiettivo({ p_utente, p_mese, p_aziende, p_canoni, p_lavori, p_valore, p_nota }) {
+      const me = tab("app_rete").find((r) => r.utente === io() && r.stato === "attivo") || {};
+      if (!isAdmin() && me.ruolo !== "reteitalia") throw new Error("non_autorizzato");
+      const mese = String(p_mese || adesso()).slice(0, 8) + "01";
+      const riga = { aziende: Number(p_aziende) || 0, canoni: Number(p_canoni) || 0, lavori: Number(p_lavori) || 0, valore: Number(p_valore) || 0, nota: p_nota || "", fissato_da: io(), aggiornato: adesso() };
+      const o = tab("app_obiettivi").find((x) => (x.utente || null) === (p_utente || null) && x.mese === mese);
+      if (o) Object.assign(o, riga); else tab("app_obiettivi").push(Object.assign({ id: id("ob"), utente: p_utente || null, mese }, riga));
+      if (p_utente && p_utente !== io()) notifica(p_utente, "Nuovi obiettivi del mese", "obiettivi");
+    },
+    app_cliente_libero({ p_tipo, p_piva, p_contatto }) { return !clienteDiAltri(io(), p_tipo, p_piva, p_contatto); },
+    app_firma_documento({ p_documento, p_nome, p_firma, p_impronta, p_dispositivo }) {
+      const d = tab("app_documenti").find((x) => x.id === p_documento);
+      const me = tab("app_rete").find((r) => r.utente === io() && r.stato === "attivo");
+      if (!d || !d.attivo || (!isAdmin() && !(me && (!(d.ruoli || []).length || d.ruoli.includes(me.ruolo))))) throw new Error("documento_non_trovato");
+      if (!d.richiede_firma) throw new Error("documento_senza_firma");
+      if (tab("app_firme").some((f) => f.documento === p_documento && f.utente === io())) throw new Error("gia_firmato");
+      const q = adesso();
+      tab("app_firme").push({ id: id("fi"), documento: p_documento, utente: io(), nome: p_nome, firma: p_firma, impronta: p_impronta || "", dispositivo: p_dispositivo || "", firmato: q });
+      notifica("u-admin", "Firmato: " + d.titolo + " · " + p_nome, "ad-documento/" + p_documento);
+      return q;
     },
     app_firma_accordo() { const r = tab("app_rete").find((x) => x.utente === io()); if (r && !r.accordo_firmato) r.accordo_firmato = adesso(); },
     app_utente_da_mail({ p_email }) { const u = Object.values(DB.datiProva().utenti).find((x) => x.email === String(p_email).toLowerCase().trim()); return u ? u.id : null; },

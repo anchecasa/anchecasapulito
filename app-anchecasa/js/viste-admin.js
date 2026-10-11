@@ -20,7 +20,7 @@ export function installa(core) {
     const rete = n.rete || {};
     return {
       t: "Cruscotto",
-      h: `<div class="pad">${n2 ? "" : avviso("Le tabelle della parte 2 non sono ancora nel database: esegui app-02-completa.sql.", "rosso") + '<div style="height:12px"></div>'}
+      h: `<div class="pad">${core.cartaOggi ? await core.cartaOggi("italia") : ""}${core.cartaLinea ? await core.cartaLinea() : ""}${n2 ? "" : avviso("Le tabelle della parte 2 non sono ancora nel database: esegui app-02-completa.sql.", "rosso") + '<div style="height:12px"></div>'}
         <div class="griglia2">${num(euro(n.canoni_mese) || "0 €", "Canoni dei moduli al mese", "verde")}${num(n.aziende ?? "–", "Aziende iscritte")}${num(n1.analisi_30g ?? "–", "Video SuperMastro (30 gg)")}${num(euro(n.provvigioni_maturate) || "0 €", "Provvigioni da pagare", "giallo")}</div><div style="height:16px"></div>
         ${sez("Le divisioni", `<div class="griglia2">
           ${tile("gru", "AncheCasa GC", `${n.cantieri_gc ?? 0} cantieri`, "ad-gc")}
@@ -30,13 +30,19 @@ export function installa(core) {
           ${tile("gara", "Gare e lotti", `${n.gare ?? 0} gare · ${n.lotti_aperti ?? 0} lotti aperti`, "ad-gare")}
           ${tile("rete", "Rete commerciale", `${Object.values(rete).reduce((a, b) => a + b, 0)} persone`, "ad-rete")}
           ${tile("stella", "Recensioni", "Report per impresa e lavoro", "report-rec")}
-          ${tile("euro", "Economia", "Canoni, ordini, provvigioni", "ad-economia")}</div>`)}
+          ${tile("euro", "Economia", "Canoni, ordini, provvigioni", "ad-economia")}
+          ${tile("doc", "Contratti e documenti", "Tutti i contratti, firme, circolari", "ad-documenti")}
+          ${tile("utente", "Clienti da affidare", "Dal sito e portati da te", "ad-affida")}</div>`)}
         ${sez("Impostazioni", lista([voce("kit", "Prezzi e percentuali", "Moduli, provvigioni, rivendita, premio segnalatori", "ad-impostazioni", "blu")]))}</div>`,
     };
   };
 
   V["ad-dafare"] = async () => {
-    const [n1, n2] = await Promise.all([core.DB.numeri().catch(() => ({})), Q.rpc("app_numeri_admin2").catch(() => ({}))]);
+    const [n1, n2, pr, st, af] = await Promise.all([core.DB.numeri().catch(() => ({})), Q.rpc("app_numeri_admin2").catch(() => ({})), Q.sel("app_proposte_rete", { eq: { stato: "proposta" }, lim: 500 }).catch(() => []), Q.sel("app_strategie", { eq: { stato: "aperta" }, lim: 500 }).catch(() => []), Q.sel("app_affari", { in: { stato: ["proposta", "firmato"] }, lim: 2000 }).catch(() => [])]);
+    n2.proposte_rete = pr.filter((p) => !p.voto_admin).length;
+    n2.strategie = st.filter((s) => !s.voto_admin).length;
+    n2.lavori = af.filter((a) => a.stato === "proposta").length;
+    n2.affidati = (await Q.sel("app_vendite", { eq: { affidato: true, stato: "proposta" }, lim: 500 }).catch(() => [])).filter((x) => Date.now() - new Date(x.creato) > 48 * 36e5).length;
     const r = (ico, t, x, go) => voce(ico, t, x ? `${x} da fare` : "Niente da fare", go, x ? "giallo" : "verde");
     return {
       t: "Da fare",
@@ -44,7 +50,11 @@ export function installa(core) {
         r("griglia", "Moduli da attivare", n2.moduli_richiesti, "ad-moduli"),
         r("corso", "Ordini AncheSicura", n2.ordini_richiesti, "ad-ordini"),
         r("euro", "Rivendite delle aziende", n2.rivendite_richieste, "ad-rivendite"),
+        r("rete", "Proposte nella rete da decidere", n2.proposte_rete, "rete-proposte"),
         r("rete", "Vendite della rete da confermare", n2.vendite_proposte, "ad-vendite"),
+        r("gru", "Lavori della rete da firmare", n2.lavori, "ad-lavori"),
+        r("chat", "Sala strategia: da decidere", n2.strategie, "strategia"),
+        r("utente", "Clienti affidati da oltre 48 ore", n2.affidati, "ad-affida"),
         r("kit", "Artigiani da verificare", n1.artigiani_attesa, "ad-artigiani"),
         r("ufficio", "Passaggi da artigiano a Impresa", n1.passaggi_attesa, "ad-passaggi"),
         r("rete", "Segnalazioni dei privati", n1.segnalazioni_nuove, "ad-segnalazioni"),
@@ -200,22 +210,24 @@ export function installa(core) {
     return {
       t: "Rete commerciale",
       h: `<div class="pad"><div class="griglia2">${["reteitalia", "sviluppo", "capoarea", "agente", "subagente"].map((k) => num(gruppo(k).length, RUOLI_RETE[k])).join("")}</div><div style="height:12px"></div>
-        ${lista([voce("euro", "Vendite da confermare", "Quando il cliente paga", "ad-vendite", "giallo"), voce("euro", "Provvigioni da pagare", "", "ad-provvigioni", "blu")])}
+        ${lista([voce("euro", "Vendite da confermare", "Quando il cliente paga", "ad-vendite", "giallo"), voce("gru", "Lavori della rete", "Firma, margine e incassi delle tranche (SAL)", "ad-lavori", "giallo"), voce("euro", "Provvigioni da pagare", "", "ad-provvigioni", "blu"), voce("chat", "Sala strategia", "Decidi con il Responsabile Rete Italia", "strategia", "arancio"), voce("doc", "Contratti e documenti", "Tutti i contratti, chi ha firmato, nuove circolari", "ad-documenti", "blu"), voce("utente", "Clienti da affidare", "Clienti di AncheCasa: metà quota a chi li segue", "ad-affida", "giallo"), voce("rete", "I ruoli della rete", "Come li vede ogni figura", "mio-ruolo", "blu"), voce("grafico", "Andamento e obiettivi", "Fissa gli obiettivi del mese", "obiettivi", "verde")])}
         ${["reteitalia", "sviluppo", "capoarea", "agente", "subagente"].map((k) => gruppo(k).length ? sez(RUOLI_RETE[k], lista(gruppo(k).map((x) => voce("rete", esc(x.nome || x.codice), `${x.area || ""}${x.regione ? " · " + esc(x.regione) : ""}${x.superiore ? " · sotto " + esc(nome(x.superiore)) : ""} · codice ${esc(x.codice)}`, "ad-persona-rete/" + x.utente, x.stato === "attivo" ? "verde" : "rosso")))) : "").join("")}
-        ${sez("Invita nella rete", `<form data-form="ad-invita-rete" novalidate>${campo("Ruolo", `<select name="ruolo">${Object.entries(RUOLI_RETE).map(([k, v]) => `<option value="${k}">${v}</option>`).join("")}</select>`)}${campo("Nome", `<input name="nome" maxlength="80">`)}${campo("Mail", `<input name="email" type="email" required>`)}<button class="btn" type="submit">Crea l'invito</button></form><p class="sotto piccolo">Il Responsabile Rete Italia lo crei solo tu (anche gli sviluppo rete, se serve). Poi ognuno invita il livello sotto: Rete Italia → sviluppo rete → capoarea → agente → sub-agente.</p>`)}
+        ${lista([voce("rete", "Proposte da decidere", "Chi entra lo decidete insieme: admin, Rete Italia, sviluppo rete", "rete-proposte", "giallo"), voce("grafico", "La catena", "Tutta la rete: chi vende, chi è fermo", "catena", "blu")])}
+        ${sez("Invita il Responsabile Rete Italia", `<form data-form="ad-invita-rete" novalidate>${campo("Nome", `<input name="nome" maxlength="80">`)}${campo("Mail", `<input name="email" type="email" required>`)}<button class="btn" type="submit">Crea l'invito</button></form><p class="sotto piccolo">Solo questo invito lo crei direttamente. Tutti gli altri passano da una proposta.</p>`)}
+        ${sez("Proponi una persona", core.formProponi ? core.formProponi("sviluppo") : "")}
         ${inv.length ? sez("Inviti in attesa", lista(inv.map((i) => voce("campana", esc(i.email), RUOLI_RETE[i.ruolo], null, "giallo", btn("Link", "link-invito:" + i.token, "piccolo chiaro"))))) : ""}</div>`,
     };
   };
   FORM["ad-invita-rete"] = async (f) => {
     const email = f.email.value.trim().toLowerCase();
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return toast("Controlla la mail.", "errore");
-    const i = await Q.ins("app_inviti", { cosa: "rete", ruolo: f.ruolo.value, email, nome: f.nome.value.trim() });
+    const i = await Q.ins("app_inviti", { cosa: "rete", ruolo: "reteitalia", email, nome: f.nome.value.trim() });
     core.mostraInvito(i);
   };
   V["ad-persona-rete"] = async (u) => {
     const [x, tutti] = await Promise.all([Q.uno("app_rete", { utente: u }), Q.sel("app_rete", { lim: 1000 })]);
     if (!x) return { t: "Rete", h: vuoto("Non trovato.") };
-    const sopra = { capoarea: "sviluppo", agente: "capoarea", subagente: "agente" }[x.ruolo];
+    const sopra = { sviluppo: "reteitalia", capoarea: "sviluppo", agente: "capoarea", subagente: "agente" }[x.ruolo];
     return {
       t: x.nome || RUOLI_RETE[x.ruolo],
       h: `<div class="pad"><form data-form="ad-rete-salva" data-u="${esc(u)}" novalidate>

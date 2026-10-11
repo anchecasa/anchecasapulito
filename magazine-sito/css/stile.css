@@ -65,13 +65,13 @@ a { color: inherit; }
 .ap-cop { margin: 0; position: relative; justify-self: center; width: min(100%, 420px); }
 .ap-cop .cop { border-radius: 6px; transform: rotate(2.2deg); box-shadow: 0 2px 0 rgba(22,48,77,.06), 0 30px 60px -18px rgba(22,48,77,.45), 0 12px 24px -12px rgba(22,48,77,.35); transition: transform .4s ease; }
 .ap-cop a:hover .cop { transform: rotate(0deg) translateY(-4px); }
-.conto { position: absolute; right: -30px; bottom: 9%; width: 132px; height: 132px; margin: 0; border-radius: 50%; background: var(--or-tasto); color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; box-shadow: 0 14px 30px -10px rgba(229,107,16,.7); transform: rotate(-8deg); }
-.conto b { font-family: var(--display); font-size: 50px; line-height: .9; font-weight: 700; }
-.conto span { font-size: 11px; font-weight: 700; line-height: 1.25; padding: 4px 14px 0; }
+.conto { position: absolute; right: -26px; bottom: -14px; width: 80px; height: 80px; margin: 0; border-radius: 50%; background: var(--or-tasto); color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; box-shadow: 0 10px 22px -8px rgba(229,107,16,.7); transform: rotate(-8deg); z-index: 2; }
+.conto b { font-family: var(--display); font-size: 30px; line-height: .9; font-weight: 700; }
+.conto span { font-size: 7.5px; font-weight: 700; line-height: 1.12; padding: 1px 8px 0; }
 @media (max-width: 900px) {
   .apertura { grid-template-columns: 1fr; }
   .ap-cop { order: -1; width: min(78%, 360px); }
-  .conto { right: -20px; width: 112px; height: 112px; } .conto b { font-size: 42px; }
+  .conto { right: -18px; bottom: -10px; width: 70px; height: 70px; } .conto b { font-size: 26px; } .conto span { font-size: 7px; }
 }
 
 /* ---------- schede ---------- */

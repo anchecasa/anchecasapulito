@@ -1,0 +1,71 @@
+COMANDO PER CURSOR — Eseguire su Supabase i file SQL mancanti (app-08 … app-12) — 11.10.2026
+
+Lavora nella cartella app-anchecasa. Parla in italiano semplice. Prima di ogni modifica al database chiedimi conferma.
+
+OBIETTIVO
+Eseguire sul progetto Supabase «edsvmnxojsmknjuhobqa» (schema marketplace) i file della cartella sql/ che mancano, nell'ordine giusto, e controllare che sia andato tutto bene.
+
+REGOLE (obbligatorie)
+1. Nessuna chiave, password o stringa di connessione in chat, nei file o su git. Se ti serve, chiedimi di metterla io come variabile d'ambiente nel terminale (SUPABASE_DB_URL) e usala solo da lì.
+2. Come collegarti, in quest'ordine:
+   a) il server MCP di Supabase, se è collegato a Cursor (strumenti tipo execute_sql / apply_migration);
+   b) altrimenti psql con la variabile SUPABASE_DB_URL che imposto io;
+   c) se non hai nessuno dei due: fermati e dimmi cosa serve.
+3. NON modificare i file SQL. Se un file dà errore: fermati subito, mostrami l'errore esatto e il file, non provare correzioni senza il mio ok.
+4. Un file alla volta, intero, nell'ordine dei numeri. Non eseguire file già fatti (anche se si possono rieseguire, non serve).
+5. Non toccare niente fuori dallo schema marketplace e dai bucket dell'app. Non pubblicare l'app, non fare deploy delle Edge Functions (quello è il passo 2, lo facciamo dopo).
+6. Non fare commit né push se non te lo chiedo.
+
+PASSO 0 — Controllo (solo lettura)
+Esegui questa query e mostrami il risultato in una tabella:
+
+select file, gia_fatto from (values
+ ('app-01', to_regclass('marketplace.app_richieste') is not null),
+ ('app-02', to_regclass('marketplace.app_org') is not null),
+ ('app-03', to_regclass('marketplace.app_contatti') is not null),
+ ('app-04', exists (select 1 from pg_proc p join pg_namespace n on n.oid = p.pronamespace where n.nspname = 'marketplace' and p.proname = 'app_puo_invitare')),
+ ('app-05', to_regclass('marketplace.app_proposte_rete') is not null),
+ ('app-06', to_regclass('marketplace.app_strategie') is not null),
+ ('app-07', to_regclass('marketplace.app_documenti') is not null),
+ ('app-08', to_regclass('marketplace.app_fe_documenti') is not null),
+ ('app-09', to_regclass('marketplace.app_sopralluoghi') is not null),
+ ('app-10', to_regclass('marketplace.app_scadenze') is not null),
+ ('app-11', to_regclass('marketplace.app_prezzari') is not null),
+ ('app-12', to_regclass('marketplace.app_sub_richieste') is not null),
+ ('pg_cron attivo', exists (select 1 from pg_extension where extname = 'pg_cron'))
+) v(file, gia_fatto) order by file;
+
+PASSO 1 — Elenco e conferma
+Dimmi quali file sono da eseguire (quelli con false), in ordine. Se manca uno dei file da app-01 ad app-07, dimmelo e fermati: prima si fanno quelli.
+Se «pg_cron attivo» è false: chiedimi di attivarlo io da Supabase → Database → Extensions → pg_cron (serve agli avvisi delle scadenze di app-10). Aspetta che ti dica «fatto».
+Aspetta il mio ok prima di andare avanti.
+
+PASSO 2 — Esecuzione
+Per ogni file da fare, in ordine (app-08, app-09, app-10, app-11, app-12):
+- con psql:  psql "$SUPABASE_DB_URL" -v ON_ERROR_STOP=1 --single-transaction -f sql/<file>.sql
+- con MCP: passa il contenuto intero del file in un'unica esecuzione.
+Dopo ogni file scrivimi: «app-XX fatto» oppure l'errore. In caso di errore fermati (regola 3).
+
+PASSO 3 — Verifica
+Riesegui la query del passo 0: devono essere tutti true. Poi esegui e mostrami:
+
+select
+ (select count(*) from marketplace.app_stima_lavorazioni) as lavorazioni_18,
+ (select count(*) from marketplace.app_fe_piani) as piani_fatture,
+ (select count(*) from marketplace.app_fascicolo_requisiti) as requisiti_fascicolo,
+ exists (select 1 from marketplace.app_impostazioni where chiave = 'stima_flash') as impostazioni_stima,
+ exists (select 1 from marketplace.app_impostazioni where chiave = 'profit_guard') as impostazioni_profit_guard,
+ (select string_agg(id, ', ' order by id) from storage.buckets where id in ('sopralluoghi', 'fascicolo')) as bucket,
+ has_function_privilege('anon', 'marketplace.app_stima_pubblica(uuid)', 'execute') as link_cliente_aperto,
+ has_function_privilege('anon', 'marketplace.app_invito_leggi(uuid)', 'execute') as link_fornitore_aperto,
+ has_table_privilege('anon', 'marketplace.app_sopralluoghi', 'select') as anon_legge_sopralluoghi_deve_essere_false,
+ has_table_privilege('anon', 'marketplace.app_sub_offerte', 'select') as anon_legge_offerte_deve_essere_false;
+
+Risultato giusto: lavorazioni_18 = 18; piani e requisiti maggiori di 0; impostazioni true; bucket «fascicolo, sopralluoghi»;
+link_cliente_aperto e link_fornitore_aperto = true; le ultime due = false. Se qualcosa non torna, dimmelo e fermati.
+
+PASSO 4 — Registro
+Aggiungi in cima al «Registro delle modifiche» di ../CLAUDE.md (non cancellare né spostare quel file) una voce:
+«### 11.10.2026 hh:mm · Cursor — Supabase: eseguiti i file SQL …» con: quali file hai eseguito, come (MCP o psql), esito della verifica, eventuali problemi.
+
+Alla fine scrivimi in 3 righe: cosa è stato eseguito, se la verifica è tutta giusta, cosa resta (passo 2: Edge Functions).

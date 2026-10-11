@@ -1,0 +1,35 @@
+AUTORIZZO LA MODIFICA: area-privata/dashboard — proposte della rete e catena (10.10.2026)
+
+Contesto
+- Progetto: C:\Users\palum\Desktop\ANCHECASA-PULITO. Leggi prima CLAUDE.md (regole e registro).
+- Regola decisa da Nando: nessuno entra nella rete (sviluppo rete, capoarea, agente, sub-agente) senza una proposta approvata. Tutti propongono; decidono insieme admin, Responsabile Rete Italia (reteitalia) e lo sviluppo rete dell'area. Serve il sì di admin e RRI (e dello sviluppo se l'area ce l'ha); basta un no per respingere. Con l'approvazione l'invito si crea da solo. L'admin invita direttamente solo il Responsabile Rete Italia.
+- La logica è già tutta nel database: app-anchecasa/sql/app-05-proposte-rete.sql (dopo app-01…04). LEGGILO prima di scrivere codice. Tabella marketplace.app_proposte_rete; funzioni marketplace.app_proponi_rete(p_ruolo, p_nome, p_email, p_telefono, p_regione, p_note) → uuid, marketplace.app_vota_proposta(p_id, p_si, p_nota) → text, marketplace.app_puo_invitare. La tabella si legge con select (le RLS mostrano a ognuno solo quello che può vedere); insert/update/delete sono chiusi: si passa SOLO dalle funzioni.
+- Riferimento già fatto nell'app telefono: app-anchecasa/js/viste-rete.js (core.formProponi, V["rete-proposte"], V["catena"]) e js/viste-admin.js (ad-rete). Copia la stessa logica, NON modificare la cartella app-anchecasa.
+
+Passo 0 — controllo (solo lettura)
+- Con il client Supabase della dashboard (window.acDb, schema marketplace) prova a leggere app_proposte_rete (limit 1). Se la tabella non esiste: NON creare niente su Supabase, aggiungi solo il codice e nella pagina mostra «Manca app-05 su Supabase: eseguire app-anchecasa/sql/app-05-proposte-rete.sql». Dimmelo a fine lavoro.
+- Non eseguire SQL su Supabase e non aggiungere file in supabase/migrations: lo SQL lo lancia Nando dall'SQL Editor.
+
+Passo 1 — copia di sicurezza
+- Copia area-privata/dashboard in _copie-dashboard-proposte-<oraminuti> prima di toccare file.
+
+Passo 2 — admin (js/app.js navItems famiglia "admin", js/views.js)
+- Nuova voce «Proposte rete» (id "proposte-rete", icona "team", gruppo "fisso") dopo «Richieste agenti». Aggiungila anche a BREVE ("Proposte").
+- V["proposte-rete"]: tre schede «Da decidere» (stato proposta e mio voto ancora vuoto), «Tutte», «Respinte/approvate». Ogni proposta: nome, ruolo, regione/area, chi l'ha proposta (nome da app_rete o profilo), data, note, tre pallini voto Admin / Rete Italia / Sviluppo (verde sì, rosso no, grigio attesa, «non serve» se serve_* = false), commenti. Tasti «Sì» e «No» (con campo nota facoltativo) → rpc app_vota_proposta. Se approvata e c'è invito: tasto «Copia link d'invito» con lo stesso formato di link usato dall'app (vedi mostraInvito in app-anchecasa/js/viste-aziende.js).
+- In alto: modulo «Proponi una persona» (ruolo: sviluppo, capoarea, agente, subagente; nome, mail, telefono, regione, note) → rpc app_proponi_rete. E un riquadro separato «Invita il Responsabile Rete Italia» che usa il flusso inviti esistente con ruolo forzato "reteitalia" (unico invito diretto).
+- In «Genera link»: se oggi permette link per agenti/sub-agenti/capoarea/sviluppo, togli quelle voci o mostrale disattivate con la scritta «Si entra solo con proposta approvata → Proposte rete». Non toccare i link delle aziende/privati.
+- Contatore «da decidere» nella voce di menu (badge), se il menu ha già i badge; altrimenti niente.
+
+Passo 3 — catena per admin
+- Nella stessa pagina (o scheda «La catena»): albero di tutta la rete da marketplace.app_rete (reteitalia → sviluppo → capoarea → agente → subagente, campo superiore). Per ogni persona: ruolo, area/regione, stato, clienti attivi, vendite del mese (app_vendite stato attiva, mese corrente), provvigioni del mese (app_provvigioni), proposte fatte, data ultima vendita. Giallo se nessuna vendita da più di 30 giorni o mai, rosso se sospeso. Clic sul nome apre/chiude i figli.
+
+Passo 4 — famiglia agente (V.catena e V.inviti già esistenti, righe ~1943 e ~1975 di views.js)
+- Se lì ci sono dati demo, lasciali ma etichettali «Esempio». Se l'utente è nella rete vera (riga in app_rete), V.catena mostra il suo ramo con gli stessi dati del Passo 3, e V.inviti diventa «Proponi una persona» + elenco «Le mie proposte» con lo stato. Se l'utente è reteitalia o sviluppo vede anche «Da decidere» con i tasti Sì/No.
+- Nessun agente/capoarea/sub-agente deve poter generare un invito diretto.
+
+Regole
+- Niente password o chiavi nel codice. Niente dati inventati mostrati come veri.
+- Non cambiare visibleNav (congelato) né le altre famiglie. Non toccare sito/, sicura/, magazine, app-anchecasa/.
+- Bump della versione dei file js/css in index.html (?v=) come fate di solito.
+- Prova: login admin → proponi un agente → vota sì → controlla che senza il sì RRI resti «in attesa»; un no → respinta. Prova la catena con la rete vuota (messaggio «Nessuno nella rete ancora»).
+- Alla fine scrivi in cima al «Registro delle modifiche» di CLAUDE.md cosa hai fatto, file toccati e copia di sicurezza. NON pubblicare: Nando pubblica da sé.

@@ -27,6 +27,8 @@ const profiloDi = (r) => PROFILI[String(r || "").split(":")[0]] || PROFILI.altro
 const ruoliDisponibili = () => S.profili.map((p) => p.k);
 const nomeProfilo = (k) => (S.profili.find((p) => p.k === k) || {}).nome || NOMI_RUOLI[String(k).split(":")[0]] || k;
 const ACCESSO = ["benvenuto", "entra", "registrati", "recupera", "mail", "nuova-password", "invito"];
+// Pagine aperte a tutti, anche senza account e anche da chi è già entrato (es. la stima del cliente dal link).
+const PUBBLICHE = ["stima", "offerta", "offerta-stop"];
 const PREFERENZA = ["admin", "impresa", "fornitore", "partner", "consulente", "operatore", "cliente", "reteitalia", "sviluppo", "capoarea", "agente", "subagente", "artigiano", "privato"];
 function scegliProfilo(k) {
   S.ruolo = k; S.base = String(k).split(":")[0]; S.org = String(k).split(":")[1] || null;
@@ -56,7 +58,7 @@ async function render() {
   const { nome, param } = rotta();
   if (S.recupero && nome !== "nuova-password") return vai("nuova-password", true);
   if (!S.utente && nome === "invito" && param) { try { sessionStorage.setItem("ac-invito", param); } catch (e) { /* niente */ } return vai("benvenuto", true); }
-  if (!S.utente && !ACCESSO.includes(nome)) return vai("benvenuto", true);
+  if (!S.utente && !ACCESSO.includes(nome) && !PUBBLICHE.includes(nome)) return vai("benvenuto", true);
   if (S.utente && nome !== "invito") { let t = null; try { t = sessionStorage.getItem("ac-invito"); sessionStorage.removeItem("ac-invito"); } catch (e) { /* niente */ } if (t) return vai("invito/" + t, true); }
   if (S.utente && !S.recupero && (ACCESSO.includes(nome) || !nome) && nome !== "mail" && nome !== "invito") return vai(casa(), true);
   const vista = V[nome];

@@ -116,6 +116,7 @@ function legaFirme(el) {
 /* ------------------------------------------------------------------------ */
 export function installa(core) {
   const { S, V, AZIONI, FORM, vai, render } = core;
+  core.legaFirme = legaFirme;
   const gestisco = (org) => !!(S.admin || (S.miei && (S.miei.org || []).some((o) => o.id === org && ["titolare", "responsabile"].includes(o.ruolo))));
   const accessoA = (rec) => ((S.miei && S.miei.accessi) || []).find((a) => a.record === rec.id || a.record === rec.rif);
   const consulenteDi = (org) => ((S.miei && S.miei.org) || []).some((o) => o.id === org && o.ruolo === "consulente");

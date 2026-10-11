@@ -137,3 +137,77 @@
   .tk-meta, .tk-scad, .tk-n { white-space: normal; }
   .tk-fcom { flex-direction: column; }
 }
+
+/* Proposte rete e catena (10.10.2026) */
+.rp-nome-h { margin: 0 0 8px; font-size: 18px; color: var(--navy); }
+.rp-schede { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 12px; }
+.rp-card { margin-top: 12px; }
+.rp-testa { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
+.rp-voti { display: flex; flex-wrap: wrap; margin-top: 8px; }
+.rp-voto { display: inline-flex; align-items: center; gap: 6px; margin: 4px 14px 0 0; font-size: 13px; font-weight: 600; color: var(--navy); }
+.rp-dot { width: 10px; height: 10px; border-radius: 50%; background: #c5ced6; flex: none; }
+.rp-dot.si { background: var(--ok); }
+.rp-dot.no { background: var(--danger); }
+.rp-dot.attesa { background: #c5ced6; }
+.rp-dot.off { background: transparent; box-shadow: inset 0 0 0 1.5px #c5ced6; }
+.rp-nota, .rp-commento { margin: 8px 0 0; font-size: 14px; }
+.rp-commento { color: #3d5165; }
+.rp-decidi { margin-top: 12px; }
+.rp-lab { display: grid; gap: 4px; font-size: 13px; font-weight: 600; color: var(--navy); margin-bottom: 8px; }
+.rp-lab input, #rp-rri-link input, #rp-link-box input { width: 100%; box-sizing: border-box; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; font: inherit; }
+.rp-nodo { border-left: 3px solid var(--line); margin: 8px 0; padding: 4px 0 4px 12px; }
+.rp-nodo.rp-verde { border-left-color: var(--ok); }
+.rp-nodo.rp-giallo { border-left-color: #e0a100; }
+.rp-nodo.rp-rosso { border-left-color: var(--danger); }
+.rp-apri { background: none; border: 0; padding: 0; font: inherit; font-weight: 700; color: var(--navy); text-align: left; }
+button.rp-apri { cursor: pointer; }
+button.rp-apri:hover { text-decoration: underline; }
+.rp-figli { margin-left: 8px; }
+.rp-meta { margin: 4px 0 0; font-size: 13px; color: var(--muted); line-height: 1.4; }
+.rp-albero { display: grid; }
+
+/* Sala strategia, obiettivi, lavori, report (10.10.2026) */
+.dir-oggi { border-left: 4px solid #E56B10; }
+.dir-metrica { margin-top: 12px; }
+.dir-metrica-h { display: flex; justify-content: space-between; gap: 8px; font-size: 14px; color: var(--navy); }
+.dir-barra { height: 8px; background: #eef2f7; border-radius: 99px; overflow: hidden; margin-top: 5px; }
+.dir-barra i { display: block; height: 100%; background: #E56B10; }
+.dir-sotto { margin: 4px 0 0; font-size: 13px; color: var(--muted); }
+.dir-persona { display: flex; justify-content: space-between; gap: 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.dir-riga { display: block; width: 100%; text-align: left; margin-top: 8px; cursor: pointer; font: inherit; color: inherit; }
+.dir-linea, .dir-linea-card { border-left: 4px solid #E56B10; }
+.dir-linea { margin-top: 10px; }
+.dir-linea-card { display: block; margin-top: 12px; text-decoration: none; color: inherit; }
+.dir-kpi { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 12px; }
+.dir-k b { display: block; font-size: 22px; color: var(--navy); }
+.dir-k span { font-size: 13px; color: var(--muted); }
+@media (max-width: 800px) {
+  .dir-kpi { grid-template-columns: 1fr 1fr; }
+}
+
+/* Contratti, firme, clienti da affidare (10.10.2026) */
+.doc-griglia { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+.doc-tile { display: flex; flex-direction: column; justify-content: center; gap: 6px; min-height: 108px; padding: 18px 16px; background: #fff; border: 1px solid var(--line); border-radius: 14px; text-decoration: none; color: var(--navy); }
+.doc-tile b { font-size: 18px; line-height: 1.25; }
+.doc-tile small { color: var(--muted); font-size: 13px; }
+.doc-tile:hover { border-color: #E56B10; }
+.doc-due { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.doc-ruoli { display: flex; flex-wrap: wrap; gap: 8px 16px; margin: 8px 0; }
+.doc-spunta { display: flex; gap: 8px; align-items: flex-start; margin: 8px 0 12px; }
+.doc-fai { margin: 0; padding-left: 18px; display: grid; gap: 6px; }
+.doc-regola { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 10px 14px; margin: 0 0 8px; }
+.doc-regola summary { cursor: pointer; font-weight: 700; color: var(--navy); }
+.doc-regola p { margin: 8px 0 0; }
+.doc-tardi { color: var(--danger); font-weight: 700; }
+.doc-firma-img { display: block; max-width: 100%; height: 90px; object-fit: contain; margin-top: 8px; background: #fff; border: 1px solid var(--line); border-radius: 8px; }
+.doc-badge { display: inline-flex; min-width: 18px; height: 18px; margin-left: 6px; padding: 0 5px; border-radius: 99px; background: #E56B10; color: #fff; font-size: 11px; align-items: center; justify-content: center; }
+.firma-box { display: grid; gap: 6px; margin: 8px 0; }
+.firma-box canvas.firma { width: 100%; height: 150px; background: #fff; border: 1px dashed var(--line); border-radius: 10px; touch-action: none; cursor: crosshair; }
+#doc-nuovo label, #doc-affida label, #doc-vendi label, #doc-firma label { display: grid; gap: 4px; margin-top: 10px; font-size: 13px; color: var(--navy); }
+#doc-nuovo input, #doc-nuovo select, #doc-nuovo textarea, #doc-affida input, #doc-affida select, #doc-vendi input, #doc-vendi select, #doc-firma input, #doc-firma select, #doc-firma textarea, .doc-due select {
+  width: 100%; box-sizing: border-box; height: 36px; border: 1px solid #ccd6e2; background: #fff; border-radius: 8px; padding: 0 10px; font-size: 13px; color: var(--text);
+}
+#doc-nuovo textarea, #doc-firma textarea { height: auto; padding: 8px 10px; }
+@media (max-width: 700px) {
+  .doc-due { grid-template-columns: 1fr; }
+}

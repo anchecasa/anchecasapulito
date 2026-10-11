@@ -194,7 +194,8 @@
     return buildOpzioniCategorie({ selected: tipoAziendaNorm(selected) });
   }
   function opzioniCategoriaLink() {
-    return buildOpzioniCategorie({ selected: "" });
+    const base = buildOpzioniCategorie({ selected: "", soloFamiglie: ["privato", "azienda"] });
+    return raw(base.s + '<optgroup label="Agente"><option disabled value="">Si entra solo con proposta approvata → Proposte rete</option></optgroup>');
   }
   const LUOGO_TIPI = [
     ["sede", "Sede"],
@@ -1062,7 +1063,8 @@
     render(el) {
       const fam = S.data.famiglia || "privato";
       if (fam !== "privato") {
-        el.innerHTML = html`${riquadroProfilo(fam)}<div class="card empty bacheca-vuota"><strong>La Bacheca</strong></div>`.s;
+        el.innerHTML = html`${fam === "agente" && window.AC && AC.direzione ? html`<div id="dir-home"></div>` : ""}${riquadroProfilo(fam)}<div class="card empty bacheca-vuota"><strong>La Bacheca</strong></div>`.s;
+        if (fam === "agente" && window.AC && AC.direzione) AC.direzione.riempiHome(el.querySelector("#dir-home"));
         return;
       }
       const miei = (S.data.annunci || []).filter((a) => a.canale !== "bacheca");
@@ -1186,6 +1188,7 @@
       );
       const bacRows = board.map((a) => bacItem(a, pubSelId));
       el.innerHTML = html`
+        ${fam === "agente" && window.AC && AC.direzione ? html`<div id="dir-home"></div>` : ""}
         <div class="tabs">
           <button type="button" class="tab ${pubTab === "bacheca" ? "on" : ""}" data-tab="bacheca" aria-selected="${pubTab === "bacheca" ? "true" : "false"}">Bacheca pubblica</button>
           <button type="button" class="tab ${pubTab === "scrivi" ? "on" : ""}" data-tab="scrivi" aria-selected="${pubTab === "scrivi" ? "true" : "false"}">Pubblica</button>
@@ -1308,6 +1311,7 @@
           paintHold();
         });
       }
+      if (fam === "agente" && window.AC && AC.direzione) AC.direzione.riempiHome(el.querySelector("#dir-home"));
       el.querySelector("#f-pub").addEventListener("submit", (e) => {
         e.preventDefault();
         const form = e.target;
@@ -1944,7 +1948,12 @@
     title: "Catena",
     sub: "Chi hai portato. Il guadagno segue questa linea.",
     render(el) {
+      if (S.data.famiglia === "agente" && window.AC && AC.rete) {
+        AC.rete.catenaAgente(el, S.data.catena);
+        return;
+      }
       el.innerHTML = html`
+        <p class="note">Esempio</p>
         <div class="card">
           <table class="mini-table">
             <thead><tr><th>Tipo</th><th>Nome</th><th>Portati</th></tr></thead>
@@ -1960,10 +1969,15 @@
     render(el) {
       const g = S.data.guadagno;
       el.innerHTML = html`
+        <p class="note">Esempio</p>
         <div class="kpis">
           <div class="kpi"><span class="ico orange">${icon("wallet", 18)}</span><span><strong>${AC.ui.fmt.euro(g.mese)}</strong><small>questo mese</small></span></div>
           <div class="kpi"><span class="ico navy">${icon("team", 18)}</span><span><strong>${AC.ui.fmt.euro(g.sub)}</strong><small>ai subagenti</small></span></div>
-        </div>`.s;
+        </div>
+        <div id="dir-guadagno"></div>
+        <div id="doc-vendita"></div>`.s;
+      if (S.data.famiglia === "agente" && window.AC && AC.direzione) AC.direzione.riempiGuadagno(el.querySelector("#dir-guadagno"));
+      if (S.data.famiglia === "agente" && window.AC && AC.contratti) AC.contratti.riempiVendita(el.querySelector("#doc-vendita"));
     }
   };
 
@@ -1976,11 +1990,29 @@
     title: "Inviti",
     sub: "Invita privati, aziende e agenti. Ogni link è tuo e resta tracciato.",
     render(el) {
-      const CHI = { privato: "Privato", azienda: "Azienda", agente: "Agente" };
+      if (S.data.famiglia === "agente" && window.AC && AC.rete) {
+        AC.rete.invitiAgente(el);
+        return;
+      }
+      this.mercato(el, {});
+    },
+    mercato(el, opts) {
+      opts = opts || {};
+      if (opts.togliAgente) {
+        const titolo = document.getElementById("page-title");
+        const sotto = document.getElementById("page-sub");
+        if (titolo) titolo.textContent = "Inviti";
+        if (sotto) sotto.textContent = "Invita privati e aziende. Nella rete si entra solo con una proposta approvata.";
+      }
+      const CHI = opts.togliAgente
+        ? { privato: "Privato", azienda: "Azienda" }
+        : { privato: "Privato", azienda: "Azienda", agente: "Agente" };
       let righe = [];
 
       function disegna(esito) {
         el.innerHTML = html`
+          ${opts.avviso ? html`<div class="card"><p>${opts.avviso}</p></div>` : ""}
+          ${opts.togliAgente ? html`<div class="card"><p class="note">Si entra nella rete solo con una proposta approvata. Da qui inviti privati e aziende.</p></div>` : ""}
           <div class="card">
             <p class="note">Scegli chi inviti e inserisci almeno la mail o il telefono. Chi si iscrive dal tuo link entra subito, senza attendere l'approvazione. Con Email il messaggio parte da AncheCasa; con WhatsApp si apre la chat con il testo già scritto.</p>
             <form id="f-inv">
@@ -3616,6 +3648,7 @@
       function disegna(righe, filtro) {
         const filtrate = filtro ? righe.filter((r) => r.famiglia === filtro) : righe;
         el.innerHTML = html`
+          <div id="dir-striscia"></div>
           <div class="card">
             <p class="note">Elenco totale privati e aziende: iscrizioni da link inviati (con chi ha mandato il link) e dal modulo web. Gli agenti non compaiono qui: usa Richieste agenti.</p>
             <div class="tabs">
@@ -3651,6 +3684,7 @@
         el.querySelectorAll("[data-f]").forEach((btn) => {
           btn.addEventListener("click", () => disegna(righe, btn.getAttribute("data-f")));
         });
+        if (window.AC && AC.direzione) AC.direzione.riempiStriscia(el.querySelector("#dir-striscia"));
         el.querySelectorAll("[data-verifica]").forEach((btn) => {
           btn.addEventListener("click", () => {
             const riga = righe.find((r) => r.id === btn.closest("tr").getAttribute("data-id"));
@@ -4265,6 +4299,10 @@
           const telefono = form.elements.telefono.value.trim();
           const info = CATEGORIE_LINK_MAP[id];
           if (!info) return;
+          if (info.famiglia === "agente") {
+            toast("Si entra solo con proposta approvata. Apri Proposte rete.", "error");
+            return;
+          }
           if (!mail) {
             toast("Inserisci la mail.", "error");
             return;

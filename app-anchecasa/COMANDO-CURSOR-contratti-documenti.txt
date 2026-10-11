@@ -1,0 +1,35 @@
+AUTORIZZO LA MODIFICA: area-privata/dashboard — pulsante «Contratti», documenti e firme, clienti da affidare, regole dei clienti, «Il mio ruolo» (10.10.2026)
+
+Contesto
+- Progetto: C:\Users\palum\Desktop\ANCHECASA-PULITO. Leggi prima CLAUDE.md (regole e registro).
+- Riferimento già fatto e provato nell'app telefono (NON modificarla): app-anchecasa/js/viste-documenti.js (Il mio ruolo, Documenti con firma, admin Contratti e documenti, Clienti da affidare), app-anchecasa/js/testi-rete.js (testi dei ruoli e regole comuni: usa questi testi, non riscriverli), app-anchecasa/js/viste-rete.js (campo Partita IVA in «Vendi»).
+- Database: app-anchecasa/sql/app-07-regole-clienti-documenti.sql (leggilo). Schema marketplace:
+  · app_documenti (tipo contratto|regolamento|circolare|altro, titolo, testo, file, ruoli[], richiede_firma, versione, attivo) — l'admin legge e scrive tutto; la rete legge i suoi;
+  · app_firme (documento, utente, nome, firma PNG data URL, impronta SHA-256, dispositivo, firmato) — si scrive SOLO con rpc app_firma_documento(p_documento, p_nome, p_firma, p_impronta, p_dispositivo); le firme non si cancellano;
+  · app_vendite ora ha cliente_piva e affidato; rpc app_cliente_libero(p_tipo, p_piva, p_contatto) → boolean; il database rifiuta con 'cliente_di_un_collega' un cliente già di un altro.
+- I PDF (5 contratti, Regolamento, Circolare 1/2026) sono in app-anchecasa/docs/ e in ANCHECASA-LAVORO\file pdf. Per la dashboard copiali in area-privata/dashboard/docs/ (stessi nomi) e usa quei percorsi.
+
+Passo 0 — controllo (solo lettura)
+- Con window.acDb prova a leggere app_documenti (limit 1). Se non c'è: NON creare niente su Supabase; nelle pagine nuove mostra «Manca app-07 su Supabase: eseguire app-anchecasa/sql/app-07-regole-clienti-documenti.sql». Dimmelo a fine lavoro. Non eseguire SQL e non aggiungere migrations.
+
+Passo 1 — copia di sicurezza
+- Copia area-privata/dashboard in _copie-dashboard-contratti-<oraminuti>.
+
+Passo 2 — admin (js/app.js navItems "admin", js/views.js, BREVE)
+- Nuova voce ben visibile «Contratti» (id "contratti", icona doc, gruppo "fisso", subito dopo «Iscritti registrati»).
+- V["contratti"]: in alto i 5 contratti come pulsanti grandi che aprono il PDF (Responsabile Rete Italia, Responsabile sviluppo rete, Capo area, Agente, Sub-agente) + Regolamento + Circolare 1/2026; sotto «Chi ha firmato»: ogni documento con «firmato da N su M» (M = persone attive di app_rete con quel ruolo, o tutte se ruoli è vuoto); dettaglio con chi deve ancora firmare, le firme ricevute (immagine, nome, data e ora, impronta) e il tasto «Ricevuta» (stessa pagina della funzione AZIONI["ricevuta-firma:"] dell'app); tasto «Togli/Rimetti nella cartella» (update attivo). In fondo «Nuova circolare» (tipo, titolo, testo, PDF facoltativo, per chi: spunte dei ruoli, da firmare sì/no) → insert su app_documenti (gli avvisi alla rete li manda il database).
+- Nuova voce «Clienti da affidare» (id "affida"): come V["ad-affida"] dell'app: form (cliente, partita IVA, telefono o mail, regione, cosa, dettaglio, importo, mese/una volta, a chi: select delle persone attive) → insert app_vendite con venditore = scelto e affidato = true; elenco affidati non confermati con le ore passate (rosso oltre 48) e «Riassegna» (update venditore).
+- Testo fisso nella pagina: «Clienti di AncheCasa: chi li segue prende metà della quota di chi porta; niente quote di sviluppo, capo area e Rete Italia. Deve chiamarli entro 48 ore.»
+
+Passo 3 — famiglia agente (rete) della dashboard
+- Voce «Il mio ruolo»: testi da RUOLI_TESTI[ruolo] di testi-rete.js (cosa fai, a chi rispondi, chi hai sotto, come guadagni con esempi, attenzione, come si sale) + le regole REGOLE (a fisarmonica) + «Fai un conto» come nell'app.
+- Voce «Documenti» con il numero da firmare: elenco Da firmare / Firmati / Da leggere; dettaglio con «Apri il PDF», nome e cognome, firma col dito o col mouse su canvas, spunta «Ho letto tutto il documento e lo accetto», «Firma e invia ad AncheCasa» → calcola SHA-256 del PDF (crypto.subtle) e chiama rpc app_firma_documento. Dopo la firma: immagine, data e ora, «Ricevuta».
+- Nel modulo di vendita/registrazione cliente (se c'è): campo «Partita IVA (per le aziende)»; prima di salvare chiama app_cliente_libero; se false o se il database risponde 'cliente_di_un_collega' mostra «Questo cliente è già registrato da un collega: è suo.» Nelle provvigioni i ruoli nuovi si chiamano: affidato = «Cliente di AncheCasa affidato (metà quota)», segnala_agente/chiude_agente/segue_agente/impresa_agente = «… (tuo sub-agente)».
+- Se lì ci sono dati demo, lasciali ma etichettali «Esempio».
+
+Regole
+- Niente password o chiavi nel codice. Niente dati inventati mostrati come veri.
+- Non cambiare visibleNav (congelato) né le famiglie privato e azienda. Non toccare sito/, sicura/, magazine-sito/, app-anchecasa/.
+- Bump ?v= dei js/css in index.html.
+- Prova: admin apre «Contratti» → i 5 PDF si aprono; un agente firma il suo contratto → l'admin vede «firmato da 1» con la firma e la ricevuta; seconda firma dello stesso documento rifiutata; admin affida un cliente → l'agente lo vede con l'avviso delle 48 ore; un collega che registra la stessa partita IVA viene fermato.
+- Alla fine scrivi in cima al «Registro delle modifiche» di CLAUDE.md cosa hai fatto, file toccati e copia di sicurezza. NON pubblicare: Nando pubblica da sé.

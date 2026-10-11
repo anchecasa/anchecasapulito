@@ -3,17 +3,29 @@ import { core, avvia } from "./main.js";
 import { installa as schede } from "./schede.js";
 import { installa as aziende } from "./viste-aziende.js";
 import { installa as rete } from "./viste-rete.js";
+import { installa as direzione } from "./viste-direzione.js";
+import { installa as documenti } from "./viste-documenti.js";
 import { installa as comuni } from "./viste-comuni.js";
 import { installa as admin } from "./viste-admin.js";
 import { installa as bacheca } from "./viste-bacheca.js";
+import { installa as fatture } from "./viste-fatture.js";
+import { installa as sicurezza } from "./viste-sicurezza.js";
+import { installa as flash } from "./viste-flash.js";
+import { installa as subappalti } from "./viste-sub.js";
 
 core.HOOK = { scheda: {}, dopoSalva: {}, primaSalva: {}, dopoScheda: {} };
 schede(core);
 aziende(core);
 rete(core);
+direzione(core);
+documenti(core);
 comuni(core);
 admin(core);
 bacheca(core);
+fatture(core); // dopo le altre: aggiunge i collegamenti a Ufficio, home dell'agente e cruscotto admin
+sicurezza(core); // fascicolo di cantiere e scadenze: collegamenti a Sicurezza, Sicurezza Cantiere e scheda del cantiere
+flash(core); // Sopralluogo Flash: nota vocale, stima, link del cliente (#/stima/…), dossier dell'ufficio, prezzari
+subappalti(core); // dopo flash: subappalti, pagamenti su misura, Profit Guard, offerte (#/offerta/…), preventivo ufficiale
 avvia();
 
 // App installabile: copia dei file per aprirla subito (solo su https, non in prova).

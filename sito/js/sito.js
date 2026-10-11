@@ -26,7 +26,7 @@
     { id: "privato", href: "/privato", label: "Privato" },
     { id: "azienda", href: "/azienda", label: "Azienda" },
     { id: "agente", href: "/agente", label: "Agente" },
-    { id: "magazine", href: "/magazine", label: "Magazine" },
+    { id: "magazine", href: "https://magazine.anchecasa.it/", label: "Magazine" },
     { id: "contatti", href: "/contatti", label: "Contatti" }
   ];
   const AZIENDA_PAGES = [

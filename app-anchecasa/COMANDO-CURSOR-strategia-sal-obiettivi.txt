@@ -1,0 +1,43 @@
+AUTORIZZO LA MODIFICA: area-privata/dashboard — sala strategia, linee decise, lavori a SAL, obiettivi del giorno, report del mese azienda (10.10.2026)
+
+Contesto
+- Progetto: C:\Users\palum\Desktop\ANCHECASA-PULITO. Leggi prima CLAUDE.md (regole e registro, le ultime 3 voci del 10.10).
+- Le stesse funzioni sono già fatte e provate nell'app telefono: app-anchecasa/js/viste-direzione.js (leggilo tutto: è il riferimento da copiare). NON modificare la cartella app-anchecasa.
+- La logica è nel database: app-anchecasa/sql/app-06-strategia-cantieri-obiettivi.sql (leggilo prima). Tabelle e funzioni (schema marketplace):
+  · app_strategie (select solo dirigenti) + rpc app_strategia_apri(p_titolo,p_testo,p_tema) → uuid, app_strategia_commenta(p_id,p_testo), app_strategia_decidi(p_id,p_si,p_linea,p_nota) → 'decisa'|'in_attesa'|'scartata', app_linee_decise() → righe per tutta la rete;
+  · app_affari (lavori), app_affari_tranche, app_affari_margine (solo admin) + rpc app_affare_firma(p_affare,p_valore,p_margine,p_chiude,p_segue,p_impresa_da), app_tranche_incassata(p_affare,p_n,p_incasso) → importo alla rete;
+  · app_provvigioni ora ha anche le colonne affare e tranche (vendita può essere vuota);
+  · app_vendite ha cliente_tipo ('azienda'|'privato'): sui privati il database non crea provvigioni;
+  · app_obiettivi (utente vuoto = tutta Italia, mese = primo giorno del mese) + rpc app_fissa_obiettivo(p_utente,p_mese,p_aziende,p_canoni,p_lavori,p_valore,p_nota).
+  Le scritture passano SOLO dalle funzioni rpc (insert/update chiusi), tranne app_affari: insert dell'agente con stato 'proposta'.
+
+Passo 0 — controllo (solo lettura)
+- Con window.acDb prova a leggere app_strategie e app_obiettivi (limit 1). Se non esistono: NON creare niente su Supabase, aggiungi il codice e nelle pagine mostra «Manca app-06 su Supabase: eseguire app-anchecasa/sql/app-06-strategia-cantieri-obiettivi.sql». Dimmelo a fine lavoro.
+- Non eseguire SQL su Supabase e non aggiungere file in supabase/migrations: lo SQL lo lancia Nando.
+
+Passo 1 — copia di sicurezza
+- Copia area-privata/dashboard in _copie-dashboard-strategia-<oraminuti> prima di toccare file.
+
+Passo 2 — admin (js/app.js navItems famiglia "admin", js/views.js, BREVE)
+- Nuove voci (gruppo "fisso"): «Oggi» (id "oggi-rete", icona chart), «Sala strategia» (id "strategia", icona chat), «Lavori rete» (id "lavori-rete", icona doc).
+- V["oggi-rete"]: come cartaOggi("italia") + V.obiettivi di viste-direzione.js: 4 barre del mese (nuove aziende clienti = vendite attive non privati attivate nel mese, clienti distinti; nuovi canoni = somma importi tipo_importo 'mese'; lavori firmati = app_affari firmati nel mese; valore lavori), obiettivo Italia, «oggi +N», quanto manca al giorno sui giorni lavorativi rimasti, persone ferme da più di 30 giorni; elenco Rete Italia e sviluppo rete con % sull'obiettivo; modulo «Fissa gli obiettivi» (per chi: Tutta Italia o persona della rete; mese: questo o il prossimo) → rpc app_fissa_obiettivo.
+- V["strategia"]: schede «In discussione / Decise / Non passate», dettaglio con testo, chip voto Admin / Rete Italia (se serve_reteitalia), linea proposta, discussione (commenti e voti con linea e nota), modulo commento, e per l'admin: campo «La linea» (precompilato) + nota + tasti «Sì, si fa» / «No» → rpc app_strategia_decidi. Modulo «Apri un argomento» (titolo, tema: vendite, zone, prodotti, persone, prezzi, altro; testo).
+- V["lavori-rete"]: gruppi «Da firmare / In corso / Collaudati». Dettaglio: dati del lavoro, ruoli (chi segnala, chiude, segue, ha portato l'impresa), margine (solo admin), modulo firma (valore, margine, 3 select con le persone attive di app_rete) → rpc app_affare_firma; le 3 tranche (Firma e acconto 30, Metà lavori 30, Collaudo 40) con importo previsto = valore × quota e, sulla prima ancora in attesa, campo incasso + «Incassato» → rpc app_tranche_incassata; elenco provvigioni del lavoro. Tasto «Lavoro perso» (update stato 'perso').
+- Nel «Da fare»/panoramica admin, se c'è un contatore: lavori da firmare e argomenti della sala che aspettano il voto admin.
+
+Passo 3 — famiglia agente (rete) della dashboard
+- In cima alla home/pubblica: la stessa carta «Oggi» ma per «tu e chi hai sotto» (te + app_rete sotto di te), con il tuo obiettivo; sotto, l'ultima linea decisa (rpc app_linee_decise) con link a «Linee decise».
+- Voce «Linee decise» per tutti; «Sala strategia» solo per reteitalia, sviluppo, capoarea (agenti e sub-agenti NON vedono la discussione).
+- In «Guadagno»: le provvigioni dei lavori mostrano «lavoro, tranche N» e il ruolo (Chi segnala, Chi chiude, Chi segue il cantiere, Chi ha portato l'impresa). Avviso: «Sui privati niente provvigioni, solo sui lavori».
+- Se lì oggi ci sono dati demo, lasciali ma etichettali «Esempio».
+
+Passo 4 — famiglia azienda: «Il tuo mese»
+- Voce «Il tuo mese» (gruppo comune) con i numeri del mese come in V["im-report"] di viste-direzione.js (richieste nuove su AncheCasa, offerte fatte e vinte con valore, richieste pubblicate, preventivi, fatture, cantieri aperti, squadra in regola) e tasto «Scarica il report su carta intestata» con lo stesso layout della funzione AZIONI["report-stampa:"] (testata blu col logo negativo, fascia arancio, 8 riquadri, barre, nota, piede Palumbo Investment S.r.l.). Se la dashboard usa già jsPDF (come il report bolletta del magazine) puoi farlo in PDF con lo stesso stile.
+- Se l'azienda della dashboard non è collegata alle tabelle app_* (app_org), mostra solo i numeri che hai e scrivi «I numeri arrivano dall'app AncheCasa»: niente numeri inventati.
+
+Regole
+- Niente password o chiavi nel codice. Niente dati inventati mostrati come veri.
+- Non cambiare visibleNav (congelato) né le famiglie privato. Non toccare sito/, sicura/, magazine-sito/, app-anchecasa/. (sito/js/magazine.js è stato appena corretto da Claude: non toccarlo.)
+- Bump della versione ?v= dei js/css in index.html.
+- Prova: admin apre un argomento → commenta → decide sì con linea → (se c'è un Responsabile Rete Italia resta «in attesa»); lavoro: firma con margine 30.000 e valore 120.000 → incasso tranche 1 di 36.000 → alla rete 3.600 €; obiettivo Italia salvato e visibile nella carta «Oggi».
+- Alla fine scrivi in cima al «Registro delle modifiche» di CLAUDE.md cosa hai fatto, file toccati e copia di sicurezza. NON pubblicare: Nando pubblica da sé.

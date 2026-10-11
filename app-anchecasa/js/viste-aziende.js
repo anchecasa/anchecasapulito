@@ -55,6 +55,7 @@ export function installa(core) {
       h: `<div class="pad"><p class="saluto">${esc(o.nome || "La tua azienda")}</p><p class="sotto">${o.tipo === "gc" ? "AncheCasa general contractor" : o.ruolo === "titolare" ? "Titolare" : "Responsabile"}</p>
         ${mod.attivo("base") ? "" : `${avviso(mod.stato("base") === "richiesto" ? "Abbonamento richiesto: AncheCasa ti contatta per il pagamento e lo attiva." : "Per cominciare attiva l'abbonamento della tua azienda.")}<div style="height:8px"></div>${mod.stato("base") === "richiesto" ? "" : btn("Vedi l'abbonamento", "go:im-moduli")}<div style="height:12px"></div>`}
         <div class="griglia2">${num(cantieri.length, "Cantieri aperti")}${num(per("dipendente").length, "Dipendenti")}${num(rossi, "Scadenze superate", rossi ? "rosso" : "verde")}${num(per("preventivo").filter((r) => r.stato === "inviato").length, "Preventivi in attesa")}</div><div style="height:16px"></div>
+        ${lista([voce("grafico", "Il tuo mese con AncheCasa", "I tuoi risultati e il report da scaricare", "im-report", "verde")])}<div style="height:12px"></div>
         ${sez("Da fare", daFare.length ? lista(daFare.slice(0, 10)) : `<div class="card"><p>Niente di urgente. Bene così.</p></div>`)}
         ${cantieri.length ? sez("Cantieri", lista(cantieri.slice(0, 5).map((r) => core.rigaScheda(r))), `<a data-go="elenco/cantiere">Tutti</a>`) : ""}
         ${attivi.length ? sez("I tuoi moduli", `<div class="griglia2">${attivi.map((m) => tile(m.ico, m.nome, "", "mod/" + m.id)).join("")}</div>`) : ""}</div>`,
@@ -389,6 +390,7 @@ export function installa(core) {
       h: `<div class="pad"><p class="saluto">${esc(o.nome || "")}</p><p class="sotto">Fornitore · materiali e noleggi</p>
         ${(await moduliOrg(S.org)).attivo("base") ? "" : `${avviso("Per rispondere alle richieste e pubblicare il listino attiva l'abbonamento Fornitore.")}<div style="height:8px"></div>${btn("Vedi l'abbonamento", "go:im-moduli")}<div style="height:12px"></div>`}
         <div class="griglia2">${num(nuovi.length, "Richieste a cui rispondere", nuovi.length ? "giallo" : "")}${num(off.filter((x) => x.stato === "accettata").length, "Offerte accettate", "verde")}${num(off.filter((x) => x.stato === "inviata").length, "Offerte in attesa")}${num(prod.length, "Prodotti a listino")}</div><div style="height:16px"></div>
+        ${lista([voce("grafico", "Il tuo mese con AncheCasa", "Offerte fatte, vinte e il report da scaricare", "im-report", "verde")])}<div style="height:12px"></div>
         ${sez("Richieste nuove", nuovi.length ? lista(nuovi.slice(0, 6).map((l) => core.rigaScheda(l))) : `<div class="card"><p>Nessuna richiesta nuova.</p></div>`, `<a data-go="fo-lotti">Tutte</a>`)}</div>`,
     };
   };
@@ -406,7 +408,7 @@ export function installa(core) {
       t: "",
       h: `<div class="pad"><p class="saluto">${esc(o ? o.nome : (S.profilo || {}).nome || "")}</p><p class="sotto">Impresa partner di AncheCasa</p>
         ${sez("Cantieri AncheCasa che segui", c.length ? lista(c.map((x) => core.rigaScheda(x))) : `<div class="card"><p>Quando AncheCasa ti assegna un cantiere, lo trovi qui.</p></div>`)}
-        ${o ? sez("La tua impresa", lista([voce("griglia", "I tuoi moduli", "Ufficio, sicurezza, cantieri…", "im-moduli", "blu"), voce("rete", "Persone", "Lavoratori e inviti", "im-persone", "blu"), voce("kit", "Kit del marchio AncheCasa", "Cartello di cantiere, adesivi, divisa", "kit", "arancio")])) : ""}</div>`,
+        ${o ? sez("La tua impresa", lista([voce("grafico", "Il tuo mese con AncheCasa", "Risultati e report da scaricare", "im-report", "verde"), voce("griglia", "I tuoi moduli", "Ufficio, sicurezza, cantieri…", "im-moduli", "blu"), voce("rete", "Persone", "Lavoratori e inviti", "im-persone", "blu"), voce("kit", "Kit del marchio AncheCasa", "Cartello di cantiere, adesivi, divisa", "kit", "arancio")])) : ""}</div>`,
     };
   };
   V["pa-cantieri"] = async () => {

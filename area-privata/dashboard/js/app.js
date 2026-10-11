@@ -266,7 +266,8 @@
       return [
         { id: "pubblica", label: "Pubblica", icon: "send", gruppo: "fisso", cuore: true },
         { id: "chat", label: "Chat", icon: "chat", gruppo: "fisso" },
-        { id: "inviti", label: "Inviti", icon: "send", gruppo: "fisso" }
+        { id: "inviti", label: "Inviti", icon: "send", gruppo: "fisso" },
+        { id: "tuo-mese", label: "Il tuo mese", icon: "chart", gruppo: "comune" }
       ].concat(
         pack === "fornitore"
           ? packFornitore(modo)
@@ -274,21 +275,34 @@
       );
     }
     if (famiglia === "agente") {
-      return [
+      const voci = [
         { id: "pubblica", label: "Pubblica", icon: "send", gruppo: "fisso", cuore: true },
+        { id: "mio-ruolo", label: "Il mio ruolo", icon: "star", gruppo: "fisso" },
+        { id: "documenti", label: "Documenti", icon: "doc", gruppo: "fisso" },
         { id: "chat", label: "Chat", icon: "chat", gruppo: "fisso" },
         { id: "catena", label: "Catena", icon: "team", gruppo: "comune" },
         { id: "guadagno", label: "Guadagno", icon: "wallet", gruppo: "comune" },
-        { id: "inviti", label: "Inviti", icon: "send", gruppo: "comune" }
+        { id: "inviti", label: "Inviti", icon: "send", gruppo: "comune" },
+        { id: "linee-decise", label: "Linee decise", icon: "doc", gruppo: "fisso" }
       ];
+      if (window.AC && AC.direzione && AC.direzione.vedeSala()) {
+        voci.push({ id: "strategia", label: "Sala strategia", icon: "chat", gruppo: "fisso" });
+      }
+      return voci;
     }
     if (famiglia === "admin") {
       return [
         { id: "iscritti", label: "Iscritti registrati", icon: "team", gruppo: "fisso", cuore: true },
+        { id: "contratti", label: "Contratti", icon: "doc", gruppo: "fisso" },
+        { id: "affida", label: "Clienti da affidare", icon: "team", gruppo: "fisso" },
         { id: "iscrizioni", label: "Iscrizioni dal sito", icon: "send", gruppo: "fisso" },
         // 09.10.2026, su richiesta: statistiche della rivista e iscritti agli avvisi (js/magazine-admin.js).
         { id: "magazine", label: "Magazine", icon: "chart", gruppo: "fisso" },
         { id: "richieste-agenti", label: "Richieste agenti", icon: "star", gruppo: "fisso" },
+        { id: "proposte-rete", label: "Proposte rete", icon: "team", gruppo: "fisso" },
+        { id: "oggi-rete", label: "Oggi", icon: "chart", gruppo: "fisso" },
+        { id: "strategia", label: "Sala strategia", icon: "chat", gruppo: "fisso" },
+        { id: "lavori-rete", label: "Lavori rete", icon: "doc", gruppo: "fisso" },
         { id: "genera-link", label: "Genera link", icon: "send", gruppo: "fisso" },
         { id: "task", label: "Task", icon: "calendar", gruppo: "fisso" },
         { id: "file", label: "File", icon: "doc", gruppo: "fisso" },
@@ -521,6 +535,7 @@
      del menu (e sul tab «Altro» del telefono). Si aggiorna al login, a ogni nuovo messaggio
      (tempo reale), ogni minuto per sicurezza e quando la pagina Chat segna tutto come letto. */
   let chatNonLetti = 0;
+  let proposteDaDecidere = 0;
   let chatCanale = null;
   let chatTimer = null;
 
@@ -539,8 +554,13 @@
       }
     });
     const altro = document.getElementById("tab-altro");
-    if (altro) altro.classList.toggle("has-badge", chatNonLetti > 0);
+    if (altro) altro.classList.toggle("has-badge", chatNonLetti > 0 || proposteDaDecidere > 0);
   }
+
+  AC.reteBadge = function (n) {
+    proposteDaDecidere = n || 0;
+    paintPallino();
+  };
 
   function aggiornaPallino() {
     if (!window.acDb) return;
@@ -629,7 +649,7 @@
 
     // Telefono (01.10.2026): barra delle sezioni in basso, come un'app. Fino a 5 voci stanno tutte nella barra;
     // altrimenti le prime 4 e «Altro», che apre una scheda con il resto e con le cartelle (Ufficio, Cantiere...).
-    const BREVE = { bacheca: "Bacheca", iscritti: "Iscritti", iscrizioni: "Iscrizioni", "richieste-agenti": "Agenti", "genera-link": "Link", task: "Task", file: "File", "chat-team": "Chat" };
+    const BREVE = { bacheca: "Bacheca", iscritti: "Iscritti", contratti: "Contratti", affida: "Affida", iscrizioni: "Iscrizioni", "richieste-agenti": "Agenti", "proposte-rete": "Proposte", "oggi-rete": "Oggi", strategia: "Strategia", "lavori-rete": "Lavori", "linee-decise": "Linee", "tuo-mese": "Mese", "genera-link": "Link", task: "Task", file: "File", "chat-team": "Chat", "mio-ruolo": "Ruolo", documenti: "Documenti" };
     const conAltro = folds.length > 0 || top.length > 5;
     const tabs = conAltro ? top.slice(0, 4) : top;
     const extra = conAltro ? top.slice(4) : [];
@@ -647,7 +667,13 @@
     const altroPanel = document.getElementById("altro-panel");
     if (tabbarEl) tabbarEl.innerHTML = htmlTab;
     if (altroPanel) altroPanel.innerHTML = htmlAltro;
-    if (famiglia === "admin") paintPallino();
+    if (famiglia === "admin") {
+      paintPallino();
+      if (window.AC && AC.rete && AC.rete.badge) AC.rete.badge();
+      if (window.AC && AC.direzione && AC.direzione.badge) AC.direzione.badge();
+    }
+    if (famiglia === "agente" && window.AC && AC.contratti && AC.contratti.badge) AC.contratti.badge();
+    if ((famiglia === "agente" || famiglia === "azienda") && window.AC && AC.direzione && AC.direzione.prepara) AC.direzione.prepara();
     nav.querySelectorAll("[data-fold]").forEach((btn) => {
       btn.addEventListener("click", () => {
         const id = btn.getAttribute("data-fold");

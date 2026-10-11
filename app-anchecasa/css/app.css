@@ -51,6 +51,7 @@ h1, h2, h3 { font-family: var(--titoli); margin: 0; letter-spacing: -.01em; }
 .ico.verde { background: var(--verde-2); color: var(--verde); }
 .ico.rosso { background: var(--rosso-2); color: var(--rosso); }
 .ico.giallo { background: var(--giallo-2); color: var(--giallo); }
+.ico.arancio { background: var(--arancio-2); color: var(--arancio); }
 .freccia { color: #9AA7B8; flex: 0 0 auto; }
 .lista .card { border-radius: 0; margin: 0; border-width: 0 0 1px; }
 .lista { border-radius: var(--r); overflow: hidden; border: 1px solid #e7ecf3; background: #fff; }

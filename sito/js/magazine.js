@@ -1157,6 +1157,12 @@
   function onResize() {
     var w = window.innerWidth;
     var h = window.innerHeight;
+    // 10.10.2026: sul telefono la tastiera (mail degli avvisi, Check Bollette) cambia solo l'altezza.
+    // Prima si rifaceva tutta la rivista: il modulo spariva con quello che avevi scritto e la pagina restava bianca.
+    // Se cambia solo l'altezza su un telefono, o mentre scrivi in un campo, la rivista resta com'è.
+    var campo = document.activeElement && document.activeElement.closest && document.activeElement.closest("input,textarea,select");
+    var tocco = window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
+    if (Math.abs(w - lastW) < 30 && (campo || (mode === "single" && tocco))) return;
     if (currentMode() !== mode) { lastW = w; lastH = h; build(); return; }
     if (mode === "single" && Math.abs(altezzaSingola() - SINGLE.h) > 12) { lastW = w; lastH = h; build(); return; }
     if (mode === "single" && Math.abs(w - lastW) < 30 && Math.abs(h - lastH) < 48) return;
