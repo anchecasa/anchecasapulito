@@ -753,4 +753,20 @@
     <p>C.10 Documenti e firma nell'app. Le Parti convengono che contratti, circolari, regolamenti e loro modifiche possano essere sottoscritti anche con firma elettronica nel sistema AncheCasa, che registra l'identità dell'utente, la data, l'ora e il testo firmato; la Società mette a disposizione del firmatario copia del documento firmato. Le modifiche che riducono i diritti del componente della rete richiedono sempre il suo consenso espresso.</p>
 `
   };
+
+  /* 11.10.2026: l'Allegato B accorciato (senza BIM 5D e senza i mestieri nascosti) è una nuova versione.
+     Non si firma finché Nando non la sblocca. Chi ha firmato il 10.10.2026 resta su quel testo. */
+  const BREVE = "analisi e partecipazione a gare); professionisti tecnici; artigiani";
+  const LUNGA = "analisi e partecipazione a gare, BIM 5D); professionisti tecnici; condomini e amministratori; agenzie immobiliari; industria; logistica e trasporti; alberghi e ristorazione; negozi; artigiani";
+  Object.keys(AC.contrattiModelli).slice().forEach(function (k) {
+    const m = AC.contrattiModelli[k];
+    if (!m || m.versione !== "10.10.2026") return;
+    AC.contrattiModelli["bozza-1110/" + k] = Object.assign({}, m, {
+      versione: "11.10.2026",
+      firmabile: false,
+      etichetta: String(m.etichetta || "").replace("10.10.2026", "11.10.2026") + " · da far vedere all'avvocato, non firmabile"
+    });
+    if (m.corpo && m.corpo.indexOf(BREVE) >= 0) m.corpo = m.corpo.split(BREVE).join(LUNGA);
+    m.firmabile = true;
+  });
 })();

@@ -89,6 +89,14 @@ function disegna(v, tabs, attiva) {
   const campana = `<button type="button" class="campana" data-go="notifiche" aria-label="Notifiche${S.nonLette ? ": " + S.nonLette + " da leggere" : ""}">${I.campana}${S.nonLette ? "<i></i>" : ""}</button>`;
   const testa = `<header class="alto">${v.back ? `<button type="button" class="indietro" data-az="indietro" aria-label="Indietro">${I.indietro}</button>` : ""}${v.t ? `<h1 class="tit">${esc(v.t)}</h1>` : `<img class="logo" src="img/logo-colore.png" alt="AncheCasa"><span class="tit"></span>`}${chip}${campana}</header>`;
   const basso = tabs ? `<nav class="basso" aria-label="Menu">${tabs.map(([r, ico, et, centro]) => `<button type="button" data-tab="${r}" class="${r === attiva ? "on" : ""} ${centro ? "piu" : ""}" ${r === attiva ? 'aria-current="page"' : ""}>${centro ? `<span class="tondo">${I[ico]}</span>` : I[ico]}<span>${et}</span></button>`).join("")}</nav>` : "";
+  const largo = !!(S.utente && !v.pieno && core.menuLato && ["impresa", "fornitore", "admin"].includes(S.base));
+  app.classList.toggle("e-largo", largo);
+  const desktop = largo && window.matchMedia("(min-width: 900px)").matches;
+  if (desktop) {
+    const testaQui = v.guscio === "oggi" ? "" : testa;
+    app.innerHTML = `${fasciaProva}<div class="dash">${core.menuLato()}${`<div class="dash-col">${testaQui}<main class="schermo" id="schermo">${v.h}</main></div>`}</div>`;
+    return;
+  }
   app.innerHTML = `${fasciaProva}${testa}<main class="schermo" id="schermo">${v.h}</main>${basso}`;
 }
 
@@ -842,5 +850,5 @@ app.addEventListener("change", async (e) => {
 });
 
 /* Il cuore dell'app, per i moduli delle altre parti (aziende, rete, admin…). */
-export const core = { S, V, AZIONI, FORM, PROFILI, NOMI_RUOLI, PROFILO_EXTRA, DB, Q, vai, render, casa, caricaUtente, caricaProfili, scegliProfilo, aggiornaNonLette, memo, blocchiAnalisi, VOCI };
+export const core = { S, V, AZIONI, FORM, PROFILI, NOMI_RUOLI, PROFILO_EXTRA, DB, Q, vai, render, casa, caricaUtente, caricaProfili, scegliProfilo, aggiornaNonLette, memo, blocchiAnalisi, VOCI, menuLato: null };
 export { avvia };

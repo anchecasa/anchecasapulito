@@ -82,6 +82,8 @@
     azienda_ristoranti: "albergo",
     azienda_negozi: "negozio",
     azienda_capannoni: "industria",
+    committente_condominio: "committente", committente_amministratore: "committente",
+    committente_grande: "committente", committente_fondo: "committente",
     azienda_studi_tecnici: "professionista",
     azienda_consulenti: "hse",
     azienda_fornitori_it: "fornitore",
@@ -137,6 +139,7 @@
     hse: withUfficio([]),
     sicurezza_armata: withUfficio([]),
     apl: withUfficio([]),
+    committente: withUfficio([]),
     /* Macro-area Edilizia (01.10.2026, su richiesta, "vediamo come viene, poi si aggiunge o si toglie"):
        impresa riordinata (Cantiere da 9 a 6 voci + nuova cartella Mezzi e squadre, Subappalti in Gare),
        e due pack nuovi per Subappaltatori e Impiantisti, che prima ricevevano impresa e artigiano. */

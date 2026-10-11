@@ -20,6 +20,14 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 11.10.2026 19:09 · Cursor — dashboard come il modello approvato (NON pubblicato)
+- Parte 0. Sul sito non ci sono più le cifre: prezzi.html, le otto pagine app e la FAQ. Al posto, «Prova gratis» e «Parla con un consulente» (modulo consulenza-prezzi). In Iscrizioni dal sito quella richiesta sta in cima, fondo arancio chiaro. I prezzi restano in catalogo.js e in app_impostazioni. prezzi_visibili resta false.
+- Parte 0. Condomini, amministratori, grandi aziende e fondi tornano come committenti che pubblicano appalti (iscrizione, ricerca, pagina Appalti, categorie dell'area privata). Il pacchetto gestionale del condominio (anagrafe, assemblee, contabilità) resta nascosto.
+- Parte 0. L'Allegato B accorciato è la versione 11.10.2026, «da far vedere all'avvocato, non firmabile». La versione 10.10.2026, con il testo di prima, resta quella che si può firmare. Chi ha già firmato resta su quella.
+- Parte 1 e 2. Nell'app, Oggi per azienda, fornitore, privato, rete e admin, con i dati del database. Menu laterale da computer per azienda, fornitore e admin; in basso sul telefono. Privato e rete: cinque voci in basso. Senza numeri inventati: se non c'è niente, il primo passo da fare. In modalità prova la fascia «dati di esempio» resta.
+- Provato in locale a 1280 px e a 375 px: le cinque dashboard, i quattro aspetti dei pulsanti, gli stati vuoti con ?vuoto. Non pubblicato. Ramo iscrizione-pulsanti, non main. Nessuno SQL sul Supabase vero.
+- File: app-anchecasa/js/viste-dash.js, css/dash.css, app.js, main.js, q.js, sw.js, index.html, pacchetti.js, iscrizione-unica.js; sito/prezzi.html, faq.html, appalti.html, js/ac.js, le pagine app-*; iscrizione-unica (copie); area-privata dashboard (contratti, contratti-modelli, contratto-firma, views.js, app.js); app-anchecasa/docs/modello-dashboard/; CLAUDE.md.
+
 ### 11.10.2026 18:36 · Cursor — prezzi nascosti e lucchetto sul passo che manca (NON pubblicato)
 - La Parte D non c'era: `prezzi_visibili` non esisteva e i pulsanti mostravano le cifre. Ora l'impostazione è `false` (in `app-14` e nella prova). Sui pulsanti e in Abbonamento e moduli non compare nessuna cifra: «Prova gratis» o «Richiedi l'attivazione». L'admin, in Impostazioni, può riaccenderle. Il listino di anchecasa.it/prezzi non è stato toccato.
 - Il lucchetto «Completa il profilo» apre il passo che manca: telefono, partita IVA, documenti o categorie. Prima apriva il profilo in generale.

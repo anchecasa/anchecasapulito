@@ -31,6 +31,10 @@
   ["Ristrutturazione completa", "Rifare il bagno", "Rifare la cucina", "Facciata del condominio", "Tetto e coperture"].forEach(function (m) { VOCI.push([m, "Ristruttura con AncheCasa", "ristruttura.html"]); });
   ["Subappalto", "Fornitura materiali edili", "Noleggio mezzi", "Gara d'appalto", "Impresa edile", "Albo fornitori"].forEach(function (m) { VOCI.push([m, "Appalti e subappalti", "appalti.html"]); });
   (window.AC_APP || []).forEach(function (a) { VOCI.push(["App " + a.nome, "App per la tua attività", "app-" + a.id + ".html"]); });
+  VOCI.push(["Condominio", "Committenti che pubblicano appalti", "appalti.html"]);
+  VOCI.push(["Amministratore di condominio", "Committenti che pubblicano appalti", "appalti.html"]);
+  VOCI.push(["Fondo immobiliare", "Committenti che pubblicano appalti", "appalti.html"]);
+  VOCI.push(["Grande azienda", "Committenti che pubblicano appalti", "appalti.html"]);
   [["Casa in vendita", "vendita"], ["Vendo casa", "vendita"], ["Cerco casa", "vendita"], ["Casa in affitto", "affitto"], ["Affitto appartamento", "affitto"], ["Alloggio studenti", "studenti"], ["Stanza per studenti", "studenti"], ["Posto letto", "studenti"], ["Cerco lavoro", "lavoro"], ["Offro lavoro", "lavoro"]].forEach(function (m) { VOCI.push([m[0], "Bacheca annunci", "bacheca.html#" + m[1]]); });
   VOCI.push(["Diventare agente", "Lavora con noi", "agenti.html"], ["Diventare partner", "Lavora con noi", "partner.html"]);
 

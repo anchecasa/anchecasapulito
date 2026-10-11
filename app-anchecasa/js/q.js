@@ -47,7 +47,7 @@ function qVero() {
 /* MOTORE PROVA                                                              */
 /* ======================================================================== */
 function qProva() {
-  const CHIAVE = "anchecasa-app-prova2-v7";
+  const CHIAVE = "anchecasa-app-prova2-v8";
   const adesso = () => new Date().toISOString();
   const giorni = (n) => new Date(Date.now() + n * 864e5).toISOString().slice(0, 10);
   const fa = (ore) => new Date(Date.now() - ore * 3600e3).toISOString();
@@ -65,6 +65,9 @@ function qProva() {
       { chiave: "segnalazioni", valore: { premio: "" } },
       { chiave: "passaggio_impresa", valore: { interventi: 20, media: 4.5 } },
       { chiave: "prezzi_visibili", valore: false },
+    ]);
+    T("richieste_iscrizione", [
+      { id: "ri-cons-1", famiglia: "privato", stato: "nuova", created_at: fa(3), dati: { modulo: "consulenza-prezzi", nome: "Luca Bianchi", email: "luca@esempio.it", messaggio: "Vorrei capire l'abbonamento per l'impresa." } },
     ]);
     T("app_org", [
       { id: "o-gc", nome: "AncheCasa General Contractor", tipo: "gc", piva: "", citta: "Roma", regione: "Lazio", telefono: "", email: "", descrizione: "", titolare: "u-admin", stato: "attiva", creato: fa(900) },

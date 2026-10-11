@@ -148,6 +148,7 @@
           <form class="cf-corpo" id="cf-form" novalidate>
             ${m.corpo}
             <section class="cf-firma" aria-label="Firma del contratto">
+              ${m.firmabile === false ? `<p class="cf-nota">Da far vedere all'avvocato, non firmabile. Chi ha firmato la versione 10.10.2026 resta su quella.</p>` : ""}
               <div class="cf-riga2">
                 <div class="campo"><label for="cf-luogo">Luogo</label><input id="cf-luogo" name="luogo" required></div>
                 <div class="campo"><label for="cf-data">data</label><input id="cf-data" name="data" type="date" required readonly></div>
@@ -163,7 +164,7 @@
               </div>
               <div class="cf-invia" data-cf-fuori>
                 <p class="cf-errori" id="cf-errori" role="alert" hidden></p>
-                <button class="cf-btn" type="submit" id="cf-btn">Invia contratto firmato</button>
+                <button class="cf-btn" type="submit" id="cf-btn"${m.firmabile === false ? " disabled" : ""}>Invia contratto firmato</button>
                 <p class="cf-nota">Dopo l'invio la tua area si attiva con tutte le funzioni. La copia firmata resta in Documenti.</p>
               </div>
             </section>

@@ -26,6 +26,8 @@ export const TIPO_PACK = {
   azienda_hotel: "albergo", azienda_ristoranti: "albergo", azienda_negozi: "negozio", azienda_capannoni: "industria",
   azienda_studi_tecnici: "professionista", azienda_consulenti: "hse", azienda_fornitori_it: "fornitore",
   azienda_agenzie_immobiliari: "agenzia", agente_agenzie_immobiliari: "agenzia", azienda_luce_gas: "energia",
+  committente_condominio: "committente", committente_amministratore: "committente",
+  committente_grande: "committente", committente_fondo: "committente",
 };
 const TIPO_FORN_MODO = {
   azienda_materiali_edili: "vendita", azienda_noleggio_attrezzature: "noleggio", azienda_fornitori_it: "vendita",
@@ -53,6 +55,7 @@ export const PACKS = {
   impiantista: conUfficio(["interventi", "rapportini", "app", "manutprog", "dico", "mezzi", "magazzino"].map((id) => voce(id, ""))),
   professionista: conUfficio(["pratiche", "analizza", "bim", "rapportini", "presenze"].map((id) => voce(id, ""))),
   condominio: conUfficio(["anagrafe", "assemblee", "manutenzioni", "contabilita", "archivio", "fornitori"].map((id) => voce(id, ""))),
+  committente: conUfficio([]),
   agenzia: conUfficio(["immobili", "mandati", "visite"].map((id) => voce(id, ""))),
   industria: conUfficio(["produzione", "magazzino", "mezzi", "personale"].map((id) => voce(id, ""))),
   logistica: conUfficio(["magazzino", "mezzi", "tracking", "spedizioni"].map((id) => voce(id, ""))),

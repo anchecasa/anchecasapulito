@@ -48,7 +48,10 @@
     ["azienda_impiantisti", "Impiantista"],
     ["azienda_subappaltatori", "Subappaltatore"],
     ["azienda_studi_tecnici", "Studio tecnico"],
-
+    ["committente_condominio", "Condominio (pubblica appalti)"],
+    ["committente_amministratore", "Amministratore di condominio"],
+    ["committente_grande", "Grande azienda"],
+    ["committente_fondo", "Fondo immobiliare"],
   ];
 
   function esc(s) {

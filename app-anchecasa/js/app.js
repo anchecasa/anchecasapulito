@@ -15,6 +15,7 @@ import { installa as flash } from "./viste-flash.js";
 import { installa as subappalti } from "./viste-sub.js";
 import { installa as magazzino } from "./viste-magazzino.js";
 import { installa as pulsanti } from "./viste-pulsanti.js";
+import { installa as dash } from "./viste-dash.js";
 
 core.HOOK = { scheda: {}, dopoSalva: {}, primaSalva: {}, dopoScheda: {} };
 schede(core);
@@ -32,6 +33,7 @@ flash(core); // Sopralluogo Flash: nota vocale, stima, link del cliente (#/stima
 subappalti(core); // dopo flash: subappalti, pagamenti su misura, Profit Guard, offerte (#/offerta/…), preventivo ufficiale
 magazzino(core); // movimenti di magazzino, mezzi nei cantieri, costi reali del cantiere
 pulsanti(core); // dashboard a pulsanti: privato, azienda, fornitore, iscrizioni admin
+dash(core); // Oggi come il modello approvato: azienda, fornitore, privato, rete, admin
 avvia();
 
 // App installabile: copia dei file per aprirla subito (solo su https, non in prova).

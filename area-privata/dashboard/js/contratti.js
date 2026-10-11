@@ -207,6 +207,8 @@
     const pdf = html`
       <h2 class="rp-nome-h">Contratti</h2>
       ${grigliaPdf(CONTRATTI_PDF)}
+      <p class="note">Versione 11.10.2026 dell'Allegato B: da far vedere all'avvocato, non firmabile. Chi ha firmato la versione 10.10.2026 resta su quella.</p>
+      <div class="doc-griglia">${CONTRATTI_PDF.map(([nome, href]) => html`<button type="button" class="doc-tile" data-bozza="${"bozza-1110/" + href}"><b>${nome} · 11.10.2026</b><small>Da far vedere all'avvocato, non firmabile</small></button>`)}</div>
       <div class="doc-griglia" style="margin-top:12px">${ALTRI_PDF.map(([nome, href]) => html`<a class="doc-tile" href="${href}" target="_blank" rel="noopener"><b>${nome}</b><small>Apri il PDF</small></a>`)}</div>`;
     if (docId) { await dettaglioAdmin(pdf); return; }
     const [dRes, fRes, rRes] = await Promise.all([
@@ -740,7 +742,22 @@
   AC.views.contratti = {
     title: "Contratti",
     sub: "I contratti della rete, chi ha firmato, le circolari.",
-    render(el) { box = el; pagina = "contratti"; docId = ""; disegna(); }
+    render(el) {
+      box = el; pagina = "contratti"; docId = "";
+      if (!el.dataset.bozza) {
+        el.dataset.bozza = "1";
+        el.addEventListener("click", (e) => {
+          const b = e.target.closest("[data-bozza]");
+          if (!b || !AC.contrattoFirma) return;
+          e.preventDefault();
+          const file = b.getAttribute("data-bozza");
+          AC.contrattoFirma.mostra(el, { file: file, titolo: "Bozza" }, { indietro: true });
+          const ind = el.querySelector("#cf-indietro");
+          if (ind) ind.addEventListener("click", () => disegna());
+        });
+      }
+      disegna();
+    }
   };
   AC.views.affida = {
     title: "Clienti da affidare",

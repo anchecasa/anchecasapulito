@@ -120,6 +120,12 @@
     { famiglia: "azienda", area: "Aziende - Energia e utenze", voci: [
       ["azienda_luce_gas", "Fornitori di luce, gas e servizi energetici"]
     ] },
+    { famiglia: "azienda", area: "Committenti", voci: [
+      ["committente_condominio", "Condominio: pubblica appalti"],
+      ["committente_amministratore", "Amministratore di condominio"],
+      ["committente_grande", "Grande azienda"],
+      ["committente_fondo", "Fondo immobiliare"]
+    ] },
     { famiglia: "azienda", area: "Aziende - Intermediazione immobiliare", voci: [
       ["azienda_agenzie_immobiliari", "Agenzie immobiliari e mediatori"]
     ] },
@@ -4216,9 +4222,10 @@
       }
 
       function disegnaElenco(righe) {
+        righe = righe.slice().sort((a, b) => ((a.dati && a.dati.modulo) === "consulenza-prezzi" ? 0 : 1) - ((b.dati && b.dati.modulo) === "consulenza-prezzi" ? 0 : 1));
         el.innerHTML = html`
           <div class="card">
-            <p class="note">Solo privati e aziende. Il profilo è approvato in automatico. Da qui vedi i dati, chiedi integrazione documenti o fai una revoca momentanea. Le candidature agente stanno in Richieste agenti.</p>
+            <p class="note">Solo privati e aziende. Il profilo è approvato in automatico. Da qui vedi i dati, chiedi integrazione documenti o fai una revoca momentanea. Le candidature agente stanno in Richieste agenti. «Parla con un consulente» sta in cima.</p>
             ${!righe.length
               ? html`<p class="note">Nessuna iscrizione privato o azienda per ora.</p>`
               : html`<table class="mini-table">
@@ -4227,8 +4234,9 @@
                     ${righe.map((r, i) => {
                       const d = r.dati || {};
                       const sv = statoVisivo(r);
-                      return html`<tr data-i="${i}">
-                        <td>${LAB_FAMIGLIA_ADMIN[r.famiglia] || r.famiglia}</td>
+                      const consulenza = d.modulo === "consulenza-prezzi";
+                      return html`<tr data-i="${i}"${consulenza ? ' style="background:#FFF1E4"' : ""}>
+                        <td>${consulenza ? "Parla con un consulente" : (LAB_FAMIGLIA_ADMIN[r.famiglia] || r.famiglia)}</td>
                         <td>${nomeIscritto(r)}</td>
                         <td>${d.email || "-"}</td>
                         <td>${TAG_STATO_ISCRIZIONE[sv] ? html`<span class="tag ${TAG_STATO_ISCRIZIONE[sv][0]}">${TAG_STATO_ISCRIZIONE[sv][1]}</span>` : sv}</td>
