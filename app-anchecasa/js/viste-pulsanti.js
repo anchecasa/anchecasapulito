@@ -226,8 +226,9 @@ async function contesto(S) {
 export async function prezziVisibili() {
   try {
     const r = await Q.uno("app_impostazioni", { chiave: "prezzi_visibili" });
-    return !!(r && (r.valore === true || r.valore === "true"));
-  } catch (e) { return false; }
+    if (!r) return true;
+    return r.valore === true || r.valore === "true";
+  } catch (e) { return true; }
 }
 
 const PASSI = ["telefono", "piva", "documenti", "categorie"];

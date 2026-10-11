@@ -282,8 +282,8 @@ export function installa(core) {
     const v = (k) => (tutte.find((x) => x.chiave === k) || {}).valore || {};
     const pm = Object.assign({}, PREZZI_PREDEFINITI, v("prezzi_moduli")), pv = v("provvigioni"), riv = v("rivendita"), seg = v("segnalazioni"), pas = v("passaggio_impresa");
     const n = (name, val, step) => `<input name="${name}" type="number" step="${step || "0.01"}" min="0" value="${esc(val ?? "")}">`;
-    const vis = v("prezzi_visibili");
-    const prezziOn = vis === true || vis === "true";
+    const rigaPrezzi = tutte.find((x) => x.chiave === "prezzi_visibili");
+    const prezziOn = !rigaPrezzi || rigaPrezzi.valore === true || rigaPrezzi.valore === "true";
     return {
       t: "Prezzi e percentuali",
       h: `<div class="pad"><form data-form="ad-impostazioni" novalidate>

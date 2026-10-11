@@ -68,8 +68,8 @@ insert into marketplace.app_impostazioni (chiave, valore) values ('iscrizione', 
   'provvisorio', true
 )) on conflict (chiave) do update set valore = marketplace.app_impostazioni.valore || excluded.valore, aggiornato = now();
 
--- Prezzi dei moduli: spenti finché Nando non li riaccende da Impostazioni.
-insert into marketplace.app_impostazioni (chiave, valore) values ('prezzi_visibili', 'false'::jsonb)
+-- Prezzi al pubblico accesi (decisione di Nando, 11.10.2026 sera). Se la riga c'è già, non la sovrascrive: l'admin la cambia da Impostazioni.
+insert into marketplace.app_impostazioni (chiave, valore) values ('prezzi_visibili', 'true'::jsonb)
 on conflict (chiave) do nothing;
 
 create or replace function marketplace.app_iscrizione_valore(p_chiave text)

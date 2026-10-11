@@ -79,8 +79,8 @@
   /* Iscrizione azienda: tipo e piano precompilati dai prezzi (#azienda-impresa ecc.) */
   var tipo = $("#tipo-azienda");
   if (tipo) {
-    var PIANI = { artigiano: ["Artigiano", "14,90 € al mese", "Iscriviti come artigiano"], impresa: ["Imprese", "49 € al mese, Ufficio compreso", "Iscrivi l'impresa"],
-      fornitore: ["Fornitori", "99 € al mese", "Iscriviti come fornitore"], gc: ["General contractor", "Richiesta di iscrizione all'albo appalti", "Richiedi l'iscrizione"] };
+    var PIANI = { artigiano: ["Artigiano", "14,90 € al mese · prova 14 giorni", "Iscriviti come artigiano"], impresa: ["Imprese", "49 € al mese, Ufficio compreso · prova 14 giorni", "Iscrivi l'impresa"],
+      fornitore: ["Fornitori", "99 € al mese · prova 14 giorni", "Iscriviti come fornitore"], gc: ["General contractor", "Richiesta di iscrizione all'albo appalti", "Richiedi l'iscrizione"] };
     var mostraPiano = function () {
       var p = PIANI[tipo.value];
       $("#piano-nome").textContent = p ? p[0] : "Scegli chi sei";
@@ -120,11 +120,56 @@
         var p = $(".esito-err", f) || f.appendChild(document.createElement("p")); p.className = "esito esito-err";
         p.innerHTML = 'La richiesta non è partita. <a href="' + a + '" style="text-decoration:underline">Mandala per mail</a> a info@anchecasa.it.';
       };
+      var passwordEl = $("input[type=password]", f);
+      var password = passwordEl ? passwordEl.value : "";
+      var cvFile = null;
+      $$("input[type=file]", f).forEach(function (c) {
+        if (!cvFile && c.files && c.files[0]) cvFile = c.files[0];
+      });
       if (ANTEPRIMA) { fatto(); return; }
-      fetch(SB + "/rest/v1/richieste_iscrizione", { method: "POST",
-        headers: { apikey: SBK, Authorization: "Bearer " + SBK, "Content-Type": "application/json", "Content-Profile": "marketplace", Prefer: "return=minimal" },
-        body: JSON.stringify({ famiglia: parti[0], dati: dati }) })
-        .then(function (r) { if (r.ok) fatto(); else errore(); }).catch(errore);
+      var salvaRichiesta = function (userId) {
+        var corpo = { famiglia: parti[0], dati: dati };
+        if (userId) corpo.user_id = userId;
+        return fetch(SB + "/rest/v1/richieste_iscrizione", { method: "POST",
+          headers: { apikey: SBK, Authorization: "Bearer " + SBK, "Content-Type": "application/json", "Content-Profile": "marketplace", Prefer: "return=minimal" },
+          body: JSON.stringify(corpo) });
+      };
+      if (!password) {
+        salvaRichiesta(null).then(function (r) { if (r.ok) fatto(); else errore(); }).catch(errore);
+        return;
+      }
+      if (parti[0] === "agente" && (!cvFile || !/\.(pdf|doc|docx)$/i.test(cvFile.name || ""))) {
+        if (btn) btn.disabled = false;
+        var manca = $(".esito-err", f) || f.appendChild(document.createElement("p"));
+        manca.className = "esito esito-err";
+        manca.textContent = "Allega il curriculum in PDF o Word. Senza il curriculum la richiesta non parte.";
+        return;
+      }
+      fetch(SB + "/auth/v1/signup", { method: "POST",
+        headers: { apikey: SBK, Authorization: "Bearer " + SBK, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: dati.email,
+          password: password,
+          data: { nome: dati.nome || dati.ragione || "", cognome: dati.cognome || "", famiglia: parti[0], zona: dati.zona || "" }
+        })
+      }).then(function (r) { return r.json().then(function (j) { return { ok: r.ok, body: j }; }); })
+        .then(function (res) {
+          var user = res.body && (res.body.user || res.body);
+          var id = user && user.id;
+          if (!res.ok || !id || (user.identities && user.identities.length === 0)) throw new Error("iscrizione");
+          if (parti[0] !== "agente" || !cvFile) return salvaRichiesta(id);
+          var safe = String(cvFile.name || "cv").replace(/[^\w.\-]+/g, "_").slice(0, 80);
+          var percorso = "agente/" + id + "/cv-" + Date.now() + "-" + safe;
+          var tok = (res.body && res.body.access_token) || SBK;
+          return fetch(SB + "/storage/v1/object/marketplace-candidature/" + percorso, { method: "POST",
+            headers: { apikey: SBK, Authorization: "Bearer " + tok, "Content-Type": cvFile.type || "application/octet-stream" },
+            body: cvFile
+          }).then(function (r) {
+            if (!r.ok) throw new Error("cv");
+            dati.cv_path = percorso;
+            return salvaRichiesta(id);
+          });
+        }).then(function (r) { if (r && r.ok) fatto(); else errore(); }).catch(errore);
     });
   });
 
@@ -142,48 +187,10 @@
   /* SuperMastro: video di 5 secondi, problema, poi chi chiamare */
   var sm = $("#sm-rec");
   if (sm) {
-      var salvaRichiesta = function (userId) {
-        var corpo = { famiglia: parti[0], dati: dati };
-        if (userId) corpo.user_id = userId;
-        return fetch(SB + "/rest/v1/richieste_iscrizione", { method: "POST",
-          headers: { apikey: SBK, Authorization: "Bearer " + SBK, "Content-Type": "application/json", "Content-Profile": "marketplace", Prefer: "return=minimal" },
-          body: JSON.stringify(corpo) });
-      };
-      var entra = function () {
-        if (parti[0] !== "privato" && parti[0] !== "azienda" && parti[0] !== "agente") return Promise.resolve(null);
-        if (password.length < 8) return Promise.reject(new Error("password"));
-        return fetch(SB + "/auth/v1/signup", { method: "POST",
-          headers: { apikey: SBK, Authorization: "Bearer " + SBK, "Content-Type": "application/json" },
-          body: JSON.stringify({
-            email: dati.email,
-            password: password,
-            data: { nome: dati.nome || dati.ragione || "", cognome: dati.cognome || "", famiglia: parti[0], zona: dati.zona || "" }
-          })
-        }).then(function (r) { return r.json().then(function (j) { return { ok: r.ok, body: j }; }); })
-          .then(function (res) {
-            var user = res.body && (res.body.user || res.body);
-            var id = user && user.id;
-            if (!res.ok || !id || (user.identities && user.identities.length === 0)) {
-              throw new Error((res.body && res.body.msg) || (res.body && res.body.error_description) || "iscrizione");
-            }
-            return id;
-          });
-      };
-      var caricaCv = function (userId) {
-        if (parti[0] !== "agente" || !cvFile) return Promise.resolve();
-        var safe = String(cvFile.name || "cv").replace(/[^\w.\-]+/g, "_").slice(0, 80);
-        var percorso = "agente/" + (userId || "richieste") + "/cv-" + Date.now() + "-" + safe;
-        return fetch(SB + "/storage/v1/object/marketplace-candidature/" + percorso, { method: "POST",
-          headers: { apikey: SBK, Authorization: "Bearer " + SBK, "Content-Type": cvFile.type || "application/octet-stream" },
-          body: cvFile
-        }).then(function (r) {
-          if (!r.ok) throw new Error("cv");
-          dati.cv_path = percorso;
-        });
-      };
-      entra().then(function (userId) {
-        return caricaCv(userId).then(function () { return salvaRichiesta(userId); });
-      }).then(function (r) { if (r && r.ok) fatto(); else errore(); }).catch(function () { errore(); });
+    var PROBLEMI = [
+      { id: "goccia", voce: "Rubinetto che gocciola", problema: "Il rubinetto perde a gocce. Di solito è la guarnizione o il rompigetto.", fai: true, consiglio: "Chiudi l'acqua sotto il lavandino, svita il rompigetto e puliscilo dal calcare. Se continua a gocciolare, chiama un idraulico.", mestiere: "idraulico", q: "idraulico", osm: ['["craft"="plumber"]'], nome: "idraulic" },
+      { id: "scarico", voce: "Scarico lento", problema: "Lo scarico è intasato.", fai: true, consiglio: "Prova la ventosa e un po' di acqua calda. Non versare acidi. Se l'acqua torna su, chiama un idraulico.", mestiere: "idraulico", q: "idraulico", osm: ['["craft"="plumber"]'], nome: "idraulic" },
+      { id: "tubo", voce: "Perdita da tubo o soffitto", problema: "C'è una perdita da un tubo o dal soffitto.", fai: false, consiglio: "Chiudi il rubinetto generale dell'acqua. Non usare prese vicine all'acqua. Serve un idraulico.", mestiere: "idraulico", q: "idraulico", osm: ['["craft"="plumber"]'], nome: "idraulic" },
       { id: "lampadina", voce: "Lampadina spenta", problema: "Non si accende la luce. Può essere solo la lampadina.", fai: true, consiglio: "Stacca la corrente di quella stanza, aspetta che sia fredda e cambiala con una uguale. Se la nuova non parte, chiama un elettricista.", mestiere: "elettricista", q: "elettricista", osm: ['["craft"="electrician"]'], nome: "elettricist" },
       { id: "salvavita", voce: "Salvavita scattato", problema: "È saltata la corrente dal salvavita.", fai: true, consiglio: "Stacca gli apparecchi e rialza l'interruttore una volta sola. Se scatta di nuovo, non aprirlo e chiama un elettricista.", mestiere: "elettricista", q: "elettricista", osm: ['["craft"="electrician"]'], nome: "elettricist" },
       { id: "presa", voce: "Presa bruciata o scintille", problema: "La presa è bruciata o fa scintille. Non toccarla.", fai: false, consiglio: "Non inserire spine e non aprire la presa. Serve un elettricista.", mestiere: "elettricista", q: "elettricista", osm: ['["craft"="electrician"]'], nome: "elettricist" },

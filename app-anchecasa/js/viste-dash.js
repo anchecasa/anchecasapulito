@@ -43,6 +43,7 @@ export function installa(core) {
   ["reteitalia", "sviluppo", "capoarea", "agente", "subagente"].forEach((k) => { if (PROFILI[k]) PROFILI[k].tabs = tabRete; });
   if (PROFILI.impresa) PROFILI.impresa.tabs = [["dash", "casa", "Oggi"], ["elenco/cliente", "lista", "Clienti"], ["elenco/cantiere", "gru", "Commesse"], ["im-moduli", "griglia", "Moduli"], ["profilo", "utente", "Profilo"]];
   if (PROFILI.fornitore) PROFILI.fornitore.tabs = [["dash", "casa", "Oggi"], ["fo-lotti", "lista", "Richieste"], ["elenco/prodotto", "box", "Listino"], ["im-moduli", "griglia", "Moduli"], ["profilo", "utente", "Profilo"]];
+  if (PROFILI.admin) PROFILI.admin.tabs = [["ad-home", "grafico", "Da fare"], ["ad-verifica", "kit", "Aziende"], ["ad-rete", "rete", "Rete"], ["ad-ufficio", "ufficio", "Ufficio"], ["ad-economia", "euro", "Economia"]];
 
   function acceso(id) {
     const h = (location.hash || "#/").replace(/^#\//, "");
@@ -330,15 +331,25 @@ export function installa(core) {
     ric = (ric || []).filter((r) => r.dati && r.dati.modulo === "consulenza-prezzi");
     if (vuotoRichiesto()) ric = [];
     const prezzi = await prezziVisibili();
+    const tutte = orgs.filter((o) => o.tipo !== "gc");
+    const completi = tutte.filter((o) => String(o.piva || "").replace(/\D/g, "").length === 11);
+    const pct = tutte.length ? Math.round((completi.length / tutte.length) * 100) : 0;
     return {
       guscio: "oggi", t: "",
       h: `<div class="pad dash-oggi">
         <h1>Da fare</h1>
+        <div class="numeri3">
+          <div class="card"><b>${liste.length}</b><span>da verificare</span></div>
+          <div class="card"><b>${ric.length}</b><span>consulenze</span></div>
+          <div class="card"><b>${pct}%</b><span>profili completi</span></div>
+        </div>
         <h2>Aziende da verificare</h2>
-          ${liste.length ? liste.slice(0, 8).map((o) => `<div class="card"><b>${esc(o.nome)}</b><p>${esc(o.tipo || "")}${o.piva ? " · P.IVA " + esc(o.piva) : o.cf ? " · CF " + esc(o.cf) : String(o.tipo || "").startsWith("committente") ? " · committente" : " · senza P.IVA"}</p>
-          <div class="riga-fare">${btn("Verifica", "verifica-org:" + o.id + ":verificata", "piccolo")}${btn("Serve un documento", "verifica-org:" + o.id + ":da_verificare", "piccolo chiaro")}${btn("Sospendi", "verifica-org:" + o.id + ":sospesa", "piccolo chiaro")}</div></div>`).join("") : vuoto("Nessuna azienda da verificare.")}
+          ${liste.length ? liste.slice(0, 8).map((o) => `<div class="card"><button type="button" class="link-nome" data-go="ad-verifica"><b>${esc(o.nome)}</b></button><p>${esc(o.tipo || "")}${o.piva ? " · P.IVA " + esc(o.piva) : o.cf ? " · CF " + esc(o.cf) : String(o.tipo || "").startsWith("committente") ? " · committente" : " · senza P.IVA"}</p>
+          <div class="riga-fare">${btn("Verifica", "verifica-org:" + o.id + ":verificata", "piccolo")}${btn("Serve un documento", "verifica-org:" + o.id + ":da_verificare", "piccolo chiaro")}</div></div>`).join("") : vuoto("Nessuna azienda da verificare.")}
+        <div class="solo-pc">
         <h2>Iscrizioni: dove si fermano</h2>
         ${righe.length ? `<div class="imbuto">${righe.map((r) => `<div class="r"><span>${esc(r.passo)}</span><div class="b ${r === perso ? "perso" : ""}" style="width:${Math.max(8, (Number(r.persone) / max) * 100)}%"></div><b>${esc(r.persone)}</b></div>`).join("")}</div>` : vuoto("Nessun passo registrato in questi 30 giorni.")}
+        </div>
         <h2>Richieste «Parla con un consulente»</h2>
         ${ric.length ? ric.map((r) => `<div class="riga-fare"><div><b>${esc((r.dati && r.dati.nome) || "Richiesta")}</b><small>${esc((r.dati && (r.dati.email || r.dati.Mail)) || "")}</small></div><button type="button" class="btn" data-go="ad-aziende">Assegna</button></div>`).join("") : vuoto("Nessuna richiesta.")}
         <h2>Prezzi al pubblico</h2>
@@ -367,5 +378,20 @@ export function installa(core) {
     const p = String(resto).split(":");
     await Q.upd("app_org", { id: p[0] }, { stato_verifica: p[1] });
     vai("ad-home", true);
+  });
+
+  V["ad-ufficio"] = async () => ({
+    t: "Ufficio",
+    h: `<div class="pad dash-oggi">
+      <h1>Ufficio interno</h1>
+      <p class="sotto">Task, file, chat e Magazine restano nell'area privata.</p>
+      <div class="griglia-casa">
+        <a href="${AREA}task"><b>Task</b></a>
+        <a href="${AREA}file"><b>File</b></a>
+        <a href="${AREA}chat-team"><b>Chat del team</b></a>
+        <a href="${AREA}magazine"><b>Magazine</b></a>
+        <a href="${AREA}admin-mail"><b>Mail</b></a>
+      </div>
+    </div>`,
   });
 }

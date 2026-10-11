@@ -73,3 +73,11 @@
 .imbuto .b { height: 14px; background: #16304D; border-radius: 6px; }
 .imbuto .b.perso { background: #E56B10; }
 .interruttore { display: flex; align-items: center; gap: 10px; min-height: 44px; }
+.numeri3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 12px 0; }
+.numeri3 .card { padding: 10px; }
+.numeri3 .card b { display: block; font-size: 22px; color: #16304D; }
+.numeri3 .card span { font-size: 12px; color: #5c6b7a; }
+.solo-pc { display: none; }
+@media (min-width: 900px) { .solo-pc { display: block; } }
+.link-nome { background: none; border: 0; padding: 0; font: inherit; color: inherit; cursor: pointer; text-align: left; min-height: 44px; }
+.griglia-casa a { display: flex; align-items: center; min-height: 72px; border-radius: 14px; border: 1px solid #DCE3EC; background: #fff; text-decoration: none; color: inherit; padding: 12px; }

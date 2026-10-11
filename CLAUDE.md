@@ -20,6 +20,19 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 11.10.2026 19:47 · Cursor — pubblicato sito, area privata e app (ok scritto di Nando)
+- Prezzi visibili: `prezzi_visibili` è `true` su Supabase. Sul sito tornano le cifre di catalogo.js: artigiano 14,90 €, imprese 49 €, fornitori 99 €, moduli 9 / 19 / 29 / 29 / 9 / 9, tutti i moduli 69 €. Accanto restano «Prova gratis 14 giorni» e «Parla con un consulente».
+- Il primo invio del sito aveva `ac.js` rotto (l'iscrizione era finita dentro SuperMastro e lo script non partiva). Corretto: l'iscrizione con password crea l'account e scrive la richiesta; senza password, come il consulente, scrive solo la richiesta; SuperMastro ha di nuovo l'elenco dei problemi. Secondo invio: `dpl_Bx9ZtUYgSsXjaPvbSEDMfv78ih3o`, alias https://anchecasa.it, script `ac.js?v=8`.
+- Modulo consulente provato su https://anchecasa.it/prezzi: «Richiesta ricevuta». Nel database c'è la riga `consulenza-prezzi` di prova-pubblicazione-1110@anchecasa.it. Non ho creato un account di prova, così non parte una mail di conferma.
+- App su Cloudflare Pages, progetto app-anchecasa, produzione https://app-anchecasa.pages.dev e https://7cdaf910.app-anchecasa.pages.dev. Service worker `ac-app-2.9.0`. Provate in locale sul sito pubblicato le cinque «Oggi» (admin, impresa, fornitore, privato, agente) a 375 px e l'admin a 1280 px: menu in basso, tre numeri, Sospendi solo in Aziende, grafico iscrizioni solo da computer, interruttore prezzi acceso.
+- Area privata: `dpl_8tz4khcmuTEZEF1E4PLXufdPhmXo`, alias https://areaprivata.anchecasa.it. Login, home.js e manifest rispondono. Non sono entrato: non ho usato una password vera.
+- Funzioni spente, dopo aver salvato il codice in `app-anchecasa/supabase/functions-archivio/`: parse-cv, scrape-company-site, installation-bids, omi-lookup, ordine-tracking, presentazione-mappa-search. Pubblicate sopralluogo-flash, subappalti-mail, gare-analisi. Senza accesso rispondono `accesso_richiesto`. `sdi-gateway` resta accesa. 97 funzioni online, 3 posti liberi. La chiave Gemini è tra i segreti, valore non scritto. La prova audio → computo → stima non è stata fatta: serve un agente entrato, con un sopralluogo e un audio.
+- app-15 non eseguito: niente backup da cui tornare indietro (PITR spento, elenco backup vuoto, Docker assente, password del database rifiutata). Dettaglio in `APPUNTI-FRANCESCO.md`.
+- SuperMastro SOS non pubblicato: il login nuovo è nel codice, il sito online è ancora quello di prima.
+- Magazine e AncheSicura non toccati. Niente store. app.anchecasa.it non toccato. DNS di entra.anchecasa.it non scritto.
+- Contratto firmabile: solo la versione 10.10.2026. La 11.10.2026 resta in sola lettura.
+- File: `sito/` (prezzi, faq, pagine app, `js/ac.js`), `app-anchecasa/` (dashboard telefono, service worker 2.9.0, archivio funzioni), `APPUNTI-FRANCESCO.md`, `CLAUDE.md`.
+
 ### 11.10.2026 19:09 · Cursor — dashboard come il modello approvato (NON pubblicato)
 - Parte 0. Sul sito non ci sono più le cifre: prezzi.html, le otto pagine app e la FAQ. Al posto, «Prova gratis» e «Parla con un consulente» (modulo consulenza-prezzi). In Iscrizioni dal sito quella richiesta sta in cima, fondo arancio chiaro. I prezzi restano in catalogo.js e in app_impostazioni. prezzi_visibili resta false.
 - Parte 0. Condomini, amministratori, grandi aziende e fondi tornano come committenti che pubblicano appalti (iscrizione, ricerca, pagina Appalti, categorie dell'area privata). Il pacchetto gestionale del condominio (anagrafe, assemblee, contabilità) resta nascosto.
