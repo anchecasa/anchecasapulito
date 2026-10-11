@@ -138,7 +138,7 @@ function motoreVero() {
 /* MOTORE PROVA (dati di esempio nel browser)                                 */
 /* ======================================================================== */
 function motoreProva() {
-  const CHIAVE = "anchecasa-app-prova-v3";
+  const CHIAVE = "anchecasa-app-prova-v4";
   const adesso = () => new Date().toISOString();
   const fa = (ore) => new Date(Date.now() - ore * 3600e3).toISOString();
   const nuovoId = () => "p-" + Math.random().toString(36).slice(2, 10);
@@ -146,7 +146,7 @@ function motoreProva() {
   const seme = () => ({
     utente: null,
     utenti: {
-      privato: { id: "u-privato", email: "privato@esempio.it", nome: "Giulia (esempio)", citta: "Roma", telefono: "", ruoli: ["privato"], admin: false, etichetta: "Privato" },
+      privato: { id: "u-privato", email: "privato@esempio.it", nome: "Giulia (esempio)", citta: "Roma", telefono: "", obiettivi: ["guasto"], ruoli: ["privato"], admin: false, etichetta: "Privato" },
       artigiano: { id: "u-artigiano", email: "artigiano@esempio.it", nome: "Marco (esempio)", citta: "Roma", telefono: "", ruoli: ["artigiano"], admin: false, etichetta: "Artigiano" },
       admin: { id: "u-admin", email: "admin@esempio.it", nome: "Admin (esempio)", citta: "Roma", telefono: "", ruoli: [], admin: true, etichetta: "Admin AncheCasa" },
       impresa: { id: "u-impresa", email: "impresa@esempio.it", nome: "Roberto (esempio)", citta: "Roma", telefono: "000 000 0101", ruoli: [], admin: false, etichetta: "Impresa · titolare" },
@@ -207,7 +207,7 @@ function motoreProva() {
     async esci() { db.utente = null; salva(); },
     async azzeraProva() { db = seme(); salva(); },
 
-    async profilo() { const u = me(); return { nome: u.nome, citta: u.citta, telefono: u.telefono, famiglia: "" }; },
+    async profilo() { const u = me(); return { nome: u.nome, citta: u.citta, telefono: u.telefono, famiglia: "", obiettivi: u.obiettivi || [] }; },
     async salvaProfilo({ nome, citta, telefono }) { Object.assign(me(), { nome, citta, telefono }); salva(); },
     async ruoli() { return { ruoli: me().ruoli.slice(), admin: me().admin, famiglia: "" }; },
     async aggiungiRuolo(r) { if (!me().ruoli.includes(r)) me().ruoli.push(r); salva(); },

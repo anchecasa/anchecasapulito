@@ -120,6 +120,12 @@
     { famiglia: "azienda", area: "Aziende - Energia e utenze", voci: [
       ["azienda_luce_gas", "Fornitori di luce, gas e servizi energetici"]
     ] },
+    { famiglia: "azienda", area: "Committenti", voci: [
+      ["committente_condominio", "Condominio: pubblica appalti"],
+      ["committente_amministratore", "Amministratore di condominio"],
+      ["committente_grande", "Grande azienda"],
+      ["committente_fondo", "Fondo immobiliare"]
+    ] },
     { famiglia: "azienda", area: "Aziende - Intermediazione immobiliare", voci: [
       ["azienda_agenzie_immobiliari", "Agenzie immobiliari e mediatori"]
     ] },
@@ -3765,8 +3771,11 @@
     return n || dati.email || "Agente";
   }
 
-  function rigaAllegato(lab, nome, url) {
-    if (!nome && !url) return html`<li><strong>${lab}:</strong> non allegato</li>`;
+  function rigaAllegato(lab, nome, url, path) {
+    if (!nome && !url && !path) return html`<li><strong>${lab}:</strong> non allegato</li>`;
+    if (path) {
+      return html`<li><strong>${lab}:</strong> <a href="#" data-cv-path="${path}" target="_blank" rel="noopener">${nome || "Apri il curriculum"}</a></li>`;
+    }
     if (url) {
       return html`<li><strong>${lab}:</strong> <a href="${url}" target="_blank" rel="noopener">${nome || "Apri file"}</a></li>`;
     }
@@ -3832,7 +3841,7 @@
             </dl>
             <h3 style="margin:18px 0 8px;font-size:15px">Allegati</h3>
             <ul class="ra-all">
-              ${rigaAllegato("Curriculum", d.cv, d.cv_url)}
+              ${rigaAllegato("Curriculum", d.cv, d.cv_url, d.cv_path)}
               ${rigaAllegato("Portfolio", d.portfolio, d.portfolio_url)}
             </ul>
             ${d.info_domande
@@ -3843,6 +3852,12 @@
               <button type="button" class="btn-in" id="ra-approva" ${r.stato === "accettata" ? "disabled" : ""}>${r.stato === "accettata" ? "Già approvato" : "Approva agente"}</button>
             </div>
           </div>`.s;
+        el.querySelectorAll("[data-cv-path]").forEach((a) => {
+          const percorso = a.getAttribute("data-cv-path");
+          window.acDb.storage.from("marketplace-candidature").createSignedUrl(percorso, 3600).then((r) => {
+            if (r.data && r.data.signedUrl) a.href = r.data.signedUrl;
+          });
+        });
         el.querySelector("#ra-indietro").addEventListener("click", carica);
         el.querySelector("#ra-info").addEventListener("click", () => richiediInfo(r, () => vediAgente(Object.assign({}, r, { dati: r.dati }))));
         el.querySelector("#ra-approva").addEventListener("click", () => approvaAgente(r, carica));
@@ -4207,9 +4222,10 @@
       }
 
       function disegnaElenco(righe) {
+        righe = righe.slice().sort((a, b) => ((a.dati && a.dati.modulo) === "consulenza-prezzi" ? 0 : 1) - ((b.dati && b.dati.modulo) === "consulenza-prezzi" ? 0 : 1));
         el.innerHTML = html`
           <div class="card">
-            <p class="note">Solo privati e aziende. Il profilo è approvato in automatico. Da qui vedi i dati, chiedi integrazione documenti o fai una revoca momentanea. Le candidature agente stanno in Richieste agenti.</p>
+            <p class="note">Solo privati e aziende. Il profilo è approvato in automatico. Da qui vedi i dati, chiedi integrazione documenti o fai una revoca momentanea. Le candidature agente stanno in Richieste agenti. «Parla con un consulente» sta in cima.</p>
             ${!righe.length
               ? html`<p class="note">Nessuna iscrizione privato o azienda per ora.</p>`
               : html`<table class="mini-table">
@@ -4218,8 +4234,9 @@
                     ${righe.map((r, i) => {
                       const d = r.dati || {};
                       const sv = statoVisivo(r);
-                      return html`<tr data-i="${i}">
-                        <td>${LAB_FAMIGLIA_ADMIN[r.famiglia] || r.famiglia}</td>
+                      const consulenza = d.modulo === "consulenza-prezzi";
+                      return html`<tr data-i="${i}"${consulenza ? ' style="background:#FFF1E4"' : ""}>
+                        <td>${consulenza ? "Parla con un consulente" : (LAB_FAMIGLIA_ADMIN[r.famiglia] || r.famiglia)}</td>
                         <td>${nomeIscritto(r)}</td>
                         <td>${d.email || "-"}</td>
                         <td>${TAG_STATO_ISCRIZIONE[sv] ? html`<span class="tag ${TAG_STATO_ISCRIZIONE[sv][0]}">${TAG_STATO_ISCRIZIONE[sv][1]}</span>` : sv}</td>

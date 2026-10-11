@@ -12,6 +12,49 @@
   }
 
   var form = document.getElementById("login-form");
+  var APP = "https://entra.anchecasa.it/";
+
+  function vaNellApp(famiglia) {
+    return famiglia === "privato" || famiglia === "azienda" || famiglia === "fornitore";
+  }
+
+  // Admin e rete restano nell'area privata. Privato, azienda e fornitore vanno nell'app.
+  function dopoAccesso(userId) {
+    return window.acDb.from("admins").select("id").eq("id", userId).maybeSingle()
+      .then(function (adminRes) {
+        if (adminRes.error) throw new Error("Accesso non riuscito. Riprova.");
+        if (adminRes.data) {
+          window.location.href = "dashboard/#/";
+          return;
+        }
+        return window.acDb.from("profiles").select("famiglia, verifica").eq("id", userId).maybeSingle()
+          .then(function (profRes) {
+            if (profRes.error) throw new Error("Accesso non riuscito. Riprova.");
+            var prof = profRes.data;
+            if (!prof || prof.verifica !== "verificato") {
+              var rifiutato = prof && prof.verifica === "rifiutato";
+              var errVerifica = new Error(rifiutato
+                ? "La tua richiesta non è stata accettata. Per informazioni contatta l'assistenza."
+                : "La richiesta da agente è in attesa. Ti scriviamo quando viene accettata.");
+              if (!rifiutato) errVerifica.tipo = "info";
+              return window.acDb.auth.signOut().then(function () { throw errVerifica; }, function () { throw errVerifica; });
+            }
+            if (vaNellApp(prof.famiglia)) {
+              window.location.href = APP;
+              return;
+            }
+            window.location.href = "dashboard/#/" + prof.famiglia + "/";
+          });
+      });
+  }
+
+  // 11.10.2026: chi ha già fatto l'accesso entra subito, senza ridare la password.
+  if (form && window.acDb && !/[?&]esci\b/.test(location.search)) {
+    window.acDb.auth.getSession().then(function (r) {
+      if (r && r.data && r.data.session) dopoAccesso(r.data.session.user.id).catch(function () {});
+    }).catch(function () {});
+  }
+
   if (form && window.acDb) {
     var loginError = document.getElementById("login-error");
     var loginBtn = form.querySelector('button[type="submit"]');
@@ -58,32 +101,7 @@
             throw new Error(msg);
           }
           var userId = res.data.user.id;
-          return conTimeout(window.acDb.from("admins").select("id").eq("id", userId).maybeSingle(), 25000, msgServerLento)
-            .then(function (adminRes) {
-              if (adminRes.error) throw new Error("Accesso non riuscito. Riprova.");
-              if (adminRes.data) {
-                window.location.href = "dashboard/#/admin/iscritti";
-                return;
-              }
-              return conTimeout(window.acDb.from("profiles").select("famiglia, verifica").eq("id", userId).maybeSingle(), 25000, msgServerLento)
-                .then(function (profRes) {
-                  if (profRes.error) throw new Error("Accesso non riuscito. Riprova.");
-                  // Chi si iscrive dal sito ha subito account e profilo (trigger
-                  // handle_new_user_marketplace), ma con verifica "attesa": entra solo
-                  // quando l'amministrazione lo segna "verificato". Altrimenti si esce.
-                  var prof = profRes.data;
-                  if (!prof || prof.verifica !== "verificato") {
-                    var rifiutato = prof && prof.verifica === "rifiutato";
-                    var errVerifica = new Error(rifiutato
-                      ? "La tua iscrizione non è stata approvata. Per informazioni contatta l'assistenza."
-                      : "La tua iscrizione è in attesa di verifica. Ti contatteremo appena è approvata.");
-                    if (!rifiutato) errVerifica.tipo = "info";
-                    return window.acDb.auth.signOut().then(function () { throw errVerifica; }, function () { throw errVerifica; });
-                  }
-                  // Privato, Azienda e Agente arrivano su "La mia bacheca" (23.09.2026), non più sul Profilo.
-                  window.location.href = "dashboard/#/" + prof.famiglia + "/bacheca";
-                });
-            });
+          return dopoAccesso(userId);
         })
         .catch(function (err) {
           if (loginBtn) loginBtn.disabled = false;

@@ -1,0 +1,26 @@
+/* Modulo unico di iscrizione. Palette AncheCasa: cotto, navy, inchiostro, carta. */
+.iu { color: #1A2432; font-family: "DM Sans", "Segoe UI", sans-serif; }
+.iu h2 { margin: 0 0 8px; font-family: Montserrat, "Segoe UI", sans-serif; color: #2A3C54; font-size: 1.35rem; }
+.iu .iu-lead { margin: 0 0 16px; color: #3d4d62; line-height: 1.45; }
+.iu-scelte { display: grid; gap: 8px; margin-bottom: 14px; }
+.iu-scelta { display: flex; gap: 10px; align-items: flex-start; border: 1px solid #e4ebf3; border-radius: 12px; padding: 10px 12px; background: #fff; cursor: pointer; }
+.iu-scelta:has(input:checked) { border-color: #E56B10; background: #fff7f0; }
+.iu-scelta b { display: block; color: #2A3C54; }
+.iu-scelta small { color: #66758a; }
+.iu label.iu-campo { display: block; margin: 0 0 12px; font-weight: 650; color: #2A3C54; }
+.iu label.iu-campo input, .iu label.iu-campo select { display: block; width: 100%; margin-top: 6px; box-sizing: border-box; border: 1px solid #d5deea; border-radius: 10px; padding: 12px; font: inherit; background: #fff; }
+.iu-spunta { display: flex; gap: 8px; align-items: flex-start; margin: 8px 0 14px; font-weight: 500; }
+.iu-btn { display: inline-block; background: #E56B10; color: #fff; border: 0; border-radius: 24px; padding: 12px 22px; font-weight: 800; cursor: pointer; }
+.iu-btn.linea { background: #fff; color: #2A3C54; border: 1px solid #d5deea; }
+.iu-social { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.iu-err { color: #9a3412; font-weight: 700; }
+.iu-ok { color: #2A3C54; }
+.iu-avviso { background: #fff7f0; border-left: 4px solid #E56B10; padding: 10px 12px; border-radius: 8px; margin-bottom: 12px; }
+.iu-obiettivi { display: grid; gap: 8px; }
+.iu-obiettivi label { display: flex; gap: 8px; align-items: center; background: #FBF8F3; border-radius: 10px; padding: 10px; }
+.iu-barra { background: #fff; border: 1px solid #e4ebf3; border-radius: 12px; padding: 12px 14px; margin-bottom: 12px; }
+.iu-barra .traccia { height: 8px; background: #eef2f7; border-radius: 8px; overflow: hidden; }
+.iu-barra .pieno { height: 8px; background: #E56B10; }
+.iu-lucchetto { color: #66758a; }
+.iu-attiva { display: inline-block; background: #E56B10; color: #fff; border-radius: 10px; padding: 2px 8px; font-size: 12px; font-weight: 800; }
+.iu-ateco { max-height: 180px; overflow: auto; border: 1px solid #e4ebf3; border-radius: 10px; padding: 8px; background: #fff; }

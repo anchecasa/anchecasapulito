@@ -8,6 +8,13 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <!-- 11.10.2026: app installabile dal telefono (manifest.webmanifest, sw.js) -->
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="theme-color" content="#1f4d7a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="AncheCasa">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <link rel="stylesheet" href="css/kit.css">
 </head>
 <body>
@@ -60,5 +67,6 @@
   <script src="js/supabase-client.js"></script>
   <script src="js/mostra-password.js"></script>
   <script src="js/app.js"></script>
+  <script>if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(function () {});</script>
 </body>
 </html>

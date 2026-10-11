@@ -1,0 +1,38 @@
+COMANDO PER CURSOR · Area «Rete» admin (creare e supervisionare tutta la rete) · 11.10.2026
+
+Cartella: area-privata/dashboard (online su https://areaprivata.anchecasa.it/dashboard). SQL in app-anchecasa/sql.
+Prima di tutto: copia di sicurezza in _copie-dashboard-rete-admin-<ora> (se esiste già quella delle 15:50 va bene) e a fine lavoro voce nel registro di CLAUDE.md.
+
+PERCHÉ OGGI L'ADMIN NON PUÒ CREARE CAPO AREA, AGENTI ECC.
+- app-anchecasa/sql/app-05-proposte-rete.sql, funzione marketplace.app_puo_invitare:
+    if p_cosa = 'rete' then return marketplace.is_admin() and p_ruolo = 'reteitalia'; end if;
+  → l'admin può inserire in app_inviti (cosa='rete') solo il ruolo reteitalia. Tutti gli altri passano da app_proponi_rete + voti.
+- js/rete-proposte.js, agganciaRri(): crea l'invito Rete Italia ma dà solo un link da copiare, nessuna mail.
+- js/views.js (~riga 2660): le mail d'invito AncheCasa partono con la funzione "invia-invito-marketplace" solo per gli inviti di Genera link.
+
+COSA FARE
+1) SQL nuovo app-anchecasa/sql/app-15-rete-admin.sql (NON eseguirlo: lo lancia Nando nell'SQL Editor)
+   - app_puo_invitare: per p_cosa='rete' → return marketplace.is_admin() (tutti i ruoli: reteitalia, sviluppo, capoarea, agente, subagente). Il resto della funzione identico.
+   - se manca, colonna per il responsabile sopra (es. app_inviti.sopra uuid / app_rete.sopra) e regione; passala all'utente quando accetta l'invito (app_accetta_invito).
+   - controllo lato server: ruolo valido, mail non già nella rete, il "sopra" deve avere un ruolo superiore.
+   - le proposte fatte dagli altri ruoli (app_proponi_rete / app_vota_proposta / app_proposta_esito) NON si toccano.
+
+2) Nuova pagina #/admin/rete (file nuovo js/rete-admin.js + css/rete-admin.css, caricati in index.html), con 4 schede:
+   a. Albero: riusa montaCatena() di rete-proposte.js. Ogni persona: ruolo, regione, sopra, stato (invitato/aperto/attivo), contratto firmato sì/no (app_firme), ultimo accesso se c'è. Filtri ruolo/regione/stato, ricerca, contatori in alto. Tocco su una persona → scheda con sottoposti, firme, azioni: reinvia mail, cambia responsabile, sospendi/riattiva.
+   b. Crea persona: ruolo (5), nome, mail, telefono, regione, responsabile sopra (select solo coi ruoli superiori). Insert in app_inviti cosa='rete' → l'invito parte SUBITO, senza voti, e manda la mail AncheCasa come fa Genera link (stessa funzione invia-invito-marketplace se accetta gli inviti rete, altrimenti adattala) + bottone copia link.
+   c. Approvazioni: in un solo elenco le proposte da decidere (app_proposte_rete) e le candidature di Richieste agenti, con le azioni che già esistono.
+   d. Contratti e firme: per ogni contratto chi ha firmato e chi manca (dati di contratti.js), clic sulla persona, «Sollecita» per chi non ha firmato.
+   Le pagine vecchie proposte-rete e richieste-agenti restano e si raggiungono anche da qui.
+
+3) Menu (js/app.js)
+   - Telefono (tabbar in basso): Iscritti · Rete · Contratti · Affida · Altro. «Rete» fisso, non dentro Altro.
+   - PC (side-menu): voci raggruppate con titoletto: Clienti (Iscritti, Iscrizioni dal sito, Affida, Genera link) · Rete (Rete, Proposte rete, Richieste agenti, Oggi, Lavori rete, Sala strategia) · Documenti (Contratti, Bandi, Magazine) · Strumenti (Appunti, Task).
+   - Badge della rete (AC.reteBadge) sulla voce Rete.
+
+4) Telefono: schede scorrevoli in orizzontale, tabelle → card, form a una colonna, tasti alti almeno 44 px.
+
+VINCOLI
+- Stile attuale (blu/arancio, card bianche arrotondate, dashboard.css). Nessuna libreria nuova.
+- Non toccare i dati esistenti né il flusso di firma del contratto appena fatto (contratto-firma.js, app-14).
+- Prova in locale a 390 px e 1366 px con un admin finto. NON pubblicare: pubblica Nando, dopo aver eseguito app-15 (e app-14 se non ancora fatto).
+- Mostrami prima il piano con i file che tocchi, poi procedi.

@@ -1,0 +1,47 @@
+COMANDO PER CURSOR · Contratti compilabili e firmabili dal telefono: database, prova, commit e pubblicazione · 11.10.2026
+
+Cartella: ANCHECASA-PULITO. Il lavoro è già scritto da Claude e annotato in CLAUDE.md (voci 11.10.2026 15:40 e 15:55).
+NON riscrivere i file del lavoro: qui si mette online, e si sistema solo se una prova fallisce.
+
+FILE DEL LAVORO
+- area-privata/dashboard/index.html (Manrope, css/contratto-firma.css, js/contratti-modelli.js, js/contratto-firma.js, contratti.js?v=2, app.js?v=7)
+- area-privata/dashboard/js/app.js (una sola riga dopo paintTop: AC.contrattoFirma.applica)
+- area-privata/dashboard/js/contratti.js
+- area-privata/dashboard/js/contratto-firma.js (nuovo)
+- area-privata/dashboard/js/contratti-modelli.js (nuovo: i 5 contratti 10.10.2026)
+- area-privata/dashboard/css/contratto-firma.css (nuovo)
+- area-privata/dashboard/img/contratto-logo.png, contratto-logo-negativo.png, contratto-curva.png (nuovi)
+- app-anchecasa/sql/app-14-contratto-compilato.sql (nuovo)
+
+PASSO 1 · Database (prima di tutto)
+- Esegui app-anchecasa/sql/app-14-contratto-compilato.sql sul progetto ANCHECASA (edsvmnxojsmknjuhobqa), come hai fatto per app-03…app-13. È idempotente.
+- Controlla che esistano: colonna marketplace.app_firme.dati, funzioni marketplace.app_firma_contratto(uuid,text,text,text,text,jsonb) e marketplace.app_contratto_ok(uuid), policy app_vendite_serve_contratto e app_affari_serve_contratto.
+- Se lo script non parte, FERMATI e dimmi l'errore esatto: senza app-14 la dashboard non va pubblicata (l'invio del contratto risponde «Manca app-14»).
+
+PASSO 2 · Prova in locale (python -m http.server dalla cartella area-privata, oppure npx serve)
+- Con un utente vero della rete senza firma (o uno di prova in app_rete con stato attivo):
+  a. ogni pagina dell'agente mostra la striscia «La tua area è in sola lettura» con «Firma il contratto»; i tasti che salvano sono fermati, Documenti resta libero;
+  b. «Firma il contratto» apre il contratto del suo ruolo, a 390 px si compila bene, CF/P.IVA/IBAN vengono controllati, la firma col dito funziona;
+  c. «Invia contratto firmato» → «Contratto inviato», la striscia sparisce; in Supabase c'è la riga in app_firme con dati e impronta;
+  d. in Documenti «Apri il contratto firmato» apre la copia con dati e firma; da admin · Contratti · Ricevuta si apre la stessa copia.
+- Prova almeno Agente e Sub-agente. Nessun errore in console.
+- La riga di prova in app_firme NON si cancella dall'app: se è di un utente finto, toglila tu dal database alla fine.
+
+PASSO 3 · Commit
+- git status: ci sono anche modifiche di altri lavori. Committa SOLO i file elencati sopra + CLAUDE.md, con il messaggio:
+  «Area privata: contratti della rete compilabili e firmabili dal telefono, area in sola lettura fino alla firma (app-14)»
+- Dimmi su che ramo sei. Se non sei su main, non cambiare ramo da solo: chiedimi se fare il commit qui o portarlo su main.
+- Push su origin (anchecasa/anchecasapulito). Nessuna chiave nei file.
+
+PASSO 4 · Pubblicazione dell'area privata (Vercel, progetto area-privata-produzione, areaprivata.anchecasa.it)
+- Prima confronta i file online con quelli della cartella area-privata: se online c'è qualcosa che in locale manca, NON pubblicare e dimmelo.
+- Poi pubblica la cartella area-privata in produzione (npx vercel deploy --prod dalla cartella area-privata, che ha già .vercel collegato).
+- Controlla online: https://areaprivata.anchecasa.it/dashboard/js/contratto-firma.js risponde 200; l'admin entra e Contratti si apre; un agente senza firma vede la striscia.
+
+PASSO 5 · Registro
+- Voce in CLAUDE.md (in cima al Registro): app-14 eseguito sì/no, commit (hash e ramo), pubblicazione sì/no con indirizzo, eventuali problemi.
+
+NON TOCCARE
+- Il testo dei contratti in contratti-modelli.js (è identico ai PDF 10.10.2026; se l'avvocato cambia un PDF, si cambia anche il modello).
+- navItems, visibleNav e il resto di app.js; il sito anchecasa.it, il Magazine, AncheSicura.
+- Il lavoro dell'area «Rete» admin (COMANDO-CURSOR-area-rete-admin.txt) è un comando separato: va fatto dopo questo.

@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Cruscotto admin</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#EEF2F7;font-family:'Manrope',sans-serif;color:#16304D}
+a{color:#16304D}a:hover{color:#0B1A2C}
+.card{background:#FFFFFF;border:1px solid #DCE3EC;border-radius:14px;padding:20px}
+.nav{display:flex;align-items:center;gap:12px;padding:9px 12px;border-radius:10px;color:#D5DEEA;text-decoration:none;font-size:14px;font-weight:600}
+.nav:hover{background:#2C4A6E;color:#FFFFFF}
+.grp{font-size:11px;font-weight:800;color:#9AAFC4;letter-spacing:.06em;padding:14px 12px 4px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:0 14px;border-radius:10px;font-family:inherit;font-size:13px;font-weight:700;border:0;cursor:pointer}
+.row{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:12px 0;border-top:1px solid #EEF2F7}
+</style>
+</helmet>
+<div style="display: flex; flex-wrap: wrap; min-height: 100vh; width: 100%">
+
+<nav aria-label="Menu admin" style="flex: 1 1 240px; max-width: 260px; background: #0B1A2C; padding: 24px 16px; box-sizing: border-box; display: flex; flex-direction: column; gap: 2px">
+<div style="font-size: 24px; font-weight: 800; color: #FFFFFF; padding: 0 12px 4px">Anche<span style="color: #E56B10">Casa</span></div>
+<div style="font-size: 11px; color: #9AAFC4; padding: 0 12px 10px">Admin</div>
+<a class="nav" href="#" aria-current="page" style="background: #FFFFFF; color: #16304D">Da fare</a>
+<div class="grp">PIATTAFORMA</div>
+<a class="nav" href="#">Aziende e verifiche</a>
+<a class="nav" href="#">Iscrizioni</a>
+<a class="nav" href="#">Moduli e prezzi</a>
+<a class="nav" href="#">Prezzari regionali</a>
+<div class="grp">ANCHECASA GC</div>
+<a class="nav" href="#">Commesse dei privati</a>
+<a class="nav" href="#">Imprese partner</a>
+<div class="grp">RETE</div>
+<a class="nav" href="#">Persone e proposte</a>
+<a class="nav" href="#">Provvigioni</a>
+<a class="nav" href="#">Sala strategia</a>
+<div class="grp">UFFICIO INTERNO</div>
+<a class="nav" href="#">Task, file, chat</a>
+<a class="nav" href="#">Magazine e mail</a>
+<div class="grp">ECONOMIA</div>
+<a class="nav" href="#">Ricavi e costi</a>
+</nav>
+
+<main style="flex: 999 1 560px; min-width: 0; padding: 28px 32px 40px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px; max-width: 1180px">
+
+<header>
+<div style="font-size: 13px; color: #2C4A6E; font-weight: 600">Domenica 11 ottobre · dati di esempio</div>
+<h1 style="margin: 4px 0 0; font-size: 30px; font-weight: 800">Da fare</h1>
+</header>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+
+<section class="card" aria-labelledby="verifica" style="flex: 3 1 520px; min-width: 0">
+<h2 id="verifica" style="margin: 0 0 6px; font-size: 18px; font-weight: 800">Aziende da verificare</h2>
+<div class="row"><div style="flex: 1 1 220px"><div style="font-size: 14px; font-weight: 700">Termoidraulica Sud Srl</div><div style="font-size: 12px; color: #2C4A6E">Azienda · ATECO 43.22 · DURC e visura caricati</div></div><button type="button" class="btn" style="background: #16304D; color: #FFFFFF">Verifica</button><button type="button" class="btn" style="background: #FFFFFF; border: 1px solid #DCE3EC; color: #16304D">Serve un documento</button><button type="button" class="btn" style="background: #FFFFFF; border: 1px solid #DCE3EC; color: #8C1D18">Sospendi</button></div>
+<div class="row"><div style="flex: 1 1 220px"><div style="font-size: 14px; font-weight: 700">Materiali Edili Sud</div><div style="font-size: 12px; color: #2C4A6E">Fornitore · ATECO 46.73 · manca l'assicurazione</div></div><button type="button" class="btn" style="background: #16304D; color: #FFFFFF">Verifica</button><button type="button" class="btn" style="background: #FFFFFF; border: 1px solid #DCE3EC; color: #16304D">Serve un documento</button><button type="button" class="btn" style="background: #FFFFFF; border: 1px solid #DCE3EC; color: #8C1D18">Sospendi</button></div>
+<div class="row"><div style="flex: 1 1 220px"><div style="font-size: 14px; font-weight: 700">Condominio Via Verdi</div><div style="font-size: 12px; color: #2C4A6E">Committente · codice fiscale · amministratore indicato</div></div><button type="button" class="btn" style="background: #16304D; color: #FFFFFF">Verifica</button><button type="button" class="btn" style="background: #FFFFFF; border: 1px solid #DCE3EC; color: #16304D">Serve un documento</button><button type="button" class="btn" style="background: #FFFFFF; border: 1px solid #DCE3EC; color: #8C1D18">Sospendi</button></div>
+</section>
+
+<section class="card" aria-labelledby="imbuto" style="flex: 2 1 320px; min-width: 0">
+<h2 id="imbuto" style="margin: 0 0 4px; font-size: 18px; font-weight: 800">Iscrizioni: dove si fermano</h2>
+<div style="font-size: 12px; color: #2C4A6E; margin-bottom: 14px">Ultimi 7 giorni · tutte le categorie</div>
+<div style="display: flex; flex-direction: column; gap: 10px">
+<div><div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600"><span>Modulo aperto</span><span>100</span></div><div style="height: 10px; background: #16304D; border-radius: 4px; margin-top: 4px; width: 100%"></div></div>
+<div><div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600"><span>Account creato</span><span>68</span></div><div style="height: 10px; background: #16304D; border-radius: 4px; margin-top: 4px; width: 68%"></div></div>
+<div><div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600"><span>Cosa vuoi fare</span><span>55</span></div><div style="height: 10px; background: #16304D; border-radius: 4px; margin-top: 4px; width: 55%"></div></div>
+<div><div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600"><span>Profilo completo</span><span>21</span></div><div style="height: 10px; background: #E56B10; border-radius: 4px; margin-top: 4px; width: 21%"></div></div>
+<div><div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600"><span>Abbonamento o modulo</span><span>6</span></div><div style="height: 10px; background: #16304D; border-radius: 4px; margin-top: 4px; width: 6%"></div></div>
+</div>
+<div style="font-size: 12px; color: #2C4A6E; margin-top: 12px">Il passo che perde di più è evidenziato.</div>
+</section>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<section class="card" aria-labelledby="consulenza" style="flex: 3 1 520px; min-width: 0">
+<h2 id="consulenza" style="margin: 0 0 6px; font-size: 18px; font-weight: 800">Richieste «Parla con un consulente»</h2>
+<div style="font-size: 12px; color: #2C4A6E">Per i responsabili commerciali</div>
+<div class="row"><div style="flex: 1 1 220px"><div style="font-size: 14px; font-weight: 700">Impresa edile · Caserta</div><div style="font-size: 12px; color: #2C4A6E">Vuole ricevere clienti e il fascicolo di sicurezza</div></div><button type="button" class="btn" style="background: #16304D; color: #FFFFFF">Assegna</button></div>
+<div class="row"><div style="flex: 1 1 220px"><div style="font-size: 14px; font-weight: 700">Fornitore noleggio · Napoli</div><div style="font-size: 12px; color: #2C4A6E">Chiede le richieste di zona</div></div><button type="button" class="btn" style="background: #16304D; color: #FFFFFF">Assegna</button></div>
+</section>
+
+<section class="card" aria-labelledby="prezzi" style="flex: 2 1 320px; min-width: 0">
+<h2 id="prezzi" style="margin: 0 0 6px; font-size: 18px; font-weight: 800">Prezzi al pubblico</h2>
+<div style="font-size: 13px; color: #2C4A6E; line-height: 1.5; margin-bottom: 14px">Nascosti fino alla decisione commerciale. Nel database restano tutti.</div>
+<label style="display: flex; align-items: center; gap: 12px; font-size: 14px; font-weight: 700; min-height: 44px">
+<input type="checkbox" style="width: 20px; height: 20px">
+Mostra i prezzi su sito e app
+</label>
+</section>
+</div>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1000}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

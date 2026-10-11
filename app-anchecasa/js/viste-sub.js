@@ -477,7 +477,7 @@ export function installa(core) {
             <div data-contro style="margin-top:10px;${o && !o.accetta_pagamenti ? "" : "display:none"}">${editorPagamenti("contro", o && !o.accetta_pagamenti ? o.controproposta : d.pagamenti, o ? o.importo : "")}</div>
             <div style="height:12px"></div><button class="btn" type="submit">${o ? "Rimanda l'offerta" : "Manda l'offerta"}</button></form></section>`
             : !d.aperta && !o ? `<section class="st-card">${avviso("La richiesta è chiusa: non si accettano più offerte.", "")}</section>` : ""}
-          <section class="st-card"><h2>Non sei ancora su AncheCasa?</h2><p class="sotto">Iscriviti gratis: ricevi lavori veri nella tua zona e prepari preventivi con il tuo logo.</p><a class="btn chiaro" href="#/registrati">Iscriviti in 30 secondi</a></section>
+          <section class="st-card"><h2>Non sei ancora su AncheCasa?</h2><p class="sotto">Iscriviti gratis: ricevi lavori veri nella tua zona e prepari preventivi con il tuo logo.</p><a class="btn chiaro" href="#/registrati/fornitore">Iscriviti in 30 secondi</a></section>
         </div>${piede}</div>`,
       dopo: (el) => {
         attivaPagamenti(el);

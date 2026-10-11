@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Dashboard azienda</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#EEF2F7;font-family:'Manrope',sans-serif;color:#16304D}
+a{color:#16304D}a:hover{color:#0B1A2C}
+.card{background:#FFFFFF;border:1px solid #DCE3EC;border-radius:14px;padding:20px}
+.nav{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;color:#D5DEEA;text-decoration:none;font-size:14px;font-weight:600}
+.nav:hover{background:#2C4A6E;color:#FFFFFF}
+.tag{font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px;white-space:nowrap}
+.row{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid #EEF2F7}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 18px;border-radius:10px;font-family:inherit;font-size:14px;font-weight:700;border:0;cursor:pointer}
+</style>
+</helmet>
+<div style="display: flex; flex-wrap: wrap; min-height: 100vh; width: 100%">
+
+<nav aria-label="Menu principale" style="flex: 1 1 240px; max-width: 260px; background: #16304D; padding: 24px 16px; box-sizing: border-box; display: flex; flex-direction: column; gap: 4px">
+<div style="font-size: 24px; font-weight: 800; color: #FFFFFF; padding: 0 12px 4px">Anche<span style="color: #E56B10">Casa</span></div>
+<div style="font-size: 11px; color: #9AAFC4; padding: 0 12px 18px">Costruiamo fiducia</div>
+<a href="#" style="display: flex; flex-direction: column; gap: 2px; padding: 12px; margin-bottom: 14px; border-radius: 12px; background: #2C4A6E; text-decoration: none">
+<span style="font-size: 14px; font-weight: 700; color: #FFFFFF">Edil Nord Srl</span>
+<span style="font-size: 12px; color: #D5DEEA">Impresa · Verificata · Cambia profilo</span>
+</a>
+<a class="nav" href="#" aria-current="page" style="background: #FFFFFF; color: #16304D">Oggi</a>
+<a class="nav" href="#">Clienti e vendite</a>
+<a class="nav" href="#">Commesse</a>
+<a class="nav" href="#">Acquisti</a>
+<a class="nav" href="#">Persone e sicurezza</a>
+<a class="nav" href="#"><span style="flex: 1">Magazzino e mezzi</span><span class="tag" style="background: #FFF1E4; color: #9A4A0A">Prova</span></a>
+<a class="nav" href="#"><span style="flex: 1">Gare</span><span class="tag" style="background: #FFF1E4; color: #9A4A0A">Prova</span></a>
+<a class="nav" href="#">Report</a>
+<div style="flex: 1; min-height: 24px"></div>
+<a class="nav" href="#">Abbonamento e moduli</a>
+<a class="nav" href="#">Invita</a>
+<a class="nav" href="#">Assistenza</a>
+</nav>
+
+<main style="flex: 999 1 560px; min-width: 0; padding: 28px 32px 40px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px; max-width: 1180px">
+
+<header style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px">
+<div style="flex: 1 1 320px">
+<div style="font-size: 13px; color: #2C4A6E; font-weight: 600">Domenica 11 ottobre · dati di esempio</div>
+<h1 style="margin: 4px 0 0; font-size: 30px; font-weight: 800">Buongiorno, Edil Nord</h1>
+</div>
+<label style="display: flex; align-items: center; gap: 8px; background: #FFFFFF; border: 1px solid #DCE3EC; border-radius: 10px; padding: 0 14px; min-height: 44px; flex: 0 1 300px">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2C4A6E" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-4-4"></path></svg>
+<span style="position: absolute; left: -9999px">Cerca</span>
+<input type="search" placeholder="Cerca clienti, commesse, documenti" style="border: 0; outline: 0; font-family: inherit; font-size: 14px; width: 100%; background: transparent; color: #16304D">
+</label>
+<button type="button" class="btn" aria-label="Notifiche, 3 nuove" style="background: #FFFFFF; border: 1px solid #DCE3EC; color: #16304D; padding: 0 12px">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16304D" stroke-width="2" aria-hidden="true"><path d="M6 8a6 6 0 1112 0c0 7 3 8 3 8H3s3-1 3-8"></path><path d="M10 20a2 2 0 004 0"></path></svg>
+<span style="margin-left: 6px">3</span>
+</button>
+<button type="button" class="btn" style="background: #16304D; color: #FFFFFF">+ Nuovo</button>
+</header>
+
+<section class="card" aria-label="Completa il profilo" style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px; background: #FFF1E4; border-color: #F6D2B3">
+<div style="flex: 1 1 360px">
+<div style="font-size: 15px; font-weight: 700">Profilo all'80%: carica il DURC</div>
+<div style="font-size: 13px; color: #2C4A6E; margin-top: 2px">Sblocca le offerte su lotti, subappalti e gare dei general contractor.</div>
+<div style="height: 8px; background: #FFFFFF; border-radius: 99px; margin-top: 10px; overflow: hidden"><div style="width: 80%; height: 100%; background: #E56B10"></div></div>
+</div>
+<button type="button" class="btn" style="background: #16304D; color: #FFFFFF">Carica il DURC</button>
+</section>
+
+<section aria-label="I numeri di oggi" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px">
+<div class="card"><div style="font-size: 13px; color: #2C4A6E; font-weight: 600">Richieste nuove</div><div style="font-size: 32px; font-weight: 800; margin-top: 6px">3</div><div style="font-size: 12px; color: #2C4A6E">dai privati della tua zona</div></div>
+<div class="card"><div style="font-size: 13px; color: #2C4A6E; font-weight: 600">Preventivi in attesa</div><div style="font-size: 32px; font-weight: 800; margin-top: 6px">2</div><div style="font-size: 12px; color: #2C4A6E">uno sotto la soglia di margine</div></div>
+<div class="card"><div style="font-size: 13px; color: #2C4A6E; font-weight: 600">Commesse in corso</div><div style="font-size: 32px; font-weight: 800; margin-top: 6px">1</div><div style="font-size: 12px; color: #2C4A6E">avanzamento medio 62%</div></div>
+<div class="card"><div style="font-size: 13px; color: #2C4A6E; font-weight: 600">Scadenze entro 15 giorni</div><div style="font-size: 32px; font-weight: 800; margin-top: 6px; color: #B3261E">2</div><div style="font-size: 12px; color: #2C4A6E">dallo scadenziario unico</div></div>
+</section>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+
+<section class="card" aria-labelledby="dafare" style="flex: 2 1 480px; min-width: 0">
+<h2 id="dafare" style="margin: 0 0 6px; font-size: 18px; font-weight: 800">Da fare oggi</h2>
+<div class="row"><span class="tag" style="background: #FDE7E5; color: #8C1D18">Scade</span><div style="flex: 1; min-width: 0"><div style="font-size: 14px; font-weight: 700">DURC del subappaltatore scade tra 6 giorni</div><div style="font-size: 12px; color: #2C4A6E">Fascicolo di sicurezza · Via Garibaldi 12, Roma</div></div><a href="#" style="font-size: 13px; font-weight: 700">Chiedi il nuovo</a></div>
+<div class="row"><span class="tag" style="background: #FFF1E4; color: #9A4A0A">Margine</span><div style="flex: 1; min-width: 0"><div style="font-size: 14px; font-weight: 700">Rifacimento facciata: margine sotto la soglia</div><div style="font-size: 12px; color: #2C4A6E">Controllo del margine · Condominio Via Verdi</div></div><a href="#" style="font-size: 13px; font-weight: 700">Rivedi il preventivo</a></div>
+<div class="row"><span class="tag" style="background: #E6EEF7; color: #16304D">Offerte</span><div style="flex: 1; min-width: 0"><div style="font-size: 14px; font-weight: 700">2 offerte da confrontare</div><div style="font-size: 12px; color: #2C4A6E">Subappalto impianto elettrico · scade venerdì</div></div><a href="#" style="font-size: 13px; font-weight: 700">Confronta</a></div>
+<div class="row"><span class="tag" style="background: #E6EEF7; color: #16304D">Cliente</span><div style="flex: 1; min-width: 0"><div style="font-size: 14px; font-weight: 700">Nuova richiesta: infiltrazione nel bagno</div><div style="font-size: 12px; color: #2C4A6E">Privato · Roma · con video di SuperMastro</div></div><a href="#" style="font-size: 13px; font-weight: 700">Rispondi</a></div>
+<div class="row"><span class="tag" style="background: #E6EEF7; color: #16304D">SAL</span><div style="flex: 1; min-width: 0"><div style="font-size: 14px; font-weight: 700">SAL n. 3 da emettere</div><div style="font-size: 12px; color: #2C4A6E">Commessa AC-2026-0001 · Via Garibaldi 12</div></div><a href="#" style="font-size: 13px; font-weight: 700">Prepara</a></div>
+</section>
+
+<div style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 20px">
+<section class="card" aria-labelledby="vendite">
+<h2 id="vendite" style="margin: 0 0 12px; font-size: 18px; font-weight: 800">Clienti e vendite</h2>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+<div style="background: #EEF2F7; border-radius: 10px; padding: 12px"><div style="font-size: 22px; font-weight: 800">2</div><div style="font-size: 12px; color: #2C4A6E">sopralluoghi</div></div>
+<div style="background: #EEF2F7; border-radius: 10px; padding: 12px"><div style="font-size: 22px; font-weight: 800">1</div><div style="font-size: 12px; color: #2C4A6E">stime Flash inviate</div></div>
+<div style="background: #EEF2F7; border-radius: 10px; padding: 12px"><div style="font-size: 22px; font-weight: 800">2</div><div style="font-size: 12px; color: #2C4A6E">preventivi</div></div>
+<div style="background: #EEF2F7; border-radius: 10px; padding: 12px"><div style="font-size: 22px; font-weight: 800">1</div><div style="font-size: 12px; color: #2C4A6E">accettati</div></div>
+</div>
+<button type="button" class="btn" style="background: #16304D; color: #FFFFFF; width: 100%; margin-top: 14px">Nuovo sopralluogo Flash</button>
+</section>
+
+<section class="card" aria-labelledby="commessa">
+<h2 id="commessa" style="margin: 0 0 4px; font-size: 18px; font-weight: 800">Via Garibaldi 12, Roma</h2>
+<div style="font-size: 12px; color: #2C4A6E">AC-2026-0001 · Condominio Via Verdi</div>
+<div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; margin-top: 12px"><span>Avanzamento</span><span>62%</span></div>
+<div style="height: 8px; background: #EEF2F7; border-radius: 99px; margin-top: 6px; overflow: hidden"><div style="width: 62%; height: 100%; background: #16304D"></div></div>
+<div style="display: flex; align-items: center; gap: 10px; margin-top: 14px; padding: 12px; border-radius: 10px; border: 1px dashed #E56B10">
+<div style="flex: 1; font-size: 13px"><b>Costi reali e margine</b><br><span style="color: #2C4A6E">Con Magazzino e mezzi</span></div>
+<a href="#" class="tag" style="background: #FFF1E4; color: #9A4A0A; text-decoration: none; font-size: 12px; padding: 8px 12px">Prova gratis</a>
+</div>
+</section>
+</div>
+</div>
+
+<section class="card" aria-labelledby="moduli">
+<div style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 12px; margin-bottom: 14px">
+<h2 id="moduli" style="margin: 0; font-size: 18px; font-weight: 800; flex: 1">I tuoi moduli</h2>
+<span style="font-size: 12px; color: #2C4A6E">Proposti per il settore Imprese edili</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px">
+<a href="#" style="display: flex; flex-direction: column; gap: 6px; padding: 16px; border-radius: 12px; border: 1px solid #DCE3EC; text-decoration: none"><span style="font-size: 14px; font-weight: 700">Ufficio</span><span style="font-size: 12px; color: #2C4A6E">Clienti, preventivi, fatture</span><span class="tag" style="align-self: flex-start; background: #E3F1E6; color: #1E5B2E">Attivo</span></a>
+<a href="#" style="display: flex; flex-direction: column; gap: 6px; padding: 16px; border-radius: 12px; border: 1px solid #DCE3EC; text-decoration: none"><span style="font-size: 14px; font-weight: 700">Sicurezza Cantiere</span><span style="font-size: 12px; color: #2C4A6E">Fascicolo 81/08, ingressi</span><span class="tag" style="align-self: flex-start; background: #E3F1E6; color: #1E5B2E">Attivo</span></a>
+<a href="#" style="display: flex; flex-direction: column; gap: 6px; padding: 16px; border-radius: 12px; border: 1px solid #DCE3EC; text-decoration: none"><span style="font-size: 14px; font-weight: 700">Cantiere e SAL</span><span style="font-size: 12px; color: #2C4A6E">Giornale, presenze, SAL</span><span class="tag" style="align-self: flex-start; background: #E3F1E6; color: #1E5B2E">Attivo</span></a>
+<a href="#" style="display: flex; flex-direction: column; gap: 6px; padding: 16px; border-radius: 12px; border: 1px solid #F6D2B3; background: #FFFAF5; text-decoration: none"><span style="font-size: 14px; font-weight: 700">Gare e bandi</span><span style="font-size: 12px; color: #2C4A6E">Analisi del bando con l'IA</span><span class="tag" style="align-self: flex-start; background: #FFF1E4; color: #9A4A0A">Prova gratis</span></a>
+<a href="#" style="display: flex; flex-direction: column; gap: 6px; padding: 16px; border-radius: 12px; border: 1px solid #DCE3EC; background: #F6F8FB; text-decoration: none"><span style="font-size: 14px; font-weight: 700; color: #2C4A6E">Offerte su gare dei GC</span><span style="font-size: 12px; color: #2C4A6E">Serve il DURC nel profilo</span><span class="tag" style="align-self: flex-start; background: #E4E8EE; color: #2C4A6E">Completa il profilo</span></a>
+<a href="#" style="display: flex; flex-direction: column; gap: 6px; padding: 16px; border-radius: 12px; border: 1px solid #DCE3EC; text-decoration: none"><span style="font-size: 14px; font-weight: 700">Gare private e AncheBIM</span><span style="font-size: 12px; color: #2C4A6E">Per general contractor</span><span class="tag" style="align-self: flex-start; background: #16304D; color: #FFFFFF">Business · Richiedi</span></a>
+</div>
+</section>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1180}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

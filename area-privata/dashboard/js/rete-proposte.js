@@ -19,7 +19,7 @@
   const REGIONI = ["Abruzzo", "Basilicata", "Calabria", "Campania", "Emilia-Romagna", "Friuli-Venezia Giulia", "Lazio", "Liguria", "Lombardia", "Marche", "Molise", "Piemonte", "Puglia", "Sardegna", "Sicilia", "Toscana", "Trentino-Alto Adige", "Umbria", "Valle d'Aosta", "Veneto"];
   const LIVELLO = { reteitalia: 0, sviluppo: 1, capoarea: 2, agente: 3, subagente: 4 };
   /* Stesso formato di mostraInvito nell'app: origine + #/invito/ + token. */
-  const BASE_APP = "https://app.anchecasa.it/";
+  const BASE_APP = "https://entra.anchecasa.it/";
   const aperti = new Set();
   let schedaAdmin = "decidere";
   let nBadge = 0;

@@ -1,6 +1,7 @@
 -- Solo per le prove in locale: imita le parti di Supabase che servono. NON eseguire su Supabase.
 do $$ begin if not exists (select 1 from pg_roles where rolname = 'service_role') then create role service_role nologin bypassrls; end if; end $$;
-do $$ begin if not exists (select 1 from pg_roles where rolname = 'anon') then create role anon nologin; create role authenticated nologin; create role service_role nologin bypassrls; end if; end $$;
+do $$ begin if not exists (select 1 from pg_roles where rolname = 'anon') then create role anon nologin; end if; end $$;
+do $$ begin if not exists (select 1 from pg_roles where rolname = 'authenticated') then create role authenticated nologin; end if; end $$;
 create schema auth; create schema storage; create schema marketplace;
 grant usage on schema auth, storage, marketplace to anon, authenticated, service_role;
 create table auth.users (id uuid primary key, email text);

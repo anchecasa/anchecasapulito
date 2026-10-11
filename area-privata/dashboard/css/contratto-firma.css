@@ -1,0 +1,114 @@
+/* Contratto compilabile e firmabile (11.10.2026). Carta intestata come la mail d'invito:
+   logo e dati società in alto con filo arancio, fascia curva e piede blu in fondo. Niente riquadri scuri. */
+.cf {
+  --cf-navy: #16304d; --cf-navy-mid: #2c4a6e; --cf-ink: #24384c; --cf-muted: #66758a;
+  --cf-orange: #E56B10; --cf-orange-ink: #c45d0c; --cf-orange-soft: #fff1e4;
+  --cf-line: #e4ebf3; --cf-field: #b9c5d3; --cf-err: #a93226; --cf-ok: #1f6e40; --cf-ok-bg: #e8f6ee;
+  --cf-font: "Manrope", "Segoe UI", Arial, Helvetica, sans-serif;
+  max-width: 794px; margin: 12px auto 0; background: #fff; border-radius: 8px;
+  box-shadow: 0 14px 40px rgba(22, 48, 77, .10); overflow: hidden;
+  font-family: var(--cf-font); color: var(--cf-ink);
+}
+.cf * { box-sizing: border-box; }
+
+.cf-testa { padding: 44px 56px 0; }
+.cf-testa-riga { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding-bottom: 26px; border-bottom: 2px solid var(--cf-orange); }
+.cf-testa img { width: 190px; height: auto; display: block; }
+.cf-testa-dx { text-align: right; font-size: 12px; line-height: 1.8; color: var(--cf-muted); }
+.cf-testa-dx b { display: block; color: var(--cf-navy); font-size: 13px; font-weight: 800; letter-spacing: .02em; margin-bottom: 3px; }
+
+.cf-titolo { padding: 34px 56px 6px; }
+.cf-eti { display: inline-block; background: var(--cf-orange-soft); color: var(--cf-orange-ink); font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; border-radius: 12px; padding: 5px 12px; }
+.cf-titolo h1 { margin: 14px 0 4px; font-size: 28px; line-height: 1.15; font-weight: 800; color: var(--cf-navy); text-wrap: balance; }
+.cf-titolo p { margin: 0; color: var(--cf-muted); font-size: 15px; }
+
+.cf-corpo { padding: 10px 56px 34px; font-size: 15px; line-height: 1.65; }
+.cf-corpo p { margin: 0 0 12px; }
+.cf-corpo .centro { text-align: center; font-weight: 800; color: var(--cf-navy); letter-spacing: .14em; margin: 26px 0 12px; font-size: 14px; }
+.cf-corpo h2 { font-size: 15px; font-weight: 800; color: var(--cf-navy); margin: 28px 0 10px; letter-spacing: .02em; }
+.cf-corpo ol.prem { margin: 0 0 12px; padding-left: 22px; list-style: lower-alpha; }
+.cf-corpo ol.prem li, .cf-corpo ul.el li { margin-bottom: 8px; }
+.cf-corpo ul.el { margin: 0 0 12px; padding-left: 22px; list-style: none; }
+.cf-corpo ul.el li::before { content: attr(data-l) ". "; font-weight: 700; margin-left: -18px; }
+.cf-corpo .fine { font-size: 12.5px; color: var(--cf-muted); }
+
+.cf .campi, .cf .cf-riga2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 28px; margin: 6px 0 18px; }
+.cf .campo { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.cf .campo label { font-size: 12px; color: var(--cf-muted); font-weight: 600; }
+.cf .campo input, .cf input.inline {
+  font: inherit; font-size: 16px; color: var(--cf-ink); border: 0; border-bottom: 1.5px solid var(--cf-field);
+  background: transparent; padding: 8px 0 6px; border-radius: 0; outline: none; width: 100%; min-width: 0; box-shadow: none; height: auto;
+}
+.cf input.inline { display: inline-block; width: auto; min-width: 220px; max-width: 100%; padding: 2px 0; }
+.cf .campo input:focus, .cf input.inline:focus { border-bottom-color: var(--cf-orange); box-shadow: 0 2px 0 0 var(--cf-orange); }
+.cf .campo.err input, .cf input.inline.err { border-bottom-color: var(--cf-err); }
+.cf .campo small { font-size: 11.5px; color: var(--cf-err); }
+.cf .campo.lungo { grid-column: 1 / -1; }
+.cf-valore { color: var(--cf-navy); font-weight: 700; }
+
+.cf .tab { overflow-x: auto; margin: 6px 0 14px; }
+.cf table { border-collapse: collapse; width: 100%; font-size: 13.5px; min-width: 520px; }
+.cf th { text-align: left; font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--cf-muted); font-weight: 700; padding: 8px 10px; border-bottom: 1.5px solid var(--cf-line); }
+.cf td { padding: 9px 10px; border-bottom: 1px solid var(--cf-line); vertical-align: top; }
+
+.cf-firma { margin-top: 30px; padding-top: 24px; border-top: 2px solid var(--cf-orange); }
+.cf-spunta { display: flex; gap: 12px; align-items: flex-start; padding: 12px 0; font-size: 14px; line-height: 1.55; }
+.cf-spunta input { flex: none; width: 22px; height: 22px; margin-top: 1px; accent-color: var(--cf-orange); }
+.cf-spunta input.err { outline: 2px solid var(--cf-err); outline-offset: 2px; }
+.cf-spunta-copia { font-size: 13.5px; }
+.cf-pad-lab { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 13px; color: var(--cf-muted); font-weight: 600; margin: 8px 0 6px; }
+.cf-pad-lab button { font: inherit; font-size: 13px; color: var(--cf-navy-mid); background: none; border: 0; padding: 6px 0; cursor: pointer; text-decoration: underline; }
+.cf-pad { position: relative; border: 1.5px dashed var(--cf-field); border-radius: 12px; background: #fbfcfe; height: 190px; touch-action: none; }
+.cf-pad.on { border-style: solid; border-color: var(--cf-navy-mid); }
+.cf-pad.err { border-color: var(--cf-err); }
+.cf-pad canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; border-radius: 12px; cursor: crosshair; }
+.cf-pad-hint { position: absolute; left: 0; right: 0; bottom: 44px; text-align: center; color: #aab6c4; font-size: 14px; pointer-events: none; }
+.cf-pad-hint::before { content: ""; display: block; margin: 0 auto 10px; width: 70%; border-bottom: 1px solid #d5dde7; }
+.cf-firmatari { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin: 22px 0 4px; font-size: 13px; color: var(--cf-muted); }
+.cf-firmatari > div { border-top: 1px solid var(--cf-ink); padding-top: 6px; min-width: 0; }
+.cf-firmatari b { color: var(--cf-navy); display: block; }
+.cf-firma-img { display: block; max-width: 100%; height: 80px; object-fit: contain; margin-top: 6px; }
+.cf-prova { display: grid; grid-template-columns: 140px 1fr; gap: 4px 14px; font-size: 12px; color: var(--cf-muted); margin: 18px 0 8px; }
+.cf-prova dd { margin: 0; word-break: break-all; color: var(--cf-ink); }
+
+.cf-invia { margin-top: 22px; display: flex; flex-direction: column; gap: 10px; align-items: stretch; }
+.cf-btn { font: inherit; font-size: 17px; font-weight: 800; color: #fff; background: var(--cf-orange-ink); border: 0; border-radius: 26px; padding: 16px 36px; cursor: pointer; width: 100%; max-width: 420px; align-self: center; }
+.cf-btn:hover { background: #a94f09; }
+.cf-btn:focus-visible { outline: 3px solid var(--cf-orange-soft); outline-offset: 2px; }
+.cf-btn[disabled] { opacity: .6; cursor: default; }
+.cf-nota { text-align: center; font-size: 13px; color: var(--cf-muted); margin: 0; }
+.cf-errori { color: var(--cf-err); font-size: 13.5px; text-align: center; margin: 0; }
+
+.cf-fatto { text-align: center; padding: 40px 24px 30px; }
+.cf-ok { width: 56px; height: 56px; border-radius: 50%; background: var(--cf-ok-bg); color: var(--cf-ok); display: grid; place-items: center; margin: 0 auto 14px; font-size: 28px; font-weight: 800; }
+.cf-fatto h2 { font-size: 22px; margin: 0 0 8px; color: var(--cf-navy); }
+.cf-fatto p { color: var(--cf-muted); margin: 0 auto 6px; max-width: 46ch; }
+.cf-fatto code { font-size: 11.5px; color: var(--cf-ink); word-break: break-all; background: #eef2f7; border-radius: 6px; padding: 6px 8px; display: inline-block; margin: 8px 0 14px; }
+
+.cf-curva { display: block; width: 100%; height: auto; }
+.cf-piede { background: var(--cf-navy); color: #d5deea; padding: 4px 56px 16px; font-size: 12px; line-height: 1.6; display: flex; justify-content: space-between; align-items: center; gap: 8px 24px; flex-wrap: wrap; }
+.cf-piede img { width: 118px; height: auto; display: block; }
+
+/* Striscia della sola lettura, in cima a ogni pagina finché il contratto non è firmato */
+.cf-striscia { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; background: #fff; border: 1px solid #f4c9a3; border-radius: 12px; padding: 12px 16px; margin: 0 0 14px; font-size: 14px; line-height: 1.45; }
+.cf-striscia > i { flex: none; width: 10px; height: 10px; border-radius: 50%; background: #E56B10; }
+.cf-striscia > div { flex: 1 1 260px; min-width: 0; }
+.cf-striscia b { color: #16304d; }
+.cf-striscia-btn { font: inherit; font-weight: 700; color: #fff; background: #c45d0c; border: 0; border-radius: 18px; padding: 9px 18px; cursor: pointer; }
+.cf-striscia-btn:hover { background: #a94f09; }
+body.cf-sola-lettura #view .btn-in, body.cf-sola-lettura #view .btn-new, body.cf-sola-lettura #view .btn-danger,
+body.cf-sola-lettura #view .btn-mail, body.cf-sola-lettura #view form button[type="submit"] { opacity: .5; cursor: not-allowed; }
+body.cf-sola-lettura #view .cf .cf-btn { opacity: 1; cursor: pointer; }
+
+@media (max-width: 640px) {
+  .cf { border-radius: 0; }
+  .cf-testa { padding: 26px 20px 0; }
+  .cf-testa-riga { flex-direction: column; align-items: flex-start; padding-bottom: 18px; }
+  .cf-testa-dx { text-align: left; }
+  .cf-titolo { padding: 24px 20px 4px; }
+  .cf-titolo h1 { font-size: 23px; }
+  .cf-corpo { padding: 6px 20px 28px; font-size: 15.5px; }
+  .cf .campi, .cf .cf-riga2, .cf-firmatari { grid-template-columns: 1fr; }
+  .cf-piede { padding: 4px 20px 14px; flex-direction: column; align-items: flex-start; }
+  .cf-prova { grid-template-columns: 1fr; }
+}

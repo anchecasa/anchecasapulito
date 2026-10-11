@@ -31,8 +31,12 @@
   ["Ristrutturazione completa", "Rifare il bagno", "Rifare la cucina", "Facciata del condominio", "Tetto e coperture"].forEach(function (m) { VOCI.push([m, "Ristruttura con AncheCasa", "ristruttura.html"]); });
   ["Subappalto", "Fornitura materiali edili", "Noleggio mezzi", "Gara d'appalto", "Impresa edile", "Albo fornitori"].forEach(function (m) { VOCI.push([m, "Appalti e subappalti", "appalti.html"]); });
   (window.AC_APP || []).forEach(function (a) { VOCI.push(["App " + a.nome, "App per la tua attività", "app-" + a.id + ".html"]); });
+  VOCI.push(["Condominio", "Committenti che pubblicano appalti", "appalti.html"]);
+  VOCI.push(["Amministratore di condominio", "Committenti che pubblicano appalti", "appalti.html"]);
+  VOCI.push(["Fondo immobiliare", "Committenti che pubblicano appalti", "appalti.html"]);
+  VOCI.push(["Grande azienda", "Committenti che pubblicano appalti", "appalti.html"]);
   [["Casa in vendita", "vendita"], ["Vendo casa", "vendita"], ["Cerco casa", "vendita"], ["Casa in affitto", "affitto"], ["Affitto appartamento", "affitto"], ["Alloggio studenti", "studenti"], ["Stanza per studenti", "studenti"], ["Posto letto", "studenti"], ["Cerco lavoro", "lavoro"], ["Offro lavoro", "lavoro"]].forEach(function (m) { VOCI.push([m[0], "Bacheca annunci", "bacheca.html#" + m[1]]); });
-  VOCI.push(["Centralino AncheVoice", "Servizi", "anchevoice.html"], ["Opportunità immobiliari", "Area riservata", "opportunita.html"], ["Diventare agente", "Lavora con noi", "agenti.html"], ["Diventare partner", "Lavora con noi", "partner.html"]);
+  VOCI.push(["Diventare agente", "Lavora con noi", "agenti.html"], ["Diventare partner", "Lavora con noi", "partner.html"]);
 
   function trova(v) {
     v = slug(v); if (!v) return [];
@@ -75,8 +79,8 @@
   /* Iscrizione azienda: tipo e piano precompilati dai prezzi (#azienda-impresa ecc.) */
   var tipo = $("#tipo-azienda");
   if (tipo) {
-    var PIANI = { artigiano: ["Artigiano", "14,90 € al mese", "Iscriviti come artigiano"], impresa: ["Imprese", "49 € al mese, Ufficio compreso", "Iscrivi l'impresa"],
-      fornitore: ["Fornitori", "99 € al mese", "Iscriviti come fornitore"], gc: ["General contractor", "Richiesta di iscrizione all'albo appalti", "Richiedi l'iscrizione"] };
+    var PIANI = { artigiano: ["Artigiano", "14,90 € al mese · prova 14 giorni", "Iscriviti come artigiano"], impresa: ["Imprese", "49 € al mese, Ufficio compreso · prova 14 giorni", "Iscrivi l'impresa"],
+      fornitore: ["Fornitori", "99 € al mese · prova 14 giorni", "Iscriviti come fornitore"], gc: ["General contractor", "Richiesta di iscrizione all'albo appalti", "Richiedi l'iscrizione"] };
     var mostraPiano = function () {
       var p = PIANI[tipo.value];
       $("#piano-nome").textContent = p ? p[0] : "Scegli chi sei";
@@ -98,7 +102,7 @@
       if (!f.checkValidity()) { f.reportValidity(); return; }
       var parti = f.getAttribute("data-invia").split("|"), dati = { modulo: parti[1], pagina: location.pathname };
       $$("input,select,textarea", f).forEach(function (c) {
-        if (c.type === "checkbox" || c.type === "submit" || c.type === "hidden") return;
+        if (c.type === "checkbox" || c.type === "submit" || c.type === "hidden" || c.type === "password") return;
         var l = c.closest("label"), k = (l ? l.childNodes[0].textContent : c.name || c.id || "campo").trim();
         var v = c.type === "file" ? (c.files && c.files[0] ? c.files[0].name : "") : c.value;
         if (c.tagName === "SELECT" && c.selectedIndex >= 0) v = c.options[c.selectedIndex].text;
@@ -116,11 +120,56 @@
         var p = $(".esito-err", f) || f.appendChild(document.createElement("p")); p.className = "esito esito-err";
         p.innerHTML = 'La richiesta non è partita. <a href="' + a + '" style="text-decoration:underline">Mandala per mail</a> a info@anchecasa.it.';
       };
+      var passwordEl = $("input[type=password]", f);
+      var password = passwordEl ? passwordEl.value : "";
+      var cvFile = null;
+      $$("input[type=file]", f).forEach(function (c) {
+        if (!cvFile && c.files && c.files[0]) cvFile = c.files[0];
+      });
       if (ANTEPRIMA) { fatto(); return; }
-      fetch(SB + "/rest/v1/richieste_iscrizione", { method: "POST",
-        headers: { apikey: SBK, Authorization: "Bearer " + SBK, "Content-Type": "application/json", "Content-Profile": "marketplace", Prefer: "return=minimal" },
-        body: JSON.stringify({ famiglia: parti[0], dati: dati }) })
-        .then(function (r) { if (r.ok) fatto(); else errore(); }).catch(errore);
+      var salvaRichiesta = function (userId) {
+        var corpo = { famiglia: parti[0], dati: dati };
+        if (userId) corpo.user_id = userId;
+        return fetch(SB + "/rest/v1/richieste_iscrizione", { method: "POST",
+          headers: { apikey: SBK, Authorization: "Bearer " + SBK, "Content-Type": "application/json", "Content-Profile": "marketplace", Prefer: "return=minimal" },
+          body: JSON.stringify(corpo) });
+      };
+      if (!password) {
+        salvaRichiesta(null).then(function (r) { if (r.ok) fatto(); else errore(); }).catch(errore);
+        return;
+      }
+      if (parti[0] === "agente" && (!cvFile || !/\.(pdf|doc|docx)$/i.test(cvFile.name || ""))) {
+        if (btn) btn.disabled = false;
+        var manca = $(".esito-err", f) || f.appendChild(document.createElement("p"));
+        manca.className = "esito esito-err";
+        manca.textContent = "Allega il curriculum in PDF o Word. Senza il curriculum la richiesta non parte.";
+        return;
+      }
+      fetch(SB + "/auth/v1/signup", { method: "POST",
+        headers: { apikey: SBK, Authorization: "Bearer " + SBK, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: dati.email,
+          password: password,
+          data: { nome: dati.nome || dati.ragione || "", cognome: dati.cognome || "", famiglia: parti[0], zona: dati.zona || "" }
+        })
+      }).then(function (r) { return r.json().then(function (j) { return { ok: r.ok, body: j }; }); })
+        .then(function (res) {
+          var user = res.body && (res.body.user || res.body);
+          var id = user && user.id;
+          if (!res.ok || !id || (user.identities && user.identities.length === 0)) throw new Error("iscrizione");
+          if (parti[0] !== "agente" || !cvFile) return salvaRichiesta(id);
+          var safe = String(cvFile.name || "cv").replace(/[^\w.\-]+/g, "_").slice(0, 80);
+          var percorso = "agente/" + id + "/cv-" + Date.now() + "-" + safe;
+          var tok = (res.body && res.body.access_token) || SBK;
+          return fetch(SB + "/storage/v1/object/marketplace-candidature/" + percorso, { method: "POST",
+            headers: { apikey: SBK, Authorization: "Bearer " + tok, "Content-Type": cvFile.type || "application/octet-stream" },
+            body: cvFile
+          }).then(function (r) {
+            if (!r.ok) throw new Error("cv");
+            dati.cv_path = percorso;
+            return salvaRichiesta(id);
+          });
+        }).then(function (r) { if (r && r.ok) fatto(); else errore(); }).catch(errore);
     });
   });
 

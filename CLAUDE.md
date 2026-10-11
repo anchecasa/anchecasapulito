@@ -11,7 +11,171 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 - Se si annulla qualcosa, si annota anche l'annullamento.
 - Questo file non si cancella e non si sposta: resta nella cartella principale del progetto.
 
+## Regole fisse · 11.10.2026, 17:25 (decisioni di Nando)
+
+1. ANCHECASA-PULITO è l'unica cartella ufficiale di AncheCasa. Le cartelle fuori (ANCHECASA-LAVORO, BIM-SICUR, 04-SuperMastro e le altre) non sono più ufficiali: non si lavora più lì.
+2. L'app AncheCasa (cartella `app-anchecasa`) è l'unica dashboard per privati, aziende e fornitori. Indirizzo: https://entra.anchecasa.it
+3. Le funzioni nuove si fanno solo nell'app. Nell'area privata (areaprivata.anchecasa.it) solo correzioni, finché tutto non è passato nell'app.
+4. app.anchecasa.it non si usa più per l'app nuova e non si tocca.
+
 ## Registro delle modifiche
+
+### 11.10.2026 19:47 · Cursor — pubblicato sito, area privata e app (ok scritto di Nando)
+- Prezzi visibili: `prezzi_visibili` è `true` su Supabase. Sul sito tornano le cifre di catalogo.js: artigiano 14,90 €, imprese 49 €, fornitori 99 €, moduli 9 / 19 / 29 / 29 / 9 / 9, tutti i moduli 69 €. Accanto restano «Prova gratis 14 giorni» e «Parla con un consulente».
+- Il primo invio del sito aveva `ac.js` rotto (l'iscrizione era finita dentro SuperMastro e lo script non partiva). Corretto: l'iscrizione con password crea l'account e scrive la richiesta; senza password, come il consulente, scrive solo la richiesta; SuperMastro ha di nuovo l'elenco dei problemi. Secondo invio: `dpl_Bx9ZtUYgSsXjaPvbSEDMfv78ih3o`, alias https://anchecasa.it, script `ac.js?v=8`.
+- Modulo consulente provato su https://anchecasa.it/prezzi: «Richiesta ricevuta». Nel database c'è la riga `consulenza-prezzi` di prova-pubblicazione-1110@anchecasa.it. Non ho creato un account di prova, così non parte una mail di conferma.
+- App su Cloudflare Pages, progetto app-anchecasa, produzione https://app-anchecasa.pages.dev e https://7cdaf910.app-anchecasa.pages.dev. Service worker `ac-app-2.9.0`. Provate in locale sul sito pubblicato le cinque «Oggi» (admin, impresa, fornitore, privato, agente) a 375 px e l'admin a 1280 px: menu in basso, tre numeri, Sospendi solo in Aziende, grafico iscrizioni solo da computer, interruttore prezzi acceso.
+- Area privata: `dpl_8tz4khcmuTEZEF1E4PLXufdPhmXo`, alias https://areaprivata.anchecasa.it. Login, home.js e manifest rispondono. Non sono entrato: non ho usato una password vera.
+- Funzioni spente, dopo aver salvato il codice in `app-anchecasa/supabase/functions-archivio/`: parse-cv, scrape-company-site, installation-bids, omi-lookup, ordine-tracking, presentazione-mappa-search. Pubblicate sopralluogo-flash, subappalti-mail, gare-analisi. Senza accesso rispondono `accesso_richiesto`. `sdi-gateway` resta accesa. 97 funzioni online, 3 posti liberi. La chiave Gemini è tra i segreti, valore non scritto. La prova audio → computo → stima non è stata fatta: serve un agente entrato, con un sopralluogo e un audio.
+- app-15 non eseguito: niente backup da cui tornare indietro (PITR spento, elenco backup vuoto, Docker assente, password del database rifiutata). Dettaglio in `APPUNTI-FRANCESCO.md`.
+- SuperMastro SOS non pubblicato: il login nuovo è nel codice, il sito online è ancora quello di prima.
+- Magazine e AncheSicura non toccati. Niente store. app.anchecasa.it non toccato. DNS di entra.anchecasa.it non scritto.
+- Contratto firmabile: solo la versione 10.10.2026. La 11.10.2026 resta in sola lettura.
+- File: `sito/` (prezzi, faq, pagine app, `js/ac.js`), `app-anchecasa/` (dashboard telefono, service worker 2.9.0, archivio funzioni), `APPUNTI-FRANCESCO.md`, `CLAUDE.md`.
+
+### 11.10.2026 19:09 · Cursor — dashboard come il modello approvato (NON pubblicato)
+- Parte 0. Sul sito non ci sono più le cifre: prezzi.html, le otto pagine app e la FAQ. Al posto, «Prova gratis» e «Parla con un consulente» (modulo consulenza-prezzi). In Iscrizioni dal sito quella richiesta sta in cima, fondo arancio chiaro. I prezzi restano in catalogo.js e in app_impostazioni. prezzi_visibili resta false.
+- Parte 0. Condomini, amministratori, grandi aziende e fondi tornano come committenti che pubblicano appalti (iscrizione, ricerca, pagina Appalti, categorie dell'area privata). Il pacchetto gestionale del condominio (anagrafe, assemblee, contabilità) resta nascosto.
+- Parte 0. L'Allegato B accorciato è la versione 11.10.2026, «da far vedere all'avvocato, non firmabile». La versione 10.10.2026, con il testo di prima, resta quella che si può firmare. Chi ha già firmato resta su quella.
+- Parte 1 e 2. Nell'app, Oggi per azienda, fornitore, privato, rete e admin, con i dati del database. Menu laterale da computer per azienda, fornitore e admin; in basso sul telefono. Privato e rete: cinque voci in basso. Senza numeri inventati: se non c'è niente, il primo passo da fare. In modalità prova la fascia «dati di esempio» resta.
+- Provato in locale a 1280 px e a 375 px: le cinque dashboard, i quattro aspetti dei pulsanti, gli stati vuoti con ?vuoto. Non pubblicato. Ramo iscrizione-pulsanti, non main. Nessuno SQL sul Supabase vero.
+- File: app-anchecasa/js/viste-dash.js, css/dash.css, app.js, main.js, q.js, sw.js, index.html, pacchetti.js, iscrizione-unica.js; sito/prezzi.html, faq.html, appalti.html, js/ac.js, le pagine app-*; iscrizione-unica (copie); area-privata dashboard (contratti, contratti-modelli, contratto-firma, views.js, app.js); app-anchecasa/docs/modello-dashboard/; CLAUDE.md.
+
+### 11.10.2026 18:36 · Cursor — prezzi nascosti e lucchetto sul passo che manca (NON pubblicato)
+- La Parte D non c'era: `prezzi_visibili` non esisteva e i pulsanti mostravano le cifre. Ora l'impostazione è `false` (in `app-14` e nella prova). Sui pulsanti e in Abbonamento e moduli non compare nessuna cifra: «Prova gratis» o «Richiedi l'attivazione». L'admin, in Impostazioni, può riaccenderle. Il listino di anchecasa.it/prezzi non è stato toccato.
+- Il lucchetto «Completa il profilo» apre il passo che manca: telefono, partita IVA, documenti o categorie. Prima apriva il profilo in generale.
+- Provato in locale (telefono 390 px): privato senza numero arriva a Telefono e, salvato, i lucchetti spariscono; impresa con partita IVA arriva a Documenti; fornitore vede «Prova gratis» e «Richiedi l'attivazione», nessuna €, nessuno scorrimento orizzontale. Partita IVA corta non prosegue.
+- Ramo GitHub `iscrizione-pulsanti`, non main. Niente pubblicazione su Vercel, Cloudflare o Supabase.
+- File: `app-anchecasa/js/viste-pulsanti.js`, `viste-aziende.js`, `viste-admin.js`, `q.js`, `app-anchecasa/sql/app-14-iscrizione-profili.sql`, `area-privata/dashboard/js/profili-pulsanti.js`, `area-privata/dashboard/js/app.js`, `CLAUDE.md`.
+
+### 11.10.2026 18:18 · Cursor — anagrafica unica, app-15 (NON pubblicato, non eseguito su Supabase)
+- Nuove tabelle `marketplace.app_soggetti` e `marketplace.app_rubrica`, albo `marketplace.app_albo` (solo aziende verificate), unione e «non sono la stessa persona». Le colonne vecchie restano. La fattura tiene `cliente_dati` come fotografia.
+- Stessa partita IVA da due ditte: un soggetto e due righe di rubrica. Il collega che registra un cliente già preso è bloccato (`cliente_di_un_collega`, 90 giorni e 12 mesi come prima). Il fornitore invitato per mail, quando si iscrive con la stessa partita IVA, rivendica il profilo e ritrova la richiesta.
+- Prove due volte sul Postgres locale (porta 5433, database `ac15`): secondo giro 6 soggetti, 2 righe di rubrica, 1 possibile doppione (stessa mail, uno con codice fiscale e uno senza). Un estraneo legge 0 soggetti. La ditta A vede solo la propria nota.
+- Nell'app, Clienti e Fornitori cercano per nome, partita IVA e telefono; il salvataggio chiama `app_soggetto_in_rubrica` se il database c'è.
+- File: `app-anchecasa/sql/app-15-anagrafica-unica.sql`, `app-anchecasa/sql/prove/15-prove.sql`, `app-anchecasa/js/rubrica.js`, `app-anchecasa/js/app.js`, `app-anchecasa/sw.js`, `CLAUDE.md`.
+
+### 11.10.2026 18:16 · Cursor — mestieri verticali nascosti (NON pubblicato)
+- Restano in vista: imprese edili, artigiani, subappaltatori, impiantisti, studi tecnici, materiali, noleggio, fornitori IT. Nascosti, con `nascosto: true` nel codice: condominio, manutenzione stabili, hotel, ristoranti, negozi, capannoni, traslochi, facchinaggio, pulizie, consulenti HSE, agenzie immobiliari, sicurezza armata, APL, industria.
+- Chi è già iscritto con un mestiere nascosto vede Ufficio e Sicurezza. I tasti del mestiere non compaiono. Le pagine `app-*.html` di quei mestieri sono in `_archivio/sito-promesse` e in `sito/vercel.json` rimandano a `/app`.
+- Tolti dalle scelte dell'iscrizione: pulizie, traslochi e i codici ATECO 81.21, 81.22, 49.41.
+- Iscritti veri per mestiere: non contati da qui (niente SQL sul Supabase). Query da lanciare, in sola lettura, dopo app-14:
+  `select famiglia, coalesce(tipo_azienda, '') as mestiere, count(*) from marketplace.profiles group by 1, 2 order by 3 desc;`
+  e, se c'è la colonna: `select unnest(ateco) as ateco, count(*) from marketplace.app_org group by 1 order by 2 desc;`
+- File: `area-privata/dashboard/js/app.js`, `app-anchecasa/js/pacchetti.js`, `iscrizione-unica/iscrizione.js` e le copie, `sito/app.html`, `sito/vercel.json`, `CLAUDE.md`.
+
+### 11.10.2026 18:12 · Cursor — tolte le promesse di servizi che non esistono (NON pubblicato)
+- Tolti da menu, piede, prezzi e ricerca: AncheVoice come centralino in vendita, Opportunità, aste, Credit, Predict, BIM 5D, InJobs, Tracking. Il registro delle chiamate nell'app resta, con il nome «Registro chiamate», solo per chi lo ha già attivo. Non si propone e non si vende.
+- «Tutti i moduli» resta 69 €. Nando può cambiarlo.
+- Spostate in `_archivio/sito-promesse` (niente cancellato): `anchevoice.html`, `opportunita.html`, `strumenti.html`, le pagine `app-` dei mestieri nascosti e le pagine che `vercel.json` già reindirizzava (agente, azienda, privato, login e le altre). Reindirizzamenti: AncheVoice → `/prezzi`, Opportunità → `/`, le altre → `/app` o la pagina che c'era già.
+- Mail: tolto «Aste immobiliari con assistenza» da `mail/invito/mail-invito.js` e dalle copie; anteprime rigenerate.
+- Area privata: Opportunità, Aste, Credit, Predict, BIM, Tracking e Recruitment (InJobs) non sono nel menu. Il codice delle pagine resta in `views.js`.
+- Nell'Allegato B dei cinque contratti in app è tolto il BIM 5D e l'elenco dei mestieri nascosti. Va fatto vedere all'avvocato prima di una firma.
+- Il Magazine non promette nessuno di questi servizi. Copia di prima: `_copie-anagrafica-1110`.
+- File: `sito/` (pagine e `vercel.json`), `sicura-DA-CARICARE-SU-CLOUDFLARE/`, `sito-nuovo/`, `sicura-nuovo/`, `mail/`, `area-privata/dashboard/js/app.js`, `area-privata/dashboard/js/contratti-modelli.js`, `app-anchecasa/js/catalogo.js`, `app-anchecasa/js/viste-aziende.js`, `app-anchecasa/js/viste-pulsanti.js`, `CLAUDE.md`.
+
+### 11.10.2026 17:58 · Cursor — pulsanti della dashboard solo nell'app (NON pubblicato)
+- Privato, azienda e fornitore, dopo l'accesso e dopo l'iscrizione dall'area privata, vanno su https://entra.anchecasa.it. L'admin e la rete (agenti) restano nell'area privata. `visibleNav` non è stato toccato.
+- Nell'app la Home del privato è la griglia dei pulsanti: in cima quelli degli obiettivi, «Il mio cantiere» solo se c'è un cantiere. Azienda e fornitore leggono l'aspetto da `app_stato_pulsanti()` quando c'è; se manca, gli stessi quattro aspetti si calcolano in locale. «Attiva» manda la richiesta di oggi, con la prova di 14 giorni segnata provvisoria.
+- I pacchetti `TIPO_PACK` e `PACKS` sono copiati in `app-anchecasa/js/pacchetti.js` e decidono i moduli del mestiere. Il fornitore è una categoria: l'ATECO sceglie il pacchetto (43.21 impiantista, 46.73 fornitore di materiali, 41.20 impresa). Nell'area privata i pacchetti non sono cambiati.
+- Admin, nell'app: «Iscrizioni: dove si fermano» e «Aziende da verificare» (Verifica, Serve un documento, Sospendi).
+- Provato in locale con la modalità prova, telefono: privato (lucchetto sul telefono, guasto e trova in cima), fornitore (Prova gratis su Sicurezza, richiesta salvata), impresa (moduli accesi, aziende da verificare che sparisce dopo Verifica). Non pubblicato.
+- File: `app-anchecasa/js/pacchetti.js`, `app-anchecasa/js/viste-pulsanti.js`, `app-anchecasa/js/app.js`, `app-anchecasa/js/db.js`, `app-anchecasa/js/q.js`, `app-anchecasa/css/app.css`, `app-anchecasa/sw.js`, `app-anchecasa/sql/app-14-iscrizione-profili.sql`, `area-privata/js/app.js`, `area-privata/js/iscrizione.js`, `area-privata/js/benvenuto.js`, `CLAUDE.md`.
+
+### 11.10.2026 17:45 · Cursor — pulizia: cartelle inutilizzate in _archivio (niente cancellato)
+- Restano al loro posto: `sito-nuovo` (sorgente del sito), `sicura-nuovo` (legge `sito-nuovo` e genera AncheSicura), `sicura-DA-CARICARE-SU-CLOUDFLARE` (è la cartella che va su https://sicura.anchecasa.it).
+- Spostate in `_archivio`, dopo copia in `_copie-entra-1110`: `sicura` (sito di prima, l'online usa la cartella da caricare), `superapp`, `superapp-viste` (nessuno script e nessun sito le pubblica), `anchecasapulito` (solo `.gitattributes`).
+- `LEGGIMI.txt` aggiornato: cosa c'è, cosa è online e dove, cosa sta in `_archivio`.
+- File: `LEGGIMI.txt`, `CLAUDE.md`. Cartelle: `_archivio/sicura`, `_archivio/superapp`, `_archivio/superapp-viste`, `_archivio/anchecasapulito`, `_copie-entra-1110`.
+
+### 11.10.2026 17:43 · Cursor — gare, AncheBIM e SuperMastro SOS copiati dentro (NON pubblicato)
+- `business/`: codice del cruscotto da BIM-SICUR\ecosistema-anchecasa, ramo feature/admin-eprocurement-button (src, services, public, configurazione). Non è un sito. SQL app-01 … app-13 non ricopiato. Lo SQL gare era già in `supabase/migrations/20261011103000_e_procurement.sql`. Nessuna chiave.
+- `supermastro-sos/`: web, migrazioni 20261011, script e workflow da 04-SuperMastro. Schema public non toccato. Pull request non unita. I repository GitHub ecosistema-anchecasa e supermastro-sos restano.
+- File: `business/`, `supermastro-sos/`, `CLAUDE.md`.
+
+### 11.10.2026 17:40 · Cursor — entra.anchecasa.it sull'app (DNS da fare a mano)
+- Cloudflare Pages, progetto app-anchecasa: aggiunto entra.anchecasa.it (stato initializing). Tolto app.anchecasa.it da questo progetto. Non ricollegato altrove.
+- Il record DNS CNAME «entra» non si può scrivere da qui: il login di wrangler e il token nel file rispondono 403 sulla zona. https://entra.anchecasa.it non risolve. https://app-anchecasa.pages.dev risponde 200, titolo AncheCasa (pubblicazione https://3fd7d0ad.app-anchecasa.pages.dev). Prova da telefono sullo stesso nome: non risolve, per lo stesso motivo.
+- Supabase, progetto ANCHECASA: APP_URL impostato su https://entra.anchecasa.it (valore non mostrato). DIAGNOSI_ORIGINI non c'è: le funzioni ammettono già ogni origine, entra compreso, quindi il segreto non è stato creato.
+- Nel codice di app-anchecasa, app.anchecasa.it è diventato entra.anchecasa.it (config, LEGGIMI, script, gare-analisi, sdi-gateway, sopralluogo-flash, subappalti-mail). supermastro-analisi non contiene quel nome ed è rimasta in sola lettura. Le funzioni già online non sono state ripubblicate (limite 100). Link all'app nuova in area-privata/dashboard/js/rete-proposte.js e negli appunti. Sito, magazine e sicura non pubblicati.
+- File: `app-anchecasa/` (config, LEGGIMI, scripts, funzioni), `area-privata/dashboard/js/rete-proposte.js`, `area-privata/dashboard/js/appunti-francesco.js`, `CLAUDE.md`.
+
+### 11.10.2026 17:20 · Cursor — inviti per mail, iscrizione dal sito, curriculum obbligatorio per l'agente
+- Chi riceve l'invito per mail resta già dentro: il profilo nasce verificato, come prima.
+- Dal sito, privato e azienda si iscrivono senza autorizzazione e poi completano il profilo. La funzione `handle_new_user_marketplace` è già aggiornata su Supabase e li segna verificati. L'agente dal sito resta una richiesta in attesa.
+- Senza curriculum in PDF o Word la richiesta dell'agente non parte. Il file va nel bucket `marketplace-candidature` e l'admin lo apre dalla richiesta.
+- File: `supabase/migrations/20261011172000_iscrizione_web.sql`, `area-privata/js/iscrizione.js`, `area-privata/js/app.js`, `area-privata/iscriviti.html`, `area-privata/candidatura-agente.html`, `area-privata/dashboard/js/views.js`, `sito/js/ac.js`, `sito/iscriviti.html`, `sito/agenti.html`, `sito/privacy.html`, `CLAUDE.md`.
+
+### 11.10.2026 17:10 · Cursor — Terranova, Gare private e AncheBIM come tasti dell'area privata (NON pubblicato)
+- Su richiesta: i progetti di ieri sera e di oggi sono funzioni di AncheCasa, con un tasto nel menu admin, non siti a parte. Bandi c'era già. Aggiunti Terranova (schema `terranova`, tabella gare), Gare private (`marketplace.app_ep_gare`) e AncheBIM (controllo disegni X, Y, Z). Stesso Supabase dell'area privata. In anteprima `?demo=admin` i tre tasti mostrano esempi.
+- Sul telefono restano in barra Home, Iscritti, Bandi e Contratti. I tre tasti nuovi stanno nel menu e in Altro.
+- Non pubblicato: restano sul ramo `feat/sm-fase-1-procione`. Nessun sito nuovo su Vercel o Cloudflare.
+- File: `area-privata/dashboard/js/funzioni-interne.js` (nuovo), `area-privata/dashboard/js/app.js`, `area-privata/dashboard/index.html`, `CLAUDE.md`.
+
+### 11.10.2026 16:52 · Cursor — lettura di partenza del comando «mettere online» (niente pubblicato)
+- Ramo `feat/sm-fase-1-procione`, non main. Non ho cambiato ramo.
+- `SUPABASE_DB_URL` non è impostata in questa sessione, quindi psql non è partito. Il controllo in sola lettura è passato dalla CLI già collegata al progetto ANCHECASA.
+- app-14 c'è (colonna `app_firme.dati` e le due funzioni). app-15 non c'è (mancano `app_inviti.superiore` e `regione`).
+- Funzioni Supabase: 100 su 100. C'è `sdi-gateway`. Mancano `sopralluogo-flash`, `subappalti-mail`, `gare-analisi`.
+- Vercel produzione: area-privata circa 5 ore fa, sito e magazine circa 10 ore fa. Cloudflare Pages: app-anchecasa circa 5 ore fa (sorgente `cbdf410`), sicura circa 9 ore fa. https://app.anchecasa.it risponde 522.
+- Copia di prima: `_copie-registro-a-1652`. File: `CLAUDE.md`.
+
+### 11.10.2026 16:45 · Claude — area privata installabile come app dal telefono (NON pubblicato)
+- `area-privata/manifest.webmanifest` (nome AncheCasa, apre `/`, schermo intero, colore #1f4d7a, icone ufficiali da `marchio/5-simbolo-e-icone/icone-app` copiate in `area-privata/img/app/`), `area-privata/sw.js` minimo (non conserva copie: si vede sempre la versione online).
+- Collegati in `area-privata/index.html` (accesso) e `area-privata/dashboard/index.html`: manifest, theme-color, meta per iPhone, registrazione di /sw.js.
+- `area-privata/vercel.json`: sw.js e manifest senza cache, tipo application/manifest+json.
+- Provato in locale con Chrome: manifest senza errori, service worker attivo, nessun motivo che impedisce l'installazione; con sessione aperta la pagina di accesso porta subito alla dashboard.
+- Copia di prima: `_copie-pwa-1640`.
+- File: nuovi `area-privata/manifest.webmanifest`, `area-privata/sw.js`, `area-privata/img/app/icona-192.png`, `icona-512.png`, `icona-maskable-512.png`; cambiati `area-privata/index.html`, `area-privata/dashboard/index.html`, `area-privata/vercel.json`, `COMANDO-CURSOR-TUTTO-ONLINE-v2.md`, `CLAUDE.md`.
+
+### 11.10.2026 16:35 · Claude — accesso: chi è già entrato non ridà la password, dopo l'accesso si arriva alla Home (NON pubblicato)
+- Pagina di accesso dell'area privata: se c'è già una sessione Supabase aperta (anche nell'app salvata sul telefono) si entra subito nella dashboard. I controlli (admin, profilo verificato) restano nella dashboard, che chiude la sessione e riporta al login se non va bene.
+- Dopo l'accesso: admin e profili vanno a `dashboard/#/` (o `#/<famiglia>/`) e la dashboard apre la prima pagina giusta: Home per admin e agenti, Appunti per Francesco, Bacheca per privati e aziende. Prima l'admin finiva su Iscritti.
+- Copia di prima: `_copie-login-sessione-1630`.
+- File: `area-privata/js/app.js`, `COMANDO-CURSOR-TUTTO-ONLINE-v2.md` (aggiunto il file), `CLAUDE.md`.
+
+### 11.10.2026 16:30 · Claude — da computer la dashboard prende l'aspetto della «viste» (orologio in alto a sinistra), il telefono resta com'è (NON pubblicato)
+- Su richiesta di Nando: da computer (oltre 980 px) in alto a sinistra data e orologio come in `ANCHECASA-LAVORO\viste` (stesso disegno, colori della dashboard area privata), sotto una colonna di icone rapide (Home, Chat, Task/Documenti, Contratti, File/Pubblica: solo voci che la persona vede già) e il menu; logo in una barra bianca in alto a destra; l'orologio grigio accanto al titolo sparisce da computer.
+- Telefono: nessun cambiamento (barra in alto con logo e «Ciao», barra in basso con Home… e Altro). I nuovi elementi lì sono nascosti.
+- Home: da 981 a 1200 px i quattro numeri vanno su due righe.
+- Provato in locale con ?demo=admin e ?demo=agente a 1366, 1024 e 390 px: nessun errore, nessuno scorrimento orizzontale.
+- Copia di prima: `_copie-dashboard-aspetto-dock-1625`.
+- File: nuovo `area-privata/dashboard/css/aspetto-dock.css`; cambiati `area-privata/dashboard/index.html` (blocco data/ora, colonna icone, barra con logo, app.js?v=9), `area-privata/dashboard/js/app.js` (tick, paintNav), `area-privata/dashboard/css/home.css`, `CLAUDE.md`.
+
+### 11.10.2026 16:20 · Claude — Home con grafici e andamenti, tasto «Home» per admin e collaboratori (NON pubblicato)
+- Su richiesta di Nando: nuova pagina «Home», primo tasto del menu e della barra in basso del telefono, sia per l'admin sia per gli agenti della rete. È anche la prima pagina dopo l'accesso (Francesco resta su Appunti) e il logo dell'admin porta lì.
+- Admin: iscritti, rete attiva, canoni attivi al mese, lavori firmati dell'anno; grafici degli ultimi 12 mesi (nuovi iscritti privati/aziende, nuovi nella rete, canoni attivati, valore lavori firmati) e barre per ruolo, regione e stato dei lavori.
+- Collaboratore: la sua squadra, canoni e lavori suoi e della catena, le sue provvigioni (pagate e da pagare) mese per mese, squadra per ruolo, lavori per stato. I filtri li fa già Supabase (app_nella_mia_rete): stesse letture per tutti, nessuna scrittura, nessun SQL nuovo.
+- Grafici in HTML/CSS senza librerie; toccando una colonna si legge il dettaglio del mese. Con ?demo=admin|agente mostra numeri d'esempio scritti «Esempio».
+- Nota «CONGELATO 20.09.2026» in app.js aggiornata con l'eccezione per il tasto Home.
+- Provato in locale con dati d'esempio: telefono 390 px (admin e agente) e computer 1366 px, nessun errore, nessuno scorrimento orizzontale.
+- Attenzione alla pubblicazione: la cartella contiene anche i contratti firmabili (voci delle 15:40 e 15:55), che richiedono app-14 su Supabase prima di andare online.
+- Copia di prima: `_copie-dashboard-home-1610`.
+- File: nuovi `area-privata/dashboard/js/home.js`, `area-privata/dashboard/css/home.css`; cambiati `area-privata/dashboard/js/app.js` (navItems, primaPagina, logo, BREVE), `area-privata/dashboard/index.html` (home.css, home.js, app.js?v=8), `CLAUDE.md`.
+
+### 11.10.2026 15:55 · Claude — compilabili e firmabili dal telefono anche gli altri 4 contratti della rete
+- Responsabile Rete Italia, Responsabile sviluppo rete (collaborazione occasionale), Capo area e Sub-agente: stesso funzionamento del contratto Agente (carta intestata, campi da compilare, spunte, firma col dito, «Invia», sola lettura fino alla firma). Testo preso dai PDF versione 10.10.2026 e controllato parola per parola col PDF (articoli e Allegato A); Allegati B e C sono identici in tutti e 5 i contratti.
+- Campi propri di ogni contratto: Sviluppo rete senza partita IVA, con documento; Capo area con la «Regione» dell'art. 2.2; Sub-agente con documento, partita IVA ed Enasarco facoltativi e i dati dell'Agente di riferimento (nome, partita IVA, zona). Nell'art. 4.2 dello Sviluppo rete le aree sono in tabella.
+- Sub-agente: compare «L'Agente di riferimento · per accettazione», ma la sua firma nell'app non viene ancora raccolta (da decidere).
+- Provato in locale con dati finti per tutti e 4 i ruoli (telefono 390 px): blocco, compilazione, invio, dati salvati. NON pubblicato. Serve sempre `app-14` su Supabase prima di pubblicare.
+- File: `area-privata/dashboard/js/contratti-modelli.js`, `area-privata/dashboard/js/contratto-firma.js` (riga per altri firmatari), `CLAUDE.md`.
+
+### 11.10.2026 15:40 · Claude — contratto Agente compilabile e firmabile dal telefono, area in sola lettura fino alla firma
+- Su richiesta di Nando: il contratto si compila e si firma nell'app, anche da telefono. Carta intestata come la mail d'invito (logo e dati Palumbo Investment in alto con filo arancio, fascia curva e piede blu basso in fondo), senza riquadri scuri e senza i dati di chi ha invitato. Testo del contratto Agente versione 10.10.2026 identico al PDF.
+- In Documenti il «Contratto Agente» da firmare apre il contratto con i campi da compilare (dati anagrafici, CF, P.IVA, REA, CCIAA, Enasarco, telefono, PEC, mail, IBAN, zona art. 2.2, luogo), le spunte «letto e accetto» e artt. 1341-1342, la firma col dito e «Invia contratto firmato». Controlli su CF, P.IVA, IBAN e mail. Impronta SHA-256 del testo con i dati compilati.
+- Finché il contratto del proprio ruolo non è firmato, l'agente della rete vede tutto ma non registra niente: striscia «La tua area è in sola lettura» con «Firma il contratto» su ogni pagina; i tasti che salvano o inviano sono fermati (Documenti resta libero). Dopo l'invio la striscia sparisce e tutto si attiva. Chi non è in app_rete (anteprime) non è toccato.
+- Dopo la firma: «Apri il contratto firmato» in Documenti (copia completa con dati, firma, impronta, «Salva in PDF»); l'admin in Contratti apre la stessa copia da «Ricevuta».
+- Database: nuovo `app-anchecasa/sql/app-14-contratto-compilato.sql` (colonna `app_firme.dati`, rpc `app_firma_contratto`, funzione `app_contratto_ok`, policy restrittive: senza firma niente insert in app_vendite e app_affari). NON ancora eseguito su Supabase: va lanciato nell'SQL Editor PRIMA di pubblicare la dashboard, altrimenti l'invio risponde «Manca app-14».
+- Gli altri 4 contratti (Rete Italia, Sviluppo, Capo area, Sub-agente) per ora restano col PDF e la firma di prima: il blocco vale anche per loro, si sblocca con quella firma. Per farli compilabili basta aggiungere il loro modello in `contratti-modelli.js`.
+- Provato in locale con dati finti (telefono 390 px e computer): sola lettura, blocco dei tasti, compilazione, errori, firma, invio, sblocco, copia firmata. NON pubblicato: lo pubblica Nando.
+- Copia di prima: `_copie-dashboard-contratto-firma-1531`.
+- File: `area-privata/dashboard/index.html`, `area-privata/dashboard/js/app.js` (una riga dopo paintTop), `area-privata/dashboard/js/contratti.js`, nuovi `area-privata/dashboard/js/contratto-firma.js`, `area-privata/dashboard/js/contratti-modelli.js`, `area-privata/dashboard/css/contratto-firma.css`, `area-privata/dashboard/img/contratto-logo.png`, `contratto-logo-negativo.png`, `contratto-curva.png` (da `sito/assets/mail` e `sito/assets/logo/footer-curva.png`), `app-anchecasa/sql/app-14-contratto-compilato.sql`, `CLAUDE.md`.
+
+### 11.10.2026 12:15 · Cursor — app 2.7 e SuperMastro, quanto si poteva fare senza chiedere conferme
+- App: database app-03…app-13 ok. Funzione pubblicata solo sdi-gateway (limite 100 funzioni). Sito su https://app-anchecasa.pages.dev. app.anchecasa.it collegato ma pending, risponde 522. Commit su main: `62b2a93`.
+- SuperMastro: prove 16/16, typecheck e build ok, lint 20 errori. Migrazioni 20261011 applicate, controllo RLS ok. Secrets SOS_SHARE_SECRET e CRON_SECRET creati. Pull request https://github.com/anchecasa/supermastro-sos/pull/1 non unita. Il sito online è ancora quello di prima: l'admin si apre senza login. Workflow notturno assente su main.
+- Password del database e token nel file non accettati. Appunti aggiornati nella dashboard, voce Appunti.
+- File: `area-privata/dashboard/js/appunti-francesco.js`, `area-privata/dashboard/index.html`, `CLAUDE.md`.
 
 ### 11.10.2026 11:55 · Cursor — app AncheCasa 2.7 messa online per quanto si poteva da qui
 - Database: app-03 … app-13 eseguiti sul progetto ANCHECASA. Verifica dello script superata (18 lavorazioni, piani, fascicolo, bucket fascicolo/loghi/sopralluoghi, link cliente e fornitore, tabelle private non leggibili senza account, avviso scadenze già programmato). Lo script online-1 non si collega: la password nel file risponde «password authentication failed».

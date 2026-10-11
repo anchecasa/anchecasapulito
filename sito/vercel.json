@@ -24,22 +24,22 @@
   },
   {
    "source": "/agenzia",
-   "destination": "/app-agenzie-immobiliari",
+   "destination": "/app",
    "permanent": false
   },
   {
    "source": "/agenzia.html",
-   "destination": "/app-agenzie-immobiliari",
+   "destination": "/app",
    "permanent": false
   },
   {
    "source": "/albergo",
-   "destination": "/app-hotel",
+   "destination": "/app",
    "permanent": false
   },
   {
    "source": "/albergo.html",
-   "destination": "/app-hotel",
+   "destination": "/app",
    "permanent": false
   },
   {
@@ -84,12 +84,12 @@
   },
   {
    "source": "/condominio",
-   "destination": "/app-condominio",
+   "destination": "/app",
    "permanent": false
   },
   {
    "source": "/condominio.html",
-   "destination": "/app-condominio",
+   "destination": "/app",
    "permanent": false
   },
   {
@@ -134,12 +134,12 @@
   },
   {
    "source": "/industria",
-   "destination": "/app-capannoni-logistica",
+   "destination": "/app",
    "permanent": false
   },
   {
    "source": "/industria.html",
-   "destination": "/app-capannoni-logistica",
+   "destination": "/app",
    "permanent": false
   },
   {
@@ -154,22 +154,22 @@
   },
   {
    "source": "/logistica",
-   "destination": "/app-capannoni-logistica",
+   "destination": "/app",
    "permanent": false
   },
   {
    "source": "/logistica.html",
-   "destination": "/app-capannoni-logistica",
+   "destination": "/app",
    "permanent": false
   },
   {
    "source": "/negozio",
-   "destination": "/app-negozi",
+   "destination": "/app",
    "permanent": false
   },
   {
    "source": "/negozio.html",
-   "destination": "/app-negozi",
+   "destination": "/app",
    "permanent": false
   },
   {
@@ -230,6 +230,136 @@
   {
    "source": "/strumenti.html",
    "destination": "/app",
+   "permanent": false
+  },
+  {
+   "source": "/app-condominio",
+   "destination": "/app",
+   "permanent": false
+  },
+  {
+   "source": "/app-condominio.html",
+   "destination": "/app",
+   "permanent": false
+  },
+  {
+   "source": "/app-manutenzione-stabili",
+   "destination": "/app",
+   "permanent": false
+  },
+  {
+   "source": "/app-manutenzione-stabili.html",
+   "destination": "/app",
+   "permanent": false
+  },
+  {
+   "source": "/app-hotel",
+   "destination": "/app",
+   "permanent": false
+  },
+  {
+   "source": "/app-hotel.html",
+   "destination": "/app",
+   "permanent": false
+  },
+  {
+   "source": "/app-ristoranti",
+   "destination": "/app",
+   "permanent": false
+  },
+  {
+   "source": "/app-ristoranti.html",
+   "destination": "/app",
+   "permanent": false
+  },
+  {
+   "source": "/app-negozi",
+   "destination": "/app",
+   "permanent": false
+  },
+  {
+   "source": "/app-negozi.html",
+   "destination": "/app",
+   "permanent": false
+  },
+  {
+   "source": "/app-capannoni-logistica",
+   "destination": "/app",
+   "permanent": false
+  },
+  {
+   "source": "/app-capannoni-logistica.html",
+   "destination": "/app",
+   "permanent": false
+  },
+  {
+   "source": "/app-traslochi",
+   "destination": "/app",
+   "permanent": false
+  },
+  {
+   "source": "/app-traslochi.html",
+   "destination": "/app",
+   "permanent": false
+  },
+  {
+   "source": "/app-facchinaggio",
+   "destination": "/app",
+   "permanent": false
+  },
+  {
+   "source": "/app-facchinaggio.html",
+   "destination": "/app",
+   "permanent": false
+  },
+  {
+   "source": "/app-pulizie",
+   "destination": "/app",
+   "permanent": false
+  },
+  {
+   "source": "/app-pulizie.html",
+   "destination": "/app",
+   "permanent": false
+  },
+  {
+   "source": "/app-consulenti",
+   "destination": "/app",
+   "permanent": false
+  },
+  {
+   "source": "/app-consulenti.html",
+   "destination": "/app",
+   "permanent": false
+  },
+  {
+   "source": "/app-agenzie-immobiliari",
+   "destination": "/app",
+   "permanent": false
+  },
+  {
+   "source": "/app-agenzie-immobiliari.html",
+   "destination": "/app",
+   "permanent": false
+  },
+  {
+   "source": "/anchevoice",
+   "destination": "/prezzi",
+   "permanent": false
+  },
+  {
+   "source": "/anchevoice.html",
+   "destination": "/prezzi",
+   "permanent": false
+  },
+  {
+   "source": "/opportunita",
+   "destination": "/",
+   "permanent": false
+  },
+  {
+   "source": "/opportunita.html",
+   "destination": "/",
    "permanent": false
   }
  ]

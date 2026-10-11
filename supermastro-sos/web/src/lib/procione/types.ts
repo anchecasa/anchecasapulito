@@ -1,0 +1,75 @@
+export type AppointmentColor = "orange" | "green" | "blue" | "purple";
+export type AppointmentSource = "manual" | "voice" | "google";
+export type AppointmentStatus = "scheduled" | "completed" | "cancelled";
+export type VoiceRole = "user" | "assistant";
+export type ActionType = "appointment" | "contact" | "task" | "query" | "multi" | "call" | "whatsapp" | "navigate" | "chat" | "draft";
+
+export type AssistantAppointment = {
+  id: string;
+  owner_id: string;
+  title: string;
+  description: string | null;
+  location: string | null;
+  contact_name: string | null;
+  contact_id?: string | null;
+  starts_at: string;
+  ends_at: string;
+  color: AppointmentColor;
+  source: AppointmentSource;
+  status: AppointmentStatus;
+  google_event_id?: string | null;
+  created_at: string;
+};
+
+export type AssistantContact = {
+  id: string;
+  full_name: string;
+  normalized_name?: string | null;
+  company: string | null;
+  phone: string | null;
+  email: string | null;
+  notes: string | null;
+  created_at: string;
+};
+
+export type AssistantVoiceLog = {
+  id: string;
+  role: VoiceRole;
+  content: string;
+  action_type: ActionType | null;
+  created_at: string;
+};
+
+export type CreateAppointmentInput = {
+  title: string;
+  description?: string;
+  location?: string;
+  contact_name?: string;
+  starts_at: string;
+  ends_at: string;
+  color?: AppointmentColor;
+  source?: AppointmentSource;
+};
+
+export type AssistantTaskType = "reminder" | "marketing";
+
+export type AssistantTask = {
+  id: string;
+  owner_id: string;
+  title: string;
+  description: string | null;
+  due_at: string | null;
+  completed: boolean;
+  task_type: AssistantTaskType;
+  voice_ref: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type CreateTaskInput = {
+  title: string;
+  description?: string;
+  due_at?: string;
+  task_type?: AssistantTaskType;
+  voice_ref?: string;
+};

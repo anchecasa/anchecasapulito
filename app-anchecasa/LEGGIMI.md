@@ -13,7 +13,7 @@ Un'app sola per tutti, con un profilo per ogni modo di usarla. Chi ha più profi
 | **Fornitore** | Richieste di fornitura e noleggio (lotti), offerte, listino prodotti. |
 | **Consulente AncheSicura** | Aziende seguite con il semaforo della sicurezza, sopralluoghi, agenda, schede sicurezza delle aziende. |
 | **Sviluppo rete → Capoarea → Agente → Sub-agente** | Codice personale, vendite e clienti, squadra con inviti al livello sotto, guadagni. Report recensioni (sviluppo: la sua area; capoarea: la sua regione). Accordo da firmare per lo sviluppo rete. |
-| **Admin** | Cruscotto con tutte le divisioni e una lista «Da fare» con tutto quello che aspetta una decisione. Aziende e moduli (attivazione), AncheCasa GC (cantieri, inviti a proprietari e partner), AncheSicura (ordini, rivendite, consulenti), SuperMastro (artigiani, passaggi, segnalazioni), AncheVoice, gare e lotti, rete commerciale (inviti, ruoli, aree, conferma vendite, pagamento provvigioni), economia, report recensioni con CSV per Excel, impostazioni (prezzi e percentuali). |
+| **Admin** | Cruscotto con tutte le divisioni e una lista «Da fare» con tutto quello che aspetta una decisione. Aziende e moduli (attivazione), AncheCasa GC (cantieri, inviti a proprietari e partner), AncheSicura (ordini, rivendite, consulenti), SuperMastro (artigiani, passaggi, segnalazioni), registro chiamate (non in vendita), gare e lotti, rete commerciale (inviti, ruoli, aree, conferma vendite, pagamento provvigioni), economia, report recensioni con CSV per Excel, impostazioni (prezzi e percentuali). |
 
 **Moduli dell'impresa**
 - **Ufficio**: clienti, preventivi con le voci e il PDF, fatture, documenti.
@@ -84,7 +84,7 @@ Se l'app dice «configurazione mancante», aggiungere nei Secrets `AC_PUBLISHABL
 cd "C:\Users\palum\Desktop\ANCHECASA-PULITO\app-anchecasa"
 npx vercel deploy --prod --yes --scope anchecasas-projects
 ```
-Per spostare `app.anchecasa.it` sull'app serve «AUTORIZZO LA MODIFICA: dominio app.anchecasa.it».
+L'app è su `https://entra.anchecasa.it`. `app.anchecasa.it` non si usa più e non si ricollega.
 
 **7. Decisioni di Nando**, da mettere nell'app (Admin → Impostazioni) o in `js/config.js`:
 - prezzi dei moduli e listino AncheSicura. Oggi c'è la proposta del 09.10; il listino dei corsi è in `app_impostazioni` (`listino_anchesicura`);
@@ -148,11 +148,11 @@ Per spostare `app.anchecasa.it` sull'app serve «AUTORIZZO LA MODIFICA: dominio 
 - Nota legale: la firma nell'app è una firma elettronica semplice. Per i contratti di agenzia fai verificare all'avvocato se basta o se serve una firma elettronica avanzata (per esempio con codice via SMS).
 
 
-## Pubblicare l'app su Cloudflare Pages (app.anchecasa.it)
+## Pubblicare l'app su Cloudflare Pages (entra.anchecasa.it)
 
 1. Dalla cartella `app-anchecasa`: `node scripts/prepara-pubblicazione.mjs` → crea `dist/` con SOLO i file dell'app (niente `sql/`, `supabase/`, documenti) e le intestazioni di sicurezza; si ferma se trova una chiave segreta.
 2. `npx wrangler pages deploy dist --project-name app-anchecasa --branch main` (la prima volta: `npx wrangler pages project create app-anchecasa --production-branch main`).
-3. Cloudflare → Workers & Pages → `app-anchecasa` → Custom domains → `app.anchecasa.it`.
-4. Supabase → Authentication → URL Configuration: aggiungere `https://app.anchecasa.it` (Site URL e Redirect URLs).
-5. Google Cloud → chiave di Maps → restrizioni HTTP: aggiungere `https://app.anchecasa.it/*`.
-6. Secrets delle funzioni: `DIAGNOSI_ORIGINI` deve contenere `https://app.anchecasa.it`; `APP_URL` = `https://app.anchecasa.it`.
+3. Cloudflare → Workers & Pages → `app-anchecasa` → Custom domains → `entra.anchecasa.it`.
+4. Supabase → Authentication → URL Configuration: aggiungere `https://entra.anchecasa.it` (Site URL e Redirect URLs).
+5. Google Cloud → chiave di Maps → restrizioni HTTP: aggiungere `https://entra.anchecasa.it/*`.
+6. Secrets delle funzioni: `DIAGNOSI_ORIGINI` deve contenere `https://entra.anchecasa.it`; `APP_URL` = `https://entra.anchecasa.it`.

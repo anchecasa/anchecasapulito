@@ -271,6 +271,13 @@ small.div { font: 700 10.5px var(--font); color: var(--arancio); background: var
   .schermo { overflow: visible; background: #fff; }
 }
 .tit-sez { font-size: 17px; color: var(--blu); margin: 0 0 10px; }
+a.tile { text-decoration: none; color: inherit; }
+.tile.spento { opacity: .72; }
+.tile.spento .lucchetto { color: #8a93a3; background: #e7ecf3; }
+.tile .prova { color: #fff; background: #E56B10; font-weight: 700; border-radius: 999px; padding: 2px 8px; align-self: flex-start; }
+.barra-profilo { margin: 8px 0 14px; cursor: pointer; }
+.barra-profilo span { display: block; font-size: 13px; font-weight: 700; color: #2A3C54; margin-bottom: 6px; }
+.sotto-dash { color: #5c6b7a; font-size: 13px; margin: 0 0 8px; }
 
 
 @keyframes appare { from { opacity: 0; } to { opacity: 1; } }

@@ -89,6 +89,14 @@ function disegna(v, tabs, attiva) {
   const campana = `<button type="button" class="campana" data-go="notifiche" aria-label="Notifiche${S.nonLette ? ": " + S.nonLette + " da leggere" : ""}">${I.campana}${S.nonLette ? "<i></i>" : ""}</button>`;
   const testa = `<header class="alto">${v.back ? `<button type="button" class="indietro" data-az="indietro" aria-label="Indietro">${I.indietro}</button>` : ""}${v.t ? `<h1 class="tit">${esc(v.t)}</h1>` : `<img class="logo" src="img/logo-colore.png" alt="AncheCasa"><span class="tit"></span>`}${chip}${campana}</header>`;
   const basso = tabs ? `<nav class="basso" aria-label="Menu">${tabs.map(([r, ico, et, centro]) => `<button type="button" data-tab="${r}" class="${r === attiva ? "on" : ""} ${centro ? "piu" : ""}" ${r === attiva ? 'aria-current="page"' : ""}>${centro ? `<span class="tondo">${I[ico]}</span>` : I[ico]}<span>${et}</span></button>`).join("")}</nav>` : "";
+  const largo = !!(S.utente && !v.pieno && core.menuLato && ["impresa", "fornitore", "admin"].includes(S.base));
+  app.classList.toggle("e-largo", largo);
+  const desktop = largo && window.matchMedia("(min-width: 900px)").matches;
+  if (desktop) {
+    const testaQui = v.guscio === "oggi" ? "" : testa;
+    app.innerHTML = `${fasciaProva}<div class="dash">${core.menuLato()}${`<div class="dash-col">${testaQui}<main class="schermo" id="schermo">${v.h}</main></div>`}</div>`;
+    return;
+  }
   app.innerHTML = `${fasciaProva}${testa}<main class="schermo" id="schermo">${v.h}</main>${basso}`;
 }
 
@@ -176,22 +184,23 @@ V.entra = async () => ({
     <div style="height:14px"></div><button type="button" class="link" data-go="recupera">Hai dimenticato la password?</button>
     <p class="piede">Non hai un account? <button type="button" class="link" data-go="registrati">Creane uno</button></p></div>`,
 });
-V.registrati = async () => ({
+V.registrati = async (param) => ({
   pieno: true,
   h: `<div class="ingresso"><button type="button" class="indietro-tondo" data-az="indietro" aria-label="Indietro">${I.indietro}</button>
-    <h1>Crea il tuo account</h1><p>Chi sei?</p>
-    <form data-form="registrati" novalidate>
-      <div class="scelte" role="radiogroup">
-        <label class="scelta"><input type="radio" name="ruolo" value="privato" checked><span>${I.casa}<b>Privato</b><small>Guasti, artigiani, la tua casa. Gratis.</small></span></label>
-        <label class="scelta"><input type="radio" name="ruolo" value="artigiano"><span>${I.kit}<b>Artigiano</b><small>Pronto intervento: ricevi i clienti da SuperMastro.</small></span></label>
-      </div>
-      ${campo("Nome e cognome", `<input name="nome" autocomplete="name" required maxlength="80">`)}
-      ${campo("Città", `<input name="citta" autocomplete="address-level2" required maxlength="80">`)}
-      ${campo("Mail", `<input name="email" type="email" autocomplete="email" required>`)}
-      ${campo("Password", `<input name="password" type="password" autocomplete="new-password" minlength="8" required>`, "Almeno 8 caratteri.")}
-      <label class="spunta"><input type="checkbox" name="privacy" required> <span>Ho letto ${CONFIG.privacyUrl ? `<a href="${esc(CONFIG.privacyUrl)}" target="_blank" rel="noopener">l'informativa privacy</a>` : "l'informativa privacy"} e accetto il trattamento dei miei dati per usare l'app.</span></label>
-      <button class="btn" type="submit">Crea l'account</button></form>
-    <p class="piede">Hai già un account? <button type="button" class="link" data-go="entra">Entra</button></p></div>`,
+    <div id="iscrizione-unica"></div></div>`,
+  dopo(schermo) {
+    const box = schermo.querySelector("#iscrizione-unica");
+    if (!box || !window.IscrizioneUnica) return;
+    const cat = ["privato", "azienda", "fornitore"].includes(param) ? param : "privato";
+    IscrizioneUnica.monta(box, {
+      da: "app",
+      privacy: CONFIG.privacyUrl || "https://anchecasa.it/privacy.html",
+      google: !!CONFIG.accessoGoogle,
+      apple: !!CONFIG.accessoApple,
+      precompila: { categoria: cat },
+      supabase: DB.sb || null,
+    });
+  },
 });
 V.mail = async () => ({
   pieno: true,
@@ -841,5 +850,5 @@ app.addEventListener("change", async (e) => {
 });
 
 /* Il cuore dell'app, per i moduli delle altre parti (aziende, rete, admin…). */
-export const core = { S, V, AZIONI, FORM, PROFILI, NOMI_RUOLI, PROFILO_EXTRA, DB, Q, vai, render, casa, caricaUtente, caricaProfili, scegliProfilo, aggiornaNonLette, memo, blocchiAnalisi, VOCI };
+export const core = { S, V, AZIONI, FORM, PROFILI, NOMI_RUOLI, PROFILO_EXTRA, DB, Q, vai, render, casa, caricaUtente, caricaProfili, scegliProfilo, aggiornaNonLette, memo, blocchiAnalisi, VOCI, menuLato: null };
 export { avvia };

@@ -142,6 +142,17 @@
       });
       const password = form.elements.password ? form.elements.password.value : "";
       data.privacy = !!(form.elements.privacy && form.elements.privacy.checked);
+      if (famiglia === "agente") {
+        const nomeFile = (fileCv && fileCv.name) || "";
+        if (!fileCv || !fileCv.size || !/\.(pdf|doc|docx)$/i.test(nomeFile)) {
+          errore("Allega il curriculum in PDF o Word. Senza il curriculum la richiesta non parte.");
+          return;
+        }
+        if (fileCv.size > 8 * 1024 * 1024) {
+          errore("Il curriculum deve stare entro 8 MB.");
+          return;
+        }
+      }
       data.at = new Date().toISOString();
       if (data.privacy) data.privacy_at = data.at;
       if (invitoToken) data.invito = invitoToken;
@@ -169,12 +180,12 @@
           .from("marketplace-candidature")
           .upload(percorso, file, { contentType: file.type || "application/octet-stream", upsert: false })
           .then(function (up) {
-            if (up.error) return { nome: file.name || "", url: "" };
+            if (up.error) return { nome: file.name || "", url: "", path: "" };
             const pub = window.acDb.storage.from("marketplace-candidature").getPublicUrl(percorso);
-            return { nome: file.name || "", url: (pub.data && pub.data.publicUrl) || "" };
+            return { nome: file.name || "", url: (pub.data && pub.data.publicUrl) || "", path: percorso };
           })
           .catch(function () {
-            return { nome: file.name || "", url: "" };
+            return { nome: file.name || "", url: "", path: "" };
           });
       }
 
@@ -184,7 +195,7 @@
             email: data.email,
             password: password,
             options: {
-              emailRedirectTo: "https://areaprivata.anchecasa.it/",
+              emailRedirectTo: (famiglia === "privato" || famiglia === "azienda" || famiglia === "fornitore") ? "https://entra.anchecasa.it/" : "https://areaprivata.anchecasa.it/",
               // "invito": il database lo usa per collegare l'iscritto a chi l'ha invitato e, se
               // l'invito è di un utente (non dell'admin), per verificarlo subito.
               data: { nome: data.nome || data.ragione || "", cognome: data.cognome || "", famiglia: famiglia, zona: zonaProfilo, invito: invitoToken || null }
@@ -205,11 +216,15 @@
         .then(function (userId) {
           const allegati = famiglia === "agente"
             ? Promise.all([caricaAllegato(userId, "cv", fileCv), caricaAllegato(userId, "portfolio", filePortfolio)])
-            : Promise.resolve([{ nome: "", url: "" }, { nome: "", url: "" }]);
+            : Promise.resolve([{ nome: "", url: "", path: "" }, { nome: "", url: "", path: "" }]);
           return allegati.then(function (all) {
+            if (famiglia === "agente" && !all[0].path) {
+              throw new Error("Il curriculum non è stato salvato. La richiesta non è partita.");
+            }
             if (all[0].nome) {
               data.cv = all[0].nome;
               if (all[0].url) data.cv_url = all[0].url;
+              if (all[0].path) data.cv_path = all[0].path;
             }
             if (all[1].nome) {
               data.portfolio = all[1].nome;
@@ -235,6 +250,10 @@
           form._utenteId = null;
           form.reset();
           if (btn) btn.disabled = false;
+          if (famiglia === "privato" || famiglia === "azienda" || famiglia === "fornitore") {
+            window.location.href = "https://entra.anchecasa.it/";
+            return;
+          }
           if (ok) ok.classList.add("show");
         })
         .catch(function (x) {

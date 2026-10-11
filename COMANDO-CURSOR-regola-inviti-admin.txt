@@ -1,0 +1,67 @@
+COMANDO PER CURSOR · L'admin invita direttamente tutti i ruoli della rete · 11.10.2026
+
+OBIETTIVO: l'admin crea subito l'invito per Responsabile Rete Italia, Sviluppo rete, Capo area, Agente e Sub-agente, senza passare dai voti. Le proposte fatte dagli altri ruoli restano come sono, con la catena dei voti.
+
+PRIMA: copia di sicurezza di area-privata/dashboard/js/rete-proposte.js in _copie-dashboard-regola-inviti-<ora>. Alla fine: voce in cima al registro di CLAUDE.md.
+
+1) NUOVO FILE app-anchecasa/sql/app-15-inviti-admin-rete.sql
+   Deve poter essere rieseguito senza errori: usa "if not exists" e "create or replace", tutto dentro begin/commit.
+   NON eseguirlo: lo lancia Nando nell'SQL Editor di Supabase.
+
+   a. Colonne nuove sull'invito, per sapere dove va la persona:
+        alter table marketplace.app_inviti add column if not exists superiore uuid references auth.users(id) on delete set null;
+        alter table marketplace.app_inviti add column if not exists regione text not null default '' check (length(regione) <= 40);
+
+   b. Regola: riscrivi marketplace.app_puo_invitare(p_cosa text, p_target uuid, p_ruolo text).
+      Oggi è in app-05-proposte-rete.sql e contiene:
+        if p_cosa = 'rete' then return marketplace.is_admin() and p_ruolo = 'reteitalia'; end if;
+      Deve diventare:
+        if p_cosa = 'rete' then
+          return marketplace.is_admin()
+             and p_ruolo in ('reteitalia','sviluppo','capoarea','agente','subagente');
+        end if;
+      Il resto della funzione resta identico (org, cantiere, admin → true).
+      Le funzioni app_proponi_rete, app_vota_proposta e app_proposta_esito NON si toccano.
+
+   c. Controlli lato server: trigger BEFORE INSERT su marketplace.app_inviti, solo quando cosa='rete'.
+      - Errore 'gia_nella_rete' se la mail è già di un utente in app_rete. Confronta con auth.users.email in minuscolo.
+      - Errore 'invito_gia_aperto' se esiste già un invito 'inviato' per la stessa mail con cosa='rete'.
+      - Se superiore non è null, deve essere attivo in app_rete con un ruolo SOPRA quello invitato.
+        Ordine dei ruoli: reteitalia > sviluppo > capoarea > agente > subagente.
+        Altrimenti errore 'superiore_non_valido'.
+      - reteitalia non ha superiore.
+
+   d. Riscrivi marketplace.app_accetta_invito(p_token text), copiando quella di app-05 e cambiando solo il ramo "rete senza proposta":
+      - Se l'invito ha superiore o regione, usa questi:
+          superiore = i.superiore
+          regione = i.regione
+          area = marketplace.app_area_di(i.regione)
+      - Altrimenti fai come oggi (superiore = chi ha creato l'invito, se è nella rete).
+      Il ramo "con proposta" resta uguale.
+
+   e. Grant come nei file precedenti. In fondo, query di controllo commentate.
+
+2) DASHBOARD: area-privata/dashboard/js/rete-proposte.js
+   - Il blocco «Invita il Responsabile Rete Italia» (formReteItalia + agganciaRri) diventa «Crea direttamente (solo admin)», con questi campi:
+     · Ruolo: select con i 5 ruoli
+     · Nome e cognome
+     · Mail
+     · Regione: stessa lista del modulo proposte
+     · Responsabile sopra: select caricata da app_rete con solo i ruoli superiori al ruolo scelto, si aggiorna quando cambia il ruolo. Nascosta per reteitalia; facoltativa per gli altri.
+   - Insert in app_inviti con: cosa:'rete', ruolo, email, nome, superiore, regione.
+   - Dopo la creazione:
+     · mostra il link con «Copia link d'invito», come oggi;
+     · aggiungi il bottone «Invia mail» che usa window.acDb.functions.invoke("invia-invito-marketplace", { body: { token } }), come in views.js (~riga 2660).
+       Se la funzione non accetta gli inviti rete, NON modificarla: scrivimelo.
+   - Errori in italiano semplice per: gia_nella_rete, invito_gia_aperto, superiore_non_valido.
+     Se la colonna superiore manca → «Manca app-15: va eseguito su Supabase».
+   - Cambia il testo sotto il blocco:
+     «L'admin crea subito l'invito. Le proposte degli altri passano dai voti.»
+
+3) PROVA in locale (telefono 390 px e computer), con admin finto:
+   - crea un agente con un capo area sopra;
+   - prova una mail doppia;
+   - prova un superiore sbagliato.
+   NON pubblicare: prima Nando esegue app-14 (se non fatto) e app-15, poi pubblica.
+
+Mostrami il piano coi file che tocchi, poi procedi.

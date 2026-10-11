@@ -10,7 +10,7 @@
 // Variabili (Supabase → Edge Functions → Secrets):
 //   MAIL_PROVIDER = brevo | resend          MAIL_API_KEY = chiave del servizio di invio
 //   MAIL_MITTENTE = es. «AncheCasa <ufficio@anchecasa.it>» (indirizzo verificato nel servizio)
-//   APP_URL = indirizzo dell'app, es. https://app.anchecasa.it (serve per i link nella mail)
+//   APP_URL = indirizzo dell'app, es. https://entra.anchecasa.it (serve per i link nella mail)
 //   PRIVACY_URL (consigliata) = informativa privacy per i fornitori
 //   MAIL_AL_GIORNO (facoltativa, predefinita 100 inviti al giorno per ditta)
 //   DIAGNOSI_ORIGINI (consigliata), AC_PUBLISHABLE_KEY / AC_SECRET_KEY solo con le chiavi nuove (come le altre funzioni)
@@ -21,10 +21,10 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 const TITOLARE = "Palumbo Investments Srl (AncheCasa)";
 
 function cors(origin: string | null): Record<string, string> {
-  // Se DIAGNOSI_ORIGINI è vuota tutti i siti sono ammessi; se c'è, si aggiunge sempre l'app (app.anchecasa.it o APP_URL).
+  // Se DIAGNOSI_ORIGINI è vuota tutti i siti sono ammessi; se c'è, si aggiunge sempre l'app (entra.anchecasa.it o APP_URL).
   const base = (Deno.env.get("DIAGNOSI_ORIGINI") || "").split(",").map((s) => s.trim()).filter(Boolean);
-  const app = (Deno.env.get("APP_URL") || "https://app.anchecasa.it").replace(/\/+$/, "");
-  const ammessi = base.length ? [...base, app, "https://app.anchecasa.it"] : [];
+  const app = (Deno.env.get("APP_URL") || "https://entra.anchecasa.it").replace(/\/+$/, "");
+  const ammessi = base.length ? [...base, app, "https://entra.anchecasa.it"] : [];
   const ok = !ammessi.length || (origin && ammessi.includes(origin));
   const h: Record<string, string> = { "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type", "Access-Control-Allow-Methods": "POST, OPTIONS", Vary: "Origin" };
   if (ok) h["Access-Control-Allow-Origin"] = origin || "*";
@@ -99,12 +99,18 @@ async function mandaMail(a: { email: string; nome: string; oggetto: string; html
 }
 
 function pagina(titolo: string, corpo: string, piede: string) {
-  return `<!doctype html><html lang="it"><body style="margin:0;background:#E9EDF2;font-family:'Open Sans',Arial,sans-serif;color:#0B1A2C">
+  return `<!doctype html><html lang="it"><body style="margin:0;background:#eef2f7;font-family:'Segoe UI',Arial,sans-serif;color:#24384c">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:24px 12px">
-<table role="presentation" width="100%" style="max-width:560px;background:#fff;border-radius:16px;overflow:hidden">
-<tr><td style="background:#18304E;color:#fff;padding:18px 22px;font:800 20px Montserrat,Arial,sans-serif">Anche<span style="color:#E36A12">Casa</span></td></tr>
-<tr><td style="padding:22px"><h1 style="font:800 20px Montserrat,Arial,sans-serif;color:#18304E;margin:0 0 12px">${titolo}</h1>${corpo}</td></tr>
-<tr><td style="padding:14px 22px;background:#F4F6F9;color:#66758A;font-size:12px;line-height:1.5">${piede}</td></tr>
+<table role="presentation" width="600" style="width:100%;max-width:600px;background:#fff;border-radius:16px;overflow:hidden">
+<tr><td style="padding:22px 32px 0"><table width="100%" style="border-bottom:2px solid #E56B10"><tr>
+<td><a href="https://www.anchecasa.it"><img src="https://anchecasa.it/assets/mail/logo.png" width="190" height="49" alt="AncheCasa"></a></td>
+<td align="right" style="font-weight:800;color:#16304d">anchecasa.it</td></tr></table></td></tr>
+<tr><td style="padding:0"><img src="https://anchecasa.it/assets/mail/azienda.jpg" width="600" height="300" alt="" style="display:block;width:100%;height:auto"></td></tr>
+<tr><td style="padding:28px 32px"><h1 style="margin:0 0 12px;font-size:26px;color:#16304d">${titolo}</h1>${corpo}</td></tr>
+<tr><td style="padding:0;font-size:0"><img src="https://anchecasa.it/assets/mail/curva.png" width="600" height="52" alt="" style="display:block;width:100%;height:auto"></td></tr>
+<tr><td style="padding:16px 32px 24px;background:#16304d;color:#d5deea;font-size:13px;line-height:1.5">
+<img src="https://anchecasa.it/assets/mail/logo-negativo.png" width="170" height="44" alt="AncheCasa"><br>
+AncheCasa · Costruiamo fiducia · anchecasa.it<br>Palumbo Investment S.r.l. · Via Giusti 22, 81057 Teano (CE) · P.IVA 04724830619<br>${piede}</td></tr>
 </table></td></tr></table></body></html>`;
 }
 const bottone = (url: string, t: string) => `<p style="margin:20px 0"><a href="${esc(url)}" style="display:inline-block;background:#E36A12;color:#fff;text-decoration:none;font-weight:700;padding:13px 22px;border-radius:12px">${esc(t)}</a></p>`;

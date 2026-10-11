@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Dashboard fornitore</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#EEF2F7;font-family:'Manrope',sans-serif;color:#16304D}
+a{color:#16304D}a:hover{color:#0B1A2C}
+.card{background:#FFFFFF;border:1px solid #DCE3EC;border-radius:14px;padding:20px}
+.nav{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;color:#D5DEEA;text-decoration:none;font-size:14px;font-weight:600}
+.nav:hover{background:#2C4A6E;color:#FFFFFF}
+.tag{font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px;white-space:nowrap}
+.row{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid #EEF2F7}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 18px;border-radius:10px;font-family:inherit;font-size:14px;font-weight:700;border:0;cursor:pointer;text-decoration:none}
+.chip{font-size:12px;font-weight:600;padding:6px 10px;border-radius:999px;background:#EEF2F7;color:#16304D}
+</style>
+</helmet>
+<div style="display: flex; flex-wrap: wrap; min-height: 100vh; width: 100%">
+
+<nav aria-label="Menu principale" style="flex: 1 1 240px; max-width: 260px; background: #16304D; padding: 24px 16px; box-sizing: border-box; display: flex; flex-direction: column; gap: 4px">
+<div style="font-size: 24px; font-weight: 800; color: #FFFFFF; padding: 0 12px 4px">Anche<span style="color: #E56B10">Casa</span></div>
+<div style="font-size: 11px; color: #9AAFC4; padding: 0 12px 18px">Costruiamo fiducia</div>
+<a href="#" style="display: flex; flex-direction: column; gap: 2px; padding: 12px; margin-bottom: 14px; border-radius: 12px; background: #2C4A6E; text-decoration: none">
+<span style="font-size: 14px; font-weight: 700; color: #FFFFFF">Materiali Edili Sud</span>
+<span style="font-size: 12px; color: #D5DEEA">Fornitore · Verificata · Cambia profilo</span>
+</a>
+<a class="nav" href="#" aria-current="page" style="background: #FFFFFF; color: #16304D">Oggi</a>
+<a class="nav" href="#"><span style="flex: 1">Richieste</span><span class="tag" style="background: #E56B10; color: #FFFFFF">2</span></a>
+<a class="nav" href="#">Offerte e ordini</a>
+<a class="nav" href="#">Listino</a>
+<a class="nav" href="#">Clienti e fatture</a>
+<a class="nav" href="#">Documenti</a>
+<div style="flex: 1; min-height: 24px"></div>
+<a class="nav" href="#">Abbonamento e moduli</a>
+<a class="nav" href="#">Invita</a>
+<a class="nav" href="#">Assistenza</a>
+</nav>
+
+<main style="flex: 999 1 560px; min-width: 0; padding: 28px 32px 40px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px; max-width: 1180px">
+
+<header style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px">
+<div style="flex: 1 1 320px">
+<div style="font-size: 13px; color: #2C4A6E; font-weight: 600">Domenica 11 ottobre · dati di esempio</div>
+<h1 style="margin: 4px 0 0; font-size: 30px; font-weight: 800">Buongiorno, Materiali Edili Sud</h1>
+</div>
+<button type="button" class="btn" aria-label="Notifiche, 2 nuove" style="background: #FFFFFF; border: 1px solid #DCE3EC; color: #16304D; padding: 0 12px">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#16304D" stroke-width="2" aria-hidden="true"><path d="M6 8a6 6 0 1112 0c0 7 3 8 3 8H3s3-1 3-8"></path><path d="M10 20a2 2 0 004 0"></path></svg>
+<span style="margin-left: 6px">2</span>
+</button>
+</header>
+
+<section class="card" aria-label="Profilo rivendicato" style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px; background: #E6EEF7; border-color: #C9D6E6">
+<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#16304D" stroke-width="2" aria-hidden="true"><path d="M20 6L9 17l-5-5"></path></svg>
+<div style="flex: 1 1 360px">
+<div style="font-size: 15px; font-weight: 700">Benvenuto: abbiamo ritrovato 2 richieste che avevi ricevuto per mail</div>
+<div style="font-size: 13px; color: #2C4A6E; margin-top: 2px">Sono già nella tua pagina Richieste. Rispondere è gratis.</div>
+</div>
+<a href="#" class="btn" style="background: #16304D; color: #FFFFFF">Apri le richieste</a>
+</section>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+
+<section class="card" aria-labelledby="ricevute" style="flex: 2 1 480px; min-width: 0">
+<div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px">
+<h2 id="ricevute" style="margin: 0; font-size: 18px; font-weight: 800; flex: 1">Richieste ricevute</h2>
+<span class="tag" style="background: #E3F1E6; color: #1E5B2E">Gratis</span>
+</div>
+<div class="row"><div style="flex: 1; min-width: 0"><div style="font-size: 14px; font-weight: 700">Fornitura cartongesso e profili, 340 mq</div><div style="font-size: 12px; color: #2C4A6E">Edil Nord Srl · Roma · offerte entro venerdì</div></div><a href="#" class="btn" style="background: #16304D; color: #FFFFFF; min-height: 40px">Fai l'offerta</a></div>
+<div class="row"><div style="flex: 1; min-width: 0"><div style="font-size: 14px; font-weight: 700">Noleggio ponteggio, 6 settimane</div><div style="font-size: 12px; color: #2C4A6E">Edil Nord Srl · Via Garibaldi 12 · offerte entro lunedì</div></div><a href="#" class="btn" style="background: #16304D; color: #FFFFFF; min-height: 40px">Fai l'offerta</a></div>
+<div class="row"><div style="flex: 1; min-width: 0"><div style="font-size: 14px; font-weight: 700">Gara privata: materiali per 24 alloggi</div><div style="font-size: 12px; color: #2C4A6E">Busta chiusa · documenti allegati · apertura tra 9 giorni</div></div><a href="#" class="btn" style="background: #FFFFFF; color: #16304D; border: 1px solid #16304D; min-height: 40px">Apri la gara</a></div>
+</section>
+
+<section class="card" aria-labelledby="zona" style="flex: 1 1 300px; min-width: 0; border-color: #F6D2B3; background: #FFFAF5">
+<h2 id="zona" style="margin: 0 0 6px; font-size: 18px; font-weight: 800">Tutte le richieste della tua zona</h2>
+<p style="margin: 0 0 14px; font-size: 13px; color: #2C4A6E; line-height: 1.5">Ricevi le richieste di fornitura e noleggio di imprese, condomini e committenti della Campania, per le tue specializzazioni. E compari nelle ricerche.</p>
+<div aria-hidden="true" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px">
+<div style="height: 14px; border-radius: 6px; background: #F1E4D8"></div>
+<div style="height: 14px; width: 80%; border-radius: 6px; background: #F1E4D8"></div>
+<div style="height: 14px; width: 60%; border-radius: 6px; background: #F1E4D8"></div>
+</div>
+<a href="#" class="btn" style="background: #FFF1E4; color: #9A4A0A; border: 1px solid #E56B10; width: 100%; box-sizing: border-box">Prova gratis l'abbonamento</a>
+</section>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start">
+<section class="card" aria-labelledby="chi" style="flex: 1 1 360px; min-width: 0">
+<h2 id="chi" style="margin: 0 0 12px; font-size: 18px; font-weight: 800">Cosa fai</h2>
+<div style="font-size: 12px; font-weight: 700; color: #2C4A6E; margin-bottom: 8px">SETTORE · Materiali (dall'ATECO 46.73)</div>
+<div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px">
+<span class="chip">Cartongesso</span><span class="chip">Isolanti</span><span class="chip">Laterizi</span><span class="chip">Ponteggi a noleggio</span><span class="chip">Consegna in cantiere</span>
+</div>
+<div style="font-size: 12px; font-weight: 700; color: #2C4A6E; margin-bottom: 8px">ZONE</div>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<span class="chip">Napoli</span><span class="chip">Caserta</span><span class="chip">Salerno</span><span class="chip">Roma</span>
+</div>
+</section>
+
+<section class="card" aria-labelledby="doc" style="flex: 1 1 360px; min-width: 0">
+<h2 id="doc" style="margin: 0 0 6px; font-size: 18px; font-weight: 800">Documenti per i cantieri</h2>
+<div style="font-size: 12px; color: #2C4A6E; margin-bottom: 4px">Caricati una volta, validi in ogni cantiere</div>
+<div class="row"><span class="tag" style="background: #E3F1E6; color: #1E5B2E">Valido</span><div style="flex: 1; font-size: 14px; font-weight: 600">Visura camerale</div></div>
+<div class="row"><span class="tag" style="background: #FFF1E4; color: #9A4A0A">Scade</span><div style="flex: 1; font-size: 14px; font-weight: 600">DURC · tra 12 giorni</div><a href="#" style="font-size: 13px; font-weight: 700">Aggiorna</a></div>
+<div class="row"><span class="tag" style="background: #E4E8EE; color: #2C4A6E">Manca</span><div style="flex: 1; font-size: 14px; font-weight: 600">Assicurazione RC</div><a href="#" style="font-size: 13px; font-weight: 700">Carica</a></div>
+</section>
+</div>
+
+<section class="card" aria-labelledby="mod" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px">
+<h2 id="mod" style="margin: 0; font-size: 18px; font-weight: 800; grid-column: 1 / -1">Strumenti</h2>
+<a href="#" style="display: flex; flex-direction: column; gap: 6px; padding: 16px; border-radius: 12px; border: 1px solid #DCE3EC; background: #F6F8FB; text-decoration: none"><span style="font-size: 14px; font-weight: 700; color: #2C4A6E">Listino e ordini</span><span style="font-size: 12px; color: #2C4A6E">Con l'abbonamento fornitore</span><span class="tag" style="align-self: flex-start; background: #FFF1E4; color: #9A4A0A">Prova gratis</span></a>
+<a href="#" style="display: flex; flex-direction: column; gap: 6px; padding: 16px; border-radius: 12px; border: 1px solid #DCE3EC; background: #F6F8FB; text-decoration: none"><span style="font-size: 14px; font-weight: 700; color: #2C4A6E">Clienti e fatture</span><span style="font-size: 12px; color: #2C4A6E">Preventivi e fatture, invio allo SdI</span><span class="tag" style="align-self: flex-start; background: #FFF1E4; color: #9A4A0A">Prova gratis</span></a>
+<a href="#" style="display: flex; flex-direction: column; gap: 6px; padding: 16px; border-radius: 12px; border: 1px solid #DCE3EC; background: #F6F8FB; text-decoration: none"><span style="font-size: 14px; font-weight: 700; color: #2C4A6E">Magazzino e flotta</span><span style="font-size: 12px; color: #2C4A6E">Giacenze, noleggi, manutenzioni</span><span class="tag" style="align-self: flex-start; background: #FFF1E4; color: #9A4A0A">Prova gratis</span></a>
+</section>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1100}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

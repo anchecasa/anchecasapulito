@@ -1,0 +1,22 @@
+export const CITTA_PER_REGIONE: Record<string, string[]> = {
+  "Abruzzo": ["L'Aquila","Chieti","Pescara","Teramo","Avezzano","Lanciano","Vasto","Sulmona","Montesilvano","Francavilla al Mare"],
+  "Basilicata": ["Potenza","Matera","Melfi","Pisticci","Policoro","Lavello","Venosa","Rionero in Vulture","Bernalda","Lauria"],
+  "Calabria": ["Catanzaro","Cosenza","Reggio Calabria","Crotone","Vibo Valentia","Lamezia Terme","Rende","Castrovillari","Rossano","Corigliano Calabro"],
+  "Campania": ["Napoli","Salerno","Caserta","Avellino","Benevento","Torre del Greco","Giugliano in Campania","Castellammare di Stabia","Pozzuoli","Afragola","Portici","Ercolano","Battipaglia","Scafati","Casoria","Aversa","Nocera Inferiore","Cava de' Tirreni","Acerra","Marcianise"],
+  "Emilia-Romagna": ["Bologna","Parma","Modena","Reggio Emilia","Ravenna","Rimini","Ferrara","Forlì","Piacenza","Cesena","Carpi","Imola","Faenza","Sassuolo","Casalecchio di Reno"],
+  "Friuli Venezia Giulia": ["Trieste","Udine","Pordenone","Gorizia","Monfalcone","Sacile","Codroipo","Cervignano del Friuli","Cordenons","Azzano Decimo"],
+  "Lazio": ["Roma","Latina","Frosinone","Viterbo","Rieti","Guidonia Montecelio","Fiumicino","Aprilia","Pomezia","Tivoli","Velletri","Civitavecchia","Anzio","Nettuno","Ardea","Monterotondo","Formia","Terracina","Cassino","Ciampino"],
+  "Liguria": ["Genova","La Spezia","Savona","Imperia","Sanremo","Rapallo","Chiavari","Albenga","Ventimiglia","Sestri Levante"],
+  "Lombardia": ["Milano","Brescia","Bergamo","Monza","Como","Varese","Pavia","Cremona","Mantova","Lecco","Busto Arsizio","Sesto San Giovanni","Cinisello Balsamo","Vigevano","Legnano","Gallarate","Rho","Desio","Lodi","Seregno","Paderno Dugnano","Cologno Monzese"],
+  "Marche": ["Ancona","Pesaro","Fano","Ascoli Piceno","Macerata","Senigallia","Civitanova Marche","Jesi","Fermo","San Benedetto del Tronto","Fabriano","Urbino","Osimo","Recanati"],
+  "Molise": ["Campobasso","Isernia","Termoli","Bojano","Larino","Venafro","Agnone","Campomarino","Riccia","Guglionesi"],
+  "Piemonte": ["Torino","Novara","Alessandria","Asti","Cuneo","Moncalieri","Collegno","Rivoli","Nichelino","Settimo Torinese","Biella","Vercelli","Verbania","Grugliasco","Chieri","Casale Monferrato","Pinerolo","Alba","Bra","Ivrea"],
+  "Puglia": ["Bari","Taranto","Foggia","Lecce","Brindisi","Andria","Barletta","Trani","Altamura","Cerignola","Manfredonia","Bitonto","Molfetta","San Severo","Monopoli","Corato","Martina Franca","Conversano","Nardò","Gallipoli"],
+  "Sardegna": ["Cagliari","Sassari","Quartu Sant'Elena","Olbia","Alghero","Nuoro","Oristano","Carbonia","Iglesias","Selargius","Assemini","Porto Torres","Tempio Pausania","Capoterra","Sestu"],
+  "Sicilia": ["Palermo","Catania","Messina","Siracusa","Ragusa","Trapani","Agrigento","Caltanissetta","Enna","Marsala","Gela","Vittoria","Modica","Acireale","Bagheria","Mazara del Vallo","Alcamo","Barcellona Pozzo di Gotto","Licata","Sciacca","Caltagirone","Augusta"],
+  "Toscana": ["Firenze","Prato","Livorno","Arezzo","Pisa","Lucca","Pistoia","Grosseto","Massa","Carrara","Siena","Viareggio","Empoli","Scandicci","Sesto Fiorentino","Campi Bisenzio","Pontedera","Piombino","Cecina","Montecatini Terme"],
+  "Trentino-Alto Adige": ["Trento","Bolzano","Rovereto","Merano","Bressanone","Laives","Pergine Valsugana","Riva del Garda","Arco","Brunico"],
+  "Umbria": ["Perugia","Terni","Foligno","Città di Castello","Spoleto","Gubbio","Assisi","Bastia Umbra","Orvieto","Narni","Corciano","Marsciano","Todi"],
+  "Valle d'Aosta": ["Aosta","Châtillon","Sarre","Gressan","Saint-Vincent","Pont-Saint-Martin","Quart","Saint-Christophe","Courmayeur","Verrès"],
+  "Veneto": ["Venezia","Verona","Padova","Vicenza","Treviso","Rovigo","Belluno","Mestre","Chioggia","Bassano del Grappa","San Donà di Piave","Schio","Montebelluna","Conegliano","Castelfranco Veneto","Jesolo","Thiene","Arzignano","Cittadella","Valdagno"]
+};

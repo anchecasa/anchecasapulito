@@ -1,0 +1,38 @@
+name: SuperMastro · pulizia notturna
+
+# Ogni notte chiama /api/cron/nightly: cancella i video «Mandagli il video» scaduti (12 mesi),
+# pulisce i limiti di frequenza vecchi e fa la riconciliazione già prevista dalla rotta.
+# Serve il secret di GitHub CRON_SECRET (lo stesso valore del secret CRON_SECRET del Worker).
+# Facoltativa la variabile SUPERMASTRO_URL (predefinita https://supermastro.anchecasa.it).
+
+on:
+  schedule:
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  nightly:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Chiama la pulizia notturna
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          SUPERMASTRO_URL: ${{ vars.SUPERMASTRO_URL || 'https://supermastro.anchecasa.it' }}
+        run: |
+          if [ -z "${CRON_SECRET}" ]; then
+            echo "::error::Manca il secret CRON_SECRET in GitHub (Settings → Secrets and variables → Actions)."
+            exit 1
+          fi
+          code=$(curl -sS -o risposta.json -w "%{http_code}" -X POST \
+            -H "Authorization: Bearer ${CRON_SECRET}" \
+            "${SUPERMASTRO_URL%/}/api/cron/nightly")
+          echo "Risposta HTTP: ${code}"
+          cat risposta.json || true
+          if [ "${code}" -lt 200 ] || [ "${code}" -ge 300 ]; then
+            echo "::error::La pulizia notturna non è riuscita (HTTP ${code})."
+            exit 1
+          fi

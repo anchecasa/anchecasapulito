@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 /**
- * Passo 3: pubblica l'app AncheCasa su Cloudflare Pages e la collega a https://app.anchecasa.it.
+ * Passo 3: pubblica l'app AncheCasa su Cloudflare Pages e la collega a https://entra.anchecasa.it.
  * - prepara dist/ (solo i file dell'app, controllo chiavi);
  * - crea il progetto Pages «app-anchecasa» se non c'è e pubblica;
- * - collega il dominio app.anchecasa.it (e il record DNS se manca; se ne esiste uno diverso NON lo tocca);
- * - aggiunge https://app.anchecasa.it agli indirizzi ammessi per l'accesso su Supabase (senza togliere gli altri);
+ * - collega il dominio entra.anchecasa.it (e il record DNS se manca; se ne esiste uno diverso NON lo tocca);
+ * - aggiunge https://entra.anchecasa.it agli indirizzi ammessi per l'accesso su Supabase (senza togliere gli altri);
  * - controlla che l'app si apra e che i file SQL NON siano online.
  * Uso:  node scripts/online-3-app.mjs
  */
@@ -40,7 +40,7 @@ r = lancia("npx", ["--yes", "wrangler@latest", "pages", "deploy", "dist", "--pro
 if (!r.ok) ferma("pubblicazione su Cloudflare Pages non riuscita:\n" + r.out.slice(-1500));
 scrivi(`Pubblicata su https://${sottodominio}`);
 
-// 4. Dominio app.anchecasa.it
+// 4. Dominio entra.anchecasa.it
 const dom = await cf(`/pages/projects/${PROGETTO_PAGES}/domains`);
 const giaCollegato = dom.ok && (dom.dati.result || []).some((d) => d.name === DOMINIO_APP);
 if (!giaCollegato) {
@@ -54,13 +54,13 @@ if (zoneId) {
   const rec = await cf(`https://api.cloudflare.com/client/v4/zones/${zoneId}/dns_records?name=${DOMINIO_APP}`);
   const esistenti = (rec.ok && rec.dati.result) || [];
   if (!esistenti.length) {
-    const nuovo = await cf(`https://api.cloudflare.com/client/v4/zones/${zoneId}/dns_records`, { method: "POST", body: { type: "CNAME", name: "app", content: sottodominio, proxied: true, comment: "App AncheCasa (Cloudflare Pages)" } });
+    const nuovo = await cf(`https://api.cloudflare.com/client/v4/zones/${zoneId}/dns_records`, { method: "POST", body: { type: "CNAME", name: "entra", content: sottodominio, proxied: true, comment: "App AncheCasa (Cloudflare Pages)" } });
     if (nuovo.ok) scrivi(`Record DNS ${DOMINIO_APP} → ${sottodominio} creato.`);
     else avvisi.push(`record DNS non creato (permesso DNS del token?): ${JSON.stringify(nuovo.dati && nuovo.dati.errors)}`);
   } else if (!esistenti.some((x) => x.type === "CNAME" && x.content === sottodominio)) {
     avvisi.push(`esiste già un record DNS per ${DOMINIO_APP} che punta altrove (${esistenti.map((x) => x.type + " " + x.content).join(", ")}): NON l'ho toccato.`);
   } else scrivi(`Record DNS ${DOMINIO_APP} già giusto.`);
-} else avvisi.push("zona anchecasa.it non trovata con questo token: il DNS di app.anchecasa.it va controllato.");
+} else avvisi.push("zona anchecasa.it non trovata con questo token: il DNS di entra.anchecasa.it va controllato.");
 
 // 5. Supabase: indirizzi ammessi per l'accesso (login, recupero password)
 const SB = `https://api.supabase.com/v1/projects/${PROJECT_REF}/config/auth`;

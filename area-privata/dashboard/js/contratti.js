@@ -1,4 +1,5 @@
 /* Contratti, firme e clienti da affidare (10.10.2026).
+   11.10.2026: i contratti con modello in contratti-modelli.js si compilano e si firmano qui (contratto-firma.js).
    Stessa logica di app-anchecasa/js/viste-documenti.js e di sql/app-07-regole-clienti-documenti.sql.
    Le firme si scrivono solo con rpc app_firma_documento. */
 (function () {
@@ -112,10 +113,19 @@
     return Math.floor((Date.now() - t) / 36e5);
   }
 
+  // 11.10.2026: con app-14 le firme dei contratti compilati hanno anche «dati». Senza app-14 si legge come prima.
+  async function firmeCon(colonne, filtro) {
+    let res = await conTempo(filtro(db().from("app_firme").select(colonne + ", dati")));
+    if (res && res.error && /42703|dati/i.test(String(res.error.code || "") + " " + String(res.error.message || ""))) {
+      res = await conTempo(filtro(db().from("app_firme").select(colonne)));
+    }
+    return res;
+  }
+
   async function caricaFirmeMie() {
     const uid = await utenteId();
     if (!uid) return [];
-    const res = await conTempo(db().from("app_firme").select("documento, nome, firma, impronta, dispositivo, firmato").eq("utente", uid).limit(500));
+    const res = await firmeCon("documento, nome, firma, impronta, dispositivo, firmato", (q) => q.eq("utente", uid).limit(500));
     if (!res || res.error) return [];
     return res.data || [];
   }
@@ -197,6 +207,8 @@
     const pdf = html`
       <h2 class="rp-nome-h">Contratti</h2>
       ${grigliaPdf(CONTRATTI_PDF)}
+      <p class="note">Versione 11.10.2026 dell'Allegato B: da far vedere all'avvocato, non firmabile. Chi ha firmato la versione 10.10.2026 resta su quella.</p>
+      <div class="doc-griglia">${CONTRATTI_PDF.map(([nome, href]) => html`<button type="button" class="doc-tile" data-bozza="${"bozza-1110/" + href}"><b>${nome} · 11.10.2026</b><small>Da far vedere all'avvocato, non firmabile</small></button>`)}</div>
       <div class="doc-griglia" style="margin-top:12px">${ALTRI_PDF.map(([nome, href]) => html`<a class="doc-tile" href="${href}" target="_blank" rel="noopener"><b>${nome}</b><small>Apri il PDF</small></a>`)}</div>`;
     if (docId) { await dettaglioAdmin(pdf); return; }
     const [dRes, fRes, rRes] = await Promise.all([
@@ -255,7 +267,7 @@
   async function dettaglioAdmin(pdf) {
     const [dRes, fRes, rRes] = await Promise.all([
       conTempo(db().from("app_documenti").select("id, tipo, titolo, testo, file, ruoli, richiede_firma, versione, attivo, pubblicato").eq("id", docId).maybeSingle()),
-      conTempo(db().from("app_firme").select("id, documento, utente, nome, firma, impronta, dispositivo, firmato").eq("documento", docId).limit(2000)),
+      firmeCon("id, documento, utente, nome, firma, impronta, dispositivo, firmato", (q) => q.eq("documento", docId).limit(2000)),
       conTempo(db().from("app_rete").select("utente, nome, codice, ruolo, stato").limit(2000))
     ]);
     const err = (dRes && dRes.error) || (fRes && fRes.error) || (rRes && rRes.error);
@@ -296,7 +308,10 @@
     if (tog) tog.addEventListener("click", () => cambiaAttivo(d));
     box.querySelectorAll("[data-ricevuta]").forEach((b) => b.addEventListener("click", () => {
       const f = firme.find((x) => x.utente === b.getAttribute("data-ricevuta"));
-      if (f) apriRicevuta(d, f);
+      if (!f) return;
+      // Contratto compilato nell'app: si apre il contratto firmato con i dati; altrimenti la ricevuta di sempre.
+      if (f.dati && Object.keys(f.dati).length && AC.contrattoFirma && AC.contrattoFirma.apriCopia(d, f)) return;
+      apriRicevuta(d, f);
     }));
   }
 
@@ -533,6 +548,27 @@
         nome = (u && u.user_metadata && (u.user_metadata.nome || u.user_metadata.full_name)) || "";
       } catch (e) { nome = ""; }
     }
+    // 11.10.2026: contratto con modello (contratti-modelli.js) da firmare → si compila e si firma qui, su carta intestata.
+    const cf = AC.contrattoFirma;
+    if (!f && d.tipo === "contratto" && d.richiede_firma && cf && cf.modello(d)) {
+      let mail = "", tel = "";
+      try {
+        const s = await db().auth.getSession();
+        const u = s && s.data && s.data.session && s.data.session.user;
+        mail = (u && u.email) || "";
+        tel = (u && u.user_metadata && (u.user_metadata.telefono || u.user_metadata.phone)) || "";
+      } catch (e) { mail = ""; }
+      const p = (AC.store && AC.store.data && AC.store.data.profilo) || {};
+      cf.mostra(box, d, {
+        nome: p.nome || nome || "",
+        mail: mail || p.mail || p.email || "",
+        telefono: tel || p.telefono || "",
+        indietro: () => { docId = ""; disegna(); },
+        dopo: () => { if (AC.app && AC.app.refresh) setTimeout(() => cf.applica("agente", "documenti"), 0); mettiNumero(0); AC.contratti.badge(); }
+      });
+      return;
+    }
+    const copia = f && f.dati && Object.keys(f.dati).length && cf && cf.modello(d);
     box.innerHTML = html`
       <button type="button" class="btn-ghost" id="doc-indietro">Tutti i documenti</button>
       <div class="card" style="margin-top:12px">
@@ -541,10 +577,12 @@
         ${d.testo ? html`<p style="white-space:pre-line">${d.testo}</p>` : ""}
         ${d.file ? html`<p><a class="btn-ghost" href="${d.file}" target="_blank" rel="noopener">Apri il PDF</a></p>` : ""}
       </div>
-      ${f ? html`<div class="card" style="margin-top:12px"><p>Firmato il ${quando(f.firmato)} da <b>${f.nome}</b>. La firma è arrivata ad AncheCasa.</p><img class="doc-firma-img" src="${f.firma}" alt="La tua firma"><p style="margin-top:8px"><button type="button" class="btn-ghost" id="doc-ricevuta">Ricevuta</button></p></div>` : d.richiede_firma ? html`<form class="card" id="doc-firma" style="margin-top:12px" novalidate><h2 class="rp-nome-h">Firma il documento</h2><label>Nome e cognome <input name="nome" maxlength="120" required value="${nome}" autocomplete="name"></label><div class="firma-box"><span>La tua firma (col dito o col mouse)</span><canvas class="firma" aria-label="Spazio per la firma"></canvas><input type="hidden" name="firma" value=""><button type="button" class="link" data-cancella-firma>Cancella la firma</button></div><label class="doc-spunta"><input type="checkbox" name="letto"> Ho letto tutto il documento e lo accetto</label><button class="btn-in" type="submit">Firma e invia ad AncheCasa</button><p class="note">Si registrano il tuo nome, la firma, la data e l'ora e un'impronta del documento, così si sa esattamente cosa hai firmato.</p></form>` : html`<div class="card" style="margin-top:12px"><p>Questo documento è da leggere: non serve firmarlo.</p></div>`}`.s;
+      ${f ? html`<div class="card" style="margin-top:12px"><p>Firmato il ${quando(f.firmato)} da <b>${f.nome}</b>. La firma è arrivata ad AncheCasa.</p><img class="doc-firma-img" src="${f.firma}" alt="La tua firma"><p style="margin-top:8px">${copia ? html`<button type="button" class="btn-ghost" id="doc-copia">Apri il contratto firmato</button> ` : ""}<button type="button" class="btn-ghost" id="doc-ricevuta">Ricevuta</button></p></div>` : d.richiede_firma ? html`<form class="card" id="doc-firma" style="margin-top:12px" novalidate><h2 class="rp-nome-h">Firma il documento</h2><label>Nome e cognome <input name="nome" maxlength="120" required value="${nome}" autocomplete="name"></label><div class="firma-box"><span>La tua firma (col dito o col mouse)</span><canvas class="firma" aria-label="Spazio per la firma"></canvas><input type="hidden" name="firma" value=""><button type="button" class="link" data-cancella-firma>Cancella la firma</button></div><label class="doc-spunta"><input type="checkbox" name="letto"> Ho letto tutto il documento e lo accetto</label><button class="btn-in" type="submit">Firma e invia ad AncheCasa</button><p class="note">Si registrano il tuo nome, la firma, la data e l'ora e un'impronta del documento, così si sa esattamente cosa hai firmato.</p></form>` : html`<div class="card" style="margin-top:12px"><p>Questo documento è da leggere: non serve firmarlo.</p></div>`}`.s;
     box.querySelector("#doc-indietro").addEventListener("click", () => { docId = ""; disegna(); });
     const ric = box.querySelector("#doc-ricevuta");
     if (ric) ric.addEventListener("click", () => apriRicevuta(d, f));
+    const cop = box.querySelector("#doc-copia");
+    if (cop) cop.addEventListener("click", () => cf.apriCopia(d, f));
     const form = box.querySelector("#doc-firma");
     if (form) {
       legaFirme(box);
@@ -704,7 +742,22 @@
   AC.views.contratti = {
     title: "Contratti",
     sub: "I contratti della rete, chi ha firmato, le circolari.",
-    render(el) { box = el; pagina = "contratti"; docId = ""; disegna(); }
+    render(el) {
+      box = el; pagina = "contratti"; docId = "";
+      if (!el.dataset.bozza) {
+        el.dataset.bozza = "1";
+        el.addEventListener("click", (e) => {
+          const b = e.target.closest("[data-bozza]");
+          if (!b || !AC.contrattoFirma) return;
+          e.preventDefault();
+          const file = b.getAttribute("data-bozza");
+          AC.contrattoFirma.mostra(el, { file: file, titolo: "Bozza" }, { indietro: true });
+          const ind = el.querySelector("#cf-indietro");
+          if (ind) ind.addEventListener("click", () => disegna());
+        });
+      }
+      disegna();
+    }
   };
   AC.views.affida = {
     title: "Clienti da affidare",
@@ -719,7 +772,7 @@
   AC.views.documenti = {
     title: "Documenti",
     sub: "Contratto, regolamento e circolari da firmare.",
-    render(el) { box = el; pagina = "documenti"; docId = ""; disegna(); }
+    render(el) { box = el; pagina = "documenti"; docId = (AC.contrattoFirma && AC.contrattoFirma.prendiDaAprire()) || ""; disegna(); }
   };
 
   AC.contratti = {
