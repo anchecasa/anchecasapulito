@@ -1,0 +1,4 @@
+# cartella creata da scripts/prepara-pubblicazione.mjs: si rigenera, non va su git
+dist/
+# file temporanei della CLI di Supabase
+supabase/.temp/

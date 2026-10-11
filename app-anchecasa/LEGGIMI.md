@@ -43,6 +43,7 @@ Modalità prova: `index.html?prova`, oppure un doppio clic su `PROVA-APP.bat`, o
 - `sql/app-10-sicurezza-cantiere.sql` → Run (fascicolo di cantiere D.Lgs. 81/08, semaforo, scadenziario comune, controllo del fascicolo all'ingresso). Per gli avvisi automatici di ogni mattina: Database → Extensions → attivare **pg_cron**, poi rieseguire questo file.
 - `sql/app-11-sopralluogo-flash.sql` → Run (Sopralluogo Flash: nota vocale → computo → stima dai prezzari regionali, link del cliente senza password, pratica edilizia, ufficio del Comune, «Converti in cantiere attivo» con codice AC-AAAA-NNNN). Dopo: Admin → Cruscotto → «Prezzari regionali per la stima» → importare il CSV della Regione e collegare le lavorazioni. Senza prezzario la stima resta «non disponibile» (nessun prezzo inventato).
 - `sql/app-12-subappalti-profit-guard.sql` → Run (sicurezza, logistica e smaltimento CER nel computo; Profit Guard con il margine; subappalti con pagamenti su misura; offerte dei fornitori dal link nella mail; approvazione del titolare; preventivo ufficiale bloccato; nome della ditta nella pagina del cliente). Dopo: Admin → Cruscotto → «Offerte dei fornitori e Profit Guard» → impostare la soglia minima di margine.
+- `sql/app-13-magazzino-mezzi.sql` → Run (movimenti di magazzino con costo medio, mezzi nei cantieri, scadenze dei mezzi nello scadenziario, costi reali del cantiere; cartella pubblica `loghi` per il logo della ditta nella pagina del cliente).
 
 Prezzi (09.10.2026): abbonamento base + moduli. Artigiano 14,90 €; Impresa 49 € con Ufficio compreso; Fornitore 99 €; moduli in più da 9 €, tutti insieme 69 €. Si cambiano da Admin → Impostazioni.
 
@@ -145,3 +146,13 @@ Per spostare `app.anchecasa.it` sull'app serve «AUTORIZZO LA MODIFICA: dominio 
 - **Documenti**: ognuno trova il suo contratto, il regolamento e le circolari (PDF nella cartella `docs`), firma col dito sul telefono e la firma arriva all'admin con data, ora e impronta del documento. L'admin («Contratti e documenti») vede tutti i contratti, chi ha firmato e chi no, le firme e le ricevute, e pubblica nuove circolari per tutta la rete o per ruolo (chi deve firmare riceve l'avviso).
 - Prove SQL: `sql/prove/07-prove.sql`.
 - Nota legale: la firma nell'app è una firma elettronica semplice. Per i contratti di agenzia fai verificare all'avvocato se basta o se serve una firma elettronica avanzata (per esempio con codice via SMS).
+
+
+## Pubblicare l'app su Cloudflare Pages (app.anchecasa.it)
+
+1. Dalla cartella `app-anchecasa`: `node scripts/prepara-pubblicazione.mjs` → crea `dist/` con SOLO i file dell'app (niente `sql/`, `supabase/`, documenti) e le intestazioni di sicurezza; si ferma se trova una chiave segreta.
+2. `npx wrangler pages deploy dist --project-name app-anchecasa --branch main` (la prima volta: `npx wrangler pages project create app-anchecasa --production-branch main`).
+3. Cloudflare → Workers & Pages → `app-anchecasa` → Custom domains → `app.anchecasa.it`.
+4. Supabase → Authentication → URL Configuration: aggiungere `https://app.anchecasa.it` (Site URL e Redirect URLs).
+5. Google Cloud → chiave di Maps → restrizioni HTTP: aggiungere `https://app.anchecasa.it/*`.
+6. Secrets delle funzioni: `DIAGNOSI_ORIGINI` deve contenere `https://app.anchecasa.it`; `APP_URL` = `https://app.anchecasa.it`.

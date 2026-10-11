@@ -26,7 +26,10 @@ const MIME_AUDIO: Record<string, string> = { webm: "audio/webm", mp4: "audio/mp4
 const MAX_AUDIO = 15_000_000; // oltre, Gemini non lo accetta in una sola richiesta (circa 15 minuti di nota)
 
 function cors(origin: string | null): Record<string, string> {
-  const ammessi = (Deno.env.get("DIAGNOSI_ORIGINI") || "").split(",").map((s) => s.trim()).filter(Boolean);
+  // Se DIAGNOSI_ORIGINI è vuota tutti i siti sono ammessi; se c'è, si aggiunge sempre l'app (app.anchecasa.it o APP_URL).
+  const base = (Deno.env.get("DIAGNOSI_ORIGINI") || "").split(",").map((s) => s.trim()).filter(Boolean);
+  const app = (Deno.env.get("APP_URL") || "https://app.anchecasa.it").replace(/\/+$/, "");
+  const ammessi = base.length ? [...base, app, "https://app.anchecasa.it"] : [];
   const ok = !ammessi.length || (origin && ammessi.includes(origin));
   const h: Record<string, string> = {
     "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",

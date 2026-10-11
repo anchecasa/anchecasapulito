@@ -15,6 +15,9 @@ const ERRORI = {
   audio_troppo_lungo: "La nota è troppo lunga: massimo circa 15 minuti.",
   audio_non_trovato: "La nota vocale non si trova più: registrala di nuovo.",
   formato_audio: "Formato audio non adatto: usa la registrazione dell'app.",
+  formato_logo: "Il logo deve essere PNG, JPG o WEBP.",
+  logo_troppo_grande: "Il logo è troppo pesante: massimo 1 MB.",
+  prima_i_dati_fiscali: "Prima salva i dati fiscali della ditta, poi il logo.",
   formato_file: "Formato non adatto: foto JPG/PNG, video MP4/WEBM, planimetrie PDF.",
   file_troppo_grande: "File troppo grande: massimo 50 MB.",
   motore_non_configurato: "L'analisi non è ancora attiva: AncheCasa la sta configurando.",
@@ -151,6 +154,32 @@ export function installa(core) {
       return out;
     };
   }
+
+  // Dati fiscali della ditta: il logo che compare nella pagina del cliente.
+  if (V["fe-dati"]) {
+    const datiVecchi = V["fe-dati"];
+    V["fe-dati"] = async (...a) => {
+      const out = await datiVecchi(...a);
+      try {
+        const org = S.org;
+        if (!out || !out.h || !org || !gestisco(org)) return out;
+        const p = await core.Q.uno("app_fe_profili", { org }).catch(() => null);
+        const url = p && p.logo ? await FL.urlLogo(p.logo).catch(() => "") : "";
+        const blocco = sez("Logo della ditta", `<form data-form="fl-logo" novalidate class="card">
+          <p class="sotto" style="margin-top:0">Compare nella pagina che il cliente apre dal link della stima, accanto ad AncheCasa. PNG, JPG o WEBP, massimo 1 MB.</p>
+          ${url ? `<img src="${esc(url)}" alt="Logo attuale" style="height:56px;max-width:200px;object-fit:contain;display:block;margin-bottom:10px">` : ""}
+          ${campo("File del logo", `<input name="logo" type="file" accept="image/png,image/jpeg,image/webp">`)}
+          <button class="btn chiaro" type="submit">${url ? "Cambia il logo" : "Carica il logo"}</button></form>`);
+        out.h = out.h.replace(/<\/div>\s*$/, blocco + "</div>");
+      } catch (e) { console.warn("logo", e); }
+      return out;
+    };
+  }
+  FORM["fl-logo"] = async (f) => {
+    const file = f.logo.files && f.logo.files[0];
+    if (!file) return toast("Scegli il file del logo.", "errore");
+    try { await FL.caricaLogo(S.org, file); toast("Logo salvato."); render(); } catch (e) { toast(errore(e), "errore"); }
+  };
 
   /* ====================================================================== */
   /* AGENTE: Sopralluogo Flash                                               */
@@ -455,7 +484,8 @@ export function installa(core) {
     document.title = "La tua stima · AncheCasa";
     let d = null;
     if (/^[0-9a-f-]{36}$/i.test(tok || "")) { try { d = await FL.pubblica(tok); } catch (e) { console.error(e); } }
-    const testa = (t, s, ditta) => `<header class="st-testa"><img src="img/logo-colore.png" alt="AncheCasa">${ditta ? `<p style="margin:10px 0 0;font-weight:700;color:var(--blu)">con ${esc(ditta)}</p>` : ""}<h1>${t}</h1><p>${s}</p></header>`;
+    const logoDitta = d && d.ditta_logo ? await FL.urlLogo(d.ditta_logo).catch(() => "") : "";
+    const testa = (t, s, ditta) => `<header class="st-testa"><img src="img/logo-colore.png" alt="AncheCasa">${ditta ? `<p style="margin:10px 0 0;font-weight:700;color:var(--blu);display:flex;align-items:center;gap:10px">con ${logoDitta ? `<img src="${esc(logoDitta)}" alt="${esc(ditta)}" style="height:32px;max-width:140px;object-fit:contain">` : ""}${esc(ditta)}</p>` : ""}<h1>${t}</h1><p>${s}</p></header>`;
     const piede = `<p class="st-piede">AncheCasa · Costruiamo fiducia · <a href="https://www.anchecasa.it" target="_blank" rel="noopener" style="text-decoration:underline">anchecasa.it</a>${CONFIG.privacyUrl ? ` · <a href="${esc(CONFIG.privacyUrl)}" target="_blank" rel="noopener" style="text-decoration:underline">Privacy</a>` : ""}</p>`;
     if (!d || !d.trovato) return { pieno: true, h: `<div class="st">${testa("Link non valido", "Il link è scaduto o non è corretto. Chiedi un nuovo link a chi ha fatto il sopralluogo.")}${piede}</div>` };
     const c = d.cantiere;
@@ -470,7 +500,7 @@ export function installa(core) {
     const ora = passi.findIndex((p) => !p[2]);
     const filo = `<ol class="fe-filo">${passi.map((p, i) => `<li class="${p[2] ? "fatto" : i === ora ? "ora" : ""}"><span class="pallino">${p[2] ? "✓" : i + 1}</span><div><b>${esc(p[0])}</b><small>${esc(p[1])}</small></div></li>`).join("")}</ol>`;
     const forbice = d.stima_min != null
-      ? `<section class="st-card st-forbice"><small>Stima di massima</small><b>${euro(d.stima_min)} – ${euro(d.stima_max)}</b><p>Non è un preventivo: è una forbice calcolata sui prezzari ufficiali della Regione, con finitura ${esc(d.finitura || "")}. Il preventivo arriva dopo il controllo dell'ufficio tecnico.</p></section>`
+      ? `<section class="st-card st-forbice"><small>Stima di massima</small><b>${euro(d.stima_min)} – ${euro(d.stima_max)}</b><p>Non è un preventivo: è una forbice calcolata sui prezzari ufficiali della Regione${d.finitura ? ", con finitura " + esc(d.finitura) : ""}. Il preventivo arriva dopo il controllo dell'ufficio tecnico.</p></section>`
       : `<section class="st-card"><h2>Stima in preparazione</h2><p class="sotto" style="margin:0">L'ufficio tecnico sta preparando la stima. Riapri questo link tra poco.</p></section>`;
     const okBtn = !c && d.stima_min != null && !d.budget_ok && ["in_ufficio", "completato", "programmato"].includes(d.stato)
       ? `<section class="st-card"><h2>Ti va bene questa cifra?</h2><p class="sotto">Con l'ok al budget l'ufficio prepara il preventivo dettagliato. Non è un contratto e non paghi nulla.</p>${btn(I.ok + " Ok al budget", "st-ok:" + tok)}</section>`

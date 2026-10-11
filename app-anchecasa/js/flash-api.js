@@ -4,6 +4,7 @@
 import { DB } from "./db.js";
 import { Q } from "./q.js";
 import { FE } from "./fe-api.js";
+import { CONFIG } from "./config.js";
 
 const PROVA = DB.prova;
 const adesso = () => new Date().toISOString();
@@ -161,7 +162,8 @@ export const FL = {
     }
     const org = await Q.uno("app_org", { id: s.org });
     const k = await Q.uno("app_computi", { sopralluogo: s.id });
-    return { trovato: true, ditta: org ? org.nome : "", ufficiale: !!(k && k.blindato_il), stato: s.stato, quando: s.quando, comune: s.comune, lavori: s.lavori, mq: s.mq, finitura: s.finitura, stile: tavola(s.stile), stima_min: s.stima_min, stima_max: s.stima_max, budget_ok: !!s.budget_ok_il,
+    const prof = await Q.uno("app_fe_profili", { org: s.org });
+    return { trovato: true, ditta: org ? org.nome : "", ditta_logo: prof && String(prof.logo || "").startsWith("loghi/") ? prof.logo : null, ufficiale: !!(k && k.blindato_il), stato: s.stato, quando: s.quando, comune: s.comune, lavori: s.lavori, mq: s.mq, finitura: s.finitura, stile: tavola(s.stile), stima_min: s.stima_min, stima_max: s.stima_max, budget_ok: !!s.budget_ok_il,
       pratica: p ? { titolo: p.titolo, confermato: p.titolo_da === "tecnico" } : null, preventivo: prev ? { stato: prev.stato_preventivo } : null, cantiere, scade: s.link_scade };
   },
   async okBudget(tok) {
@@ -230,6 +232,23 @@ export const FL = {
     await Q.upd("app_record", { id: cant }, { stato: "aperto", dati: Object.assign({}, c.dati || {}, { codice, budget: prev.totale, stima_min: s.stima_min, stima_max: s.stima_max, comune: s.comune, regione: s.regione }) });
     await Q.upd("app_sopralluoghi", { id }, { stato: "convertito" });
     return cant;
+  },
+
+  /* --- logo della ditta (cartella pubblica «loghi», per la pagina del cliente) --- */
+  urlLogo(percorso) {
+    if (!percorso || !String(percorso).startsWith("loghi/")) return Promise.resolve("");
+    if (PROVA) return Q.file.url(String(percorso).slice(6), "loghi");
+    return Promise.resolve(`${CONFIG.supabaseUrl}/storage/v1/object/public/${String(percorso).split("/").map(encodeURIComponent).join("/")}`);
+  },
+  async caricaLogo(org, file) {
+    const est = { "image/png": "png", "image/jpeg": "jpg", "image/webp": "webp" }[file.type];
+    if (!est) throw new Error("formato_logo");
+    if (file.size > 1024 * 1024) throw new Error("logo_troppo_grande");
+    if (!(await Q.uno("app_fe_profili", { org }))) throw new Error("prima_i_dati_fiscali");
+    const nome = `${org}/logo-${Date.now().toString(36)}.${est}`;
+    await Q.file.carica(nome, file, "loghi");
+    await Q.upd("app_fe_profili", { org }, { logo: "loghi/" + nome });
+    return "loghi/" + nome;
   },
 
   /* --- admin: prezzari regionali e collegamento con le lavorazioni --- */
