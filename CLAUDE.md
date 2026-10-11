@@ -13,6 +13,37 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 11.10.2026 ~08:45 · Cursor — AncheBandi nella dashboard admin, non un sito a parte (NON pubblicato)
+- AncheBandi non ha un dominio suo. La voce «Bandi» sta nel menu admin, subito dopo «Iscritti registrati». L’indirizzo è `https://areaprivata.anchecasa.it/dashboard/#/admin/bandi`.
+- La pagina legge `public.anchebandi_feed_items`. Se lo schema non c’è ancora su Supabase, lo dice. In anteprima `?demo=admin` mostra tre gare con la scritta «Esempio».
+- In `anchebandi/.env.production.local` l’URL pubblico non è più `bandi.anchecasa.it`: è la dashboard. `APP_DOMAIN` è vuoto, così il deploy non crea un sito a parte. Il deploy non è stato lanciato: manca ancora la password del database.
+- File: `area-privata/dashboard/js/app.js`, `area-privata/dashboard/js/bandi-admin.js`, `area-privata/dashboard/index.html`, `anchebandi/.env.production.local`, `CLAUDE.md`.
+
+### 11.10.2026 08:15 · Cursor — Supabase: file SQL e Edge Functions
+- File eseguiti: nessuno. Funzioni pubblicate: nessuna.
+- Collegamento tentato: MCP Supabase assente. `SUPABASE_DB_URL` assente. `psql` non è nel percorso del terminale; il programma c’è in PostgreSQL 16.
+- Verifiche: non eseguite. Secrets: non controllati.
+- Problema: manca il collegamento al database. Fermato prima di qualsiasi modifica.
+
+### 11.10.2026 07:25 · Cursor — AncheBIM: dieci piani con quota Z
+- Un palazzo con più piani, anche dieci, ha una quota Z in millimetri per piano. Non pubblicato.
+
+### 11.10.2026 07:22 · Cursor — AncheBIM: asse Z in millimetri
+- Nel cruscotto `ecosistema-anchecasa` il controllo triplo confronta anche la Z, in millimetri, al millesimo. Non pubblicato.
+
+### 11.10.2026 07:08 · Cursor — cruscotto AncheBIM nel progetto ecosistema-anchecasa (non pubblicato)
+- Nel Next.js `BIM-SICUR\ecosistema-anchecasa`: pulsante AncheBIM nel cruscotto `/admin` e pagina `/admin/bim` per analizzare un PDF (controllo triplo) o uno ZIP. Logica copiata dal motore su disco esterno. Non è l’area privata e non è online.
+- File: `services/anchebim/`, `src/app/admin/`, `src/app/api/bim/analizza/route.ts`, `src/app/page.tsx`, `src/app/layout.tsx`, `src/app/globals.css`.
+
+### 11.10.2026 06:53 · Cursor — pubblicati Vercel e Cloudflare (l’app no)
+- Vercel, produzione: progetto `anchecasa-pulito`, deployment `dpl_DMwKw7zBu4Y8YNgJDvbHdxnhX2co`, alias https://anchecasa.it. Il menu Magazine porta a https://magazine.anchecasa.it/.
+- Vercel, produzione: progetto `magazine-anchecasa`, deployment `dpl_nCGCQ6dowbtgMVZQLDL8f5ud1UiF`, alias https://magazine.anchecasa.it. Foglio `stile.css?v=4`.
+- Vercel, produzione: progetto `area-privata-produzione`, deployment `dpl_6po6X8gYbm5Nr8jDtGme9WtRQ7db`, alias https://areaprivata.anchecasa.it. Favicon risponde 200. Con questo invio vanno online anche dashboard, proposte rete, sala strategia e contratti che il 10.10 erano solo in locale.
+- Cloudflare Pages, progetto `sicura`, produzione, deployment `51ba325d`, alias https://sicura.anchecasa.it. Titolo «AncheSicura · La sicurezza di AncheCasa». Senza `LEGGIMI.txt`.
+- Non pubblicato: `app-anchecasa` e `app.anchecasa.it`. Supabase non toccato.
+- Prova: i quattro indirizzi rispondono 200.
+- File annotato: `CLAUDE.md`. In locale è comparso `area-privata/.gitignore` (solo `.vercel` e `.env*`), non è nel commit.
+
 ### 11.10.2026 06:47 · Cursor — tutto il lavoro locale mandato su GitHub (main)
 - Commit sul ramo `main` di https://github.com/anchecasa/anchecasapulito e push. Dentro: app AncheCasa fino alla 2.6 (rete, strategia, documenti, fatture, sicurezza, Sopralluogo Flash, subappalti), dashboard (proposte, sala strategia, contratti), favicon dell’area privata, bollino del Magazine, spot in `social/`.
 - Fuori dal commit: `app-anchecasa/supabase/.temp/` (file temporaneo della CLI). Nessuna chiave. Supabase non è stato aggiornato. I siti online (Vercel, Cloudflare) non sono stati ripubblicati con questo invio.
