@@ -4,7 +4,7 @@
   const S = AC.store;
   const D = AC.date;
 
-  /* CONGELATO 20.09.2026. Famiglie e pulsanti. Non cambiare FOLD_LAB, UFFICIO, PACKS, packFornitore, navItems, HEADER_OPP. Non aggiungere, togliere o rinominare pieghe o tasti.
+  /* CONGELATO 20.09.2026. Famiglie e pulsanti. Non cambiare FOLD_LAB, UFFICIO, PACKS, packFornitore, navItems, HEADER_OPP. Non aggiungere, togliere o rinominare pieghe o tasti. Eccezione 11.10.2026, su richiesta esplicita di Nando: tasto «Home» (grafici, js/home.js) primo per admin e agenti. Eccezione 11.10.2026 sera: tasti admin Terranova, Gare private e AncheBIM (js/funzioni-interne.js), funzioni interne, non siti a parte.
      ECCEZIONE 22.09.2026, su richiesta esplicita: aggiunta "admin" come quarta famiglia
      (prima era una pagina admin.html a sé, mai approvata graficamente). Non tocca le pieghe
      o i tasti delle tre famiglie originali: admin ha un suo ramo separato ovunque sotto.
@@ -105,7 +105,8 @@
   AC.fornitoreModoDi = fornitoreModoDi;
 
   function n(id, label, iconName, fold) {
-    return { id: id, label: label, icon: iconName, gruppo: "pack", fold: fold };
+    const nascosti = { predict: 1, bim: 1, tracking: 1, recruitment: 1 };
+    return { id: id, label: label, icon: iconName, gruppo: "pack", fold: fold, nascosto: !!nascosti[id] };
   }
 
   const UFFICIO = [
@@ -252,6 +253,8 @@
     return withUfficio(vendita.concat(noleggio));
   }
 
+  const PACK_NASCOSTO = { hse: 1, sicurezza_armata: 1, apl: 1, condominio: 1, agenzia: 1, industria: 1, logistica: 1, albergo: 1, negozio: 1 };
+
   function navItems(famiglia) {
     if (famiglia === "privato") {
       return [
@@ -276,6 +279,8 @@
     }
     if (famiglia === "agente") {
       const voci = [
+        // 11.10.2026, su richiesta: Home con grafici e andamenti (js/home.js), primo tasto anche sul telefono.
+        { id: "home", label: "Home", icon: "home", gruppo: "fisso" },
         { id: "pubblica", label: "Pubblica", icon: "send", gruppo: "fisso", cuore: true },
         { id: "mio-ruolo", label: "Il mio ruolo", icon: "star", gruppo: "fisso" },
         { id: "documenti", label: "Documenti", icon: "doc", gruppo: "fisso" },
@@ -291,9 +296,16 @@
       return voci;
     }
     if (famiglia === "admin") {
-      return [
+      const voci = [
+        // 11.10.2026, su richiesta: Home con grafici e andamenti di tutta la rete (js/home.js).
+        { id: "home", label: "Home", icon: "home", gruppo: "fisso" },
         { id: "iscritti", label: "Iscritti registrati", icon: "team", gruppo: "fisso", cuore: true },
+        // 11.10.2026, su richiesta: AncheBandi è un software della dashboard admin, non un sito a parte.
+        { id: "bandi", label: "Bandi", icon: "doc", gruppo: "fisso" },
         { id: "contratti", label: "Contratti", icon: "doc", gruppo: "fisso" },
+        { id: "terranova", label: "Terranova", icon: "doc", gruppo: "fisso" },
+        { id: "gare-private", label: "Gare private", icon: "doc", gruppo: "fisso" },
+        { id: "anchebim", label: "AncheBIM", icon: "doc", gruppo: "fisso" },
         { id: "affida", label: "Clienti da affidare", icon: "team", gruppo: "fisso" },
         { id: "iscrizioni", label: "Iscrizioni dal sito", icon: "send", gruppo: "fisso" },
         // 09.10.2026, su richiesta: statistiche della rivista e iscritti agli avvisi (js/magazine-admin.js).
@@ -309,6 +321,14 @@
         // id «chat-team» (non «chat»): «chat» è la Chat demo di Privato/Azienda/Agente.
         { id: "chat-team", label: "Chat", icon: "chat", gruppo: "fisso" }
       ];
+      // 11.10.2026: Francesco, dal suo computer, trova gli appunti come prima pagina e come prima voce.
+      const voceAppunti = { id: "appunti", label: "Appunti", icon: "doc", gruppo: "fisso" };
+      if (admin.perFrancesco) voci.unshift(voceAppunti);
+      else {
+        const posto = voci.findIndex((v) => v.id === "task");
+        voci.splice(posto < 0 ? voci.length : posto, 0, voceAppunti);
+      }
+      return voci;
     }
     return [];
   }
@@ -363,7 +383,21 @@
      valida di un utente presente in marketplace.admins, altrimenti si torna al login di root.
      Le tre famiglie demo (privato, azienda, agente: dati in localStorage) restano aperte. */
   const LOGIN_URL = "../index.html";
-  const admin = { stato: "nuovo", tipo: "", nome: "", errore: "" };
+  const admin = { stato: "nuovo", tipo: "", nome: "", errore: "", perFrancesco: false };
+
+  function sembraFrancesco(user) {
+    const m = (user && user.user_metadata) || {};
+    const mail = String((user && user.email) || "");
+    const chiocciola = mail.indexOf("@");
+    const pezzi = [m.nome, m.cognome, m.full_name, m.name, chiocciola > 0 ? mail.slice(0, chiocciola) : ""];
+    return pezzi.filter(Boolean).join(" ").toLowerCase().indexOf("francesco") >= 0;
+  }
+
+  function primaPagina(tipo) {
+    if (tipo === "admin") return admin.perFrancesco ? "appunti" : "home";
+    if (tipo === "agente") return "home";
+    return "bacheca";
+  }
   // Anteprima locale (?demo=privato|azienda|agente|admin): niente login.
   const demoQs = new URLSearchParams(location.search).get("demo") || "";
   const DEMO = ["privato", "azienda", "agente", "admin"].indexOf(demoQs) >= 0 ? demoQs : "";
@@ -428,8 +462,10 @@
           if (a.data) {
             admin.tipo = "admin";
             admin.nome = nomeUtente(user);
+            admin.perFrancesco = sembraFrancesco(user);
             return;
           }
+          admin.perFrancesco = false;
           if (!(p.data && p.data.verifica === "verificato")) {
             fuori();
             return "fuori";
@@ -521,14 +557,8 @@
 
   function paintTop(famiglia, page) {
     if (!topActions) return;
-    if (!famiglia || famiglia === "admin") {
-      topActions.innerHTML = "";
-      return;
-    }
-    const on = HEADER_OPP.indexOf(page) >= 0;
-    topActions.innerHTML = html`<a href="#/${famiglia}/opportunita" class="top-opp${on ? " on" : ""}"${on ? html` aria-current="page"` : ""}>
-      ${icon("star")}Opportunità
-    </a>`.s;
+    topActions.innerHTML = "";
+    /* 11.10.2026: Opportunità, aste e credit non si mostrano. Le pagine restano in views.js. */
   }
 
   /* Pallino dei messaggi non letti della Chat fra admin (02.10.2026): un numero sulla voce «Chat»
@@ -588,8 +618,17 @@
 
   AC.chatPallino = { aggiorna: aggiornaPallino };
 
+  function voceMenu(it, famiglia) {
+    if (!it || it.nascosto) return false;
+    if (famiglia === "azienda") {
+      const pack = packKey(S.data.profilo && S.data.profilo.tipoAzienda);
+      if (PACK_NASCOSTO[pack] && it.gruppo === "pack" && it.fold !== "ufficio") return false;
+    }
+    return true;
+  }
+
   function paintNav(famiglia, page) {
-    const items = visibleNav(famiglia);
+    const items = visibleNav(famiglia).filter((it) => voceMenu(it, famiglia));
     if (!items.length) {
       nav.innerHTML = "";
       if (navFoot) navFoot.innerHTML = "";
@@ -601,7 +640,17 @@
     // Il logo porta alla Bacheca (all'elenco iscritti per l'admin); sotto il logo non c'è più la dicitura
     // del profilo (Azienda, Privato, Admin...): il nome sta nella tendina in fondo.
     const logoLink = document.getElementById("brand-link");
-    if (logoLink) logoLink.setAttribute("href", "#/" + famiglia + "/" + (famiglia === "admin" ? "iscritti" : "bacheca"));
+    if (logoLink) logoLink.setAttribute("href", "#/" + famiglia + "/" + (famiglia === "admin" ? "home" : "bacheca"));
+    const headLogo = document.getElementById("head-logo");
+    if (headLogo && logoLink) headLogo.setAttribute("href", logoLink.getAttribute("href"));
+    // 11.10.2026: colonna di icone rapide a sinistra (solo da computer), prese dalle voci che la persona vede già.
+    const railEl = document.getElementById("rail");
+    if (railEl) {
+      const RAPIDE = ["home", "chat-team", "chat", "task", "documenti", "contratti", "file", "pubblica"];
+      const vede = items.filter((it) => it.gruppo !== "pack" && it.gruppo !== "piede");
+      railEl.innerHTML = RAPIDE.map((id) => vede.find((it) => it.id === id)).filter(Boolean).slice(0, 5)
+        .map((it) => html`<a class="rail-btn${it.id === page ? " active" : ""}" href="#/${famiglia}/${it.id}" title="${it.label}" aria-label="${it.label}"${it.id === page ? html` aria-current="page"` : ""}>${icon(it.id === "file" ? "folder" : it.icon)}</a>`.s).join("");
+    }
     const top = items.filter((it) => it.gruppo !== "pack" && it.gruppo !== "piede");
     const pack = items.filter((it) => it.gruppo === "pack");
     const piede = items.filter((it) => it.gruppo === "piede");
@@ -649,7 +698,7 @@
 
     // Telefono (01.10.2026): barra delle sezioni in basso, come un'app. Fino a 5 voci stanno tutte nella barra;
     // altrimenti le prime 4 e «Altro», che apre una scheda con il resto e con le cartelle (Ufficio, Cantiere...).
-    const BREVE = { bacheca: "Bacheca", iscritti: "Iscritti", contratti: "Contratti", affida: "Affida", iscrizioni: "Iscrizioni", "richieste-agenti": "Agenti", "proposte-rete": "Proposte", "oggi-rete": "Oggi", strategia: "Strategia", "lavori-rete": "Lavori", "linee-decise": "Linee", "tuo-mese": "Mese", "genera-link": "Link", task: "Task", file: "File", "chat-team": "Chat", "mio-ruolo": "Ruolo", documenti: "Documenti" };
+    const BREVE = { home: "Home", bacheca: "Bacheca", iscritti: "Iscritti", appunti: "Appunti", bandi: "Bandi", terranova: "Terranova", "gare-private": "Gare", anchebim: "BIM", contratti: "Contratti", affida: "Affida", iscrizioni: "Iscrizioni", "richieste-agenti": "Agenti", "proposte-rete": "Proposte", "oggi-rete": "Oggi", strategia: "Strategia", "lavori-rete": "Lavori", "linee-decise": "Linee", "tuo-mese": "Mese", "genera-link": "Link", task: "Task", file: "File", "chat-team": "Chat", "mio-ruolo": "Ruolo", documenti: "Documenti" };
     const conAltro = folds.length > 0 || top.length > 5;
     const tabs = conAltro ? top.slice(0, 4) : top;
     const extra = conAltro ? top.slice(4) : [];
@@ -744,7 +793,7 @@
     // Ognuno vede solo la propria area: qualsiasi altro indirizzo (anche "#/" o un'altra famiglia)
     // riporta alla sua.
     if (famiglia !== admin.tipo) {
-      history.replaceState(null, "", "#/" + admin.tipo + "/" + (admin.tipo === "admin" ? "iscritti" : "bacheca"));
+      history.replaceState(null, "", "#/" + admin.tipo + "/" + primaPagina(admin.tipo));
       ({ famiglia, page } = parseHash());
     }
 
@@ -761,9 +810,9 @@
       }
       if (famiglia === "privato") S.ensurePrivato();
       if (famiglia === "agente") S.ensureAgente();
-      if (page === "credit") {
-        history.replaceState(null, "", "#/" + famiglia + "/chat");
-        page = "chat";
+      if (["credit", "opportunita", "aste", "nuovaopportunita", "predict", "bim", "tracking", "recruitment"].indexOf(page) >= 0) {
+        history.replaceState(null, "", "#/" + famiglia + "/" + primaPagina(famiglia));
+        page = primaPagina(famiglia);
       }
       if (page === "gare") {
         history.replaceState(null, "", "#/" + famiglia + "/partecipa");
@@ -773,9 +822,9 @@
         history.replaceState(null, "", "#/" + famiglia + "/anagrafe");
         page = "anagrafe";
       }
-      const paginaDefault = famiglia === "admin" ? "iscritti" : "bacheca";
+      const paginaDefault = primaPagina(famiglia);
       // La Bacheca non è più un pulsante del menu (01.10.2026): si apre dal logo.
-      const allowed = visibleNav(famiglia).map((it) => it.id).concat(["impostazioni", "profilo"]).concat(HEADER_OPP).concat(famiglia === "admin" ? [] : ["bacheca"]);
+      const allowed = visibleNav(famiglia).filter((it) => voceMenu(it, famiglia)).map((it) => it.id).concat(["impostazioni", "profilo", "passo"]).concat(famiglia === "admin" ? [] : ["bacheca"]);
       if (!page || allowed.indexOf(page) < 0 || !AC.views[page]) {
         history.replaceState(null, "", "#/" + famiglia + "/" + paginaDefault);
         page = paginaDefault;
@@ -805,6 +854,8 @@
     dateEl.textContent = D.fmt(D.today());
     paintNav(famiglia, page);
     paintTop(famiglia, page);
+    // 11.10.2026: area della rete in sola lettura finché il contratto non è firmato (js/contratto-firma.js).
+    if (window.AC && AC.contrattoFirma) AC.contrattoFirma.applica(famiglia, page);
 
     if (fresh) {
       scroller.scrollTop = 0;
@@ -814,8 +865,15 @@
 
   function tick() {
     const d = new Date();
-    document.getElementById("clock").textContent =
-      String(d.getHours()).padStart(2, "0") + " : " + String(d.getMinutes()).padStart(2, "0");
+    const hh = String(d.getHours()).padStart(2, "0");
+    const mm = String(d.getMinutes()).padStart(2, "0");
+    document.getElementById("clock").textContent = hh + " : " + mm;
+    // 11.10.2026: data e orologio in alto a sinistra (solo da computer, css/aspetto-dock.css).
+    const metti = (id, t) => { const x = document.getElementById(id); if (x) x.textContent = t; };
+    metti("when-h", hh);
+    metti("when-m", mm);
+    metti("when-day", String(d.getDate()).padStart(2, "0"));
+    metti("when-mon", ["GEN", "FEB", "MAR", "APR", "MAG", "GIU", "LUG", "AGO", "SET", "OTT", "NOV", "DIC"][d.getMonth()]);
   }
 
   // Scheda «Altro» della barra in basso (mobile): si chiude scegliendo una voce, toccando fuori o cambiando pagina.

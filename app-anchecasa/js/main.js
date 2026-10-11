@@ -176,22 +176,23 @@ V.entra = async () => ({
     <div style="height:14px"></div><button type="button" class="link" data-go="recupera">Hai dimenticato la password?</button>
     <p class="piede">Non hai un account? <button type="button" class="link" data-go="registrati">Creane uno</button></p></div>`,
 });
-V.registrati = async () => ({
+V.registrati = async (param) => ({
   pieno: true,
   h: `<div class="ingresso"><button type="button" class="indietro-tondo" data-az="indietro" aria-label="Indietro">${I.indietro}</button>
-    <h1>Crea il tuo account</h1><p>Chi sei?</p>
-    <form data-form="registrati" novalidate>
-      <div class="scelte" role="radiogroup">
-        <label class="scelta"><input type="radio" name="ruolo" value="privato" checked><span>${I.casa}<b>Privato</b><small>Guasti, artigiani, la tua casa. Gratis.</small></span></label>
-        <label class="scelta"><input type="radio" name="ruolo" value="artigiano"><span>${I.kit}<b>Artigiano</b><small>Pronto intervento: ricevi i clienti da SuperMastro.</small></span></label>
-      </div>
-      ${campo("Nome e cognome", `<input name="nome" autocomplete="name" required maxlength="80">`)}
-      ${campo("Città", `<input name="citta" autocomplete="address-level2" required maxlength="80">`)}
-      ${campo("Mail", `<input name="email" type="email" autocomplete="email" required>`)}
-      ${campo("Password", `<input name="password" type="password" autocomplete="new-password" minlength="8" required>`, "Almeno 8 caratteri.")}
-      <label class="spunta"><input type="checkbox" name="privacy" required> <span>Ho letto ${CONFIG.privacyUrl ? `<a href="${esc(CONFIG.privacyUrl)}" target="_blank" rel="noopener">l'informativa privacy</a>` : "l'informativa privacy"} e accetto il trattamento dei miei dati per usare l'app.</span></label>
-      <button class="btn" type="submit">Crea l'account</button></form>
-    <p class="piede">Hai già un account? <button type="button" class="link" data-go="entra">Entra</button></p></div>`,
+    <div id="iscrizione-unica"></div></div>`,
+  dopo(schermo) {
+    const box = schermo.querySelector("#iscrizione-unica");
+    if (!box || !window.IscrizioneUnica) return;
+    const cat = ["privato", "azienda", "fornitore"].includes(param) ? param : "privato";
+    IscrizioneUnica.monta(box, {
+      da: "app",
+      privacy: CONFIG.privacyUrl || "https://anchecasa.it/privacy.html",
+      google: !!CONFIG.accessoGoogle,
+      apple: !!CONFIG.accessoApple,
+      precompila: { categoria: cat },
+      supabase: DB.sb || null,
+    });
+  },
 });
 V.mail = async () => ({
   pieno: true,

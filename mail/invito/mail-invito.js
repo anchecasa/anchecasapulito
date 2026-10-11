@@ -40,8 +40,7 @@
       punti: [
         ["Trovi l'artigiano giusto, vicino a te", "Scrivi cosa ti serve: vedi prima i professionisti iscritti della tua città e gli scrivi in chat. A lavoro finito lasci la tua recensione."],
         ["Mostri il guasto con un video", "Lo filmi con il telefono: ti aiutiamo a capire cosa serve e a chi chiederlo."],
-        ["Pubblichi gratis", "Una richiesta di lavoro o l'annuncio della tua casa: risposte e appuntamenti li trovi in «Richieste»."],
-        ["Aste immobiliari con assistenza", "Vedi le case all'asta nella tua zona e, se una ti interessa, AncheCasa ti accompagna."]
+        ["Pubblichi gratis", "Una richiesta di lavoro o l'annuncio della tua casa: risposte e appuntamenti li trovi in «Richieste»."]
       ],
       bottone: "Iscriviti gratis",
       chiusura: "Il link è personale e vale " + SCADENZA + ".",
@@ -68,6 +67,25 @@
       chiusura: "Il link è riservato alla sua azienda e vale " + SCADENZA + ".",
       passiTitolo: "Come si inizia",
       passi: ["Clicchi il pulsante arancione", "Scelga la password", "Completi il profilo: partita IVA, mestiere e zone"],
+      perche: "Riceve questa mail perché la sua azienda è stata invitata su AncheCasa. Se non le interessa, può ignorarla."
+    }),
+    fornitore: (inv, cat) => ({
+      tu: false,
+      oggetto: "La sua azienda fornitore è invitata su AncheCasa",
+      anteprima: "Risponda alle richieste della sua zona.",
+      etichetta: "Invito per fornitori",
+      titolo: "Risponda alle richieste della sua zona.",
+      intro: (inv ? "<strong>" + inv + "</strong> ha invitato la sua azienda" : "La sua azienda è invitata") +
+        (cat ? " come <strong>" + cat + "</strong>" : "") + " su AncheCasa.",
+      punti: [
+        ["Richieste della zona", "Riceve le richieste di chi cerca i suoi prodotti, il noleggio o i servizi."],
+        ["Risponde in pochi minuti", "Apre il link, vede il lavoro e manda l'offerta."],
+        ["Un solo account", "Può avere anche il profilo azienda, con la stessa mail."]
+      ],
+      bottone: "Iscriva l'azienda fornitore",
+      chiusura: "Il link è riservato alla sua azienda e vale " + SCADENZA + ".",
+      passiTitolo: "Come si inizia",
+      passi: ["Clicchi il pulsante arancione", "Scelga la password", "Indichi categorie e zone"],
       perche: "Riceve questa mail perché la sua azienda è stata invitata su AncheCasa. Se non le interessa, può ignorarla."
     }),
     agente: (inv) => ({
@@ -128,7 +146,7 @@
       bottone: "Confermi ed entri",
       chiusura: "Completi il profilo con mestiere e zone: è quello che vedono i clienti.",
       passiTitolo: "Da qui in poi",
-      passi: ["Clicchi il pulsante arancione", "Completi il profilo: partita IVA, mestiere e zone", "Risponda alle richieste in chat"],
+      passi: ["Clicchi il pulsante arancione", "Completi il profilo: partita IVA, mestiere e zone e diventa Verificata", "Risponda alle richieste in chat"],
       perche: "Riceve questa mail perché è stata chiesta l'iscrizione della sua azienda su AncheCasa. Se non è stata lei, la ignori: senza conferma l'account non si attiva."
     }),
     agente: (nome) => ({
@@ -150,6 +168,25 @@
       passiTitolo: "Come funziona",
       passi: ["Conferma la mail", "Completa il tuo profilo", "AncheCasa lo valuta e ti risponde"],
       perche: "Ricevi questa mail perché hai chiesto di collaborare con AncheCasa. Se non sei stato tu, ignorala: senza conferma l'account non si attiva."
+    }),
+    fornitore: (nome) => ({
+      tu: false,
+      oggetto: nome ? nome + ": l'iscrizione su AncheCasa è fatta" : "La sua azienda fornitore è iscritta su AncheCasa",
+      anteprima: "Confermi la mail ed entra subito: le richieste della sua zona la aspettano.",
+      etichetta: "Iscrizione fornitore",
+      titolo: "Benvenuti su AncheCasa.",
+      intro: (nome ? "<strong>" + nome + "</strong>, l'iscrizione è fatta. " : "L'iscrizione è fatta. ") +
+        "Confermi la mail con il pulsante qui sotto ed <strong>entra subito</strong>.",
+      punti: [
+        ["Richieste della sua zona", "Vede le richieste di chi cerca i suoi prodotti, il noleggio o i servizi."],
+        ["Risponde gratis", "Alla prima richiesta risponde senza abbonamento."],
+        ["Tutte le richieste, con l'abbonamento", "Con l'abbonamento vede tutte le richieste della zona."]
+      ],
+      bottone: "Confermi ed entri",
+      chiusura: "Categorie e zone si completano dopo l'ingresso.",
+      passiTitolo: "Da qui in poi",
+      passi: ["Clicchi il pulsante arancione", "Indichi categorie e zone", "Risponda alle richieste"],
+      perche: "Riceve questa mail perché è stata chiesta l'iscrizione della sua azienda su AncheCasa. Se non è stata lei, la ignori."
     })
   };
 
@@ -207,7 +244,7 @@
 
   function immagini(fam, d) {
     const x = (d && d.immagini) || {};
-    return { logo: x.logo || IMG.logo, logoNegativo: x.logoNegativo || x.logoBianco || IMG.logoNegativo, curva: x.curva || IMG.curva, foto: x[fam] || IMG[fam] };
+    return { logo: x.logo || IMG.logo, logoNegativo: x.logoNegativo || x.logoBianco || IMG.logoNegativo, curva: x.curva || IMG.curva, foto: x[fam] || IMG[fam] || IMG.azienda };
   }
   const pulito = (s) => s.replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").replace(/&#39;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, "<").replace(/&gt;/g, ">");
 
@@ -224,7 +261,89 @@
     return { oggetto: pulito(t.oggetto), anteprima: t.anteprima, html: impagina(fam, t, esc(d.link || SITO), immagini(fam, d)) };
   }
 
-  const API = { crea, iscrizione, famiglie: Object.keys(INVITO), IMG };
+  function avviso(tipo, d) {
+    d = d || {};
+    const lei = d.famiglia !== "privato";
+    const nome = esc(d.nome || "");
+    const link = esc(d.link || SITO);
+    const testi = {
+      "manca-passo": {
+        tu: !lei,
+        oggetto: lei ? "Manca un passo sul profilo" : "Ti manca un passo",
+        anteprima: lei ? "Il profilo è fermo. Un passo e si sblocca una funzione." : "Il profilo è fermo. Un passo e sblocchi una funzione.",
+        etichetta: "Manca un passo",
+        titolo: lei ? "Il profilo è fermo da tre giorni." : "Ti manca un passo.",
+        intro: (lei ? "Il profilo" : "Il tuo profilo") + " è fermo su <strong>" + esc(d.passo || "il passo successivo") + "</strong>. La mail parte una volta sola per quel passo.",
+        punti: [["Il pulsante porta a quel passo", lei ? "Lo completa e la funzione si sblocca." : "Lo completi e la funzione si sblocca."]],
+        bottone: lei ? "Completi il passo" : "Completa il passo",
+        chiusura: lei ? "Se ha già fatto il passo, ignori questa mail." : "Se l'hai già fatto, ignora questa mail.",
+        passiTitolo: "Cosa succede",
+        passi: ["Apre la mail", "Va al passo", "La funzione si sblocca"],
+        perche: "Riceve questa mail perché il profilo AncheCasa è fermo da tre giorni."
+      },
+      verificata: {
+        tu: false,
+        oggetto: "La sua azienda è verificata",
+        anteprima: "Il bollino Verificata è attivo. Le funzioni collegate si sbloccano.",
+        etichetta: "Azienda verificata",
+        titolo: "La sua azienda è verificata.",
+        intro: (nome ? "<strong>" + nome + "</strong> ha il bollino Verificata. " : "Il bollino Verificata è attivo. ") + "I clienti vedono che i documenti sono stati controllati.",
+        punti: [["Cosa si è sbloccato", "Ricevere clienti e le funzioni che chiedono l'azienda verificata."]],
+        bottone: "Entri nella sua area",
+        chiusura: "Il bollino resta finché i documenti sono in regola.",
+        passiTitolo: "Da qui",
+        passi: ["Entri", "Veda il bollino", "Usi le funzioni sbloccate"],
+        perche: "Riceve questa mail perché AncheCasa ha verificato la sua azienda."
+      },
+      documento: {
+        tu: false,
+        oggetto: "Serve un documento",
+        anteprima: "Per completare la verifica serve un documento.",
+        etichetta: "Serve un documento",
+        titolo: "Serve un documento.",
+        intro: "Per la verifica serve: <strong>" + esc(d.documento || "il documento richiesto") + "</strong>.",
+        punti: [["Lo carichi dalla sua area", "AncheCasa lo controlla e, se è in ordine, l'azienda diventa Verificata."]],
+        bottone: "Carichi il documento",
+        chiusura: "Senza quel documento la verifica resta in attesa.",
+        passiTitolo: "Come fare",
+        passi: ["Apri il pulsante", "Carichi il file", "Attenda la verifica"],
+        perche: "Riceve questa mail perché AncheCasa ha chiesto un documento."
+      },
+      modulo: {
+        tu: false,
+        oggetto: d.variante === "scade" ? "La prova finisce tra 3 giorni" : "Modulo attivo",
+        anteprima: d.variante === "scade" ? "La prova del modulo finisce tra 3 giorni." : "Il modulo è attivo.",
+        etichetta: d.variante === "scade" ? "Prova in scadenza" : "Modulo attivo",
+        titolo: d.variante === "scade" ? "La prova finisce tra 3 giorni." : "Il modulo è attivo.",
+        intro: "Modulo: <strong>" + esc(d.modulo || "il modulo") + "</strong>. " + (d.variante === "scade" ? "Tra 3 giorni la prova si chiude." : "Può usarlo dalla sua area."),
+        punti: [["Dove lo trova", "Nel menu, sulla voce del modulo."]],
+        bottone: d.variante === "scade" ? "Veda il modulo" : "Apri il modulo",
+        chiusura: "I prezzi dei moduli restano quelli del listino. La prova di 14 giorni è provvisoria.",
+        passiTitolo: "Da qui",
+        passi: ["Entri", "Apri il modulo", d.variante === "scade" ? "Decida se tenerlo" : "Lo usi"],
+        perche: "Riceve questa mail perché un modulo della sua azienda è cambiato."
+      },
+      password: {
+        tu: true,
+        oggetto: "Scegli una nuova password",
+        anteprima: "Ti mandiamo il link per scegliere una nuova password.",
+        etichetta: "Nuova password",
+        titolo: "Scegli una nuova password.",
+        intro: "Hai chiesto di cambiare la password di AncheCasa. Il pulsante apre la pagina per sceglierne una nuova.",
+        punti: [["Il link è personale", "Se non hai chiesto tu il cambio, ignora questa mail: la password resta quella di prima."]],
+        bottone: "Scegli la nuova password",
+        chiusura: "Il link vale poco tempo, poi ne chiedi un altro.",
+        passiTitolo: "Come fare",
+        passi: ["Apri il pulsante", "Scrivi la nuova password", "Entra"],
+        perche: "Ricevi questa mail perché è stato chiesto il recupero della password AncheCasa."
+      }
+    };
+    const t = testi[tipo] || testi["manca-passo"];
+    const fam = d.famiglia === "privato" ? "privato" : "azienda";
+    return { oggetto: pulito(t.oggetto), anteprima: t.anteprima, html: impagina(fam, t, link, immagini(fam, d)) };
+  }
+
+  const API = { crea, iscrizione, avviso, famiglie: Object.keys(INVITO), IMG };
   if (typeof module !== "undefined" && module.exports) module.exports = API;
   else root.MailInvito = API;
 })(typeof window !== "undefined" ? window : globalThis);

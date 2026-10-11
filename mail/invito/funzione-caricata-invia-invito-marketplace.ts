@@ -76,8 +76,7 @@ function json(body: unknown, status: number, origin: string | null) {
       punti: [
         ["Trovi l'artigiano giusto, vicino a te", "Scrivi cosa ti serve: vedi prima i professionisti iscritti della tua città e gli scrivi in chat. A lavoro finito lasci la tua recensione."],
         ["Mostri il guasto con un video", "Lo filmi con il telefono: ti aiutiamo a capire cosa serve e a chi chiederlo."],
-        ["Pubblichi gratis", "Una richiesta di lavoro o l'annuncio della tua casa: risposte e appuntamenti li trovi in «Richieste»."],
-        ["Aste immobiliari con assistenza", "Vedi le case all'asta nella tua zona e, se una ti interessa, AncheCasa ti accompagna."]
+        ["Pubblichi gratis", "Una richiesta di lavoro o l'annuncio della tua casa: risposte e appuntamenti li trovi in «Richieste»."]
       ],
       bottone: "Iscriviti gratis",
       chiusura: "Il link è personale e vale " + SCADENZA + ".",

@@ -32,7 +32,7 @@
   ["Subappalto", "Fornitura materiali edili", "Noleggio mezzi", "Gara d'appalto", "Impresa edile", "Albo fornitori"].forEach(function (m) { VOCI.push([m, "Appalti e subappalti", "appalti.html"]); });
   (window.AC_APP || []).forEach(function (a) { VOCI.push(["App " + a.nome, "App per la tua attività", "app-" + a.id + ".html"]); });
   [["Casa in vendita", "vendita"], ["Vendo casa", "vendita"], ["Cerco casa", "vendita"], ["Casa in affitto", "affitto"], ["Affitto appartamento", "affitto"], ["Alloggio studenti", "studenti"], ["Stanza per studenti", "studenti"], ["Posto letto", "studenti"], ["Cerco lavoro", "lavoro"], ["Offro lavoro", "lavoro"]].forEach(function (m) { VOCI.push([m[0], "Bacheca annunci", "bacheca.html#" + m[1]]); });
-  VOCI.push(["Centralino AncheVoice", "Servizi", "anchevoice.html"], ["Opportunità immobiliari", "Area riservata", "opportunita.html"], ["Diventare agente", "Lavora con noi", "agenti.html"], ["Diventare partner", "Lavora con noi", "partner.html"]);
+  VOCI.push(["Diventare agente", "Lavora con noi", "agenti.html"], ["Diventare partner", "Lavora con noi", "partner.html"]);
 
   function trova(v) {
     v = slug(v); if (!v) return [];
@@ -98,7 +98,7 @@
       if (!f.checkValidity()) { f.reportValidity(); return; }
       var parti = f.getAttribute("data-invia").split("|"), dati = { modulo: parti[1], pagina: location.pathname };
       $$("input,select,textarea", f).forEach(function (c) {
-        if (c.type === "checkbox" || c.type === "submit" || c.type === "hidden") return;
+        if (c.type === "checkbox" || c.type === "submit" || c.type === "hidden" || c.type === "password") return;
         var l = c.closest("label"), k = (l ? l.childNodes[0].textContent : c.name || c.id || "campo").trim();
         var v = c.type === "file" ? (c.files && c.files[0] ? c.files[0].name : "") : c.value;
         if (c.tagName === "SELECT" && c.selectedIndex >= 0) v = c.options[c.selectedIndex].text;
@@ -138,10 +138,48 @@
   /* SuperMastro: video di 5 secondi, problema, poi chi chiamare */
   var sm = $("#sm-rec");
   if (sm) {
-    var PROBLEMI = [
-      { id: "goccia", voce: "Rubinetto che gocciola", problema: "Il rubinetto perde a gocce. Di solito è la guarnizione o il rompigetto.", fai: true, consiglio: "Chiudi l'acqua sotto il lavandino, svita il rompigetto e puliscilo dal calcare. Se continua a gocciolare, chiama un idraulico.", mestiere: "idraulico", q: "idraulico", osm: ['["craft"="plumber"]'], nome: "idraulic" },
-      { id: "scarico", voce: "Scarico lento", problema: "Lo scarico è intasato.", fai: true, consiglio: "Prova la ventosa e un po' di acqua calda. Non versare acidi. Se l'acqua torna su, chiama un idraulico.", mestiere: "idraulico", q: "idraulico", osm: ['["craft"="plumber"]'], nome: "idraulic" },
-      { id: "tubo", voce: "Perdita da tubo o soffitto", problema: "C'è una perdita da un tubo o dal soffitto.", fai: false, consiglio: "Chiudi il rubinetto generale dell'acqua. Non usare prese vicine all'acqua. Serve un idraulico.", mestiere: "idraulico", q: "idraulico", osm: ['["craft"="plumber"]'], nome: "idraulic" },
+      var salvaRichiesta = function (userId) {
+        var corpo = { famiglia: parti[0], dati: dati };
+        if (userId) corpo.user_id = userId;
+        return fetch(SB + "/rest/v1/richieste_iscrizione", { method: "POST",
+          headers: { apikey: SBK, Authorization: "Bearer " + SBK, "Content-Type": "application/json", "Content-Profile": "marketplace", Prefer: "return=minimal" },
+          body: JSON.stringify(corpo) });
+      };
+      var entra = function () {
+        if (parti[0] !== "privato" && parti[0] !== "azienda" && parti[0] !== "agente") return Promise.resolve(null);
+        if (password.length < 8) return Promise.reject(new Error("password"));
+        return fetch(SB + "/auth/v1/signup", { method: "POST",
+          headers: { apikey: SBK, Authorization: "Bearer " + SBK, "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: dati.email,
+            password: password,
+            data: { nome: dati.nome || dati.ragione || "", cognome: dati.cognome || "", famiglia: parti[0], zona: dati.zona || "" }
+          })
+        }).then(function (r) { return r.json().then(function (j) { return { ok: r.ok, body: j }; }); })
+          .then(function (res) {
+            var user = res.body && (res.body.user || res.body);
+            var id = user && user.id;
+            if (!res.ok || !id || (user.identities && user.identities.length === 0)) {
+              throw new Error((res.body && res.body.msg) || (res.body && res.body.error_description) || "iscrizione");
+            }
+            return id;
+          });
+      };
+      var caricaCv = function (userId) {
+        if (parti[0] !== "agente" || !cvFile) return Promise.resolve();
+        var safe = String(cvFile.name || "cv").replace(/[^\w.\-]+/g, "_").slice(0, 80);
+        var percorso = "agente/" + (userId || "richieste") + "/cv-" + Date.now() + "-" + safe;
+        return fetch(SB + "/storage/v1/object/marketplace-candidature/" + percorso, { method: "POST",
+          headers: { apikey: SBK, Authorization: "Bearer " + SBK, "Content-Type": cvFile.type || "application/octet-stream" },
+          body: cvFile
+        }).then(function (r) {
+          if (!r.ok) throw new Error("cv");
+          dati.cv_path = percorso;
+        });
+      };
+      entra().then(function (userId) {
+        return caricaCv(userId).then(function () { return salvaRichiesta(userId); });
+      }).then(function (r) { if (r && r.ok) fatto(); else errore(); }).catch(function () { errore(); });
       { id: "lampadina", voce: "Lampadina spenta", problema: "Non si accende la luce. Può essere solo la lampadina.", fai: true, consiglio: "Stacca la corrente di quella stanza, aspetta che sia fredda e cambiala con una uguale. Se la nuova non parte, chiama un elettricista.", mestiere: "elettricista", q: "elettricista", osm: ['["craft"="electrician"]'], nome: "elettricist" },
       { id: "salvavita", voce: "Salvavita scattato", problema: "È saltata la corrente dal salvavita.", fai: true, consiglio: "Stacca gli apparecchi e rialza l'interruttore una volta sola. Se scatta di nuovo, non aprirlo e chiama un elettricista.", mestiere: "elettricista", q: "elettricista", osm: ['["craft"="electrician"]'], nome: "elettricist" },
       { id: "presa", voce: "Presa bruciata o scintille", problema: "La presa è bruciata o fa scintille. Non toccarla.", fai: false, consiglio: "Non inserire spine e non aprire la presa. Serve un elettricista.", mestiere: "elettricista", q: "elettricista", osm: ['["craft"="electrician"]'], nome: "elettricist" },

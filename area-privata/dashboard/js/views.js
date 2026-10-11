@@ -3765,8 +3765,11 @@
     return n || dati.email || "Agente";
   }
 
-  function rigaAllegato(lab, nome, url) {
-    if (!nome && !url) return html`<li><strong>${lab}:</strong> non allegato</li>`;
+  function rigaAllegato(lab, nome, url, path) {
+    if (!nome && !url && !path) return html`<li><strong>${lab}:</strong> non allegato</li>`;
+    if (path) {
+      return html`<li><strong>${lab}:</strong> <a href="#" data-cv-path="${path}" target="_blank" rel="noopener">${nome || "Apri il curriculum"}</a></li>`;
+    }
     if (url) {
       return html`<li><strong>${lab}:</strong> <a href="${url}" target="_blank" rel="noopener">${nome || "Apri file"}</a></li>`;
     }
@@ -3832,7 +3835,7 @@
             </dl>
             <h3 style="margin:18px 0 8px;font-size:15px">Allegati</h3>
             <ul class="ra-all">
-              ${rigaAllegato("Curriculum", d.cv, d.cv_url)}
+              ${rigaAllegato("Curriculum", d.cv, d.cv_url, d.cv_path)}
               ${rigaAllegato("Portfolio", d.portfolio, d.portfolio_url)}
             </ul>
             ${d.info_domande
@@ -3843,6 +3846,12 @@
               <button type="button" class="btn-in" id="ra-approva" ${r.stato === "accettata" ? "disabled" : ""}>${r.stato === "accettata" ? "Già approvato" : "Approva agente"}</button>
             </div>
           </div>`.s;
+        el.querySelectorAll("[data-cv-path]").forEach((a) => {
+          const percorso = a.getAttribute("data-cv-path");
+          window.acDb.storage.from("marketplace-candidature").createSignedUrl(percorso, 3600).then((r) => {
+            if (r.data && r.data.signedUrl) a.href = r.data.signedUrl;
+          });
+        });
         el.querySelector("#ra-indietro").addEventListener("click", carica);
         el.querySelector("#ra-info").addEventListener("click", () => richiediInfo(r, () => vediAgente(Object.assign({}, r, { dati: r.dati }))));
         el.querySelector("#ra-approva").addEventListener("click", () => approvaAgente(r, carica));

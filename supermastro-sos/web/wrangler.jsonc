@@ -1,0 +1,33 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "main": ".open-next/worker.js",
+  "name": "supermastro-sos",
+  "compatibility_date": "2025-05-05",
+  "workers_dev": true,
+  "vars": {
+    "NEXT_PUBLIC_SUPABASE_URL": "https://edsvmnxojsmknjuhobqa.supabase.co",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_QbYv61SkMkjA9_GGb1hhOA_6v6GEw87",
+    "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY": "sb_publishable_QbYv61SkMkjA9_GGb1hhOA_6v6GEw87",
+    "NEXT_PUBLIC_SITE_URL": "https://supermastro.anchecasa.it",
+    "ADMIN_EMAILS": "palumbofernando12@gmail.com",
+    "GEMINI_VIDEO_MODEL": "gemini-3.7-flash",
+    "GEMINI_VIDEO_MODEL_PRO": "gemini-3.1-pro-preview"
+  },
+  "compatibility_flags": [
+    "nodejs_compat",
+    "global_fetch_strictly_public"
+  ],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "services": [
+    {
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "supermastro-sos"
+    }
+  ],
+  "images": {
+    "binding": "IMAGES"
+  }
+}

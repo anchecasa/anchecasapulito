@@ -1,6 +1,7 @@
 /* Avvio dell'app AncheCasa: il cuore (main.js) più tutte le parti. */
 import { core, avvia } from "./main.js";
 import { installa as schede } from "./schede.js";
+import { installa as rubrica } from "./rubrica.js";
 import { installa as aziende } from "./viste-aziende.js";
 import { installa as rete } from "./viste-rete.js";
 import { installa as direzione } from "./viste-direzione.js";
@@ -13,9 +14,11 @@ import { installa as sicurezza } from "./viste-sicurezza.js";
 import { installa as flash } from "./viste-flash.js";
 import { installa as subappalti } from "./viste-sub.js";
 import { installa as magazzino } from "./viste-magazzino.js";
+import { installa as pulsanti } from "./viste-pulsanti.js";
 
 core.HOOK = { scheda: {}, dopoSalva: {}, primaSalva: {}, dopoScheda: {} };
 schede(core);
+rubrica(core);
 aziende(core);
 rete(core);
 direzione(core);
@@ -28,6 +31,7 @@ sicurezza(core); // fascicolo di cantiere e scadenze: collegamenti a Sicurezza, 
 flash(core); // Sopralluogo Flash: nota vocale, stima, link del cliente (#/stima/…), dossier dell'ufficio, prezzari
 subappalti(core); // dopo flash: subappalti, pagamenti su misura, Profit Guard, offerte (#/offerta/…), preventivo ufficiale
 magazzino(core); // movimenti di magazzino, mezzi nei cantieri, costi reali del cantiere
+pulsanti(core); // dashboard a pulsanti: privato, azienda, fornitore, iscrizioni admin
 avvia();
 
 // App installabile: copia dei file per aprirla subito (solo su https, non in prova).

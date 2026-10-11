@@ -47,7 +47,7 @@ function qVero() {
 /* MOTORE PROVA                                                              */
 /* ======================================================================== */
 function qProva() {
-  const CHIAVE = "anchecasa-app-prova2-v6";
+  const CHIAVE = "anchecasa-app-prova2-v7";
   const adesso = () => new Date().toISOString();
   const giorni = (n) => new Date(Date.now() + n * 864e5).toISOString().slice(0, 10);
   const fa = (ore) => new Date(Date.now() - ore * 3600e3).toISOString();
@@ -64,11 +64,12 @@ function qProva() {
       { chiave: "rivendita", valore: { percentuale: 30 } },
       { chiave: "segnalazioni", valore: { premio: "" } },
       { chiave: "passaggio_impresa", valore: { interventi: 20, media: 4.5 } },
+      { chiave: "prezzi_visibili", valore: false },
     ]);
     T("app_org", [
       { id: "o-gc", nome: "AncheCasa General Contractor", tipo: "gc", piva: "", citta: "Roma", regione: "Lazio", telefono: "", email: "", descrizione: "", titolare: "u-admin", stato: "attiva", creato: fa(900) },
-      { id: "o-imp", nome: "Edil Esempio Srl", tipo: "impresa", piva: "00000000002", citta: "Roma", regione: "Lazio", telefono: "000 000 0201", email: "info@esempio.it", descrizione: "Impresa di ESEMPIO per la prova.", titolare: "u-impresa", stato: "attiva", creato: fa(800) },
-      { id: "o-forn", nome: "Laterizi Esempio", tipo: "fornitore", piva: "", citta: "Latina", regione: "Lazio", telefono: "000 000 0202", email: "", descrizione: "Fornitore di ESEMPIO: materiali e noleggio.", titolare: "u-fornitore", stato: "attiva", creato: fa(700) },
+      { id: "o-imp", nome: "Edil Esempio Srl", tipo: "impresa", ateco: ["41.20"], piva: "00000000002", citta: "Roma", regione: "Lazio", telefono: "000 000 0201", email: "info@esempio.it", descrizione: "Impresa di ESEMPIO per la prova.", titolare: "u-impresa", stato: "attiva", creato: fa(800) },
+      { id: "o-forn", nome: "Laterizi Esempio", tipo: "fornitore", ateco: ["46.73"], piva: "", citta: "Latina", regione: "Lazio", telefono: "000 000 0202", email: "", descrizione: "Fornitore di ESEMPIO: materiali e noleggio.", titolare: "u-fornitore", stato: "attiva", creato: fa(700) },
       { id: "o-part", nome: "Partner Esempio Srl", tipo: "partner", piva: "", citta: "Roma", regione: "Lazio", telefono: "000 000 0203", email: "", descrizione: "Impresa partner di ESEMPIO.", titolare: "u-partner", stato: "attiva", creato: fa(600) },
     ]);
     T("app_org_membri", [

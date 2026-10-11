@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="it">
 <head>
   <meta charset="UTF-8">
@@ -6,6 +6,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#1f4d7a">
+  <!-- 11.10.2026: app installabile dal telefono (manifest.webmanifest, sw.js) -->
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="apple-mobile-web-app-title" content="AncheCasa">
   <meta http-equiv="Cache-Control" content="no-store">
   <title>AncheCasa · Area riservata</title>
   <link rel="icon" href="/favicon.ico" sizes="48x48">
@@ -17,6 +20,10 @@
   <link rel="stylesheet" href="css/admin-task.css?v=4">
   <link rel="stylesheet" href="css/energia.css">
   <link rel="stylesheet" href="css/magazine-admin.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="css/contratto-firma.css?v=1">
+  <link rel="stylesheet" href="css/home.css?v=1">
+  <link rel="stylesheet" href="css/aspetto-dock.css?v=1">
 </head>
 <body>
   <div class="stage">
@@ -26,6 +33,12 @@
     <div class="app-frame">
       <aside class="side">
         <div class="side-sticky">
+          <!-- 11.10.2026: da computer data e orologio in alto a sinistra e icone rapide, come la dashboard «viste» (css/aspetto-dock.css). Sul telefono sono nascosti. -->
+          <div class="when" aria-label="Data e ora">
+            <div class="dock-date"><span class="dock-day" id="when-day">00</span><span class="dock-mon" id="when-mon">MES</span></div>
+            <div class="dock-time"><span id="when-h">00</span><span class="clock-sep" aria-hidden="true">:</span><span id="when-m">00</span></div>
+          </div>
+          <nav class="side-rail" id="rail" aria-label="Funzioni rapide"></nav>
           <div class="side-brand">
             <a class="mark" id="brand-link" href="#/" aria-label="AncheCasa, vai alla tua bacheca"><img src="../assets/logo/anchecasa-orizzontale-trasparente.png?v=3" alt="AncheCasa"></a>
             <span class="nav-lab" id="nav-lab" hidden></span>
@@ -36,6 +49,7 @@
       </aside>
 
       <main class="main">
+        <div class="head-bar"><a class="top-logo" id="head-logo" href="#/" aria-label="AncheCasa"><img src="../assets/logo/anchecasa-orizzontale-trasparente.png?v=3" alt="AncheCasa"></a></div>
         <div class="topbar">
           <h1><span id="page-title">Cruscotto</span><span class="sub" id="page-sub"></span></h1>
           <div class="top-meta">
@@ -61,13 +75,20 @@
   <script src="js/store.js"></script>
   <script src="js/ui.js"></script>
   <script src="js/cartina-italia.js"></script>
-  <script src="js/views.js?v=5"></script>
+  <script src="js/views.js?v=6"></script>
   <script src="js/rete-proposte.js?v=2"></script>
   <script src="js/direzione.js?v=2"></script>
   <script src="js/testi-rete.js?v=1"></script>
-  <script src="js/contratti.js?v=1"></script>
+  <script src="js/contratti-modelli.js?v=1"></script>
+  <script src="js/contratto-firma.js?v=1"></script>
+  <script src="js/contratti.js?v=2"></script>
   <script src="js/energia.js"></script>
   <script src="js/magazine-admin.js"></script>
-  <script src="js/app.js?v=4"></script>
+  <script src="js/bandi-admin.js?v=1"></script>
+  <script src="js/funzioni-interne.js?v=2"></script>
+  <script src="js/appunti-francesco.js?v=2"></script>
+  <script src="js/home.js?v=1"></script>
+  <script src="js/app.js?v=10"></script>
+  <script>if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(function () {});</script>
 </body>
 </html>

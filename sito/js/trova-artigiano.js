@@ -276,6 +276,7 @@
       return '<article class="sm-a-riga' + (x.rete ? " is-rete" : "") + '" data-i="' + i + '"><button type="button" class="n" data-mappa="' + i + '" aria-label="Mostra sulla cartina">' + (i + 1) + '</button>' +
         '<div class="tx"><strong>' + esc(x.nome) + "</strong><small>" + distanza(x.dist) + (x.rete ? " · Certificato DM 37/08" : "") + (x.indirizzo ? " · " + esc(x.indirizzo) : "") + "</small></div>" +
         '<div class="az">' + (x.tel ? '<a class="btn" href="tel:' + esc(x.tel.replace(/\s/g, "")) + '">Chiama</a>' : '<a class="btn linea" target="_blank" rel="noopener" href="' + esc(mapsUrl(x)) + '">Apri e chiama</a>') +
+      '<button type="button" class="btn linea" data-scrivi="' + esc(x.nome || "") + '">Scrivi</button>' +
         '<button type="button" class="btn linea" data-mappa="' + i + '">Cartina</button></div></article>';
     }).join("");
   }
@@ -285,6 +286,23 @@
     if (riga && window.matchMedia("(min-width: 900px)").matches) riga.scrollIntoView({ block: "nearest", behavior: "smooth" });
   }
   document.addEventListener("click", function (e) {
+    var scriviA = e.target.closest("[data-scrivi]");
+    if (scriviA && window.IscrizioneUnica) {
+      var nome = scriviA.getAttribute("data-scrivi") || "l'artigiano";
+      var gia = IscrizioneUnica.leggiBozza();
+      if (gia && gia.sessione) {
+        alert("Sei già iscritto. Puoi scrivere a " + nome + ".");
+        return;
+      }
+      IscrizioneUnica.chiedi({
+        da: "sito",
+        privacy: "privacy.html",
+        nota: nome,
+        precompila: { categoria: "privato" },
+        tornato: function () { alert("Torni a scrivere a " + nome + "."); }
+      });
+      return;
+    }
     var b = e.target.closest("[data-mappa]");
     if (!b) return;
     var i = +b.getAttribute("data-mappa"), mk = stato.segni[i];

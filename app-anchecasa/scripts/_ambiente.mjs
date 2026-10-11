@@ -13,7 +13,7 @@ import { spawnSync } from "node:child_process";
 
 export const PROJECT_REF = "edsvmnxojsmknjuhobqa";
 export const APP = resolve(dirname(fileURLToPath(import.meta.url)), "..");
-export const DOMINIO_APP = "app.anchecasa.it";
+export const DOMINIO_APP = "entra.anchecasa.it";
 export const URL_APP = `https://${DOMINIO_APP}`;
 export const PROGETTO_PAGES = "app-anchecasa";
 const SUPERMASTRO = resolve(APP, "..", "..", "04-SuperMastro");

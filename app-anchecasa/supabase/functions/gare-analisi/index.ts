@@ -30,10 +30,10 @@ const PROMPT = `Sei l'ufficio gare di un'impresa edile italiana. Leggi il bando 
 Non inventare: se un dato non c'è scrivi vuoto o null.`;
 
 function cors(origin: string | null): Record<string, string> {
-  // Se DIAGNOSI_ORIGINI è vuota tutti i siti sono ammessi; se c'è, si aggiunge sempre l'app (app.anchecasa.it o APP_URL).
+  // Se DIAGNOSI_ORIGINI è vuota tutti i siti sono ammessi; se c'è, si aggiunge sempre l'app (entra.anchecasa.it o APP_URL).
   const base = (Deno.env.get("DIAGNOSI_ORIGINI") || "").split(",").map((s) => s.trim()).filter(Boolean);
-  const app = (Deno.env.get("APP_URL") || "https://app.anchecasa.it").replace(/\/+$/, "");
-  const ammessi = base.length ? [...base, app, "https://app.anchecasa.it"] : [];
+  const app = (Deno.env.get("APP_URL") || "https://entra.anchecasa.it").replace(/\/+$/, "");
+  const ammessi = base.length ? [...base, app, "https://entra.anchecasa.it"] : [];
   const ok = !ammessi.length || (origin && ammessi.includes(origin));
   const h: Record<string, string> = {
     "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",

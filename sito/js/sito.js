@@ -179,19 +179,19 @@
 
   const family = {
     privato: {
-      note: "Il privato non vede Opportunità. Sotto il separatore: Credit, Aste immobiliari, Impostazioni.",
-      sub: ["Credit", "Aste immobiliari", "Impostazioni"],
+      note: "Sotto il separatore: Impostazioni.",
+      sub: ["Impostazioni"],
       opp: false
     },
     azienda: {
-      note: "L’azienda vede Opportunità. Sotto: Credit, Aste, Sicurezza, Impostazioni. Dal profilo approfondito si accendono Gare, Predict, BIM 5D, Condomini o tracking.",
-      sub: ["Credit", "Aste immobiliari", "Sicurezza", "Impostazioni"],
-      opp: true
+      note: "Sotto: Sicurezza e Impostazioni. Dal profilo si accendono i moduli del mestiere.",
+      sub: ["Sicurezza", "Impostazioni"],
+      opp: false
     },
     agente: {
-      note: "L’agente vede Opportunità. Sotto: Catena, Guadagno, Inviti, Impostazioni. Solo l’agente guadagna, e il guadagno scende sulla catena.",
+      note: "Sotto: Catena, Guadagno, Inviti, Impostazioni. Solo l’agente guadagna, e il guadagno scende sulla catena.",
       sub: ["Catena", "Guadagno", "Inviti", "Impostazioni"],
-      opp: true
+      opp: false
     }
   };
 

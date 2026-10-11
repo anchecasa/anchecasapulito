@@ -10,8 +10,12 @@ export const CONFIG = {
   googleMapId: "DEMO_MAP_ID",
   funzioneAnalisi: "supermastro-analisi",
   areaPrivata: "https://areaprivata.anchecasa.it",
+  indirizzo: "https://entra.anchecasa.it",
   privacyUrl: "",            // indirizzo dell'informativa privacy (da mettere prima di andare online)
   premioSegnalazione: "",    // testo del premio per chi segnala (vuoto finché Nando non lo decide)
   passaggio: { interventi: 20, media: 4.5 }, // requisiti per passare da artigiano a Impresa (li decide Nando)
   versione: "2.7.0 · 11.10.2026",
+  // Acceso solo dopo che Nando attiva il fornitore in Supabase → Authentication → Providers.
+  accessoGoogle: false,
+  accessoApple: false,
 };

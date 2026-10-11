@@ -3,7 +3,7 @@
  * Passo 2: funzioni Supabase dell'app AncheCasa (sdi-gateway, sopralluogo-flash, subappalti-mail, gare-analisi).
  * - pubblica le funzioni con «verify JWT» spento (il controllo di chi entra lo fanno le funzioni);
  * - imposta i secrets che si possono creare da soli: APP_URL e SDI_WEBHOOK_SEGRETO (casuale, mai mostrato);
- * - controlla che le funzioni rispondano e che accettino chiamate da https://app.anchecasa.it
+ * - controlla che le funzioni rispondano e che accettino chiamate da https://entra.anchecasa.it
  *   (se DIAGNOSI_ORIGINI le blocca, la ricostruisce aggiungendo l'app, senza togliere i siti che funzionano);
  * - elenca i secrets che mancano e che servono solo per le mail (MAIL_*): senza, gli inviti restano «da inviare».
  * Uso:  node scripts/online-2-funzioni.mjs
@@ -16,7 +16,7 @@ import { PROJECT_REF, URL_APP, ENV, ferma, lancia, manca, scrivi, segreto } from
 
 const FUNZIONI = ["sdi-gateway", "sopralluogo-flash", "subappalti-mail", "gare-analisi"];
 const SITI_NOTI = [
-  "https://anchecasa.it", "https://www.anchecasa.it", "https://app.anchecasa.it", "https://areaprivata.anchecasa.it",
+  "https://anchecasa.it", "https://www.anchecasa.it", "https://entra.anchecasa.it", "https://areaprivata.anchecasa.it",
   "https://supermastro.anchecasa.it", "https://sicura.anchecasa.it", "https://magazine.anchecasa.it", "http://localhost:3000",
 ];
 const BASE = `https://${PROJECT_REF}.supabase.co/functions/v1`;
@@ -87,7 +87,7 @@ for (const f of ["sdi-gateway", "sopralluogo-flash", "subappalti-mail"]) {
   scrivi(`  ${f} risponde e blocca chi non è entrato.`);
 }
 
-// 4. Le funzioni usate dall'app accettano chiamate da https://app.anchecasa.it?
+// 4. Le funzioni usate dall'app accettano chiamate da https://entra.anchecasa.it?
 const daControllare = [...FUNZIONI, "supermastro-analisi"];
 const bloccate = [];
 for (const f of daControllare) if ((await ammette(f, URL_APP)) === false) bloccate.push(f);

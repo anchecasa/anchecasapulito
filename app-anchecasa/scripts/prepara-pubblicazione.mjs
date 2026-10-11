@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Prepara la cartella dist/ dell'app AncheCasa per Cloudflare Pages (app.anchecasa.it).
+ * Prepara la cartella dist/ dell'app AncheCasa per Cloudflare Pages (entra.anchecasa.it).
  * Copia SOLO i file che servono all'app: niente sql/, supabase/, docs, LEGGIMI, script.
  * Aggiunge le intestazioni di sicurezza (_headers) e controlla che non ci siano chiavi segrete.
  *

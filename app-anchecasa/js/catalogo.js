@@ -7,7 +7,7 @@ export const MODULI = [
   { id: "cantieri", nome: "Cantiere e SAL", ico: "gru", desc: "Giornale dei lavori, presenze, SAL, cronoprogramma, DDT, app del cliente", tipi: ["cantiere"] },
   { id: "gare", nome: "Gare", ico: "gara", desc: "Analisi del bando con l'IA, partecipa sì o no, esito, gara vinta → cantiere", tipi: ["gara"] },
   { id: "lotti", nome: "Lotti e subappalti", ico: "lotti", desc: "Pubblica lotti e forniture, ricevi offerte da imprese e fornitori", tipi: ["lotto"] },
-  { id: "centralino", nome: "Centralino AncheVoice", ico: "tel", desc: "Registro chiamate e richiami (il numero AncheVoice si collega a parte)", div: "AncheVoice", tipi: ["chiamata"] },
+  { id: "centralino", nome: "Registro chiamate", ico: "tel", desc: "Registro chiamate e richiami. Non è in vendita: lo vede solo chi lo ha già attivo.", tipi: ["chiamata"], nascosto: true },
   { id: "magazzino", nome: "Magazzino e mezzi", ico: "box", desc: "Giacenze con scorta minima, mezzi, scadenze e manutenzioni", tipi: ["articolo", "mezzo"] },
 ];
 export const PREZZI_PREDEFINITI = { base_impresa: 49, base_fornitore: 99, base_partner: 49, base_artigiano: 14.9, ufficio: 0, sicurezza: 9, sicantiere: 19, cantieri: 29, gare: 29, lotti: 9, centralino: 19, magazzino: 9, pacchetto: 69 };

@@ -4,6 +4,7 @@ import { I, esc, voce, lista, sez, stato, num, btn, campo, vuoto, avviso, virgol
 import { Q } from "./q.js";
 import { TIPI, R, euro, giornoIt, semaforo, semaforoDipendente, statoScheda } from "./schede.js";
 import { MODULI, PREZZI_PREDEFINITI, REGIONI, BASE } from "./catalogo.js";
+import { prezziVisibili } from "./viste-pulsanti.js";
 
 export function installa(core) {
   const { S, V, AZIONI, FORM, PROFILI, PROFILO_EXTRA, vai, render, HOOK } = core;
@@ -63,40 +64,47 @@ export function installa(core) {
   };
 
   V["im-moduli"] = async () => {
-    const [mod, pr] = await Promise.all([moduliOrg(S.org), prezziModuli()]);
-    const extra = MODULI.filter((m) => !m.compreso);
+    const [mod, pr, visibili] = await Promise.all([moduliOrg(S.org), prezziModuli(), prezziVisibili()]);
+    const extra = MODULI.filter((m) => !m.compreso && (!m.nascosto || mod.stato(m.id) === "attivo"));
     const somma = extra.reduce((s, m) => s + Number(pr[m.id] || 0), 0);
     const pacc = mod.stato("pacchetto");
     const tipoOrg = orgDi(S.org).tipo || "impresa";
     const B = BASE[tipoOrg] || BASE.impresa;
     const sb = mod.stato("base");
+    const pulita = (t) => (visibili ? t : String(t).replace(/\s*\([^)]*\d[^)]*\)/g, ""));
+    const chiedi = (id, etichetta) => btn(etichetta || "Richiedi l'attivazione", "chiedi-modulo:" + id, etichetta ? "" : "piccolo");
     return {
       t: "Abbonamento e moduli",
-      h: `<div class="pad"><p class="sotto">Prezzi al mese, pagamento annuale. Dopo la richiesta AncheCasa ti contatta per il pagamento e attiva.</p>
-        <div class="card"><div class="riga"><div class="cresci"><b>${esc(B.nome)}</b><small>${euro(pr["base_" + tipoOrg] ?? pr.base_impresa)} al mese</small></div>${sb === "attivo" ? stato("verde", "Attivo") : sb === "richiesto" ? stato("giallo", "Richiesto") : tipoOrg === "gc" ? "" : btn("Chiedi", "chiedi-modulo:base", "piccolo")}</div><ul class="passi" style="margin-top:8px">${B.comprende.map((x) => `<li>${esc(x)}</li>`).join("")}</ul></div><div style="height:16px"></div>
+      h: `<div class="pad"><p class="sotto">${visibili ? "Prezzi al mese, pagamento annuale. Dopo la richiesta AncheCasa ti contatta per il pagamento e attiva." : "Prova gratis oppure richiedi l'attivazione. Il pagamento si collega dopo."}</p>
+        <div class="card"><div class="riga"><div class="cresci"><b>${esc(B.nome)}</b>${sb === "attivo" || sb === "richiesto" ? "" : (visibili ? `<small>${euro(pr["base_" + tipoOrg] ?? pr.base_impresa)} al mese</small>` : `<small>Prova gratis</small>`)}</div>${sb === "attivo" ? stato("verde", "Attivo") : sb === "richiesto" ? stato("giallo", "Richiesto") : tipoOrg === "gc" ? "" : chiedi("base")}</div><ul class="passi" style="margin-top:8px">${B.comprende.map((x) => `<li>${esc(pulita(x))}</li>`).join("")}</ul></div><div style="height:16px"></div>
         ${tipoOrg === "fornitore" ? "" : `<h2 class="tit-sez">Moduli in più</h2>
-        <div class="eroe"><h3>Tutti i moduli · ${euro(pr.pacchetto)} al mese</h3><p>Sicurezza, cantieri, gare, lotti, centralino e magazzino insieme, invece di ${euro(somma)}.</p>${pacc === "attivo" ? stato("verde", "Attivo") : pacc === "richiesto" ? stato("giallo", "Richiesto") : btn("Chiedi tutti i moduli", "chiedi-modulo:pacchetto")}</div><div style="height:16px"></div>
+        <div class="eroe"><h3>Tutti i moduli${visibili ? " · " + cifra(pr.pacchetto) + " al mese" : ""}</h3><p>${visibili ? "Sicurezza, cantieri, gare, lotti e magazzino insieme, invece di " + cifra(somma) + "." : "Sicurezza, cantieri, gare, lotti e magazzino insieme."}</p>${pacc === "attivo" ? stato("verde", "Attivo") : pacc === "richiesto" ? stato("giallo", "Richiesto") : btn("Richiedi l'attivazione", "chiedi-modulo:pacchetto")}</div><div style="height:16px"></div>
         ${lista(extra.map((m) => {
           const st = mod.stato(m.id);
-          const dx = st === "attivo" ? stato("verde", "Attivo") : st === "richiesto" ? stato("giallo", "Richiesto") : `<span class="prezzo-piccolo">${euro(pr[m.id])}/mese</span>`;
+          const dx = st === "attivo" ? stato("verde", "Attivo") : st === "richiesto" ? stato("giallo", "Richiesto") : (visibili ? `<span class="prezzo-piccolo">${euro(pr[m.id])}/mese</span>` : `<span class="prezzo-piccolo">Prova gratis</span>`);
           return voce(m.ico, esc(m.nome) + (m.div ? ` <small class="div">${esc(m.div)}</small>` : ""), esc(m.desc), st === "attivo" ? "mod/" + m.id : "modulo-info/" + m.id, st === "attivo" ? "verde" : "", dx);
         }))}`}
         ${mod.attivo("base") && tipoOrg !== "fornitore" ? `<div style="height:12px"></div>${lista([voce("ufficio", "Ufficio", "Compreso nell'abbonamento", "mod/ufficio", "verde", stato("verde", "Attivo"))])}` : ""}
-        <div style="height:16px"></div>${sez("Sempre compresi", lista([voce("stella", "Recensioni e vetrina", "Le recensioni dei tuoi clienti", "im-recensioni", "verde"), voce("scudo", "Corsi e servizi AncheSicura", "Prezzi sotto il mercato", "corsi-listino", "blu"), voce("euro", "Rivendi la sicurezza ai tuoi clienti", "Ti riconosciamo il 30%", "im-rivendi", "arancio"), voce("box", "Lotti degli altri e offerte", "Subappalti e forniture aperti", "fo-lotti", "blu")]))}</div>`,
+        <div style="height:16px"></div>${sez("Sempre compresi", lista([voce("stella", "Recensioni e vetrina", "Le recensioni dei tuoi clienti", "im-recensioni", "verde"), voce("scudo", "Corsi e servizi AncheSicura", visibili ? "Prezzi sotto il mercato" : "Per la tua azienda", "corsi-listino", "blu"), voce("euro", "Rivendi la sicurezza ai tuoi clienti", visibili ? "Ti riconosciamo il 30%" : "Per i tuoi clienti", "im-rivendi", "arancio"), voce("box", "Lotti degli altri e offerte", "Subappalti e forniture aperti", "fo-lotti", "blu")]))}</div>`,
     };
   };
   V["modulo-info"] = async (id) => {
     const m = MODULI.find((x) => x.id === id); const pr = await prezziModuli(); const mod = await moduliOrg(S.org);
+    const visibili = await prezziVisibili();
     if (!m) return { t: "Modulo", h: vuoto("Modulo non trovato.") };
     const st = mod.stato(id);
+    if (m.nascosto && st !== "attivo") return { t: m.nome, h: `<div class="pad">${avviso("Questo modulo non è in vendita. Resta visibile solo per chi lo ha già attivo.")}</div>` };
+    const prezzo = visibili ? `<p class="prezzo" style="color:#fff">${euro(pr[id])} <small style="color:rgba(255,255,255,.8)">al mese, pagamento annuale</small></p>` : `<p class="prezzo" style="color:#fff">Prova gratis</p>`;
     return {
       t: m.nome,
-      h: `<div class="pad"><div class="eroe"><h3>${esc(m.nome)}</h3><p>${esc(m.desc)}</p><p class="prezzo" style="color:#fff">${euro(pr[id])} <small style="color:rgba(255,255,255,.8)">al mese, pagamento annuale</small></p></div><div style="height:14px"></div>
+      h: `<div class="pad"><div class="eroe"><h3>${esc(m.nome)}</h3><p>${esc(m.desc)}</p>${prezzo}</div><div style="height:14px"></div>
         ${lista(m.tipi.map((t) => voce(TIPI[t].ico, esc(TIPI[t].plur), "", null, "blu")))}<div style="height:14px"></div>
-        ${st === "richiesto" ? avviso("Richiesta inviata: AncheCasa ti contatta per attivarlo.") : core.gestisco(S.org) ? btn("Chiedi l'attivazione", "chiedi-modulo:" + id) : avviso("Lo può attivare il titolare dell'azienda.")}</div>`,
+        ${st === "richiesto" ? avviso("Richiesta inviata: AncheCasa ti contatta per attivarlo.") : core.gestisco(S.org) ? btn("Richiedi l'attivazione", "chiedi-modulo:" + id) : avviso("Lo può attivare il titolare dell'azienda.")}</div>`,
     };
   };
   AZIONI["chiedi-modulo:"] = async (id) => {
+    const chiesto = MODULI.find((x) => x.id === id);
+    if (chiesto && chiesto.nascosto) { toast("Questo modulo non è in vendita.", "errore"); return; }
     try {
       const pr = await prezziModuli();
       await Q.ins("app_moduli", { org: S.org, modulo: id, stato: "richiesto", prezzo_mese: pr[id] ?? null });

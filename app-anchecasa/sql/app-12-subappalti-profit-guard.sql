@@ -337,6 +337,10 @@ begin
   select * into v_s from marketplace.app_sopralluoghi where id = p_sopralluogo;
   if not found then raise exception 'sopralluogo_non_trovato'; end if;
   if not marketplace.app_fe_scrive(v_s.org) then raise exception 'non_autorizzato'; end if;
+  if not (marketplace.is_admin() or marketplace.app_modulo_attivo(v_s.org, 'base')
+      or (to_regclass('marketplace.app_rete') is not null and exists (select 1 from marketplace.app_rete where utente = auth.uid() and stato = 'attivo'))) then
+    raise exception 'Subappalti è nell''abbonamento impresa';
+  end if;
   if p_scadenza is null or p_scadenza < current_date then raise exception 'scadenza_non_valida'; end if;
   if marketplace.app_milestone_errore(p_pagamenti) is not null then raise exception '%', marketplace.app_milestone_errore(p_pagamenti); end if;
   if exists (select 1 from marketplace.app_computi where sopralluogo = p_sopralluogo and blindato_il is not null) then raise exception 'preventivo_blindato'; end if;

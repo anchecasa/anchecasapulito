@@ -282,9 +282,12 @@ export function installa(core) {
     const v = (k) => (tutte.find((x) => x.chiave === k) || {}).valore || {};
     const pm = Object.assign({}, PREZZI_PREDEFINITI, v("prezzi_moduli")), pv = v("provvigioni"), riv = v("rivendita"), seg = v("segnalazioni"), pas = v("passaggio_impresa");
     const n = (name, val, step) => `<input name="${name}" type="number" step="${step || "0.01"}" min="0" value="${esc(val ?? "")}">`;
+    const vis = v("prezzi_visibili");
+    const prezziOn = vis === true || vis === "true";
     return {
       t: "Prezzi e percentuali",
       h: `<div class="pad"><form data-form="ad-impostazioni" novalidate>
+        ${sez("Prezzi in vista", `<label class="riga"><input type="checkbox" name="prezzi_visibili" ${prezziOn ? "checked" : ""}><span>Mostra le cifre alle aziende. Spento: sui pulsanti si legge solo «Prova gratis» o «Richiedi l'attivazione».</span></label>`)}
         ${sez("Abbonamenti (€ al mese)", `<div class="griglia2">${[["base_artigiano", "Artigiano"], ["base_impresa", "Impresa"], ["base_partner", "Impresa partner"], ["base_fornitore", "Fornitore"]].map(([k, t]) => campo(t, n("pm_" + k, pm[k]))).join("")}</div>`)}
         ${sez("Moduli in più (€ al mese)", `<div class="griglia2">${["pacchetto", ...MODULI.filter((m) => !m.compreso).map((m) => m.id)].map((k) => campo(MOD_NOMI[k], n("pm_" + k, pm[k]))).join("")}</div>`)}
         ${sez("Provvigioni della rete (%)", `<div class="griglia2">${campo("Quota della rete sul venduto", n("pv_percentuale_vendita", pv.percentuale_vendita, "0.1"))}${campo("A chi porta il cliente", n("pv_chi_porta", pv.chi_porta ?? 70, "1"))}${campo("Allo sviluppo rete", n("pv_sviluppo", pv.sviluppo, "1"))}${campo("Al capo area", n("pv_capoarea", pv.capoarea, "1"))}${campo("Al Responsabile Rete Italia", n("pv_reteitalia", pv.reteitalia ?? 5, "1"))}${campo("Sub-agente: sua parte", n("pv_subagente", pv.subagente, "1"))}${campo("Sub-agente: al suo agente", n("pv_agente", pv.agente, "1"))}</div>`)}
@@ -297,7 +300,9 @@ export function installa(core) {
   FORM["ad-impostazioni"] = async (f) => {
     const num = (k) => (f.elements[k].value === "" ? null : Number(f.elements[k].value));
     const pm = { ufficio: 0 }; ["base_artigiano", "base_impresa", "base_partner", "base_fornitore", "pacchetto", ...MODULI.filter((m) => !m.compreso).map((m) => m.id)].forEach((k) => { pm[k] = num("pm_" + k); });
+    const vis = !!f.prezzi_visibili.checked;
     const righe = [
+      { chiave: "prezzi_visibili", valore: vis },
       { chiave: "prezzi_moduli", valore: pm },
       { chiave: "provvigioni", valore: { percentuale_vendita: num("pv_percentuale_vendita"), chi_porta: num("pv_chi_porta"), sviluppo: num("pv_sviluppo"), capoarea: num("pv_capoarea"), reteitalia: num("pv_reteitalia"), subagente: num("pv_subagente"), agente: num("pv_agente") } },
       { chiave: "rivendita", valore: { percentuale: num("riv_percentuale") } },
@@ -305,6 +310,8 @@ export function installa(core) {
       { chiave: "passaggio_impresa", valore: { interventi: num("pas_interventi"), media: num("pas_media") } },
     ];
     for (const r of righe) await Q.upd("app_impostazioni", { chiave: r.chiave }, { valore: r.valore, aggiornato: new Date().toISOString() });
+    const gia = await Q.uno("app_impostazioni", { chiave: "prezzi_visibili" }).catch(() => null);
+    if (!gia) await Q.ins("app_impostazioni", { chiave: "prezzi_visibili", valore: vis });
     _prezzi = null; toast("Salvato.");
   };
 }

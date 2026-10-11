@@ -169,6 +169,9 @@ begin
   select * into v_s from marketplace.app_sopralluoghi where id = p_sopralluogo;
   if not found then raise exception 'sopralluogo_non_trovato'; end if;
   if not (marketplace.app_fe_sistema() or v_s.agente = auth.uid() or marketplace.app_gestisce(v_s.org)) then raise exception 'non_autorizzato'; end if;
+  if to_regprocedure('marketplace.app_flash_controlla(uuid,uuid)') is not null then
+    perform marketplace.app_flash_controlla(v_s.org, v_s.agente);
+  end if;
   select valore into v_imp from marketplace.app_impostazioni where chiave = 'stima_flash';
   v_coef := coalesce((v_imp->'finitura'->>v_s.finitura)::numeric, 1);
   v_forb := coalesce((v_imp->>'forbice')::numeric, 0.12);
