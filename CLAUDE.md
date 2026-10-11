@@ -13,6 +13,52 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 11.10.2026 11:55 · Cursor — app AncheCasa 2.7 messa online per quanto si poteva da qui
+- Database: app-03 … app-13 eseguiti sul progetto ANCHECASA. Verifica dello script superata (18 lavorazioni, piani, fascicolo, bucket fascicolo/loghi/sopralluoghi, link cliente e fornitore, tabelle private non leggibili senza account, avviso scadenze già programmato). Lo script online-1 non si collega: la password nel file risponde «password authentication failed».
+- Funzioni: pubblicata solo sdi-gateway. Le altre si fermano con «Max number of functions reached for project, please upgrade Plan or disable spend cap» (100 funzioni già presenti). Il token Supabase nel file risponde 401. Usato il login della CLI già sul PC.
+- App: pubblicata su https://app-anchecasa.pages.dev (titolo AncheCasa). Il dominio app.anchecasa.it è stato staccato dal progetto vecchio e collegato a app-anchecasa, ma resta «pending» e l'indirizzo risponde 522/523. Il token Cloudflare nel file non è valido e da qui non si possono cambiare i record DNS.
+- Secrets impostati senza mostrarli: APP_URL, SDI_WEBHOOK_SEGRETO. Mancano MAIL_PROVIDER, MAIL_API_KEY, MAIL_MITTENTE, PRIVACY_URL, GEMINI_API_KEY.
+- File: `app-anchecasa/`, `CLAUDE.md`.
+
+### 11.10.2026 11:33 · Cursor — Francesco vede gli appunti entrando dal computer
+- Nell'area privata, se nome o mail contengono Francesco, la prima pagina è «Appunti». Gli altri admin trovano la voce accanto a Task. Provato in locale: la pagina elenca cosa è fatto e cosa manca, e un admin che non è Francesco resta su Iscritti.
+- Pubblicato su https://areaprivata.anchecasa.it, progetto `area-privata-produzione`, deployment `dpl_v3hXfywRTxoA8gDdkq4HhBka9HFh`. Lo script online risponde e contiene il titolo degli appunti.
+- File: `area-privata/dashboard/js/appunti-francesco.js`, `area-privata/dashboard/js/app.js`, `area-privata/dashboard/index.html`, `APPUNTI-PER-FRANCESCO.md`, `CLAUDE.md`.
+
+### 11.10.2026 ~11:45 · Claude — script per mettere online tutto senza passaggi a mano (NON eseguiti)
+- **Nuovi file**: `app-anchecasa/scripts/_ambiente.mjs` (legge gli accessi già presenti in `04-SuperMastro\web\.env.local`, non li mostra mai), `online-1-database.mjs` (esegue solo i file SQL mancanti app-08…13, uno per volta tutto-o-niente, prova pg_cron, verifica permessi e cartelle), `online-2-funzioni.mjs` (pubblica sdi-gateway, sopralluogo-flash, subappalti-mail, gare-analisi; crea APP_URL e SDI_WEBHOOK_SEGRETO casuale; usa la GEMINI_API_KEY già presente se manca; controlla che le funzioni accettino l'app), `online-3-app.mjs` (Cloudflare Pages «app-anchecasa», dominio app.anchecasa.it e DNS se manca, indirizzo dell'app tra quelli ammessi da Supabase Auth, controlli online), `online-tutto.mjs` (i tre in fila). In SuperMastro: `scripts/online-segreti-sos.mjs` (SOS_SHARE_SECRET e CRON_SECRET creati e allineati, valori mai mostrati).
+- **Cambiato nelle funzioni**: `gare-analisi`, `sdi-gateway`, `sopralluogo-flash`, `subappalti-mail` → se `DIAGNOSI_ORIGINI` è impostata, viene sempre ammessa anche l'app (`APP_URL` / https://app.anchecasa.it). `supermastro-analisi` non è stata toccata (file in sola lettura).
+- **Provato**: passo 1 su Postgres locale (esegue solo app-13, al secondo giro non fa niente); passi 2 e 3 con Supabase e Cloudflare simulati.
+
+### 11.10.2026 11:22 · Cursor — schema gare su Supabase, appunti per Francesco
+- Eseguiti sul progetto ANCHECASA `edsvmnxojsmknjuhobqa`, in ordine: `app-anchecasa/sql/app-01-supermastro.sql`, `app-anchecasa/sql/app-02-completa.sql`, `supabase/migrations/20261011103000_e_procurement.sql`. Controllo: tabelle `app_org` e `app_ep_*`, bucket `e-procurement`, ruolo `general_contractor_buyer`, cron `anchecasa-ep-chiudi-scadute`. Organizzazioni 0, Albo 0, admin di piattaforma 2. App-03 … app-13 non eseguiti. Nessuna service role. Cruscotto non pubblicato.
+- Appunti: `APPUNTI-PER-FRANCESCO.md` (copia uguale in `BIM-SICUR\ecosistema-anchecasa`).
+- File: `APPUNTI-PER-FRANCESCO.md`, `CLAUDE.md`.
+
+### 11.10.2026 11:15 · Cursor — SQL completo delle gare private copiato, non eseguito
+- In `supabase/migrations/20261011103000_e_procurement.sql` c’è lo schema intero che usa il cruscotto Next: gare, documenti, inviti, offerte a busta chiusa, registro. Va lanciato a mano dopo app-01 e app-02. Non eseguito da qui.
+- File: `supabase/migrations/20261011103000_e_procurement.sql`, `CLAUDE.md`.
+
+### 11.10.2026 10:45 · Cursor — chiave pubblica Supabase copiata nel cruscotto Next, solo in locale
+- Nel file locale `.env.local` di `BIM-SICUR\ecosistema-anchecasa` ci sono l’indirizzo `edsvmnxojsmknjuhobqa` e la chiave publishable già presente nel sito. Non committata. Nessuna chiave nuova sul pannello Supabase e nessuna service role.
+- File annotato: `CLAUDE.md`.
+
+### 11.10.2026 ~11:00 · Claude — app-anchecasa 2.7.0: Magazzino e Mezzi collegati al cantiere, logo della ditta, pubblicazione su Cloudflare Pages preparata (NON su Supabase, NON pubblicato)
+- **Nuovi file**: `app-anchecasa/sql/app-13-magazzino-mezzi.sql` (tabelle `app_mag_movimenti`, `app_mezzi_uso`; funzioni `app_mag_legge/scrive/operatore`, `app_mag_puo_muovere/usare`, `app_mag_in_cantiere`, `app_scadenza_imposta`, `app_costi_cantiere`, `app_logo_mio`; trigger scadenze dei mezzi verso `app_scadenze`; bucket pubblico `loghi`; `app_stima_pubblica` ora restituisce anche `ditta_logo`), `app-anchecasa/js/mag-api.js`, `app-anchecasa/js/viste-magazzino.js`, `app-anchecasa/scripts/prepara-pubblicazione.mjs`, `app-anchecasa/.gitignore` (`dist/`, `supabase/.temp/`).
+- **Cambiato nell'app**: `js/schede.js` (mezzo: «Bollo fino al» e «Costo al giorno»), `js/viste-flash.js` (logo nei Dati fiscali e nella pagina del cliente; «con finitura» solo se c'è), `js/flash-api.js`, `js/app.js`, `sw.js` (2.7.0), `js/config.js` (2.7.0), `LEGGIMI.md` (passo 13 e pubblicazione su Cloudflare Pages).
+- **Regole**: la giacenza del deposito resta in `articolo.dati.giacenza` (il semaforo «Da riordinare» continua a funzionare); i movimenti non si cancellano (si corregge con reso o inventario); scarico bloccato se in deposito non basta; un mezzo non può stare in due cantieri negli stessi giorni; i costi reali li vede solo chi gestisce la ditta; il lavoratore può registrare solo scarichi, resi e uso dei mezzi; la manodopera interna non è ancora nei costi (segnalato a schermo).
+- **Provato**: SQL due volte su Postgres locale (costo medio 7 €, giacenza, blocchi, sovrapposizione mezzi, costi cantiere 60 € materiali + 380 € mezzi, permessi lavoratore/estraneo, scadenze revisione/assicurazione/bollo/manutenzione); nel browser in modalità prova: magazzino, mezzi, costi del cantiere, logo, più le prove di Flash e subappalti rifatte senza errori; `prepara-pubblicazione.mjs` crea `dist/` con 37 file e nessuna chiave.
+
+### 11.10.2026 10:25 · Cursor — ruolo gare private rinominato, pulsante nel cruscotto Next
+- Nel cruscotto `BIM-SICUR\ecosistema-anchecasa` la voce e la card «Gestione e-Procurement & Subappalti» compaiono solo per admin o `general_contractor_buyer`. Non è l’area privata e non è online.
+- Lo SQL locale usa quel ruolo al posto di `corporate_buyer`. Non eseguito su Supabase.
+- File: `supabase/migrations/20261011103000_e_procurement.sql`, `CLAUDE.md`.
+
+### 11.10.2026 10:20 · Cursor — SQL gare private pronto, non eseguito su Supabase
+- La pagina admin delle gare private sta nel cruscotto Next `BIM-SICUR\ecosistema-anchecasa`, ramo `feature/e-procurement`, indirizzo `/admin/e-procurement`. Non è l’area privata e non è online.
+- Qui è copiata la migrazione da applicare a mano dopo `app-01` e `app-02`. Non crea un secondo albo: usa `marketplace.app_org` e aggiunge solo il ruolo `corporate_buyer`. CLI Supabase, Docker e `db push` non sono stati usati.
+- File: `supabase/migrations/20261011103000_e_procurement.sql`, `CLAUDE.md`.
+
 ### 11.10.2026 ~08:45 · Cursor — AncheBandi nella dashboard admin, non un sito a parte (NON pubblicato)
 - AncheBandi non ha un dominio suo. La voce «Bandi» sta nel menu admin, subito dopo «Iscritti registrati». L’indirizzo è `https://areaprivata.anchecasa.it/dashboard/#/admin/bandi`.
 - La pagina legge `public.anchebandi_feed_items`. Se lo schema non c’è ancora su Supabase, lo dice. In anteprima `?demo=admin` mostra tre gare con la scritta «Esempio».

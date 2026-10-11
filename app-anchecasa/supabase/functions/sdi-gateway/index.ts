@@ -23,7 +23,10 @@ import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 // Utilità di collegamento (come in gare-analisi)
 // ---------------------------------------------------------------------------
 function cors(origin: string | null): Record<string, string> {
-  const ammessi = (Deno.env.get("DIAGNOSI_ORIGINI") || "").split(",").map((s) => s.trim()).filter(Boolean);
+  // Se DIAGNOSI_ORIGINI è vuota tutti i siti sono ammessi; se c'è, si aggiunge sempre l'app (app.anchecasa.it o APP_URL).
+  const base = (Deno.env.get("DIAGNOSI_ORIGINI") || "").split(",").map((s) => s.trim()).filter(Boolean);
+  const app = (Deno.env.get("APP_URL") || "https://app.anchecasa.it").replace(/\/+$/, "");
+  const ammessi = base.length ? [...base, app, "https://app.anchecasa.it"] : [];
   const ok = !ammessi.length || (origin && ammessi.includes(origin));
   const h: Record<string, string> = {
     "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
