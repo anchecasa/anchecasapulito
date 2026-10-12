@@ -4,7 +4,7 @@
   const S = AC.store;
   const D = AC.date;
 
-  /* CONGELATO 20.09.2026. Famiglie e pulsanti. Non cambiare FOLD_LAB, UFFICIO, PACKS, packFornitore, navItems, HEADER_OPP. Non aggiungere, togliere o rinominare pieghe o tasti. Eccezione 11.10.2026, su richiesta esplicita di Nando: tasto «Home» (grafici, js/home.js) primo per admin e agenti. Eccezione 11.10.2026 sera: tasti admin Terranova, Gare private e AncheBIM (js/funzioni-interne.js), funzioni interne, non siti a parte. Eccezione 12.10.2026: tasto admin «Software» (js/software-admin.js), secondo dopo Home, con tutti i software per categoria.
+  /* CONGELATO 20.09.2026. Famiglie e pulsanti. Non cambiare FOLD_LAB, UFFICIO, PACKS, packFornitore, navItems, HEADER_OPP. Non aggiungere, togliere o rinominare pieghe o tasti. Eccezione 11.10.2026, su richiesta esplicita di Nando: tasto «Home» (grafici, js/home.js) primo per admin e agenti. Eccezione 11.10.2026 sera: tasti admin Terranova, Gare private e AncheBIM (js/funzioni-interne.js), funzioni interne, non siti a parte. Eccezione 12.10.2026: tasto admin «Software» (js/software-admin.js), secondo dopo Home, con tutti i software per categoria. Eccezione 12.10.2026: tasto admin «Pulsanti per profilo» (js/pulsanti-profili.js); i menu di privato, azienda e agente mostrano solo i pulsanti che l'admin ha scelto lì.
      ECCEZIONE 22.09.2026, su richiesta esplicita: aggiunta "admin" come quarta famiglia
      (prima era una pagina admin.html a sé, mai approvata graficamente). Non tocca le pieghe
      o i tasti delle tre famiglie originali: admin ha un suo ramo separato ovunque sotto.
@@ -304,6 +304,8 @@
         { id: "home", label: "Home", icon: "home", gruppo: "fisso" },
         // 12.10.2026, su richiesta: tutti i software per categoria (js/software-admin.js).
         { id: "software", label: "Software", icon: "grid", gruppo: "fisso" },
+        // 12.10.2026, su richiesta: l'admin decide i pulsanti di ogni profilo (js/pulsanti-profili.js).
+        { id: "pulsanti", label: "Pulsanti per profilo", icon: "gear", gruppo: "fisso" },
         { id: "iscritti", label: "Iscritti registrati", icon: "team", gruppo: "fisso", cuore: true },
         // 11.10.2026, su richiesta: AncheBandi è un software della dashboard admin, non un sito a parte.
         { id: "bandi", label: "Bandi", icon: "doc", gruppo: "fisso" },
@@ -348,6 +350,55 @@
     });
     return out;
   }
+
+  /* Pulsanti per profilo (12.10.2026, su richiesta esplicita di Nando). I profili che l'admin configura
+     e, per ciascuno, tutti i pulsanti che può avere. Le scelte sono in js/pulsanti-profili.js. */
+  const PROFILI_PULSANTI = [
+    { k: "privato", nome: "Privato", famiglia: "privato" },
+    { k: "azienda:impresa", nome: "Impresa edile", famiglia: "azienda", pack: "impresa" },
+    { k: "azienda:subappaltatore", nome: "Subappaltatore", famiglia: "azienda", pack: "subappaltatore" },
+    { k: "azienda:impiantista", nome: "Impiantista", famiglia: "azienda", pack: "impiantista" },
+    { k: "azienda:artigiano", nome: "Artigiano", famiglia: "azienda", pack: "artigiano" },
+    { k: "azienda:professionista", nome: "Studio tecnico", famiglia: "azienda", pack: "professionista" },
+    { k: "azienda:fornitore", nome: "Fornitore (materiali, noleggio, IT)", famiglia: "azienda", pack: "fornitore" },
+    { k: "azienda:energia", nome: "Luce e gas", famiglia: "azienda", pack: "energia" },
+    { k: "azienda:committente", nome: "Committente (condominio, amministratore, fondi)", famiglia: "azienda", pack: "committente" },
+    { k: "agente", nome: "Rete (agenti e ruoli)", famiglia: "agente" }
+  ];
+  const GRUPPO_LAB = { fisso: "In alto nel menu", comune: "In alto nel menu" };
+  function catalogoPulsanti(prof) {
+    let voci;
+    if (prof.famiglia === "azienda") {
+      voci = [
+        { id: "pubblica", label: "Pubblica", icon: "send", gruppo: "fisso" },
+        { id: "chat", label: "Chat", icon: "chat", gruppo: "fisso" },
+        { id: "inviti", label: "Inviti", icon: "send", gruppo: "fisso" },
+        { id: "tuo-mese", label: "Il tuo mese", icon: "chart", gruppo: "comune" }
+      ].concat(prof.pack === "fornitore" ? packFornitore("entrambi") : PACKS[prof.pack] || []);
+    } else if (prof.famiglia === "agente") {
+      voci = navItems("agente");
+      if (!voci.some((v) => v.id === "strategia")) voci = voci.concat([{ id: "strategia", label: "Sala strategia", icon: "chat", gruppo: "fisso", nota: "Solo per chi è nella direzione" }]);
+    } else {
+      voci = navItems(prof.famiglia);
+    }
+    const visti = {};
+    return voci.filter((it) => {
+      if (it.nascosto || visti[it.id]) return false;
+      visti[it.id] = true;
+      return true;
+    }).map((it) => Object.assign({}, it, { gruppoLab: it.gruppo === "pack" ? FOLD_LAB[it.fold] || it.fold : GRUPPO_LAB[it.gruppo] || "Menu" }));
+  }
+  function profiloPulsanti(famiglia) {
+    if (famiglia === "azienda") return "azienda:" + packKey(S.data.profilo && S.data.profilo.tipoAzienda);
+    return famiglia;
+  }
+  /** "gratis" | "pagamento" | "" per il pulsante id nel menu della famiglia. L'admin vede tutto. */
+  function statoPulsante(famiglia, id) {
+    if (famiglia === "admin") return "gratis";
+    return AC.pulsanti ? AC.pulsanti.stato(profiloPulsanti(famiglia), id) : "";
+  }
+  AC.profiliPulsanti = () => PROFILI_PULSANTI.slice();
+  AC.catalogoPulsanti = catalogoPulsanti;
 
   /* CONGELATO 20.09.2026. Impostazioni, regola A. Non cambiare visibleNav senza richiesta esplicita. Titolare: pack intero. Operatore: solo fold assegnati e accesi. Agente collaboratore: tasti in me.tasti. */
   function visibleNav(famiglia) {
@@ -499,6 +550,10 @@
             return S.caricaAnnunci(true);
           });
         }).then((esito) => {
+          if (esito === "fuori") return esito;
+          // 12.10.2026: i pulsanti scelti dall'admin si leggono prima di disegnare il menu.
+          return AC.pulsanti ? AC.pulsanti.carica().then(() => esito) : esito;
+        }).then((esito) => {
           if (esito === "fuori") return;
           admin.stato = "ok";
           if (admin.tipo === "admin") avviaPallino();
@@ -625,11 +680,17 @@
 
   function voceMenu(it, famiglia) {
     if (!it || it.nascosto) return false;
+    // 12.10.2026: fuori dall'admin si vede solo ciò che l'admin ha scelto in «Pulsanti per profilo».
+    if (!statoPulsante(famiglia, it.id)) return false;
     if (famiglia === "azienda") {
       const pack = packKey(S.data.profilo && S.data.profilo.tipoAzienda);
       if (PACK_NASCOSTO[pack] && it.gruppo === "pack" && it.fold !== "ufficio") return false;
     }
     return true;
+  }
+
+  function segnoPagamento(famiglia, id) {
+    return statoPulsante(famiglia, id) === "pagamento" ? html`<span class="nav-paga" title="A pagamento">€</span>` : "";
   }
 
   function paintNav(famiglia, page) {
@@ -668,7 +729,7 @@
       prev = it.gruppo;
       const on = it.id === page;
       htmlNav += html`<a href="#/${famiglia}/${it.id}" class="${on ? "active" : ""}${it.cuore ? " cuore" : ""}"${on ? html` aria-current="page"` : ""}>
-        ${icon(it.icon)}${it.label}
+        ${icon(it.icon)}${it.label}${segnoPagamento(famiglia, it.id)}
       </a>`.s;
     });
     const folds = [];
@@ -694,7 +755,7 @@
       f.items.forEach((it) => {
         const on = it.id === page;
         htmlNav += html`<a href="#/${famiglia}/${it.id}" class="${on ? "active" : ""}"${on ? html` aria-current="page"` : ""}>
-          ${icon(it.icon)}${it.label}
+          ${icon(it.icon)}${it.label}${segnoPagamento(famiglia, it.id)}
         </a>`.s;
       });
       htmlNav += "</div>";
@@ -703,7 +764,7 @@
 
     // Telefono (01.10.2026): barra delle sezioni in basso, come un'app. Fino a 5 voci stanno tutte nella barra;
     // altrimenti le prime 4 e «Altro», che apre una scheda con il resto e con le cartelle (Ufficio, Cantiere...).
-    const BREVE = { home: "Home", software: "Software", bacheca: "Bacheca", iscritti: "Iscritti", appunti: "Appunti", bandi: "Bandi", terranova: "Terranova", "gare-private": "Gare", anchebim: "BIM", contratti: "Contratti", affida: "Affida", iscrizioni: "Iscrizioni", "richieste-agenti": "Agenti", "proposte-rete": "Segnala", "oggi-rete": "Oggi", strategia: "Strategia", "lavori-rete": "Lavori", "linee-decise": "Linee", "tuo-mese": "Mese", "genera-link": "Link", task: "Task", file: "File", "chat-team": "Chat", "mio-ruolo": "Ruolo", documenti: "Documenti" };
+    const BREVE = { home: "Home", software: "Software", pulsanti: "Pulsanti", bacheca: "Bacheca", iscritti: "Iscritti", appunti: "Appunti", bandi: "Bandi", terranova: "Terranova", "gare-private": "Gare", anchebim: "BIM", contratti: "Contratti", affida: "Affida", iscrizioni: "Iscrizioni", "richieste-agenti": "Agenti", "proposte-rete": "Segnala", "oggi-rete": "Oggi", strategia: "Strategia", "lavori-rete": "Lavori", "linee-decise": "Linee", "tuo-mese": "Mese", "genera-link": "Link", task: "Task", file: "File", "chat-team": "Chat", "mio-ruolo": "Ruolo", documenti: "Documenti" };
     const conAltro = folds.length > 0 || top.length > 5;
     const tabs = conAltro ? top.slice(0, 4) : top;
     const extra = conAltro ? top.slice(4) : [];
@@ -830,16 +891,29 @@
       const paginaDefault = primaPagina(famiglia);
       // La Bacheca non è più un pulsante del menu (01.10.2026): si apre dal logo.
       const allowed = visibleNav(famiglia).filter((it) => voceMenu(it, famiglia)).map((it) => it.id).concat(["impostazioni", "profilo", "passo"]).concat(famiglia === "admin" ? [] : ["bacheca"]);
+      // 12.10.2026: se la prima pagina non è tra i pulsanti scelti dall'admin, si arriva alla Bacheca.
+      const arrivo = allowed.indexOf(paginaDefault) >= 0 || famiglia === "admin" ? paginaDefault : "bacheca";
       if (!page || allowed.indexOf(page) < 0 || !AC.views[page]) {
-        history.replaceState(null, "", "#/" + famiglia + "/" + paginaDefault);
-        page = paginaDefault;
+        history.replaceState(null, "", "#/" + famiglia + "/" + arrivo);
+        page = arrivo;
       }
     }
 
     // Annunci veri: aprendo Pubblica o La mia bacheca si aggiornano (al massimo ogni 20 s).
     if (famiglia !== "admin" && (page === "pubblica" || page === "bacheca")) S.caricaAnnunci(false);
 
-    const v = AC.views[page === "scegli" ? "scegli" : page];
+    let v = AC.views[page === "scegli" ? "scegli" : page];
+    // 12.10.2026: pulsante a pagamento. Per ora si vede che esiste, la funzione si attiva con AncheCasa.
+    if (famiglia && famiglia !== "admin" && statoPulsante(famiglia, page) === "pagamento") {
+      const vera = v;
+      v = {
+        title: vera.title,
+        sub: vera.sub,
+        render(el) {
+          el.innerHTML = html`<div class="card empty"><strong>${vera.title} è a pagamento</strong><span>Per attivarla scrivi ad AncheCasa dalla Chat o parla con il tuo consulente.</span></div>`.s;
+        }
+      };
+    }
     const scroller = document.querySelector(".main");
     const narrow = window.matchMedia("(max-width: 980px)").matches;
     scroller.classList.toggle("is-fit", page === "profilo" && S.data.famiglia !== "azienda" && !narrow);
@@ -931,7 +1005,10 @@
       if (evento === "SIGNED_OUT") location.replace(LOGIN_URL);
     });
   }
+  AC.adminNome = () => admin.nome || "";
   tick();
   setInterval(tick, 15000);
-  render(true);
+  // Anteprima locale: i pulsanti scelti si leggono dal browser prima del primo disegno.
+  if (DEMO && AC.pulsanti) AC.pulsanti.carica().then(() => render(true), () => render(true));
+  else render(true);
 })();

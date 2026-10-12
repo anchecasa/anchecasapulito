@@ -20,6 +20,16 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 12.10.2026 06:50 · Claude — «Pulsanti per profilo»: ogni dashboard parte vuota, decide l'admin (NON pubblicato)
+- Decisione di Nando: si tolgono tutti i pulsanti da ogni dashboard. L'admin sceglie, profilo per profilo e pulsante per pulsante, cosa si vede: Nascosto, Gratis o A pagamento. Prima i gratuiti, poi quelli a pagamento.
+- Nuovo tasto admin «Pulsanti per profilo». Profili: Privato, Impresa edile, Subappaltatore, Impiantista, Artigiano, Studio tecnico, Fornitore, Luce e gas, Committente, Rete (agenti e ruoli). Per ognuno l'elenco dei suoi pulsanti, raggruppati come nel menu, con Salva per profilo.
+- Le scelte stanno su Supabase in `marketplace.app_impostazioni`, chiave `pulsanti_profili` (tabella e regole già esistenti: legge chi è entrato, scrive solo l'admin). Nessuno SQL nuovo.
+- Nel menu di privato, azienda e agente compaiono solo i pulsanti scelti; un indirizzo di un pulsante nascosto riporta alla Bacheca. Un profilo mai salvato non vede nessun pulsante. Restano sempre Bacheca (dal logo), Profilo, Impostazioni ed Esci. L'admin non è toccato.
+- A pagamento: il pulsante si vede con «€»; la pagina dice che è a pagamento e di scrivere ad AncheCasa. Chi ha pagato non è ancora distinto: è il passo dopo.
+- È una regola di visibilità del menu, non un blocco sui dati.
+- Provato in locale con `?demo=` a 1280 px: azienda senza scelte, menu vuoto; salvate 5 voci gratis e 2 a pagamento per Impresa edile, il menu mostra quelle 7, SAL apre l'avviso, Magazzino riporta alla Bacheca; agente senza scelte arriva alla Bacheca. Copia di prima: `_copie-pulsanti-0645`.
+- File: `area-privata/dashboard/js/pulsanti-profili.js` (nuovo), `area-privata/dashboard/js/app.js`, `area-privata/dashboard/index.html` (app.js ?v=13, admin-task.css ?v=6), `area-privata/dashboard/css/admin-task.css`, `CLAUDE.md`.
+
 ### 12.10.2026 06:35 · Cursor — pagina Software pubblicata sull'area privata
 - Invio su GitHub, ramo main, commit `4c65990`. Pubblicazione Vercel `area-privata-produzione`, deployment `dpl_2LrUSpECWhwCxp8EzinhZaGUbzV5`, alias https://areaprivata.anchecasa.it.
 - Online la pagina Software: lo script `software-admin.js` risponde e il menu admin ha la voce Software. Indirizzo https://areaprivata.anchecasa.it/dashboard/#/admin/software.
