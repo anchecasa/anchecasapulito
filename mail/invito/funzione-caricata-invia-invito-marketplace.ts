@@ -13,7 +13,8 @@ const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY")!;
 const RESEND_FROM = Deno.env.get("RESEND_FROM") || "AncheCasa <info@anchecasa.it>";
-const LINK_ISCRIVITI = "https://areaprivata.anchecasa.it/benvenuto.html";
+// 12.10.2026: tutti tranne Nando entrano da entra.anchecasa.it (stesso sito di areaprivata).
+const LINK_ISCRIVITI = "https://entra.anchecasa.it/benvenuto.html";
 
 function cors(origin: string | null) {
   return {
