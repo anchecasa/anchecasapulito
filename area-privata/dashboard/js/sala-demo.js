@@ -12,9 +12,10 @@
     { nome: "Privato", desc: "Guasti, ristrutturazioni, bacheca, bollette, passaparola.", ico: "home", demo: "privato", regole: "regole/privato.html", pronta: true },
     { nome: "Rete", desc: "Una dashboard per ruolo: ognuno vede sé stesso e chi ha sotto.", ico: "team", demo: "agente", regole: "regole/rete.html", contratti: true, pronta: true,
       ruoli: [["subagente", "Sub-agente"], ["agente", "Agente"], ["capoarea", "Capo area"], ["sviluppo", "Sviluppo rete"], ["reteitalia", "Rete Italia"]] },
-    { nome: "Impresa edile", desc: "Cantieri, SAL, gare, subappalti, squadre.", ico: "building" },
+    // 12.10.2026, app-24 e app-25: lavori AncheCasa, i propri cantieri da general contractor, richieste della zona.
+    { nome: "Impresa edile", desc: "Lavori affidati da AncheCasa, i miei cantieri da general contractor, richieste alle aziende della zona, piccoli lavori.", ico: "building", demo: "azienda", tipo: "azienda_imprese_edili", pagina: "imp_home", pronta: true },
     { nome: "Artigiano", desc: "Ho un guasto: una richiesta alla volta, 15 minuti o 2 ore, lavoro fatto, 4,99 €, recensioni, garanzia.", ico: "gear", demo: "azienda", tipo: "azienda_artigiani", pagina: "art_home", pronta: true },
-    { nome: "Subappaltatore e impiantista", desc: "Lavori per i general contractor, certificazioni.", ico: "gear" },
+    { nome: "Subappaltatore e impiantista", desc: "Richieste dei cantieri della zona, offerta voce per voce, bollino documenti, voti.", ico: "gear", demo: "azienda", tipo: "azienda_subappaltatori", pagina: "cnt_perme", pronta: true },
     { nome: "Studio tecnico", desc: "Pratiche, gare, presenze di cantiere.", ico: "doc" },
     { nome: "Fornitore", desc: "Informatica e promozione.", ico: "folder" },
     // 12.10.2026, app-21: fornitori a preventivo con la zona.
