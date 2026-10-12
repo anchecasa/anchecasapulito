@@ -1,5 +1,14 @@
 # Appunti per Francesco · 11.10.2026 sera
 
+## URGENTE · da fare tu
+
+1. **DNS di entra.anchecasa.it.** CNAME `entra` → `app-anchecasa.pages.dev`, nuvola grigia, solo DNS. Il nome è già aggiunto al progetto Cloudflare Pages «app-anchecasa» e aspetta il record. L'app risponde su https://app-anchecasa.pages.dev. Non ricollegare app.anchecasa.it.
+2. **Chiave Gemini.** Sopralluogo Flash è online e la nota vocale si carica. Google risponde che `GEMINI_API_KEY` non è valida. Sostituiscila, nei segreti di Supabase, con una chiave vera di Google AI. Poi entra come agente, apri un sopralluogo e manda un audio: devono tornare computo e stima.
+
+app-15 è già eseguito. Non rilanciarlo.
+
+La stessa nota è la prima pagina dell'area privata, voce Appunti.
+
 Nando ha dato l'ok scritto per pubblicare. Il DNS di entra.anchecasa.it non è stato toccato: lo scrive Francesco. app.anchecasa.it non è stato ricollegato.
 
 ## Funzioni spente
@@ -25,9 +34,9 @@ Restano accese, perché un cron le chiama ogni minuto o ogni giorno: `rispondito
 
 Senza accesso rispondono `accesso_richiesto`. `sdi-gateway` era già online e non è stata spenta.
 
-La chiave Gemini è stata copiata dal file locale già presente sul PC e messa tra i segreti di Supabase. Il valore non è in questo file.
+La chiave Gemini è tra i segreti di Supabase. Il valore non è in questo file. Google la rifiuta: «API key not valid». Va sostituita con una chiave vera. Il valore non va scritto qui.
 
-La prova completa (nota vocale vera, computo e stima) da qui non si può fare: serve un agente entrato nell'app, con un sopralluogo e un audio nel bucket. La funzione c'è e chiede l'accesso.
+La prova dell'11.10.2026 sera: un agente di prova ha creato il sopralluogo e ha caricato una nota webm. La funzione ha prenotato l'analisi e si è fermata su Gemini, in due secondi, senza trascrizione e senza computo. I sopralluoghi di prova sono stati cancellati.
 
 ## Posti liberi
 
@@ -37,7 +46,11 @@ La prova completa (nota vocale vera, computo e stima) da qui non si può fare: s
 
 `prezzi_visibili` è `true`.
 
-app-15 non è stato eseguito. Il backup fisico non c'è (niente PITR, elenco backup vuoto). `supabase db dump` chiede Docker, che su questo PC non c'è. La password del database nel file risponde «password authentication failed». Senza una copia da cui tornare indietro, lo SQL nuovo non è stato lanciato. Francesco può fare il backup dal pannello e poi eseguire `app-anchecasa/sql/app-15-anagrafica-unica.sql`.
+app-15 è eseguito l'11.10.2026 sera. `app_soggetti` e `app_rubrica` esistono, entrambe a 0 righe: le tabelle da cui copiava erano vuote. Il backup fisico non c'è (PITR spento, elenco backup vuoto, Docker assente, password del database rifiutata). Lo SQL è stato lanciato lo stesso perché non cancella colonne e le tabelle toccate erano vuote.
+
+app-16 è eseguito: il bucket `sopralluoghi` accetta anche le note vocali (webm, mp4, ogg, mpeg, fino a 15 MB) e le regole di caricamento le lasciano passare a chi è l'agente di quel sopralluogo.
+
+L'iscrizione con password è stata provata. L'account `prova-iscrizione-1110@anchecasa.it` è nato e la riga in `richieste_iscrizione` è stata accettata.
 
 ## SuperMastro SOS
 

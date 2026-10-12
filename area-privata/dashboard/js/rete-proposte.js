@@ -1,13 +1,12 @@
-/* Proposte della rete e catena (10.10.2026).
-   Stesse regole di app-anchecasa/sql/app-05-proposte-rete.sql e di viste-rete.js:
-   si propone, decidono insieme admin, Responsabile Rete Italia e lo sviluppo dell'area.
-   Basta un no. Con tutti i sì l'invito nasce da solo nel database.
-   La dashboard non scrive sulle tabelle: solo select e le funzioni app_proponi_rete e app_vota_proposta.
-   L'unico invito diretto è quello dell'admin per il Responsabile Rete Italia (app_inviti, ruolo reteitalia). */
+/* Segnalazioni della rete e catena (11.10.2026).
+   L'admin fa entrare chiunque, senza un altro sì.
+   I commerciali fanno entrare privati e aziende.
+   Per sviluppo rete, agenti e sub-agenti segnalano: decide solo l'admin (app_proponi_rete, app_vota_proposta).
+   Capo area e Responsabile Rete Italia li fa entrare l'admin, con un invito diretto. */
 (function () {
   const AC = (window.AC = window.AC || {});
   const ui = () => AC.ui;
-  const MANCA = "Manca app-05 su Supabase: eseguire app-anchecasa/sql/app-05-proposte-rete.sql";
+  const MANCA = "Manca app-17 su Supabase: eseguire app-anchecasa/sql/app-17-chi-entra.sql";
   const RUOLI = {
     reteitalia: "Responsabile Rete Italia",
     sviluppo: "Sviluppo rete",
@@ -15,7 +14,9 @@
     agente: "Agente",
     subagente: "Sub-agente"
   };
-  const PROPONIBILI = ["sviluppo", "capoarea", "agente", "subagente"];
+  const SEGNALA = ["sviluppo", "agente", "subagente"];
+  const DIRETTI = ["reteitalia", "sviluppo", "capoarea", "agente", "subagente"];
+  const LINK_BENVENUTO = "https://areaprivata.anchecasa.it/benvenuto.html";
   const REGIONI = ["Abruzzo", "Basilicata", "Calabria", "Campania", "Emilia-Romagna", "Friuli-Venezia Giulia", "Lazio", "Liguria", "Lombardia", "Marche", "Molise", "Piemonte", "Puglia", "Sardegna", "Sicilia", "Toscana", "Trentino-Alto Adige", "Umbria", "Valle d'Aosta", "Veneto"];
   const LIVELLO = { reteitalia: 0, sviluppo: 1, capoarea: 2, agente: 3, subagente: 4 };
   /* Stesso formato di mostraInvito nell'app: origine + #/invito/ + token. */
@@ -95,10 +96,7 @@
   }
 
   function chiVota(p, ctx) {
-    if (!ctx) return null;
-    if (ctx.admin) return "admin";
-    if (ctx.ruolo === "reteitalia" && ctx.stato === "attivo") return "reteitalia";
-    if (ctx.ruolo === "sviluppo" && ctx.stato === "attivo" && p.serve_sviluppo && ctx.area && ctx.area === p.area) return "sviluppo";
+    if (ctx && ctx.admin) return "admin";
     return null;
   }
 
@@ -133,11 +131,11 @@
   }
 
   function formProponi(predef) {
-    const ruolo = PROPONIBILI.indexOf(predef) >= 0 ? predef : "agente";
+    const ruolo = SEGNALA.indexOf(predef) >= 0 ? predef : "agente";
     return html`<form id="rp-proponi" novalidate>
       <div class="fields tre">
         <div class="field"><label for="rp-ruolo">Ruolo</label>
-          <select id="rp-ruolo" name="ruolo">${PROPONIBILI.map((k) => html`<option value="${k}"${k === ruolo ? ui().raw(" selected") : ""}>${RUOLI[k]}</option>`)}</select>
+          <select id="rp-ruolo" name="ruolo">${SEGNALA.map((k) => html`<option value="${k}"${k === ruolo ? ui().raw(" selected") : ""}>${RUOLI[k]}</option>`)}</select>
         </div>
         <div class="field"><label for="rp-nome">Nome e cognome</label><input id="rp-nome" name="nome" maxlength="80" required autocomplete="name"></div>
         <div class="field"><label for="rp-mail">Mail</label><input id="rp-mail" name="email" type="email" required autocomplete="off"></div>
@@ -149,20 +147,38 @@
         </div>
         <div class="field"><label for="rp-note">Note</label><input id="rp-note" name="note" maxlength="600" placeholder="Chi è e perché è adatto"></div>
       </div>
-      <div class="row-actions" style="margin-top:12px"><button class="btn-in" type="submit">Manda la proposta</button></div>
-      <p class="note">Entra solo se dicono sì l’admin, il Responsabile Rete Italia e lo sviluppo rete della sua area, quando quell’area ne ha uno. Basta un no. Quando passa, qui compare il link d’invito.</p>
+      <div class="row-actions" style="margin-top:12px"><button class="btn-in" type="submit">Manda la segnalazione</button></div>
+      <p class="note">Segnali uno sviluppo rete, un agente o un sub-agente. Decide l’admin. Se dice sì, qui compare il link da mandare.</p>
     </form>`;
   }
 
-  function formReteItalia() {
-    return html`<form id="rp-rri" novalidate>
+  function formEntra() {
+    return html`<form id="rp-entra" novalidate>
       <div class="fields tre">
-        <div class="field"><label for="rp-rri-nome">Nome</label><input id="rp-rri-nome" name="nome" maxlength="80" autocomplete="name"></div>
-        <div class="field"><label for="rp-rri-mail">Mail</label><input id="rp-rri-mail" name="email" type="email" required autocomplete="off"></div>
+        <div class="field"><label for="rp-entra-ruolo">Ruolo</label>
+          <select id="rp-entra-ruolo" name="ruolo">${DIRETTI.map((k) => html`<option value="${k}">${RUOLI[k]}</option>`)}</select>
+        </div>
+        <div class="field"><label for="rp-entra-nome">Nome</label><input id="rp-entra-nome" name="nome" maxlength="80" autocomplete="name"></div>
+        <div class="field"><label for="rp-entra-mail">Mail</label><input id="rp-entra-mail" name="email" type="email" required autocomplete="off"></div>
       </div>
-      <div class="row-actions" style="margin-top:12px"><button class="btn-in" type="submit">Crea l’invito</button></div>
-      <p class="note">Solo questo invito lo crei direttamente. Tutti gli altri passano da una proposta approvata.</p>
-      <div id="rp-rri-link"></div>
+      <div class="row-actions" style="margin-top:12px"><button class="btn-in" type="submit">Fai entrare</button></div>
+      <p class="note">Entra subito, senza un altro sì. Privati e aziende li fai entrare da Genera link.</p>
+      <div id="rp-entra-link"></div>
+    </form>`;
+  }
+
+  function formClienti() {
+    return html`<form id="rp-clienti" novalidate>
+      <div class="fields tre">
+        <div class="field"><label for="rp-cli-chi">Chi fai entrare</label>
+          <select id="rp-cli-chi" name="chi"><option value="privato">Privato</option><option value="azienda">Azienda</option></select>
+        </div>
+        <div class="field"><label for="rp-cli-mail">Mail</label><input id="rp-cli-mail" name="mail" type="email" autocomplete="off"></div>
+        <div class="field"><label for="rp-cli-tel">Telefono</label><input id="rp-cli-tel" name="telefono" type="tel" maxlength="40" autocomplete="off"></div>
+      </div>
+      <div class="row-actions" style="margin-top:12px"><button class="btn-in" type="submit">Crea il link</button></div>
+      <p class="note">Privati e aziende entrano dal tuo link, senza un altro sì. Sviluppo rete, agenti e sub-agenti li segnali qui sotto: decide l’admin.</p>
+      <div id="rp-cli-link"></div>
     </form>`;
   }
 
@@ -195,8 +211,6 @@
       ${p.note ? html`<p class="rp-nota">${p.note}</p>` : ""}
       <div class="rp-voti">
         ${voceVoto("Admin", p.voto_admin, true)}
-        ${voceVoto("Rete Italia", p.voto_reteitalia, p.serve_reteitalia)}
-        ${voceVoto("Sviluppo", p.voto_sviluppo, p.serve_sviluppo)}
       </div>
       ${commentiDi(p)}
       ${posso ? html`<div class="rp-decidi">
@@ -215,8 +229,8 @@
     if (res.error) { toast(spiega(res.error), "error"); return; }
     const esito = res.data;
     if (esito === "approvata") toast("Approvata: l’invito è pronto.");
-    else if (esito === "respinta") toast("Proposta respinta.");
-    else toast("Voto registrato. Resta in attesa degli altri sì.");
+    else if (esito === "respinta") toast("Segnalazione respinta.");
+    else toast("Registrato.");
     nBadge = -1;
     if (poi) poi();
   }
@@ -274,44 +288,76 @@
       }));
       if (btn) btn.disabled = false;
       if (res.error) { toast(spiega(res.error), "error"); return; }
-      toast("Proposta mandata.");
+      toast("Segnalazione mandata. Decide l’admin.");
       nBadge = -1;
       if (poi) poi();
     });
-    if (predefRuolo && f.ruolo) f.ruolo.value = PROPONIBILI.indexOf(predefRuolo) >= 0 ? predefRuolo : "agente";
+    if (predefRuolo && f.ruolo) f.ruolo.value = SEGNALA.indexOf(predefRuolo) >= 0 ? predefRuolo : "agente";
   }
 
-  function agganciaRri(el) {
-    const f = el.querySelector("#rp-rri");
+  function mostraLink(box, idCopia, link, nota) {
+    if (!box) return;
+    box.innerHTML = html`<div class="row-actions" style="margin-top:12px;align-items:center;">
+      <input type="text" readonly value="${link}" style="flex:1;min-width:220px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;">
+      <button type="button" class="tab" id="${idCopia}">Copia link</button>
+    </div><p class="note">${nota}</p>`.s;
+    const copia = box.querySelector("#" + idCopia);
+    if (copia) copia.addEventListener("click", async () => {
+      try { await navigator.clipboard.writeText(link); toast("Link copiato."); }
+      catch (err) { toast("Seleziona il link e copialo.", "error"); }
+    });
+  }
+
+  function agganciaEntra(el) {
+    const f = el.querySelector("#rp-entra");
     if (!f) return;
     f.addEventListener("submit", async (e) => {
       e.preventDefault();
       const email = f.email.value.trim().toLowerCase();
+      const ruolo = f.ruolo.value;
+      if (!DIRETTI.includes(ruolo)) { toast("Questo ruolo non si può far entrare da qui.", "error"); return; }
       if (!mailOk(email)) { toast("Controlla la mail.", "error"); return; }
       const btn = f.querySelector('button[type="submit"]');
       if (btn) btn.disabled = true;
       const res = await conTempo(db().from("app_inviti").insert({
         cosa: "rete",
-        ruolo: "reteitalia",
+        ruolo: ruolo,
         email: email,
         nome: f.nome.value.trim()
-      }).select("token, email, nome").single());
+      }).select("token, email, nome, ruolo").single());
       if (btn) btn.disabled = false;
       if (res.error) { toast(spiega(res.error), "error"); return; }
       const link = linkInvitoRete(res.data.token);
-      const box = el.querySelector("#rp-rri-link");
-      if (box) {
-        box.innerHTML = html`<div class="row-actions" style="margin-top:12px;align-items:center;">
-          <input type="text" readonly value="${link}" style="flex:1;min-width:220px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;">
-          <button type="button" class="tab" id="rp-rri-copia">Copia link d’invito</button>
-        </div><p class="note">Link dell’app. La persona entra con la mail ${res.data.email}.</p>`.s;
-        const copia = box.querySelector("#rp-rri-copia");
-        if (copia) copia.addEventListener("click", async () => {
-          try { await navigator.clipboard.writeText(link); toast("Link copiato."); }
-          catch (err) { toast("Seleziona il link e copialo.", "error"); }
-        });
-      }
-      toast("Invito creato.");
+      mostraLink(el.querySelector("#rp-entra-link"), "rp-entra-copia", link, "Link dell’app per " + (RUOLI[res.data.ruolo] || res.data.ruolo) + ". Entra con la mail " + res.data.email + ".");
+      toast("Invito creato. Entra senza un altro sì.");
+      f.reset();
+    });
+  }
+
+  function agganciaClienti(el) {
+    const f = el.querySelector("#rp-clienti");
+    if (!f) return;
+    f.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const famiglia = f.chi.value;
+      const mail = f.mail.value.trim();
+      const telefono = f.telefono.value.trim();
+      if (famiglia !== "privato" && famiglia !== "azienda") return;
+      if (!mail && !telefono) { toast("Inserisci almeno la mail o il telefono.", "error"); return; }
+      if (mail && !mailOk(mail)) { toast("Controlla la mail.", "error"); return; }
+      const btn = f.querySelector('button[type="submit"]');
+      if (btn) btn.disabled = true;
+      const res = await conTempo(db().from("inviti_admin").insert({
+        famiglia: famiglia,
+        categoria: famiglia === "privato" ? "Privato" : "Azienda",
+        mail: mail || null,
+        telefono: telefono || null
+      }).select("token").single());
+      if (btn) btn.disabled = false;
+      if (res.error) { toast(spiega(res.error), "error"); return; }
+      const link = LINK_BENVENUTO + "?invito=" + res.data.token;
+      mostraLink(el.querySelector("#rp-cli-link"), "rp-cli-copia", link, "Chi apre il link sceglie la password ed entra come " + (famiglia === "privato" ? "privato" : "azienda") + ".");
+      toast("Link creato.");
       f.reset();
     });
   }
@@ -351,15 +397,17 @@
       el.innerHTML = cartaManca().s;
       return;
     }
-    el.innerHTML = html`<div class="card"><p class="note">Caricamento…</p></div>`.s;
+    el.innerHTML = html`<div class="card"><h2 class="rp-nome-h">Fai entrare nella rete</h2>${formEntra()}</div><div id="rp-dopo"><p class="note">Caricamento…</p></div>`.s;
+    agganciaEntra(el);
     const res = await caricaProposte();
     if (!el.isConnected) return;
+    const dopo = el.querySelector("#rp-dopo");
     if (res.error && mancaTabella(res.error)) {
-      el.innerHTML = cartaManca().s;
+      if (dopo) dopo.innerHTML = cartaManca().s;
       return;
     }
     if (res.error) {
-      el.innerHTML = html`<div class="card"><p>Non riesco a leggere le proposte (${res.error.message}).</p></div>`.s;
+      if (dopo) dopo.innerHTML = html`<div class="card"><p>Non riesco a leggere le segnalazioni (${res.error.message}).</p></div>`.s;
       return;
     }
     const uid = await sessione();
@@ -374,11 +422,7 @@
 
     function ridisegna() { paginaAdmin(el); }
 
-    el.innerHTML = html`
-      <div class="card"><h2 class="rp-nome-h">Proponi una persona</h2>${formProponi("sviluppo")}</div>
-      <div class="card rp-card"><h2 class="rp-nome-h">Invita il Responsabile Rete Italia</h2>${formReteItalia()}</div>
-      <div id="rp-schede"></div>
-      <div id="rp-corpo"></div>`.s;
+    if (dopo) dopo.innerHTML = html`<div id="rp-schede"></div><div id="rp-corpo"></div>`.s;
 
     function mostra(quale) {
       schedaAdmin = quale;
@@ -402,8 +446,6 @@
       disegnaElenco(corpo, l, ctx, nomeDi, uid, ridisegna);
     }
 
-    agganciaProponi(el, "sviluppo", ridisegna);
-    agganciaRri(el);
     mostra(schedaAdmin === "catena" || schedaAdmin === "tutte" || schedaAdmin === "chiuse" ? schedaAdmin : "decidere");
   }
 
@@ -538,9 +580,8 @@
       }
       return;
     }
-    titolo("Proponi una persona", "Nella rete si entra solo se la proposta viene approvata.");
+    titolo("Inviti", "Fai entrare privati e aziende. Per la rete segnali: decide l’admin.");
     const ctx = { admin: false, ruolo: io.riga.ruolo, area: io.riga.area, stato: io.riga.stato };
-    const decide = ctx.ruolo === "reteitalia" || ctx.ruolo === "sviluppo";
     const res = await caricaProposte();
     if (!el.isConnected) return;
     if (res.error && mancaTabella(res.error)) {
@@ -554,7 +595,6 @@
     const uid = io.riga.utente;
     const tutte = res.data || [];
     const mie = tutte.filter((p) => p.proposto_da === uid);
-    const aperte = decide ? daDecidere(tutte, ctx) : [];
     const reteRes = await conTempo(db().from("app_rete").select("utente, nome").limit(2000));
     const nomi = await nomiDi(tutte.map((p) => p.proposto_da), (reteRes && reteRes.data) || []);
     const nomeDi = (u) => nomi[u] || (u === uid ? "te" : "AncheCasa");
@@ -563,11 +603,12 @@
     function ridisegna() { invitiAgente(el); }
 
     el.innerHTML = html`
-      ${decide ? html`<h2 class="rp-nome-h">Da decidere</h2>${aperte.length ? html`<div id="rp-decidere">${aperte.map((p) => cartaProposta(p, ctx, nomeDi, uid))}</div>` : html`<p class="note">Niente da decidere.</p>`}` : ""}
-      <div class="card"><h2 class="rp-nome-h">Proponi una persona</h2>${formProponi(predef)}</div>
-      <h2 class="rp-nome-h">Le mie proposte</h2>
-      <div id="rp-mie">${mie.length ? mie.map((p) => cartaProposta(p, ctx, nomeDi, uid)) : html`<p class="note">Non hai ancora proposto nessuno.</p>`}</div>
+      <div class="card"><h2 class="rp-nome-h">Fai entrare un privato o un’azienda</h2>${formClienti()}</div>
+      <div class="card"><h2 class="rp-nome-h">Segnala per la rete</h2>${formProponi(predef)}</div>
+      <h2 class="rp-nome-h">Le mie segnalazioni</h2>
+      <div id="rp-mie">${mie.length ? mie.map((p) => cartaProposta(p, ctx, nomeDi, uid)) : html`<p class="note">Non hai ancora segnalato nessuno.</p>`}</div>
       <div id="rp-link-box"></div>`.s;
+    agganciaClienti(el);
     agganciaProponi(el, predef, ridisegna);
     agganciaLista(el, ridisegna);
   }
@@ -599,8 +640,8 @@
 
   AC.views = AC.views || {};
   AC.views["proposte-rete"] = {
-    title: "Proposte rete",
-    sub: "Chi entra nella rete lo decidete insieme.",
+    title: "Segnalazioni rete",
+    sub: "Decidi tu chi entra nella rete. I commerciali segnalano, tu dici sì o no.",
     render(el) { paginaAdmin(el); }
   };
 

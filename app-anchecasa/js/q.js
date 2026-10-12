@@ -276,8 +276,8 @@ function qProva() {
   };
   const esitoProposta = (p) => {
     if (p.stato !== "proposta") return p.stato;
-    if ([p.voto_admin, p.voto_reteitalia, p.voto_sviluppo].includes("no")) { p.stato = "respinta"; p.deciso = adesso(); notifica(p.proposto_da, "Proposta non accolta: " + p.nome, "rete-proposte"); return "respinta"; }
-    if (p.voto_admin === "si" && (!p.serve_reteitalia || p.voto_reteitalia === "si") && (!p.serve_sviluppo || p.voto_sviluppo === "si")) {
+    if (p.voto_admin === "no") { p.stato = "respinta"; p.deciso = adesso(); notifica(p.proposto_da, "Segnalazione non accolta: " + p.nome, "rete-proposte"); return "respinta"; }
+    if (p.voto_admin === "si") {
       const inv = { id: id("in"), token: Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2), cosa: "rete", target: null, ruolo: p.ruolo, email: p.email, nome: p.nome, stato: "inviato", creato_da: p.proposto_da, creato: adesso() };
       tab("app_inviti").unshift(inv); p.stato = "approvata"; p.deciso = adesso(); p.invito = inv.id;
       notifica(p.proposto_da, "Approvata: " + p.nome + ". Manda il link d'invito.", "rete-proposte"); return "approvata";
@@ -426,26 +426,23 @@ function qProva() {
     app_proponi_rete({ p_ruolo, p_nome, p_email, p_telefono, p_regione, p_note }) {
       const me = tab("app_rete").find((r) => r.utente === io() && r.stato === "attivo");
       if (!isAdmin() && !me) throw new Error("non_autorizzato");
+      if (isAdmin() ? !["sviluppo", "capoarea", "agente", "subagente"].includes(p_ruolo) : !["sviluppo", "agente", "subagente"].includes(p_ruolo)) throw new Error("ruolo_non_valido");
       if (tab("app_proposte_rete").some((x) => x.email === String(p_email).toLowerCase() && x.stato === "proposta")) throw new Error("gia_proposto");
       const AR = { Nord: ["Piemonte", "Valle d'Aosta", "Lombardia", "Trentino-Alto Adige", "Veneto", "Friuli-Venezia Giulia", "Liguria", "Emilia-Romagna"], Centro: ["Toscana", "Umbria", "Marche", "Lazio"], "Sud e isole": ["Abruzzo", "Molise", "Campania", "Puglia", "Basilicata", "Calabria", "Sicilia", "Sardegna"] };
       const area = Object.keys(AR).find((a) => AR[a].includes(p_regione)) || (me && me.area) || "";
       const liv = ["reteitalia", "sviluppo", "capoarea", "agente", "subagente"];
-      const ri = tab("app_rete").find((r) => r.ruolo === "reteitalia" && r.stato === "attivo");
-      const sv = tab("app_rete").find((r) => r.ruolo === "sviluppo" && r.stato === "attivo" && r.area === area && area);
       const p = { id: id("pr"), proposto_da: io(), ruolo: p_ruolo, nome: p_nome, email: String(p_email).toLowerCase(), telefono: p_telefono || "", regione: p_regione || "", area, superiore: me && liv.indexOf(me.ruolo) === liv.indexOf(p_ruolo) - 1 ? io() : null, note: p_note || "",
-        serve_reteitalia: !!ri, serve_sviluppo: !!sv && p_ruolo !== "sviluppo", voto_admin: isAdmin() ? "si" : null, voto_reteitalia: me && me.ruolo === "reteitalia" ? "si" : null, voto_sviluppo: me && me.ruolo === "sviluppo" && p_ruolo !== "sviluppo" ? "si" : null, commenti: [], stato: "proposta", invito: null, creato: adesso(), deciso: null };
+        serve_reteitalia: false, serve_sviluppo: false, voto_admin: isAdmin() ? "si" : null, voto_reteitalia: null, voto_sviluppo: null, commenti: [], stato: "proposta", invito: null, creato: adesso(), deciso: null };
       tab("app_proposte_rete").unshift(p);
-      tab("app_notifiche"); if (ri && ri.utente !== io()) notifica(ri.utente, "Proposta da decidere: " + p_nome, "rete-proposte");
+      tab("app_notifiche"); if (!isAdmin()) notifica("u-admin", "Rete: segnalazione di " + p_nome, "rete-proposte");
       esitoProposta(p); return p.id;
     },
     app_vota_proposta({ p_id, p_si, p_nota }) {
       const p = tab("app_proposte_rete").find((x) => x.id === p_id);
       if (!p || p.stato !== "proposta") throw new Error("proposta_chiusa");
-      const me = tab("app_rete").find((r) => r.utente === io() && r.stato === "attivo") || {};
-      const chi = isAdmin() ? "admin" : me.ruolo === "reteitalia" ? "reteitalia" : me.ruolo === "sviluppo" && me.area === p.area && p.serve_sviluppo ? "sviluppo" : null;
-      if (!chi) throw new Error("non_autorizzato");
-      p["voto_" + chi] = p_si ? "si" : "no";
-      p.commenti = (p.commenti || []).concat([{ chi, voto: p_si ? "si" : "no", nota: p_nota || "", quando: adesso() }]);
+      if (!isAdmin()) throw new Error("non_autorizzato");
+      p.voto_admin = p_si ? "si" : "no";
+      p.commenti = (p.commenti || []).concat([{ chi: "admin", voto: p_si ? "si" : "no", nota: p_nota || "", quando: adesso() }]);
       return esitoProposta(p);
     },
     app_strategia_apri({ p_titolo, p_testo, p_tema }) {

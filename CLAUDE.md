@@ -20,6 +20,31 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 12.10.2026 06:15 · Cursor — cartella inviata su GitHub
+- Il lavoro rimasto solo sul computer (chi entra, note vocali, appunti di Francesco) è sul ramo main di https://github.com/anchecasa/anchecasapulito. La cartella ufficiale resta sul Desktop: `C:\Users\palum\Desktop\ANCHECASA-PULITO`.
+- Fuori dall'invio: `supabase/.temp/linked-project.json`, file temporaneo della CLI.
+- File: `APPUNTI-FRANCESCO.md`, `app-anchecasa/sql/app-16-audio-sopralluogo.sql`, `app-17-chi-entra.sql`, `app-anchecasa/js/viste-rete.js`, `viste-admin.js`, `q.js`, `testi-rete.js`, `sopralluogo-flash/index.ts`, `notify-opportunita-pacchetto/index.ts`, `area-privata/dashboard/` (rete, appunti, views, app.js, index.html), `CLAUDE.md`.
+
+### 11.10.2026 20:22 · Cursor — chi entra: admin da solo, i commerciali segnalano
+- L'admin fa entrare chiunque nella rete (Responsabile Rete Italia, sviluppo, capo area, agente, sub-agente) senza un altro sì. Privati, aziende e agenti di commercio li fa entrare da Genera link.
+- I commerciali fanno entrare privati e aziende. Per sviluppo rete, agenti e sub-agenti mandano una segnalazione: decide solo l'admin. Un sì crea l'invito, un no la chiude. Capo area e Responsabile Rete Italia li fa entrare l'admin.
+- Funzioni aggiornate su Supabase: `app_puo_invitare`, `app_proponi_rete`, `app_vota_proposta`, `app_proposta_esito`, `app_vedo_proposta`.
+- File: `app-anchecasa/sql/app-17-chi-entra.sql`, `app-anchecasa/js/viste-rete.js`, `viste-admin.js`, `q.js`, `testi-rete.js`, `area-privata/dashboard/js/rete-proposte.js`, `views.js`, `app.js`, `testi-rete.js`, `area-privata/dashboard/index.html`, `CLAUDE.md`.
+
+### 11.10.2026 20:13 · Cursor — app-15 eseguito, note vocali aperte, Gemini rifiuta la chiave
+- app-15 eseguito sul progetto ANCHECASA. `app_soggetti` e `app_rubrica` esistono, 0 righe: le tabelle di partenza erano vuote. Backup fisico assente (PITR spento, elenco vuoto, Docker assente, password rifiutata). Lo SQL non cancella colonne.
+- Iscrizione provata: account `prova-iscrizione-1110@anchecasa.it` e riga in `richieste_iscrizione`.
+- app-16 eseguito: il bucket `sopralluoghi` accetta le note vocali e le regole lasciano caricare `{sopralluogo}/a/nota.webm` all'agente di quel sopralluogo. Prima il caricamento rispondeva 403 perché passavano solo i jpg.
+- Prova Flash: la nota webm è arrivata, la funzione ha prenotato l'analisi e Gemini ha risposto 400 «API key not valid». Niente trascrizione, niente computo, niente stima. I sopralluoghi di prova sono stati cancellati. La funzione online ora risponde `chiave_non_valida` in quel caso, senza ripetere la frase di Google.
+- Appunti di Francesco aggiornati: restano il DNS di entra e la sostituzione di GEMINI_API_KEY. app-15 non va rilanciato.
+- SuperMastro SOS non pubblicato: l'admin online si apre ancora senza il login nuovo.
+- File: `app-anchecasa/sql/app-16-audio-sopralluogo.sql`, `app-anchecasa/supabase/functions/sopralluogo-flash/index.ts`, `area-privata/dashboard/js/appunti-francesco.js`, `area-privata/dashboard/index.html` (script ?v=4), `APPUNTI-FRANCESCO.md`, `CLAUDE.md`.
+
+### 11.10.2026 19:55 · Cursor — appunto urgente per Francesco
+- In cima agli Appunti che Francesco vede entrando: DNS di entra.anchecasa.it (CNAME entra → app-anchecasa.pages.dev, nuvola grigia), backup e poi app-15, prova audio di Sopralluogo Flash. Sotto, cosa è già fatto e non va rifatto. Tolta la frase vecchia che diceva che app-03…app-13 non erano eseguiti.
+- Stesso testo in cima a APPUNTI-FRANCESCO.md.
+- File: area-privata/dashboard/js/appunti-francesco.js, area-privata/dashboard/index.html (script ?v=3), APPUNTI-FRANCESCO.md, CLAUDE.md.
+
 ### 11.10.2026 19:47 · Cursor — pubblicato sito, area privata e app (ok scritto di Nando)
 - Prezzi visibili: `prezzi_visibili` è `true` su Supabase. Sul sito tornano le cifre di catalogo.js: artigiano 14,90 €, imprese 49 €, fornitori 99 €, moduli 9 / 19 / 29 / 29 / 9 / 9, tutti i moduli 69 €. Accanto restano «Prova gratis 14 giorni» e «Parla con un consulente».
 - Il primo invio del sito aveva `ac.js` rotto (l'iscrizione era finita dentro SuperMastro e lo script non partiva). Corretto: l'iscrizione con password crea l'account e scrive la richiesta; senza password, come il consulente, scrive solo la richiesta; SuperMastro ha di nuovo l'elenco dei problemi. Secondo invio: `dpl_Bx9ZtUYgSsXjaPvbSEDMfv78ih3o`, alias https://anchecasa.it, script `ac.js?v=8`.

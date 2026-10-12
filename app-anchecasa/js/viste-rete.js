@@ -144,16 +144,16 @@ export function installa(core) {
         ${lista([voce("rete", "Le proposte", "Chi hai proposto e cosa hanno deciso", "rete-proposte/mie", "blu"), voce("grafico", "La catena", "Chi c'è sotto di te e cosa fa", "catena", "blu")])}</div>`,
     };
   };
-  /* Proposte: nella rete si entra solo se dicono sì l'admin, il Responsabile Rete Italia e lo sviluppo rete dell'area. */
-  const PROPONIBILI = ["sviluppo", "capoarea", "agente", "subagente"];
+  /* Segnalazioni: i commerciali segnalano sviluppo rete, agente o sub-agente. Decide solo l'admin. */
+  const PROPONIBILI = ["sviluppo", "agente", "subagente"];
   function formProponi(predef) {
     return `<form data-form="re-proponi" novalidate>
       ${campo("Ruolo", `<select name="ruolo">${PROPONIBILI.map((k) => `<option value="${k}" ${k === predef ? "selected" : ""}>${RUOLI_RETE[k]}</option>`).join("")}</select>`)}
       ${campo("Nome e cognome", `<input name="nome" maxlength="80" required>`)}${campo("Mail", `<input name="email" type="email" required>`)}${campo("Telefono", `<input name="telefono" type="tel" maxlength="40">`)}
       ${campo("Regione", `<select name="regione"><option value="">—</option>${REGIONI.map((r) => `<option ${r === io().regione ? "selected" : ""}>${r}</option>`).join("")}</select>`)}
       ${campo("Perché lo proponi", `<textarea name="note" maxlength="600" rows="3" placeholder="Chi è, cosa ha fatto, perché è adatto"></textarea>`)}
-      <button class="btn" type="submit">Manda la proposta</button></form>
-      <p class="sotto piccolo">Entra solo se dicono sì l'admin, il Responsabile Rete Italia e lo sviluppo rete della sua area. Quando passa, ricevi il link d'invito da mandargli.</p>`;
+      <button class="btn" type="submit">Manda la segnalazione</button></form>
+      <p class="sotto piccolo">Segnali uno sviluppo rete, un agente o un sub-agente. Decide l'admin. Se dice sì, ricevi il link da mandare.</p>`;
   }
   core.formProponi = formProponi;
   FORM["re-proponi"] = async (f) => {
@@ -162,19 +162,13 @@ export function installa(core) {
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return toast("Controlla la mail.", "errore");
     try { await Q.rpc("app_proponi_rete", { p_ruolo: f.ruolo.value, p_nome: f.nome.value.trim(), p_email: email, p_telefono: f.telefono.value.trim(), p_regione: f.regione.value, p_note: f.note.value.trim() }); }
     catch (e) { return toast(String(e.message || e).includes("gia_proposto") ? "Questa persona è già stata proposta." : spiegaErrore(e), "errore"); }
-    toast("Proposta mandata."); vai("rete-proposte/mie");
+    toast("Segnalazione mandata. Decide l'admin."); vai("rete-proposte/mie");
   };
 
   const VOTO = { si: ["verde", "sì"], no: ["rosso", "no"] };
-  const chiVota = (p) => {
-    const me = io();
-    if (S.admin && S.base === "admin") return "admin";
-    if (me.ruolo === "reteitalia" && me.stato === "attivo") return "reteitalia";
-    if (me.ruolo === "sviluppo" && me.stato === "attivo" && p.serve_sviluppo && me.area && me.area === p.area) return "sviluppo";
-    return null;
-  };
-  const mioVoto = (p, chi) => chi === "admin" ? p.voto_admin : chi === "reteitalia" ? p.voto_reteitalia : chi === "sviluppo" ? p.voto_sviluppo : "x";
-  const chipVoti = (p) => [["Admin", p.voto_admin, true], ["Rete Italia", p.voto_reteitalia, p.serve_reteitalia], ["Sviluppo", p.voto_sviluppo, p.serve_sviluppo]]
+  const chiVota = () => (S.admin && S.base === "admin") ? "admin" : null;
+  const mioVoto = (p, chi) => chi === "admin" ? p.voto_admin : "x";
+  const chipVoti = (p) => [["Admin", p.voto_admin, true]]
     .filter((x) => x[2]).map(([t, vv]) => stato(vv ? VOTO[vv][0] : "giallo", t + " " + (vv ? VOTO[vv][1] : "…"))).join(" ");
   const STP = { proposta: ["giallo", "Da decidere"], approvata: ["verde", "Approvata"], respinta: ["rosso", "Respinta"] };
 
@@ -184,10 +178,10 @@ export function installa(core) {
     const daDecidere = tutte.filter((p) => p.stato === "proposta" && chiVota(p) && !mioVoto(p, chiVota(p)));
     filtro = filtro || (daDecidere.length ? "decidere" : "mie");
     const l = filtro === "decidere" ? daDecidere : filtro === "mie" ? tutte.filter((p) => p.proposto_da === S.utente.id) : tutte;
-    const puoTutte = (S.admin && S.base === "admin") || io().ruolo === "reteitalia" || io().ruolo === "sviluppo";
+    const puoTutte = S.admin && S.base === "admin";
     const pill = (k, t) => `<button type="button" class="pillola ${k === filtro ? "on" : ""}" data-go="rete-proposte/${k}">${t}</button>`;
     return {
-      t: "Proposte nella rete",
+      t: "Segnalazioni nella rete",
       h: `<div class="pad"><div class="pillole">${pill("decidere", "Da decidere" + (daDecidere.length ? " " + daDecidere.length : ""))}${pill("mie", "Le mie")}${puoTutte ? pill("tutte", "Tutte") : ""}</div><div style="height:12px"></div>
         ${l.length ? l.map((p) => {
           const chi = chiVota(p), mio = mioVoto(p, chi);
@@ -202,7 +196,7 @@ export function installa(core) {
   };
   AZIONI["vota-proposta:"] = async (arg) => {
     const [id, vv] = arg.split(":");
-    try { const esito = await Q.rpc("app_vota_proposta", { p_id: id, p_si: vv === "si", p_nota: "" }); toast(esito === "approvata" ? "Approvata: l'invito è pronto." : esito === "respinta" ? "Proposta respinta." : "Voto registrato."); }
+    try { const esito = await Q.rpc("app_vota_proposta", { p_id: id, p_si: vv === "si", p_nota: "" }); toast(esito === "approvata" ? "Approvata: l'invito è pronto." : esito === "respinta" ? "Segnalazione respinta." : "Registrato."); }
     catch (e) { toast(spiegaErrore(e), "errore"); }
     render();
   };

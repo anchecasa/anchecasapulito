@@ -200,8 +200,7 @@
     return buildOpzioniCategorie({ selected: tipoAziendaNorm(selected) });
   }
   function opzioniCategoriaLink() {
-    const base = buildOpzioniCategorie({ selected: "", soloFamiglie: ["privato", "azienda"] });
-    return raw(base.s + '<optgroup label="Agente"><option disabled value="">Si entra solo con proposta approvata → Proposte rete</option></optgroup>');
+    return buildOpzioniCategorie({ selected: "" });
   }
   const LUOGO_TIPI = [
     ["sede", "Sede"],
@@ -2008,7 +2007,7 @@
         const titolo = document.getElementById("page-title");
         const sotto = document.getElementById("page-sub");
         if (titolo) titolo.textContent = "Inviti";
-        if (sotto) sotto.textContent = "Invita privati e aziende. Nella rete si entra solo con una proposta approvata.";
+        if (sotto) sotto.textContent = "Fai entrare privati e aziende. Per la rete si segnala: decide l’admin.";
       }
       const CHI = opts.togliAgente
         ? { privato: "Privato", azienda: "Azienda" }
@@ -2018,7 +2017,7 @@
       function disegna(esito) {
         el.innerHTML = html`
           ${opts.avviso ? html`<div class="card"><p>${opts.avviso}</p></div>` : ""}
-          ${opts.togliAgente ? html`<div class="card"><p class="note">Si entra nella rete solo con una proposta approvata. Da qui inviti privati e aziende.</p></div>` : ""}
+          ${opts.togliAgente ? html`<div class="card"><p class="note">Da qui fai entrare privati e aziende, senza un altro sì. Sviluppo rete, agenti e sub-agenti si segnalano: decide l’admin.</p></div>` : ""}
           <div class="card">
             <p class="note">Scegli chi inviti e inserisci almeno la mail o il telefono. Chi si iscrive dal tuo link entra subito, senza attendere l'approvazione. Con Email il messaggio parte da AncheCasa; con WhatsApp si apre la chat con il testo già scritto.</p>
             <form id="f-inv">
@@ -4316,10 +4315,6 @@
           const telefono = form.elements.telefono.value.trim();
           const info = CATEGORIE_LINK_MAP[id];
           if (!info) return;
-          if (info.famiglia === "agente") {
-            toast("Si entra solo con proposta approvata. Apri Proposte rete.", "error");
-            return;
-          }
           if (!mail) {
             toast("Inserisci la mail.", "error");
             return;

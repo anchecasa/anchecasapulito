@@ -139,7 +139,14 @@ async function conGemini(audio: Uint8Array, mime: string, testo: string) {
     }),
     signal: AbortSignal.timeout(110000),
   });
-  if (!r.ok) throw new Error(`Gemini ${r.status}`);
+  if (!r.ok) {
+    let dettaglio = "";
+    try {
+      const j = await r.json();
+      dettaglio = String(j?.error?.message || "").replace(/AIza[0-9A-Za-z_-]+/g, "").slice(0, 140);
+    } catch { dettaglio = ""; }
+    throw new Error(`Gemini ${r.status} ${dettaglio}`.trim().slice(0, 160));
+  }
   const j = await r.json();
   const t = j?.candidates?.[0]?.content?.parts?.map((p: { text?: string }) => p.text || "").join("") || "{}";
   return JSON.parse(t);
@@ -232,7 +239,9 @@ Deno.serve(async (req) => {
     pulisci().catch((e) => console.error("flash pulisci", e instanceof Error ? e.message : e));
     return rispondi({ ok: true, ...esito, computo_tenuto: !!s.computo_validato, stima }, 200, origin);
   } catch (e) {
-    console.error("sopralluogo-flash", e instanceof Error ? e.message : e);
-    return rispondi({ error: "analisi_non_riuscita" }, 502, origin);
+    const msg = e instanceof Error ? e.message : "";
+    const dove = /API key not valid/i.test(msg) ? "chiave_non_valida" : (msg.startsWith("Gemini ") ? msg.slice(0, 16) : (msg.split(" ")[0] || "errore").slice(0, 48));
+    console.error("sopralluogo-flash", dove);
+    return rispondi({ error: "analisi_non_riuscita", dove }, 502, origin);
   }
 });

@@ -8,27 +8,29 @@
 
   V.appunti = {
     title: "Appunti per Francesco",
-    sub: "Cosa è online oggi e cosa manca, per l'app e per SuperMastro.",
+    sub: "Urgente di stasera, 11 ottobre 2026.",
     render(el) {
       el.innerHTML = html`<div class="card">
-        <h2>11 ottobre 2026, fatto da qui</h2>
-        <p>L'app AncheCasa 2.7 è sul database: parti da app-03 a app-13, magazzino e mezzi compresi. Il controllo dei permessi è passato.</p>
-        <p>La funzione sdi-gateway è pubblicata. Le altre tre non entrano: il progetto ha già 100 funzioni e Supabase non ne accetta altre finché non si alza il piano.</p>
-        <p>L'app si apre su <strong>https://entra.anchecasa.it</strong>. L'indirizzo app.anchecasa.it non si usa più.</p>
-        <p>SuperMastro: le sei migrazioni del 11 ottobre sono sul database. I permessi delle tabelle sono a posto. SOS_SHARE_SECRET e CRON_SECRET sono stati creati, senza mostrarli. La pull request è https://github.com/anchecasa/supermastro-sos/pull/1 e non è unita a main.</p>
+        <h2>Urgente · da fare tu, stasera</h2>
+        <p>Nando ha pubblicato. Due cose le puoi fare solo tu.</p>
+        <ol>
+          <li><strong>DNS di entra.anchecasa.it.</strong> Record CNAME <strong>entra</strong> verso <strong>app-anchecasa.pages.dev</strong>, nuvola grigia, solo DNS. Il dominio è già aggiunto al progetto Cloudflare Pages «app-anchecasa», in attesa del record. L'app risponde già su https://app-anchecasa.pages.dev. Non ricollegare app.anchecasa.it.</li>
+          <li><strong>Chiave Gemini.</strong> Sopralluogo Flash è online, la nota vocale si carica, e Google risponde che la chiave non è valida. In Supabase, segreti, sostituisci <strong>GEMINI_API_KEY</strong> con una chiave vera di Google AI. Poi entra come agente, apri un sopralluogo e manda un audio: devono tornare computo e stima.</li>
+        </ol>
       </div>
       <div class="card">
-        <h2>Cosa manca</h2>
+        <h2>Già fatto · non rifarlo</h2>
         <ul>
-          <li>La password del database nel file non viene accettata. Gli script che si collegano come postgres si fermano. Il login della CLI invece funziona.</li>
-          <li>Il token Supabase nel file risponde 401. Il token Cloudflare nel file non è valido.</li>
-          <li>Mancano i dati per le mail ai fornitori: MAIL_PROVIDER, MAIL_API_KEY, MAIL_MITTENTE, e anche PRIVACY_URL e GEMINI_API_KEY.</li>
-          <li>Manca il contratto del gateway delle fatture elettroniche. Senza, l'invio allo SdI resta simulato.</li>
-          <li>Se la mappa non si vede su entra.anchecasa.it, la chiave di Google Maps va ristretta anche a quell'indirizzo.</li>
-          <li>Il lint di SuperMastro non passa: 20 errori in agenda, voce del procione e moduli di accesso. Per questo non è stato unito a main e il sito online è ancora quello di prima. L'admin online si apre ancora senza login.</li>
-          <li>La pulizia notturna non è partita: il workflow è solo sul ramo, non su main.</li>
-          <li>Cancellare la cartella 04-SuperMastro\_claude-temp: sono file temporanei.</li>
+          <li>Sito https://anchecasa.it con i prezzi visibili e la prova di 14 giorni. Area privata online. App su https://app-anchecasa.pages.dev, service worker ac-app-2.9.0.</li>
+          <li>Funzioni nuove online: sopralluogo-flash, subappalti-mail, gare-analisi. Senza accesso rispondono accesso_richiesto. sdi-gateway resta accesa.</li>
+          <li>Spente, codice in app-anchecasa/supabase/functions-archivio: parse-cv, scrape-company-site, installation-bids, omi-lookup, ordine-tracking, presentazione-mappa-search. Restano 3 posti liberi su 100.</li>
+          <li>prezzi_visibili è true. Il modulo consulente ha scritto una riga di prova: prova-pubblicazione-1110@anchecasa.it. L'iscrizione con password è stata provata: l'account prova-iscrizione-1110@anchecasa.it è nato e la richiesta è nel database.</li>
+          <li>app-15 è già eseguito. Tabelle app_soggetti e app_rubrica presenti, entrambe vuote perché le tabelle di partenza erano vuote. Non rilanciarlo.</li>
+          <li>Le note vocali del sopralluogo ora si possono caricare (app-16). Manca solo la chiave Gemini, punto 2 qui sopra.</li>
+          <li>SuperMastro SOS non è stato pubblicato: il sito online è ancora quello di prima, l'admin si apre senza il login nuovo.</li>
+          <li>Magazine, AncheSicura e gli store non sono stati toccati. Il contratto firmabile è solo la versione del 10.10.2026.</li>
         </ul>
+        <p>Il dettaglio è nel file APPUNTI-FRANCESCO.md, nella cartella principale.</p>
       </div>
       <div class="card">
         <h2>Gare private, già scritte prima</h2>
@@ -62,7 +64,7 @@
           <li>Manca la chiave service role, solo sul server, mai con il prefisso NEXT_PUBLIC. Senza quella i documenti restano in verifica.</li>
           <li>Serve almeno un'organizzazione attiva. I due admin vedono il menu. Un collega che non è admin va in app_org_membri con ruolo general_contractor_buyer.</li>
           <li>L'Albo è vuoto. Per invitare qualcuno servono fornitori attivi. Il portale fornitori si apre solo ai loro membri. A firmare l'offerta sono titolare e responsabile.</li>
-          <li>I file SQL da app-03 a app-13 non sono stati eseguiti. Per le gare non servono. Servono solo se si vuole il resto dell'app.</li>
+          <li>app-03 fino a app-16 sono già sul database. app-15 non va rilanciato.</li>
           <li>Il commit del pulsante c'è. La centrale e il portale fornitori sono sul disco e non sono ancora in un commit. Non c'è push.</li>
           <li>AncheBIM è il Python locale del cruscotto. Gli indirizzi API nel file di esempio non sono usati.</li>
           <li>Gli importi non vanno nel registro. L'acquirente li legge solo a gara chiusa o aggiudicata.</li>

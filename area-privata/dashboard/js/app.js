@@ -314,7 +314,7 @@
         // 09.10.2026, su richiesta: statistiche della rivista e iscritti agli avvisi (js/magazine-admin.js).
         { id: "magazine", label: "Magazine", icon: "chart", gruppo: "fisso" },
         { id: "richieste-agenti", label: "Richieste agenti", icon: "star", gruppo: "fisso" },
-        { id: "proposte-rete", label: "Proposte rete", icon: "team", gruppo: "fisso" },
+        { id: "proposte-rete", label: "Segnalazioni rete", icon: "team", gruppo: "fisso" },
         { id: "oggi-rete", label: "Oggi", icon: "chart", gruppo: "fisso" },
         { id: "strategia", label: "Sala strategia", icon: "chat", gruppo: "fisso" },
         { id: "lavori-rete", label: "Lavori rete", icon: "doc", gruppo: "fisso" },
@@ -701,7 +701,7 @@
 
     // Telefono (01.10.2026): barra delle sezioni in basso, come un'app. Fino a 5 voci stanno tutte nella barra;
     // altrimenti le prime 4 e «Altro», che apre una scheda con il resto e con le cartelle (Ufficio, Cantiere...).
-    const BREVE = { home: "Home", bacheca: "Bacheca", iscritti: "Iscritti", appunti: "Appunti", bandi: "Bandi", terranova: "Terranova", "gare-private": "Gare", anchebim: "BIM", contratti: "Contratti", affida: "Affida", iscrizioni: "Iscrizioni", "richieste-agenti": "Agenti", "proposte-rete": "Proposte", "oggi-rete": "Oggi", strategia: "Strategia", "lavori-rete": "Lavori", "linee-decise": "Linee", "tuo-mese": "Mese", "genera-link": "Link", task: "Task", file: "File", "chat-team": "Chat", "mio-ruolo": "Ruolo", documenti: "Documenti" };
+    const BREVE = { home: "Home", bacheca: "Bacheca", iscritti: "Iscritti", appunti: "Appunti", bandi: "Bandi", terranova: "Terranova", "gare-private": "Gare", anchebim: "BIM", contratti: "Contratti", affida: "Affida", iscrizioni: "Iscrizioni", "richieste-agenti": "Agenti", "proposte-rete": "Segnala", "oggi-rete": "Oggi", strategia: "Strategia", "lavori-rete": "Lavori", "linee-decise": "Linee", "tuo-mese": "Mese", "genera-link": "Link", task: "Task", file: "File", "chat-team": "Chat", "mio-ruolo": "Ruolo", documenti: "Documenti" };
     const conAltro = folds.length > 0 || top.length > 5;
     const tabs = conAltro ? top.slice(0, 4) : top;
     const extra = conAltro ? top.slice(4) : [];

@@ -11,7 +11,7 @@ const RUOLI_TESTI = {
   "sotto": "I responsabili sviluppo rete e, tramite loro, capi area, agenti e sub-agenti.",
   "fai": [
    "Coordini gli sviluppo rete e tieni lo stesso metodo in tutta Italia.",
-   "Decidi con l'admin chi entra nella rete (proposte) e le linee della sala strategia.",
+   "Fai entrare privati e aziende. Segnali sviluppo rete, agenti e sub-agenti: decide l'admin.",
    "Fissi con l'admin gli obiettivi del mese, per tutta Italia e per persona.",
    "Proponi quando nominare capi area e assegnare le aree, guardando i numeri."
   ],
@@ -47,7 +47,7 @@ const RUOLI_TESTI = {
   "fai": [
    "Porti persone valide: chi entra resta nella tua linea, ovunque lavori.",
    "Il primo obiettivo: trovare i capi area delle regioni (2-3 a testa entro fine anno).",
-   "Voti le proposte della tua area quando l'area ti è assegnata.",
+   "Segnali sviluppo rete, agenti e sub-agenti: decide l'admin. Fai entrare privati e aziende.",
    "Proponi argomenti nella sala strategia."
   ],
   "guadagni": [
@@ -88,7 +88,7 @@ const RUOLI_TESTI = {
    "Trovi e formi agenti nella tua regione, fai il punto ogni settimana.",
    "Affianchi gli agenti nelle trattative e nei sopralluoghi.",
    "Aiuti sul posto anche gli agenti di altre linee che lavorano nella tua regione.",
-   "Proponi nuove persone: entrano nella tua linea."
+   "Segnali agenti e sub-agenti: decide l'admin. Fai entrare privati e aziende."
   ],
   "guadagni": [
    [
@@ -192,7 +192,7 @@ const RUOLI_TESTI = {
 const REGOLE = [
  [
   "C.1 Ingresso nella rete",
-  "Si entra nella rete solo con proposta approvata dalla Società e dal Responsabile Rete Italia e, ove nominato, dal Responsabile Sviluppo Rete dell'area interessata. Ogni componente della rete può proporre nuove persone; gli incarichi sono conferiti esclusivamente dalla Società."
+  "L'admin fa entrare chiunque, senza un altro sì. I commerciali fanno entrare privati e aziende. Per sviluppo rete, agenti e sub-agenti segnalano: decide l'admin. Capo area e Responsabile Rete Italia li fa entrare l'admin."
  ],
  [
   "C.2 Chi porta, tiene",

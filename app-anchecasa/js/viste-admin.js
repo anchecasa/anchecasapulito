@@ -212,16 +212,17 @@ export function installa(core) {
       h: `<div class="pad"><div class="griglia2">${["reteitalia", "sviluppo", "capoarea", "agente", "subagente"].map((k) => num(gruppo(k).length, RUOLI_RETE[k])).join("")}</div><div style="height:12px"></div>
         ${lista([voce("euro", "Vendite da confermare", "Quando il cliente paga", "ad-vendite", "giallo"), voce("gru", "Lavori della rete", "Firma, margine e incassi delle tranche (SAL)", "ad-lavori", "giallo"), voce("euro", "Provvigioni da pagare", "", "ad-provvigioni", "blu"), voce("chat", "Sala strategia", "Decidi con il Responsabile Rete Italia", "strategia", "arancio"), voce("doc", "Contratti e documenti", "Tutti i contratti, chi ha firmato, nuove circolari", "ad-documenti", "blu"), voce("utente", "Clienti da affidare", "Clienti di AncheCasa: metà quota a chi li segue", "ad-affida", "giallo"), voce("rete", "I ruoli della rete", "Come li vede ogni figura", "mio-ruolo", "blu"), voce("grafico", "Andamento e obiettivi", "Fissa gli obiettivi del mese", "obiettivi", "verde")])}
         ${["reteitalia", "sviluppo", "capoarea", "agente", "subagente"].map((k) => gruppo(k).length ? sez(RUOLI_RETE[k], lista(gruppo(k).map((x) => voce("rete", esc(x.nome || x.codice), `${x.area || ""}${x.regione ? " · " + esc(x.regione) : ""}${x.superiore ? " · sotto " + esc(nome(x.superiore)) : ""} · codice ${esc(x.codice)}`, "ad-persona-rete/" + x.utente, x.stato === "attivo" ? "verde" : "rosso")))) : "").join("")}
-        ${lista([voce("rete", "Proposte da decidere", "Chi entra lo decidete insieme: admin, Rete Italia, sviluppo rete", "rete-proposte", "giallo"), voce("grafico", "La catena", "Tutta la rete: chi vende, chi è fermo", "catena", "blu")])}
-        ${sez("Invita il Responsabile Rete Italia", `<form data-form="ad-invita-rete" novalidate>${campo("Nome", `<input name="nome" maxlength="80">`)}${campo("Mail", `<input name="email" type="email" required>`)}<button class="btn" type="submit">Crea l'invito</button></form><p class="sotto piccolo">Solo questo invito lo crei direttamente. Tutti gli altri passano da una proposta.</p>`)}
-        ${sez("Proponi una persona", core.formProponi ? core.formProponi("sviluppo") : "")}
+        ${lista([voce("rete", "Segnalazioni da decidere", "Sviluppo rete, agenti e sub-agenti segnalati dai commerciali: decidi tu", "rete-proposte", "giallo"), voce("grafico", "La catena", "Tutta la rete: chi vende, chi è fermo", "catena", "blu")])}
+        ${sez("Fai entrare nella rete", `<form data-form="ad-invita-rete" novalidate>${campo("Ruolo", `<select name="ruolo">${["reteitalia", "sviluppo", "capoarea", "agente", "subagente"].map((k) => `<option value="${k}">${RUOLI_RETE[k]}</option>`).join("")}</select>`)}${campo("Nome", `<input name="nome" maxlength="80">`)}${campo("Mail", `<input name="email" type="email" required>`)}<button class="btn" type="submit">Fai entrare</button></form><p class="sotto piccolo">Entra subito, senza un altro sì. Privati e aziende li fai entrare dal link dell'area privata.</p>`)}
         ${inv.length ? sez("Inviti in attesa", lista(inv.map((i) => voce("campana", esc(i.email), RUOLI_RETE[i.ruolo], null, "giallo", btn("Link", "link-invito:" + i.token, "piccolo chiaro"))))) : ""}</div>`,
     };
   };
   FORM["ad-invita-rete"] = async (f) => {
     const email = f.email.value.trim().toLowerCase();
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return toast("Controlla la mail.", "errore");
-    const i = await Q.ins("app_inviti", { cosa: "rete", ruolo: "reteitalia", email, nome: f.nome.value.trim() });
+    const ruolo = ["reteitalia", "sviluppo", "capoarea", "agente", "subagente"].includes(f.ruolo.value) ? f.ruolo.value : "";
+    if (!ruolo) return toast("Scegli il ruolo.", "errore");
+    const i = await Q.ins("app_inviti", { cosa: "rete", ruolo, email, nome: f.nome.value.trim() });
     core.mostraInvito(i);
   };
   V["ad-persona-rete"] = async (u) => {
