@@ -212,6 +212,7 @@ begin
 end;
 $$;
 revoke all on function marketplace.fornitori_chiudi_scadute() from public, anon, authenticated;
+grant execute on function marketplace.fornitori_chiudi_scadute() to service_role;
 
 -- ---------------------------------------------------------------------------
 -- 4. Verifica dei contratti: il cliente risponde «Hai firmato?» dal link nella mail (verifica.html)
