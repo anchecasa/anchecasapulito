@@ -20,6 +20,12 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 12.10.2026 07:31 · Cursor — progetto dashboard e Regole del Privato pubblicati
+- Invio su GitHub, ramo main, commit `377ecde` e `c227481`. Pubblicata solo la cartella `area-privata` sul progetto Vercel `area-privata-produzione`, deployment `dpl_J5PUqyF5bYbjhRPz7jzTw3SDq63V`, alias https://areaprivata.anchecasa.it. Sito, app, magazine, sicura e Supabase non toccati.
+- Controllo online: https://areaprivata.anchecasa.it/dashboard/index.html carica `js/app.js?v=17` e `js/regole-admin.js?v=1`. https://areaprivata.anchecasa.it/dashboard/regole/privato.html risponde 200, titolo «Regole del Privato · AncheCasa».
+- La voce delle 07:40 diceva non pubblicato. Ora è pubblicato.
+- File: `CLAUDE.md`.
+
 ### 12.10.2026 07:40 · Claude — «Regole iscritti» e documento del Privato (NON pubblicato)
 - Su richiesta di Nando: nel menu admin nuova categoria Formazione con «Regole iscritti». Un documento per profilo, per far studiare le logiche agli agenti. Pronto il Privato; Rete, Impresa edile, Artigiano, Subappaltatore e impiantista, Studio tecnico, Fornitore, Luce e gas, Agenzia immobiliare, Committente «da scrivere».
 - `area-privata/dashboard/regole/privato.html`: carta intestata come i contratti (logo e dati società, filo arancio, etichetta, curva e piede blu, Manrope). Dodici sezioni con mappa della dashboard, catena degli artigiani, giro dei soldi, flussi, tabelle, «cosa c'è oggi e cosa arriva», frasi per il cliente, domande frequenti. Tasto «Scarica PDF» (stampa A4, 9 pagine).
