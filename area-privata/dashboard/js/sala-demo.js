@@ -16,7 +16,7 @@
       ruoli: [["subagente", "Sub-agente"], ["agente", "Agente"], ["capoarea", "Capo area"], ["sviluppo", "Sviluppo rete"], ["reteitalia", "Rete Italia"]] },
     // 12.10.2026, app-24 e app-25: lavori AncheCasa, i propri cantieri da general contractor, richieste della zona.
     { nome: "Impresa edile", desc: "Lavori affidati da AncheCasa, i miei cantieri da general contractor, richieste alle aziende della zona, piccoli lavori, gare.", ico: "building", demo: "azienda", tipo: "azienda_imprese_edili", pagina: "imp_home", regole: "regole/aziende.html", pronta: true },
-    { nome: "Artigiano", desc: "Ho un guasto: una richiesta alla volta, 15 minuti o 2 ore, lavoro fatto, 4,99 €, recensioni, garanzia.", ico: "gear", demo: "azienda", tipo: "azienda_artigiani", pagina: "art_home", regole: "regole/aziende.html", pronta: true },
+    { nome: "Artigiano", desc: "Ho un guasto: una richiesta alla volta, 15 minuti o 2 ore, lavoro fatto, 5,90 € (9,90 € urgente), recensioni, garanzia.", ico: "gear", demo: "azienda", tipo: "azienda_artigiani", pagina: "art_home", regole: "regole/aziende.html", pronta: true },
     { nome: "Subappaltatore e impiantista", desc: "Richieste dei cantieri della zona, offerta voce per voce, bollino documenti, voti.", ico: "gear", demo: "azienda", tipo: "azienda_subappaltatori", pagina: "cnt_perme", regole: "regole/aziende.html", pronta: true },
     { nome: "Studio tecnico", desc: "Pratiche, gare, presenze di cantiere.", ico: "doc" },
     { nome: "Fornitore", desc: "Informatica e promozione.", ico: "folder" },
@@ -35,7 +35,7 @@
   // Documenti per la presentazione alla rete. pronto: true quando il file esiste.
   const DOCUMENTI = [
     { nome: "AncheCasa in 10 minuti", desc: "Chi siamo, cosa facciamo, per chi, come guadagniamo. Il quadro intero.", ico: "star" },
-    { nome: "Il listino", desc: "Abbonamenti, moduli, 4,99 € a intervento, cosa è gratis.", ico: "wallet" },
+    { nome: "Il listino", desc: "Prezzi di tutti i profili, moduli, sponsor, e le provvigioni della rete sull'utile con tre esempi.", ico: "wallet", file: "regole/listino.html", pronto: true },
     { nome: "Come guadagna la rete", desc: "Provvigioni per ruolo, la catena, esempi con i numeri.", ico: "chart" },
     { nome: "Il percorso del cliente", desc: "Dal primo contatto alla firma: visita, Sopralluogo Flash, preventivo, obiezioni.", ico: "send" },
     { nome: "Regole della rete", desc: "Chi entra, a chi è il cliente, segnalazioni, contratto da firmare.", ico: "shield" },

@@ -29,6 +29,21 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 12.10.2026 16:20 · Claude — listino e provvigioni della rete sull'utile
+- Decisioni di Nando del 12.10.2026, 15:56. La rete prende il 35% dell'utile di AncheCasa su tutti i servizi, anche sui rinnovi e per sempre. Sui cantieri prende il 40% dell'utile. L'utile si calcola così:
+  - software (abbonamenti, moduli, costo per lavoro, sponsor): incassato senza IVA, meno le commissioni di pagamento, meno il 25% per i costi del software;
+  - tutti gli altri servizi: incassato senza IVA, meno il 15% per i costi di gestione;
+  - cantieri: incassato senza IVA, meno imprese, materiali, sicurezza, spese tecniche e pratiche. Le spese generali di AncheCasa non si tolgono.
+- Nuovo documento `area-privata/dashboard/regole/listino.html` su carta intestata. Contiene i prezzi di tutti i profili, i moduli, i fornitori, gli sponsor, le ristrutturazioni (margine 22%, blocco sotto il 18%), le provvigioni e tre esempi con i numeri. È collegato nella Sala demo alla voce «Il listino».
+- Contratti online (`js/contratti-modelli.js`, tutti e 5): nuova sezione A.3 «Come si calcola l'utile». In A.1 il 35% vale «compresi i rinnovi degli abbonamenti»; in A.2 il 40% si calcola sull'utile e non più sul margine lordo. L'art. 4.5 (5.6 per l'assistente sviluppo rete) diventa «Base di calcolo»: l'estratto conto mostra la base e la provvigione, non i singoli costi.
+- `regole/rete.html`: il riquadro «Provvigioni: da rivedere» è sostituito con le regole vere; «Provvigioni definitive» risulta disponibile.
+- `regole/aziende.html` e la Sala demo: artigiano a 19,90 €/mese più 5,90 € per lavoro (9,90 € se urgente); sponsor da 99 a 249 €/mese.
+- I PDF dei contratti e del regolamento in `dashboard/docs` sono quelli vecchi: non aggiornati.
+- Nell'app e nel database il costo per lavoro dell'artigiano resta 4,99 € (`artigiani.js`, colonna fee di app-23) finché Nando non conferma il nuovo prezzo.
+- `index.html`: messe nel commit solo le versioni `sala-demo.js?v=10` e `contratti-modelli.js?v=2`. Le altre modifiche locali a `index.html`, fatte da un'altra sessione, restano fuori dal commit. Attenzione: quella copia riporta indietro admin-task, regole-admin e app.
+- Niente SQL. Supabase, sito, magazine, app e Sicura non toccati.
+- File: `area-privata/dashboard/regole/listino.html`, `regole/rete.html`, `regole/aziende.html`, `js/contratti-modelli.js`, `js/sala-demo.js`, `index.html`, `CLAUDE.md`.
+
 ### 12.10.2026 15:29 · Cursor — presentazione del 13.10 online
 - Ok di Nando del 12.10.2026 per il commit `c32b810`. Niente SQL e nessuna funzione ripubblicata. App-27 (commit `56960fe`) era già eseguito e online dalla voce delle 15:25.
 - `area-privata/js/benvenuto.js` e `COMANDO-CURSOR-sopralluogo-invito.md` restano fuori: niente ok di Nando. Git push sul ramo main: già allineato, `e8fb0a5` (dentro c'è `c32b810`).

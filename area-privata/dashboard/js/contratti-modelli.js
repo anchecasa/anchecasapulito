@@ -71,7 +71,7 @@
     <p>4.2 Maturazione. Il diritto alla provvigione matura esclusivamente sulle somme effettivamente incassate dalla Società per gli affari andati a buon fine. Per i cantieri la provvigione matura per tranche, in proporzione agli incassi: 30% alla firma del contratto con il cliente e all'incasso dell'acconto; 30% a metà dei lavori; 40% al collaudo. In caso di mancato pagamento, recesso, risoluzione o rimborso al cliente, la provvigione relativa non matura ovvero, se già corrisposta, è restituita o compensata con le provvigioni successive.</p>
     <p>4.3 Pagamento. Entro il giorno 10 di ciascun mese la Società trasmette l'estratto conto delle provvigioni maturate nel mese precedente, con l'indicazione degli affari e degli incassi a cui si riferiscono, e provvede al pagamento entro il giorno 20 mediante bonifico, dietro emissione di regolare fattura.</p>
     <p>4.4 Oneri. La Società versa i contributi Enasarco nella misura di legge, trattenendo la quota a carico dell'agente, e opera le ritenute previste dalla normativa fiscale. Il FIRR e le indennità di fine rapporto spettano nei casi e nei limiti previsti dalla legge e dagli Accordi Economici Collettivi, ove applicabili.</p>
-    <p>4.5 Riservatezza del margine. Le quote sono calcolate sul margine della Società, determinato da quest'ultima per ciascuna operazione. La Società non è tenuta a comunicare i propri margini; l'estratto conto riporta le sole provvigioni spettanti.</p>
+    <p>4.5 Base di calcolo. Le quote sono calcolate sull'utile della Società, determinato secondo la sezione A.3 dell'Allegato A. L'estratto conto riporta, per ciascun affare, la base di calcolo e la provvigione spettante; la Società non è tenuta a comunicare i singoli costi né i prezzi delle imprese e dei fornitori.</p>
     <p>4.6 Clienti privati. Sull'iscrizione dei clienti privati e sui Servizi da essi acquistati non è prevista alcuna provvigione: le provvigioni spettano solo sui lavori, secondo la sezione A.2 dell'Allegato A e l'art. C.6 dell'Allegato C.</p>
 
     <h2>ART. 5 – RISERVATEZZA, DATI PERSONALI E MARCHIO</h2>
@@ -98,7 +98,7 @@
 
     <h2>ALLEGATO A – QUOTE DELLA RETE</h2>
     <p>Spettanze dell'Agente. Le quote sono espresse in percentuale della quota destinata alla rete.</p>
-    <p>A.1 Rendite (tutti i Servizi AncheCasa delle sezioni B.1–B.6 e B.8 dell'Allegato B, propri o di aziende partner, presenti e futuri). Alla rete è destinato il 35% dell'utile della Società su ciascun servizio, in misura fissa per tutta la durata del rapporto, ripartito come segue.</p>
+    <p>A.1 Rendite (tutti i Servizi AncheCasa delle sezioni B.1–B.6 e B.8 dell'Allegato B, propri o di aziende partner, presenti e futuri). Alla rete è destinato il 35% dell'utile della Società su ciascun servizio, in misura fissa per tutta la durata del rapporto, compresi i rinnovi degli abbonamenti, ripartito come segue. L'utile è calcolato come indicato alla sezione A.3.</p>
     <div class="tab"><table>
       <thead><tr><th>Ruolo</th><th>Quota della rete</th><th>Spettanza</th></tr></thead>
       <tbody>
@@ -108,7 +108,7 @@
         <tr><td>Responsabile Rete Italia</td><td>5%</td><td>Non spettante (Responsabile Rete Italia)</td></tr>
       </tbody></table></div>
     <p>Cliente segnalato da un terzo: a chi chiude il 45% e a chi segnala il 25% della quota della rete.</p>
-    <p>A.2 Cantieri e subappalti. Alla rete è destinato il 40% del margine lordo di ciascun cantiere ovvero, nei subappalti, della quota spettante alla Società, ripartito come segue.</p>
+    <p>A.2 Cantieri e subappalti. Alla rete è destinato il 40% dell'utile di ciascun cantiere ovvero, nei subappalti, della quota spettante alla Società, calcolati come indicato alla sezione A.3, ripartito come segue.</p>
     <div class="tab"><table>
       <thead><tr><th>Ruolo</th><th>Quota della rete</th><th>Spettanza</th></tr></thead>
       <tbody>
@@ -120,8 +120,9 @@
         <tr><td>Capo area</td><td>8%</td><td>Non spettante (capo area della regione)</td></tr>
         <tr><td>Responsabile Rete Italia</td><td>5%</td><td>Non spettante (Responsabile Rete Italia)</td></tr>
       </tbody></table></div>
-    <p class="fine">Le quote si applicano nei limiti delle regole di maturazione (incasso e tranche). Il margine è determinato dalla Società per ciascuna operazione e non è oggetto di comunicazione.</p>
-    <p class="fine">Quote in vigore dal 9 ottobre 2026, con l'introduzione del Responsabile Rete Italia: rendite 70% chi porta il cliente, 17% sviluppo rete, 8% capo area, 5% Responsabile Rete Italia; cantieri 10% chi segnala, 25% chi chiude, 30% chi segue, 10% chi ha portato l'impresa, 12% sviluppo rete, 8% capo area, 5% Responsabile Rete Italia.</p>
+    <p>A.3 Come si calcola l'utile. (a) Software (abbonamenti e moduli delle app AncheCasa, commissioni per lavoro, sponsorizzazioni): importo incassato al netto dell'IVA, meno le commissioni di pagamento sostenute, meno una quota fissa per i costi del software (sviluppo, server, assistenza) pari al 25% dell'importo incassato al netto dell'IVA. (b) Tutti gli altri servizi (luce e gas, telefonia, fornitori, finanza e assicurazioni, servizi per la casa e ogni altro servizio presente o futuro): compenso incassato dalla Società al netto dell'IVA, meno una quota fissa per i costi di gestione pari al 15% del compenso incassato al netto dell'IVA. (c) Cantieri: importo incassato dal cliente al netto dell'IVA, meno i costi diretti del cantiere (imprese e subappalti, materiali e forniture, oneri della sicurezza, spese tecniche e pratiche); le spese generali della Società non si sottraggono. Nei subappalti l'utile è la quota spettante alla Società, al netto dell'IVA. Le quote del 25% e del 15% restano invariate per tutta la durata del contratto, salvo accordo scritto.</p>
+    <p class="fine">Le quote si applicano nei limiti delle regole di maturazione (incasso e tranche). L'utile è determinato secondo la sezione A.3.</p>
+    <p class="fine">Quote in vigore dal 9 ottobre 2026, con l'introduzione del Responsabile Rete Italia: rendite 70% chi porta il cliente, 17% sviluppo rete, 8% capo area, 5% Responsabile Rete Italia; cantieri 10% chi segnala, 25% chi chiude, 30% chi segue, 10% chi ha portato l'impresa, 12% sviluppo rete, 8% capo area, 5% Responsabile Rete Italia. Calcolo dell'utile (sezione A.3) in vigore dal 12 ottobre 2026.</p>
 
     <h2>ALLEGATO B – SERVIZI ANCHECASA</h2>
     <p>Sono Servizi AncheCasa tutti i prodotti e servizi offerti dalla Società, direttamente o tramite aziende partner, presenti e futuri. L'elenco che segue è esemplificativo e non esaustivo; il listino aggiornato è sempre consultabile nella dashboard AncheCasa.</p>
@@ -229,7 +230,7 @@
 <p>5.3 Maturazione. Il diritto al compenso matura esclusivamente sulle somme effettivamente incassate dalla Società. Per i cantieri il compenso matura per tranche, in proporzione agli incassi: 30% alla firma del contratto con il cliente e all'incasso dell'acconto; 30% a metà dei lavori; 40% al collaudo. In caso di mancato pagamento, recesso, risoluzione o rimborso al cliente, il compenso relativo non matura ovvero, se già corrisposto, è restituito o compensato con i compensi successivi.</p>
 <p>5.4 Pagamento. Entro il giorno 10 di ciascun mese la Società trasmette al Collaboratore il prospetto dei compensi maturati nel mese precedente e provvede al pagamento entro il giorno 20 mediante bonifico, dietro emissione di ricevuta per prestazione occasionale, nei limiti dell'art. 6.</p>
 <p>5.5 Ritenuta. Sui compensi la Società opera, in qualità di sostituto d'imposta, la ritenuta d'acconto nella misura di legge (attualmente 20%) e ne cura il versamento.</p>
-<p>5.6 Riservatezza del margine. Le quote sono calcolate sul margine della Società, determinato da quest'ultima per ciascuna operazione. Il Collaboratore riconosce che la Società non è tenuta a comunicare i propri margini; il prospetto riporta i soli compensi spettanti.</p>
+<p>5.6 Base di calcolo. Le quote sono calcolate sull'utile della Società, determinato secondo la sezione A.3 dell'Allegato A. Il prospetto riporta, per ciascun affare, la base di calcolo e il compenso spettante; la Società non è tenuta a comunicare i singoli costi né i prezzi delle imprese e dei fornitori.</p>
 <p>5.7 Clienti privati. Sull'iscrizione dei clienti privati e sui Servizi da essi acquistati non è prevista alcuna provvigione: i compensi spettano solo sui lavori, secondo la sezione A.2 dell'Allegato A e l'art. C.6 dell'Allegato C.</p>
 <p>5.8 Clienti della Società affidati. Per i clienti della Società affidati al Collaboratore si applica l'art. C.5 dell'Allegato C.</p>
 <h2>ART. 6 – LIMITE DEI PAGAMENTI OCCASIONALI E AVVIO DELL'ATTIVITÀ PROFESSIONALE</h2>
@@ -259,7 +260,7 @@
 <p>10.3 L'eventuale invalidità di una clausola non comporta l'invalidità delle restanti.</p>
 <p>10.4 Per quanto non espressamente previsto si applicano le disposizioni del codice civile. Per ogni controversia relativa al presente contratto è competente in via esclusiva il Foro di Santa Maria Capua Vetere.</p>
 <h2>ALLEGATO A – QUOTE DELLA RETE</h2>
-<p>A.1 Rendite (tutti i Servizi AncheCasa delle sezioni B.1–B.6 e B.8 dell'Allegato B, propri o di aziende partner, presenti e futuri). Alla rete è destinato il 35% dell'utile della Società su ciascun servizio, in misura fissa per tutta la durata del rapporto, ripartito come segue.</p>
+<p>A.1 Rendite (tutti i Servizi AncheCasa delle sezioni B.1–B.6 e B.8 dell'Allegato B, propri o di aziende partner, presenti e futuri). Alla rete è destinato il 35% dell'utile della Società su ciascun servizio, in misura fissa per tutta la durata del rapporto, compresi i rinnovi degli abbonamenti, ripartito come segue. L'utile è calcolato come indicato alla sezione A.3.</p>
 <div class="tab"><table>
       <thead><tr><th>Ruolo</th><th>Quota della rete</th><th>Periodo di avvio</th><th>Dall'assegnazione dell'area</th></tr></thead>
       <tbody>
@@ -269,7 +270,7 @@
         <tr><td>Responsabile Rete Italia</td><td>5%</td><td>No</td><td>No</td></tr>
       </tbody></table></div>
 <p>Cliente segnalato da un terzo: a chi chiude il 45% e a chi segnala il 25% della quota della rete.</p>
-<p>A.2 Cantieri e subappalti. Alla rete è destinato il 40% del margine lordo di ciascun cantiere ovvero, nei subappalti, della quota spettante alla Società, ripartito come segue.</p>
+<p>A.2 Cantieri e subappalti. Alla rete è destinato il 40% dell'utile di ciascun cantiere ovvero, nei subappalti, della quota spettante alla Società, calcolati come indicato alla sezione A.3, ripartito come segue.</p>
 <div class="tab"><table>
       <thead><tr><th>Ruolo</th><th>Quota della rete</th><th>Periodo di avvio</th><th>Dall'assegnazione dell'area</th></tr></thead>
       <tbody>
@@ -281,8 +282,9 @@
         <tr><td>Capo area</td><td>8%</td><td>No</td><td>No</td></tr>
         <tr><td>Responsabile Rete Italia</td><td>5%</td><td>No</td><td>No</td></tr>
       </tbody></table></div>
-<p class="fine">Le quote si applicano nei limiti dell'art. 5 (maturazione all'incasso e per tranche) e dell'Allegato C (attribuzione dei clienti, clienti affidati, privati). Il margine è determinato dalla Società per ciascuna operazione e non è oggetto di comunicazione.</p>
-<p class="fine">Quote in vigore dal 9 ottobre 2026, con l'introduzione del Responsabile Rete Italia: rendite 70% chi porta il cliente, 17% sviluppo rete, 8% capo area, 5% Responsabile Rete Italia; cantieri 10% chi segnala, 25% chi chiude, 30% chi segue, 10% chi ha portato l'impresa, 12% sviluppo rete, 8% capo area, 5% Responsabile Rete Italia.</p>
+<p>A.3 Come si calcola l'utile. (a) Software (abbonamenti e moduli delle app AncheCasa, commissioni per lavoro, sponsorizzazioni): importo incassato al netto dell'IVA, meno le commissioni di pagamento sostenute, meno una quota fissa per i costi del software (sviluppo, server, assistenza) pari al 25% dell'importo incassato al netto dell'IVA. (b) Tutti gli altri servizi (luce e gas, telefonia, fornitori, finanza e assicurazioni, servizi per la casa e ogni altro servizio presente o futuro): compenso incassato dalla Società al netto dell'IVA, meno una quota fissa per i costi di gestione pari al 15% del compenso incassato al netto dell'IVA. (c) Cantieri: importo incassato dal cliente al netto dell'IVA, meno i costi diretti del cantiere (imprese e subappalti, materiali e forniture, oneri della sicurezza, spese tecniche e pratiche); le spese generali della Società non si sottraggono. Nei subappalti l'utile è la quota spettante alla Società, al netto dell'IVA. Le quote del 25% e del 15% restano invariate per tutta la durata del contratto, salvo accordo scritto.</p>
+<p class="fine">Le quote si applicano nei limiti dell'art. 5 (maturazione all'incasso e per tranche) e dell'Allegato C (attribuzione dei clienti, clienti affidati, privati). L'utile è determinato secondo la sezione A.3.</p>
+<p class="fine">Quote in vigore dal 9 ottobre 2026, con l'introduzione del Responsabile Rete Italia: rendite 70% chi porta il cliente, 17% sviluppo rete, 8% capo area, 5% Responsabile Rete Italia; cantieri 10% chi segnala, 25% chi chiude, 30% chi segue, 10% chi ha portato l'impresa, 12% sviluppo rete, 8% capo area, 5% Responsabile Rete Italia. Calcolo dell'utile (sezione A.3) in vigore dal 12 ottobre 2026.</p>
 <h2>ALLEGATO B – SERVIZI ANCHECASA</h2>
     <p>Sono Servizi AncheCasa tutti i prodotti e servizi offerti dalla Società, direttamente o tramite aziende partner, presenti e futuri. L'elenco che segue è esemplificativo e non esaustivo; il listino aggiornato è sempre consultabile nella dashboard AncheCasa.</p>
     <div class="tab"><table>
@@ -379,7 +381,7 @@
 <p>4.2 Maturazione. Il diritto alla provvigione matura esclusivamente sulle somme effettivamente incassate dalla Società per gli affari andati a buon fine. Per i cantieri la provvigione matura per tranche, in proporzione agli incassi: 30% alla firma del contratto con il cliente e all'incasso dell'acconto; 30% a metà dei lavori; 40% al collaudo. In caso di mancato pagamento, recesso, risoluzione o rimborso al cliente, la provvigione relativa non matura ovvero, se già corrisposta, è restituita o compensata con le provvigioni successive.</p>
 <p>4.3 Pagamento. Entro il giorno 10 di ciascun mese la Società trasmette l'estratto conto delle provvigioni maturate nel mese precedente, con l'indicazione degli affari e degli incassi a cui si riferiscono, e provvede al pagamento entro il giorno 20 mediante bonifico, dietro emissione di regolare fattura.</p>
 <p>4.4 Oneri. La Società versa i contributi Enasarco nella misura di legge, trattenendo la quota a carico dell'agente, e opera le ritenute previste dalla normativa fiscale. Il FIRR e le indennità di fine rapporto spettano nei casi e nei limiti previsti dalla legge e dagli Accordi Economici Collettivi, ove applicabili.</p>
-<p>4.5 Riservatezza del margine. Le quote sono calcolate sul margine della Società, determinato da quest'ultima per ciascuna operazione. La Società non è tenuta a comunicare i propri margini; l'estratto conto riporta le sole provvigioni spettanti.</p>
+<p>4.5 Base di calcolo. Le quote sono calcolate sull'utile della Società, determinato secondo la sezione A.3 dell'Allegato A. L'estratto conto riporta, per ciascun affare, la base di calcolo e la provvigione spettante; la Società non è tenuta a comunicare i singoli costi né i prezzi delle imprese e dei fornitori.</p>
 <p>4.6 Clienti privati. Sull'iscrizione dei clienti privati e sui Servizi da essi acquistati non è prevista alcuna provvigione: le provvigioni spettano solo sui lavori, secondo la sezione A.2 dell'Allegato A e l'art. C.6 dell'Allegato C.</p>
 <p>4.7 Quota capo area. Al Capo Area spetta la quota “capo area” dell'Allegato A sugli affari della propria linea (agenti, sub-agenti e segnalatori da lui proposti e le loro squadre), in qualsiasi regione, e sugli affari della Regione acquisiti da componenti della rete che non hanno un capo area nella propria linea, oltre alle quote di ruolo sui clienti acquisiti, chiusi o seguiti personalmente. Restano salvi gli artt. C.5 e C.8 dell'Allegato C.</p>
 <h2>ART. 5 – RISERVATEZZA, DATI PERSONALI E MARCHIO</h2>
@@ -405,7 +407,7 @@
 <p>9.4 Per quanto non espressamente previsto si applicano le disposizioni del codice civile in materia di contratto di agenzia (artt. 1742–1753 c.c.) e, ove applicabili, gli Accordi Economici Collettivi. Per ogni controversia relativa al presente contratto è competente in via esclusiva il Foro di Santa Maria Capua Vetere, salvo i casi di competenza inderogabile previsti dalla legge.</p>
 <h2>ALLEGATO A – QUOTE DELLA RETE</h2>
 <p>Spettanze del Capo Area. Le quote sono espresse in percentuale della quota destinata alla rete.</p>
-<p>A.1 Rendite (tutti i Servizi AncheCasa delle sezioni B.1–B.6 e B.8 dell'Allegato B, propri o di aziende partner, presenti e futuri). Alla rete è destinato il 35% dell'utile della Società su ciascun servizio, in misura fissa per tutta la durata del rapporto, ripartito come segue.</p>
+<p>A.1 Rendite (tutti i Servizi AncheCasa delle sezioni B.1–B.6 e B.8 dell'Allegato B, propri o di aziende partner, presenti e futuri). Alla rete è destinato il 35% dell'utile della Società su ciascun servizio, in misura fissa per tutta la durata del rapporto, compresi i rinnovi degli abbonamenti, ripartito come segue. L'utile è calcolato come indicato alla sezione A.3.</p>
 <div class="tab"><table>
       <thead><tr><th>Ruolo</th><th>Quota della rete</th><th>Spettanza</th></tr></thead>
       <tbody>
@@ -415,7 +417,7 @@
         <tr><td>Responsabile Rete Italia</td><td>5%</td><td>Non spettante (Responsabile Rete Italia)</td></tr>
       </tbody></table></div>
 <p>Cliente segnalato da un terzo: a chi chiude il 45% e a chi segnala il 25% della quota della rete.</p>
-<p>A.2 Cantieri e subappalti. Alla rete è destinato il 40% del margine lordo di ciascun cantiere ovvero, nei subappalti, della quota spettante alla Società, ripartito come segue.</p>
+<p>A.2 Cantieri e subappalti. Alla rete è destinato il 40% dell'utile di ciascun cantiere ovvero, nei subappalti, della quota spettante alla Società, calcolati come indicato alla sezione A.3, ripartito come segue.</p>
 <div class="tab"><table>
       <thead><tr><th>Ruolo</th><th>Quota della rete</th><th>Spettanza</th></tr></thead>
       <tbody>
@@ -427,8 +429,9 @@
         <tr><td>Capo area</td><td>8%</td><td>Sui cantieri della propria linea e della Regione (art. 4.7)</td></tr>
         <tr><td>Responsabile Rete Italia</td><td>5%</td><td>Non spettante (Responsabile Rete Italia)</td></tr>
       </tbody></table></div>
-<p class="fine">Le quote si applicano nei limiti delle regole di maturazione (incasso e tranche). Il margine è determinato dalla Società per ciascuna operazione e non è oggetto di comunicazione.</p>
-<p class="fine">Quote in vigore dal 9 ottobre 2026, con l'introduzione del Responsabile Rete Italia: rendite 70% chi porta il cliente, 17% sviluppo rete, 8% capo area, 5% Responsabile Rete Italia; cantieri 10% chi segnala, 25% chi chiude, 30% chi segue, 10% chi ha portato l'impresa, 12% sviluppo rete, 8% capo area, 5% Responsabile Rete Italia.</p>
+<p>A.3 Come si calcola l'utile. (a) Software (abbonamenti e moduli delle app AncheCasa, commissioni per lavoro, sponsorizzazioni): importo incassato al netto dell'IVA, meno le commissioni di pagamento sostenute, meno una quota fissa per i costi del software (sviluppo, server, assistenza) pari al 25% dell'importo incassato al netto dell'IVA. (b) Tutti gli altri servizi (luce e gas, telefonia, fornitori, finanza e assicurazioni, servizi per la casa e ogni altro servizio presente o futuro): compenso incassato dalla Società al netto dell'IVA, meno una quota fissa per i costi di gestione pari al 15% del compenso incassato al netto dell'IVA. (c) Cantieri: importo incassato dal cliente al netto dell'IVA, meno i costi diretti del cantiere (imprese e subappalti, materiali e forniture, oneri della sicurezza, spese tecniche e pratiche); le spese generali della Società non si sottraggono. Nei subappalti l'utile è la quota spettante alla Società, al netto dell'IVA. Le quote del 25% e del 15% restano invariate per tutta la durata del contratto, salvo accordo scritto.</p>
+<p class="fine">Le quote si applicano nei limiti delle regole di maturazione (incasso e tranche). L'utile è determinato secondo la sezione A.3.</p>
+<p class="fine">Quote in vigore dal 9 ottobre 2026, con l'introduzione del Responsabile Rete Italia: rendite 70% chi porta il cliente, 17% sviluppo rete, 8% capo area, 5% Responsabile Rete Italia; cantieri 10% chi segnala, 25% chi chiude, 30% chi segue, 10% chi ha portato l'impresa, 12% sviluppo rete, 8% capo area, 5% Responsabile Rete Italia. Calcolo dell'utile (sezione A.3) in vigore dal 12 ottobre 2026.</p>
 <h2>ALLEGATO B – SERVIZI ANCHECASA</h2>
     <p>Sono Servizi AncheCasa tutti i prodotti e servizi offerti dalla Società, direttamente o tramite aziende partner, presenti e futuri. L'elenco che segue è esemplificativo e non esaustivo; il listino aggiornato è sempre consultabile nella dashboard AncheCasa.</p>
     <div class="tab"><table>
@@ -522,7 +525,7 @@
 <p>4.2 Maturazione. Il diritto alla provvigione matura esclusivamente sulle somme effettivamente incassate dalla Società per gli affari andati a buon fine. Per i cantieri la provvigione matura per tranche, in proporzione agli incassi: 30% alla firma del contratto con il cliente e all'incasso dell'acconto; 30% a metà dei lavori; 40% al collaudo. In caso di mancato pagamento, recesso, risoluzione o rimborso al cliente, la provvigione relativa non matura ovvero, se già corrisposta, è restituita o compensata con le provvigioni successive.</p>
 <p>4.3 Pagamento. Entro il giorno 10 di ciascun mese la Società trasmette il prospetto dei compensi maturati nel mese precedente e provvede al pagamento entro il giorno 20 mediante bonifico, dietro ricevuta per prestazione occasionale nella Fase di prova o fattura nella Fase professionale, nei limiti dell'art. 6.</p>
 <p>4.4 Oneri. Nella Fase di prova la Società opera la ritenuta d'acconto nella misura di legge (attualmente 20%). Nella Fase professionale si applicano le ritenute fiscali e, ove dovuti, i contributi Enasarco nella misura di legge.</p>
-<p>4.5 Riservatezza del margine. Le quote sono calcolate sul margine della Società, determinato da quest'ultima per ciascuna operazione. La Società non è tenuta a comunicare i propri margini; l'estratto conto riporta le sole provvigioni spettanti.</p>
+<p>4.5 Base di calcolo. Le quote sono calcolate sull'utile della Società, determinato secondo la sezione A.3 dell'Allegato A. L'estratto conto riporta, per ciascun affare, la base di calcolo e la provvigione spettante; la Società non è tenuta a comunicare i singoli costi né i prezzi delle imprese e dei fornitori.</p>
 <p>4.6 Clienti privati. Sull'iscrizione dei clienti privati e sui Servizi da essi acquistati non è prevista alcuna provvigione: le provvigioni spettano solo sui lavori, secondo la sezione A.2 dell'Allegato A e l'art. C.6 dell'Allegato C.</p>
 <p>4.7 Ripartizione con l'Agente di riferimento. Sulle quote di ruolo maturate dal Sub-agente secondo l'Allegato A, al Sub-agente spetta il 70% e all'Agente di riferimento il 30%. La Società paga direttamente a ciascuno la parte di propria spettanza.</p>
 <h2>ART. 5 – RISERVATEZZA, DATI PERSONALI E MARCHIO</h2>
@@ -553,7 +556,7 @@
 <p>9.4 Per quanto non espressamente previsto si applicano le disposizioni del codice civile e, per la Fase professionale, le norme in materia di contratto di agenzia (artt. 1742–1753 c.c.). Per ogni controversia relativa al presente contratto è competente in via esclusiva il Foro di Santa Maria Capua Vetere, salvo i casi di competenza inderogabile previsti dalla legge.</p>
 <h2>ALLEGATO A – QUOTE DELLA RETE</h2>
 <p>Spettanze del Sub-agente. Le quote sono espresse in percentuale della quota destinata alla rete; sulla quota di ruolo maturata, il 70% spetta al Sub-agente e il 30% all'Agente di riferimento (art. 4.7).</p>
-<p>A.1 Rendite (tutti i Servizi AncheCasa delle sezioni B.1–B.6 e B.8 dell'Allegato B, propri o di aziende partner, presenti e futuri). Alla rete è destinato il 35% dell'utile della Società su ciascun servizio, in misura fissa per tutta la durata del rapporto, ripartito come segue.</p>
+<p>A.1 Rendite (tutti i Servizi AncheCasa delle sezioni B.1–B.6 e B.8 dell'Allegato B, propri o di aziende partner, presenti e futuri). Alla rete è destinato il 35% dell'utile della Società su ciascun servizio, in misura fissa per tutta la durata del rapporto, compresi i rinnovi degli abbonamenti, ripartito come segue. L'utile è calcolato come indicato alla sezione A.3.</p>
 <div class="tab"><table>
       <thead><tr><th>Ruolo</th><th>Quota della rete</th><th>Spettanza</th></tr></thead>
       <tbody>
@@ -563,7 +566,7 @@
         <tr><td>Responsabile Rete Italia</td><td>5%</td><td>Non spettante</td></tr>
       </tbody></table></div>
 <p>Cliente segnalato da un terzo: a chi chiude il 45% e a chi segnala il 25% della quota della rete.</p>
-<p>A.2 Cantieri e subappalti. Alla rete è destinato il 40% del margine lordo di ciascun cantiere ovvero, nei subappalti, della quota spettante alla Società, ripartito come segue.</p>
+<p>A.2 Cantieri e subappalti. Alla rete è destinato il 40% dell'utile di ciascun cantiere ovvero, nei subappalti, della quota spettante alla Società, calcolati come indicato alla sezione A.3, ripartito come segue.</p>
 <div class="tab"><table>
       <thead><tr><th>Ruolo</th><th>Quota della rete</th><th>Spettanza</th></tr></thead>
       <tbody>
@@ -575,8 +578,9 @@
         <tr><td>Capo area</td><td>8%</td><td>Non spettante</td></tr>
         <tr><td>Responsabile Rete Italia</td><td>5%</td><td>Non spettante</td></tr>
       </tbody></table></div>
-<p class="fine">Le quote si applicano nei limiti delle regole di maturazione (incasso e tranche). Il margine è determinato dalla Società per ciascuna operazione e non è oggetto di comunicazione.</p>
-<p class="fine">Quote in vigore dal 9 ottobre 2026, con l'introduzione del Responsabile Rete Italia: rendite 70% chi porta il cliente, 17% sviluppo rete, 8% capo area, 5% Responsabile Rete Italia; cantieri 10% chi segnala, 25% chi chiude, 30% chi segue, 10% chi ha portato l'impresa, 12% sviluppo rete, 8% capo area, 5% Responsabile Rete Italia.</p>
+<p>A.3 Come si calcola l'utile. (a) Software (abbonamenti e moduli delle app AncheCasa, commissioni per lavoro, sponsorizzazioni): importo incassato al netto dell'IVA, meno le commissioni di pagamento sostenute, meno una quota fissa per i costi del software (sviluppo, server, assistenza) pari al 25% dell'importo incassato al netto dell'IVA. (b) Tutti gli altri servizi (luce e gas, telefonia, fornitori, finanza e assicurazioni, servizi per la casa e ogni altro servizio presente o futuro): compenso incassato dalla Società al netto dell'IVA, meno una quota fissa per i costi di gestione pari al 15% del compenso incassato al netto dell'IVA. (c) Cantieri: importo incassato dal cliente al netto dell'IVA, meno i costi diretti del cantiere (imprese e subappalti, materiali e forniture, oneri della sicurezza, spese tecniche e pratiche); le spese generali della Società non si sottraggono. Nei subappalti l'utile è la quota spettante alla Società, al netto dell'IVA. Le quote del 25% e del 15% restano invariate per tutta la durata del contratto, salvo accordo scritto.</p>
+<p class="fine">Le quote si applicano nei limiti delle regole di maturazione (incasso e tranche). L'utile è determinato secondo la sezione A.3.</p>
+<p class="fine">Quote in vigore dal 9 ottobre 2026, con l'introduzione del Responsabile Rete Italia: rendite 70% chi porta il cliente, 17% sviluppo rete, 8% capo area, 5% Responsabile Rete Italia; cantieri 10% chi segnala, 25% chi chiude, 30% chi segue, 10% chi ha portato l'impresa, 12% sviluppo rete, 8% capo area, 5% Responsabile Rete Italia. Calcolo dell'utile (sezione A.3) in vigore dal 12 ottobre 2026.</p>
 <h2>ALLEGATO B – SERVIZI ANCHECASA</h2>
     <p>Sono Servizi AncheCasa tutti i prodotti e servizi offerti dalla Società, direttamente o tramite aziende partner, presenti e futuri. L'elenco che segue è esemplificativo e non esaustivo; il listino aggiornato è sempre consultabile nella dashboard AncheCasa.</p>
     <div class="tab"><table>
@@ -673,7 +677,7 @@
 <p>4.2 Maturazione. Il diritto alla provvigione matura esclusivamente sulle somme effettivamente incassate dalla Società per gli affari andati a buon fine. Per i cantieri la provvigione matura per tranche, in proporzione agli incassi: 30% alla firma del contratto con il cliente e all'incasso dell'acconto; 30% a metà dei lavori; 40% al collaudo. In caso di mancato pagamento, recesso, risoluzione o rimborso al cliente, la provvigione relativa non matura ovvero, se già corrisposta, è restituita o compensata con le provvigioni successive.</p>
 <p>4.3 Pagamento. Entro il giorno 10 di ciascun mese la Società trasmette l'estratto conto delle provvigioni maturate nel mese precedente, con l'indicazione degli affari e degli incassi a cui si riferiscono, e provvede al pagamento entro il giorno 20 mediante bonifico, dietro emissione di regolare fattura.</p>
 <p>4.4 Oneri. La Società versa i contributi Enasarco nella misura di legge, trattenendo la quota a carico dell'agente, e opera le ritenute previste dalla normativa fiscale. Il FIRR e le indennità di fine rapporto spettano nei casi e nei limiti previsti dalla legge e dagli Accordi Economici Collettivi, ove applicabili.</p>
-<p>4.5 Riservatezza del margine. Le quote sono calcolate sul margine della Società, determinato da quest'ultima per ciascuna operazione. La Società non è tenuta a comunicare i propri margini; l'estratto conto riporta le sole provvigioni spettanti.</p>
+<p>4.5 Base di calcolo. Le quote sono calcolate sull'utile della Società, determinato secondo la sezione A.3 dell'Allegato A. L'estratto conto riporta, per ciascun affare, la base di calcolo e la provvigione spettante; la Società non è tenuta a comunicare i singoli costi né i prezzi delle imprese e dei fornitori.</p>
 <p>4.6 Clienti privati. Sull'iscrizione dei clienti privati e sui Servizi da essi acquistati non è prevista alcuna provvigione: le provvigioni spettano solo sui lavori, secondo la sezione A.2 dell'Allegato A e l'art. C.6 dell'Allegato C.</p>
 <p>4.7 Quota Rete Italia. Al Responsabile Rete Italia spetta la quota “Responsabile Rete Italia” dell'Allegato A su tutti gli affari del Territorio, inclusi quelli acquisiti da Responsabili Sviluppo Rete, capi area, agenti, sub-agenti e segnalatori, oltre alle quote di ruolo sui clienti acquisiti, chiusi o seguiti personalmente. Sui clienti della Società affidati ai sensi dell'art. C.5 dell'Allegato C la quota non spetta.</p>
 <h2>ART. 5 – RISERVATEZZA, DATI PERSONALI E MARCHIO</h2>
@@ -699,7 +703,7 @@
 <p>9.4 Per quanto non espressamente previsto si applicano le disposizioni del codice civile in materia di contratto di agenzia (artt. 1742–1753 c.c.) e, ove applicabili, gli Accordi Economici Collettivi. Per ogni controversia relativa al presente contratto è competente in via esclusiva il Foro di Santa Maria Capua Vetere, salvo i casi di competenza inderogabile previsti dalla legge.</p>
 <h2>ALLEGATO A – QUOTE DELLA RETE</h2>
 <p>Spettanze del Responsabile Rete Italia. Le quote sono espresse in percentuale della quota destinata alla rete.</p>
-<p>A.1 Rendite (tutti i Servizi AncheCasa delle sezioni B.1–B.6 e B.8 dell'Allegato B, propri o di aziende partner, presenti e futuri). Alla rete è destinato il 35% dell'utile della Società su ciascun servizio, in misura fissa per tutta la durata del rapporto, ripartito come segue.</p>
+<p>A.1 Rendite (tutti i Servizi AncheCasa delle sezioni B.1–B.6 e B.8 dell'Allegato B, propri o di aziende partner, presenti e futuri). Alla rete è destinato il 35% dell'utile della Società su ciascun servizio, in misura fissa per tutta la durata del rapporto, compresi i rinnovi degli abbonamenti, ripartito come segue. L'utile è calcolato come indicato alla sezione A.3.</p>
 <div class="tab"><table>
       <thead><tr><th>Ruolo</th><th>Quota della rete</th><th>Spettanza</th></tr></thead>
       <tbody>
@@ -709,7 +713,7 @@
         <tr><td>Responsabile Rete Italia</td><td>5%</td><td>Su tutti gli affari del territorio nazionale</td></tr>
       </tbody></table></div>
 <p>Cliente segnalato da un terzo: a chi chiude il 45% e a chi segnala il 25% della quota della rete.</p>
-<p>A.2 Cantieri e subappalti. Alla rete è destinato il 40% del margine lordo di ciascun cantiere ovvero, nei subappalti, della quota spettante alla Società, ripartito come segue.</p>
+<p>A.2 Cantieri e subappalti. Alla rete è destinato il 40% dell'utile di ciascun cantiere ovvero, nei subappalti, della quota spettante alla Società, calcolati come indicato alla sezione A.3, ripartito come segue.</p>
 <div class="tab"><table>
       <thead><tr><th>Ruolo</th><th>Quota della rete</th><th>Spettanza</th></tr></thead>
       <tbody>
@@ -721,8 +725,9 @@
         <tr><td>Capo area</td><td>8%</td><td>Non spettante (capo area della regione)</td></tr>
         <tr><td>Responsabile Rete Italia</td><td>5%</td><td>Su tutti i cantieri del territorio nazionale</td></tr>
       </tbody></table></div>
-<p class="fine">Le quote si applicano nei limiti delle regole di maturazione (incasso e tranche). Il margine è determinato dalla Società per ciascuna operazione e non è oggetto di comunicazione.</p>
-<p class="fine">Quote in vigore dal 9 ottobre 2026, con l'introduzione del Responsabile Rete Italia: rendite 70% chi porta il cliente, 17% sviluppo rete, 8% capo area, 5% Responsabile Rete Italia; cantieri 10% chi segnala, 25% chi chiude, 30% chi segue, 10% chi ha portato l'impresa, 12% sviluppo rete, 8% capo area, 5% Responsabile Rete Italia.</p>
+<p>A.3 Come si calcola l'utile. (a) Software (abbonamenti e moduli delle app AncheCasa, commissioni per lavoro, sponsorizzazioni): importo incassato al netto dell'IVA, meno le commissioni di pagamento sostenute, meno una quota fissa per i costi del software (sviluppo, server, assistenza) pari al 25% dell'importo incassato al netto dell'IVA. (b) Tutti gli altri servizi (luce e gas, telefonia, fornitori, finanza e assicurazioni, servizi per la casa e ogni altro servizio presente o futuro): compenso incassato dalla Società al netto dell'IVA, meno una quota fissa per i costi di gestione pari al 15% del compenso incassato al netto dell'IVA. (c) Cantieri: importo incassato dal cliente al netto dell'IVA, meno i costi diretti del cantiere (imprese e subappalti, materiali e forniture, oneri della sicurezza, spese tecniche e pratiche); le spese generali della Società non si sottraggono. Nei subappalti l'utile è la quota spettante alla Società, al netto dell'IVA. Le quote del 25% e del 15% restano invariate per tutta la durata del contratto, salvo accordo scritto.</p>
+<p class="fine">Le quote si applicano nei limiti delle regole di maturazione (incasso e tranche). L'utile è determinato secondo la sezione A.3.</p>
+<p class="fine">Quote in vigore dal 9 ottobre 2026, con l'introduzione del Responsabile Rete Italia: rendite 70% chi porta il cliente, 17% sviluppo rete, 8% capo area, 5% Responsabile Rete Italia; cantieri 10% chi segnala, 25% chi chiude, 30% chi segue, 10% chi ha portato l'impresa, 12% sviluppo rete, 8% capo area, 5% Responsabile Rete Italia. Calcolo dell'utile (sezione A.3) in vigore dal 12 ottobre 2026.</p>
 <h2>ALLEGATO B – SERVIZI ANCHECASA</h2>
     <p>Sono Servizi AncheCasa tutti i prodotti e servizi offerti dalla Società, direttamente o tramite aziende partner, presenti e futuri. L'elenco che segue è esemplificativo e non esaustivo; il listino aggiornato è sempre consultabile nella dashboard AncheCasa.</p>
     <div class="tab"><table>
