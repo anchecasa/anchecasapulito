@@ -42,7 +42,14 @@
     adm_tecnico: "Tecnico",
     adm_comunicazione: "Comunicazione",
     adm_lavoro: "Il mio lavoro",
-    adm_piattaforma: "Impostazioni piattaforma"
+    adm_piattaforma: "Impostazioni piattaforma",
+    // Privato a categorie (12.10.2026, PROGETTO-DASHBOARD.md)
+    pv_casa: "La mia casa",
+    pv_bacheca: "Bacheca",
+    pv_mie: "Le mie cose",
+    pv_risparmio: "Risparmia",
+    pv_app: "Le mie app",
+    pv_passaparola: "Passaparola"
   };
 
   const TIPO_SETTORE = {
@@ -269,10 +276,24 @@
 
   function navItems(famiglia) {
     if (famiglia === "privato") {
+      /* 12.10.2026, deciso da Nando (PROGETTO-DASHBOARD.md): privato a categorie, tutto gratis.
+         Le pagine «pv-…» sono schede del progetto (js/privato-progetto.js) finché la funzione vera non c'è.
+         Chat si apre dal fumetto in alto. */
+      const c = (id, label, iconName, fold, extra) => Object.assign({ id: id, label: label, icon: iconName, gruppo: "pack", fold: fold }, extra || {});
       return [
-        { id: "pubblica", label: "Pubblica", icon: "send", gruppo: "fisso", cuore: true },
-        { id: "chat", label: "Chat", icon: "chat", gruppo: "fisso" },
-        { id: "inviti", label: "Inviti", icon: "send", gruppo: "fisso" }
+        c("pv-guasto", "Ho un guasto", "gear", "pv_casa", { cuore: true }),
+        c("pv-trova", "Trova artigiano o impresa", "team", "pv_casa"),
+        c("pv-ristruttura", "Ristruttura con AncheCasa", "building", "pv_casa"),
+        c("pv-mio-cantiere", "Il mio cantiere", "home", "pv_casa", { nota: "Solo con un cantiere aperto" }),
+        c("pv-annunci", "Bacheca annunci", "grid", "pv_bacheca"),
+        c("pubblica", "Pubblica un annuncio", "send", "pv_bacheca"),
+        c("pv-mie-richieste", "Le mie richieste", "doc", "pv_mie"),
+        c("pv-miei-annunci", "I miei annunci", "doc", "pv_mie"),
+        c("pv-check-bollette", "Check Bollette", "wallet", "pv_risparmio"),
+        c("pv-offerte-luce", "Offerte luce e gas", "pulse", "pv_risparmio"),
+        c("pv-mie-app", "Le mie app", "star", "pv_app"),
+        c("inviti", "Invita e guadagna credito", "star", "pv_passaparola"),
+        { id: "chat", label: "Chat", icon: "chat", gruppo: "fisso", soloTestata: true }
       ];
     }
     if (famiglia === "azienda") {
@@ -823,7 +844,7 @@
       if (inFold) foldOpen[f.id] = true;
       else if (foldOpen[f.id] === undefined) foldOpen[f.id] = false;
       const open = !!foldOpen[f.id];
-      htmlNav += '<div class="nav-sep" aria-hidden="true"></div>';
+      if (htmlNav) htmlNav += '<div class="nav-sep" aria-hidden="true"></div>'; // 12.10.2026: niente riga sopra la prima cartella
       htmlNav += html`<button type="button" class="nav-fold" data-fold="${f.id}" aria-expanded="${open ? "true" : "false"}">
         ${icon("folder")}${f.lab}
       </button>`.s;
@@ -1003,8 +1024,10 @@
       el.innerHTML = '<div class="card empty"><strong>Impossibile mostrare questa pagina</strong><span>Ricarica.</span></div>';
     }
 
-    titleEl.textContent = v.title;
-    subEl.textContent = v.sub;
+    // 12.10.2026: per il privato alcune pagine di oggi hanno il nome nuovo deciso nel progetto.
+    const rin = famiglia === "privato" && AC.privatoProgetto && AC.privatoProgetto.RINOMINA[page];
+    titleEl.textContent = rin ? rin.title : v.title;
+    subEl.textContent = rin ? rin.note : v.sub;
     document.title = v.title + " · AncheCasa";
     dateEl.textContent = D.fmt(D.today());
     paintNav(famiglia, page);

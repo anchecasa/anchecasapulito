@@ -20,6 +20,14 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 12.10.2026 07:25 · Claude — progetto delle dashboard e privato a categorie (NON pubblicato)
+- Nuovo `PROGETTO-DASHBOARD.md` nella cartella principale: le decisioni di Nando, profilo per profilo (regole di lavoro, admin, privato). Si costruisce da lì.
+- Privato a categorie, tutto gratis: La mia casa (Ho un guasto, Trova artigiano o impresa, Ristruttura con AncheCasa, Il mio cantiere), Bacheca (Bacheca annunci, Pubblica un annuncio), Le mie cose (Le mie richieste, I miei annunci), Risparmia (Check Bollette, Offerte luce e gas), Le mie app, Passaparola (Invita e guadagna credito). Chat dal fumetto in alto.
+- Le pagine nuove sono schede del progetto (`js/privato-progetto.js`, id `pv-…`): cosa fa il pulsante, come funziona, regole, e se c'è già nell'app o è da costruire. Pubblica e Inviti restano le pagine di oggi, con il nome nuovo.
+- Il menu non mette più una riga sopra la prima cartella.
+- Provato in locale con ?demo: admin mette Privato «tutti gratis» e salva; il privato vede le 6 categorie e le schede. Copia di prima: `_copie-privato-0725`.
+- File: `PROGETTO-DASHBOARD.md` (nuovo), `area-privata/dashboard/js/privato-progetto.js` (nuovo), `js/app.js`, `css/admin-task.css`, `index.html` (app.js ?v=16, admin-task.css ?v=7), `CLAUDE.md`.
+
 ### 12.10.2026 07:01 · Cursor — menu admin a categorie e testata pubblicati
 - Invio su GitHub, ramo main, commit `652920b`. Pubblicata solo la cartella `area-privata` sul progetto Vercel `area-privata-produzione`, deployment `dpl_CinAM6rWndaFSPsRfopKuZjnMC7h`, alias https://areaprivata.anchecasa.it. Sito, app, magazine, sicura e Supabase non toccati.
 - Controllo online: https://areaprivata.anchecasa.it/dashboard/index.html carica `js/app.js?v=15` e `css/testata.css?v=1`.

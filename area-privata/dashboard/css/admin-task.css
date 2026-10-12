@@ -260,3 +260,12 @@ button.rp-apri:hover { text-decoration: underline; }
 .pp-salva:disabled, #pp-annulla:disabled { opacity: .45; cursor: default; box-shadow: none; }
 .nav-paga { margin-left: auto; margin-right: 10px; padding: 0 6px; border-radius: 99px; background: var(--orange-soft); color: var(--orange-ink); font-size: 11px; font-weight: 800; }
 @media (max-width: 980px) { .pp { grid-template-columns: 1fr; } .pp-profili { position: static; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); } }
+
+/* Privato · schede del progetto (12.10.2026, js/privato-progetto.js) */
+.pv-scheda > p { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 0 0 12px; }
+.pv-scheda > p .sw-stato { margin: 0; }
+.pv-scheda > p .note { display: inline; margin: 0; }
+.pv-due { display: grid; grid-template-columns: 1.4fr 1fr; gap: 16px; align-items: start; }
+.pv-due h2 { margin: 0 0 10px; font-size: 16px; color: var(--navy); }
+.pv-lista { margin: 0; padding-left: 20px; display: grid; gap: 8px; color: var(--text); line-height: 1.45; }
+@media (max-width: 980px) { .pv-due { grid-template-columns: 1fr; } }
