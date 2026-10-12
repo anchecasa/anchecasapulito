@@ -29,6 +29,15 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 12.10.2026 15:29 · Cursor — presentazione del 13.10 online
+- Ok di Nando del 12.10.2026 per il commit `c32b810`. Niente SQL e nessuna funzione ripubblicata. App-27 (commit `56960fe`) era già eseguito e online dalla voce delle 15:25.
+- `area-privata/js/benvenuto.js` e `COMANDO-CURSOR-sopralluogo-invito.md` restano fuori: niente ok di Nando. Git push sul ramo main: già allineato, `e8fb0a5` (dentro c'è `c32b810`).
+- Area privata, progetto Vercel `area-privata-produzione`, deployment `dpl_8eq6ja5jxp9q4yKU6RcmXVqptRjB`, alias https://entra.anchecasa.it e https://areaprivata.anchecasa.it. La dashboard online carica `js/sala-demo.js?v=9` (12699 byte), `js/app.js?v=32` (77175 byte), `js/regole-admin.js?v=4` (3150 byte) e `css/admin-task.css?v=16` (23805 byte). I quattro file rispondono 200. https://entra.anchecasa.it/dashboard/regole/aziende.html risponde 200, 15040 byte.
+- Aperta https://entra.anchecasa.it/dashboard/index.html?demo=admin&vetrina=1#/admin/sala-demo. I 10 passi si aprono: Home admin, Ho un guasto del privato, Home dell'agente, I miei cantieri, Richieste per te, Richieste dell'artigiano, Ristrutturazioni, Cerca gare (4 gare di esempio), Home luce e gas, e «Vai» porta ai documenti in fondo alla stessa pagina.
+- La voce delle 15:28 diceva non pubblicato: ora la Sala demo con la scaletta è online.
+- Supabase, sito, magazine, app e Sicura non toccati.
+- File: `CLAUDE.md`.
+
 ### 12.10.2026 15:25 · Cursor — app-27 eseguito, gare online sull'area privata
 - Ok di Nando del 12.10.2026 per il commit `56960fe`. Eseguito `app-anchecasa/sql/app-27-gare-aziende.sql` sul progetto ANCHECASA. Controlli: c'è `marketplace.gare_mie`. La colonna `cantiere_richieste.prezzo` c'è. Funzioni: `gare_cerca`, `cantiere_pubblica`, `cantiere_richieste_per_me`. Le funzioni Edge non sono state toccate.
 - `area-privata/js/benvenuto.js` è stato modificato da Claude (Opus), sessione del commit `56960fe`, il 12.10.2026 alle 15:03, insieme a `COMANDO-CURSOR-sopralluogo-invito.md`. È il ritorno al sopralluogo dopo la password (`poi`). Non è in nessun commit. Non è stato incluso né pubblicato: online `js/benvenuto.js?v=2` è la versione di prima, 7483 byte, senza quel ritorno.
