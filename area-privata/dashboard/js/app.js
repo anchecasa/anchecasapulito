@@ -4,7 +4,7 @@
   const S = AC.store;
   const D = AC.date;
 
-  /* CONGELATO 20.09.2026. Famiglie e pulsanti. Non cambiare FOLD_LAB, UFFICIO, PACKS, packFornitore, navItems, HEADER_OPP. Non aggiungere, togliere o rinominare pieghe o tasti. Eccezione 11.10.2026, su richiesta esplicita di Nando: tasto «Home» (grafici, js/home.js) primo per admin e agenti. Eccezione 11.10.2026 sera: tasti admin Terranova, Gare private e AncheBIM (js/funzioni-interne.js), funzioni interne, non siti a parte. Eccezione 12.10.2026: tasto admin «Software» (js/software-admin.js), secondo dopo Home, con tutti i software per categoria. Eccezione 12.10.2026: tasto admin «Pulsanti per profilo» (js/pulsanti-profili.js); i menu di privato, azienda e agente mostrano solo i pulsanti che l'admin ha scelto lì.
+  /* CONGELATO 20.09.2026. Famiglie e pulsanti. Non cambiare FOLD_LAB, UFFICIO, PACKS, packFornitore, navItems, HEADER_OPP. Non aggiungere, togliere o rinominare pieghe o tasti. Eccezione 11.10.2026, su richiesta esplicita di Nando: tasto «Home» (grafici, js/home.js) primo per admin e agenti. Eccezione 11.10.2026 sera: tasti admin Terranova, Gare private e AncheBIM (js/funzioni-interne.js), funzioni interne, non siti a parte. Eccezione 12.10.2026: tasto admin «Software» (js/software-admin.js), secondo dopo Home, con tutti i software per categoria. Eccezione 12.10.2026: tasto admin «Pulsanti per profilo» (js/pulsanti-profili.js); i menu di privato, azienda e agente mostrano solo i pulsanti che l'admin ha scelto lì. Eccezione 12.10.2026: menu admin a categorie (pieghe adm_* in FOLD_LAB).
      ECCEZIONE 22.09.2026, su richiesta esplicita: aggiunta "admin" come quarta famiglia
      (prima era una pagina admin.html a sé, mai approvata graficamente). Non tocca le pieghe
      o i tasti delle tre famiglie originali: admin ha un suo ramo separato ovunque sotto.
@@ -33,7 +33,16 @@
     interventi: "Interventi",
     mezzimag: "Mezzi e magazzino",
     // Energia e utenze (09.10.2026, su richiesta esplicita)
-    utenze: "Luce e gas"
+    utenze: "Luce e gas",
+    // Admin a categorie (12.10.2026, su richiesta di Nando)
+    adm_panoramica: "Panoramica",
+    adm_iscritti: "Iscritti",
+    adm_rete: "Rete commerciale",
+    adm_gare: "Gare e appalti",
+    adm_tecnico: "Tecnico",
+    adm_comunicazione: "Comunicazione",
+    adm_lavoro: "Il mio lavoro",
+    adm_piattaforma: "Impostazioni piattaforma"
   };
 
   const TIPO_SETTORE = {
@@ -299,41 +308,45 @@
       return voci;
     }
     if (famiglia === "admin") {
+      /* 12.10.2026, su richiesta di Nando: menu admin a categorie (cartelle che si aprono, come quelle
+         delle aziende). Home resta sola in cima. La colonna di icone a sinistra è tolta: Chat si apre
+         dal fumetto in alto a destra (soloTestata: pagina permessa ma non nel menu); Task e File stanno in «Il mio lavoro». */
+      const c = (id, label, iconName, fold, extra) => Object.assign({ id: id, label: label, icon: iconName, gruppo: "pack", fold: fold }, extra || {});
       const voci = [
         // 11.10.2026, su richiesta: Home con grafici e andamenti di tutta la rete (js/home.js).
         { id: "home", label: "Home", icon: "home", gruppo: "fisso" },
-        // 12.10.2026, su richiesta: tutti i software per categoria (js/software-admin.js).
-        { id: "software", label: "Software", icon: "grid", gruppo: "fisso" },
-        // 12.10.2026, su richiesta: l'admin decide i pulsanti di ogni profilo (js/pulsanti-profili.js).
-        { id: "pulsanti", label: "Pulsanti per profilo", icon: "gear", gruppo: "fisso" },
-        { id: "iscritti", label: "Iscritti registrati", icon: "team", gruppo: "fisso", cuore: true },
+        c("oggi-rete", "Oggi", "chart", "adm_panoramica"),
+        c("appunti", "Appunti", "doc", "adm_panoramica"),
+        c("iscritti", "Iscritti registrati", "team", "adm_iscritti", { cuore: true }),
+        c("iscrizioni", "Iscrizioni dal sito", "send", "adm_iscritti"),
+        c("richieste-agenti", "Richieste agenti", "star", "adm_iscritti"),
+        c("affida", "Clienti da affidare", "team", "adm_iscritti"),
+        c("genera-link", "Genera link", "send", "adm_iscritti"),
+        c("proposte-rete", "Segnalazioni rete", "team", "adm_rete"),
+        c("lavori-rete", "Lavori rete", "doc", "adm_rete"),
+        c("contratti", "Contratti", "doc", "adm_rete"),
+        c("strategia", "Sala strategia", "chat", "adm_rete"),
         // 11.10.2026, su richiesta: AncheBandi è un software della dashboard admin, non un sito a parte.
-        { id: "bandi", label: "Bandi", icon: "doc", gruppo: "fisso" },
-        { id: "contratti", label: "Contratti", icon: "doc", gruppo: "fisso" },
-        { id: "terranova", label: "Terranova", icon: "doc", gruppo: "fisso" },
-        { id: "gare-private", label: "Gare private", icon: "doc", gruppo: "fisso" },
-        { id: "anchebim", label: "AncheBIM", icon: "doc", gruppo: "fisso" },
-        { id: "affida", label: "Clienti da affidare", icon: "team", gruppo: "fisso" },
-        { id: "iscrizioni", label: "Iscrizioni dal sito", icon: "send", gruppo: "fisso" },
+        c("bandi", "Bandi", "doc", "adm_gare"),
+        c("terranova", "Terranova", "doc", "adm_gare"),
+        c("gare-private", "Gare private", "doc", "adm_gare"),
+        c("anchebim", "AncheBIM", "building", "adm_tecnico"),
         // 09.10.2026, su richiesta: statistiche della rivista e iscritti agli avvisi (js/magazine-admin.js).
-        { id: "magazine", label: "Magazine", icon: "chart", gruppo: "fisso" },
-        { id: "richieste-agenti", label: "Richieste agenti", icon: "star", gruppo: "fisso" },
-        { id: "proposte-rete", label: "Segnalazioni rete", icon: "team", gruppo: "fisso" },
-        { id: "oggi-rete", label: "Oggi", icon: "chart", gruppo: "fisso" },
-        { id: "strategia", label: "Sala strategia", icon: "chat", gruppo: "fisso" },
-        { id: "lavori-rete", label: "Lavori rete", icon: "doc", gruppo: "fisso" },
-        { id: "genera-link", label: "Genera link", icon: "send", gruppo: "fisso" },
-        { id: "task", label: "Task", icon: "calendar", gruppo: "fisso" },
-        { id: "file", label: "File", icon: "doc", gruppo: "fisso" },
+        c("magazine", "Magazine", "chart", "adm_comunicazione"),
         // id «chat-team» (non «chat»): «chat» è la Chat demo di Privato/Azienda/Agente.
-        { id: "chat-team", label: "Chat", icon: "chat", gruppo: "fisso" }
+        c("chat-team", "Chat", "chat", "adm_lavoro", { soloTestata: true }),
+        c("task", "Task", "calendar", "adm_lavoro"),
+        c("file", "File", "folder", "adm_lavoro"),
+        // 12.10.2026, su richiesta: tutti i software per categoria (js/software-admin.js).
+        c("software", "Software", "grid", "adm_piattaforma"),
+        // 12.10.2026, su richiesta: l'admin decide i pulsanti di ogni profilo (js/pulsanti-profili.js).
+        c("pulsanti", "Pulsanti per profilo", "gear", "adm_piattaforma")
       ];
       // 11.10.2026: Francesco, dal suo computer, trova gli appunti come prima pagina e come prima voce.
-      const voceAppunti = { id: "appunti", label: "Appunti", icon: "doc", gruppo: "fisso" };
-      if (admin.perFrancesco) voci.unshift(voceAppunti);
-      else {
-        const posto = voci.findIndex((v) => v.id === "task");
-        voci.splice(posto < 0 ? voci.length : posto, 0, voceAppunti);
+      if (admin.perFrancesco) {
+        const i = voci.findIndex((v) => v.id === "appunti");
+        voci.splice(i, 1);
+        voci.unshift({ id: "appunti", label: "Appunti", icon: "doc", gruppo: "fisso" });
       }
       return voci;
     }
@@ -631,11 +644,12 @@
 
   function paintPallino() {
     document.querySelectorAll('a[href$="/admin/chat-team"]').forEach((a) => {
-      let b = a.querySelector(".nav-badge");
+      const cls = a.classList.contains("hi-btn") ? "hi-num" : "nav-badge";
+      let b = a.querySelector("." + cls);
       if (chatNonLetti > 0) {
         if (!b) {
           b = document.createElement("span");
-          b.className = "nav-badge";
+          b.className = cls;
           a.appendChild(b);
         }
         b.textContent = chatNonLetti > 9 ? "9+" : String(chatNonLetti);
@@ -693,8 +707,70 @@
     return statoPulsante(famiglia, id) === "pagamento" ? html`<span class="nav-paga" title="A pagamento">€</span>` : "";
   }
 
+  /* Testata (12.10.2026, anteprima per Nando): al posto della colonna di icone, in alto a destra
+     Messaggi (con i non letti) e Avvisi (cose da fare). Gli avvisi veri si decidono profilo per profilo:
+     per ora l'admin vede chat non lette e segnalazioni da decidere; in anteprima ci sono esempi. */
+  let avvisiAperto = false;
+  function avvisiDi(famiglia) {
+    if (DEMO) {
+      return famiglia === "admin"
+        ? [
+            { ico: "team", t: "3 iscrizioni dal sito da guardare", s: "Oggi", href: "#/admin/iscrizioni" },
+            { ico: "star", t: "2 segnalazioni rete da decidere", s: "Da ieri", href: "#/admin/proposte-rete" },
+            { ico: "doc", t: "1 contratto in attesa di firma", s: "Mario Rossi, agente", href: "#/admin/contratti" },
+            { ico: "calendar", t: "Gara «Scuola di Teano» scade tra 5 giorni", s: "Terranova", href: "#/admin/terranova" }
+          ]
+        : [
+            { ico: "doc", t: "Completa il profilo", s: "Manca il telefono", href: "#/" + famiglia + "/profilo" }
+          ];
+    }
+    const out = [];
+    if (famiglia === "admin" && proposteDaDecidere > 0) {
+      out.push({ ico: "star", t: proposteDaDecidere + (proposteDaDecidere === 1 ? " segnalazione da decidere" : " segnalazioni da decidere"), s: "Rete commerciale", href: "#/admin/proposte-rete" });
+    }
+    return out;
+  }
+  function paintTestata(famiglia, page) {
+    const box = document.getElementById("head-icons");
+    if (!box) return;
+    if (!famiglia || famiglia === "") { box.innerHTML = ""; return; }
+    const chatId = famiglia === "admin" ? "chat-team" : "chat";
+    const vedeChat = famiglia === "admin" || statoPulsante(famiglia, chatId);
+    const nMsg = famiglia === "admin" ? chatNonLetti : 0;
+    const avvisi = avvisiDi(famiglia);
+    const num = (n) => (n > 0 ? html`<span class="hi-num">${n > 9 ? "9+" : String(n)}</span>` : "");
+    box.innerHTML = html`
+      ${vedeChat ? html`<a class="hi-btn${page === chatId ? " on" : ""}" href="#/${famiglia}/${chatId}" title="Messaggi" aria-label="Messaggi${nMsg ? ", " + nMsg + " non letti" : ""}">${icon("chat")}${num(DEMO && famiglia === "admin" ? 4 : nMsg)}</a>` : ""}
+      <div class="hi-avvisi">
+        <button type="button" class="hi-btn" id="hi-avvisi" title="Avvisi" aria-label="Avvisi${avvisi.length ? ", " + avvisi.length : ""}" aria-expanded="${avvisiAperto ? "true" : "false"}" aria-controls="hi-pannello">${icon("bell")}${num(avvisi.length)}</button>
+        <div class="hi-pannello" id="hi-pannello"${avvisiAperto ? "" : " hidden"}>
+          <h3>Da fare</h3>
+          ${avvisi.length
+            ? avvisi.map((a) => html`<a class="hi-voce" href="${a.href}"><span class="hi-ico">${icon(a.ico)}</span><span><b>${a.t}</b><small>${a.s}</small></span></a>`)
+            : html`<div class="hi-vuoto">Niente da fare adesso.</div>`}
+        </div>
+      </div>`.s;
+    const b = box.querySelector("#hi-avvisi");
+    if (b) b.addEventListener("click", (e) => {
+      e.stopPropagation();
+      avvisiAperto = !avvisiAperto;
+      paintTestata(famiglia, page);
+    });
+    box.querySelectorAll(".hi-voce").forEach((a) => a.addEventListener("click", () => { avvisiAperto = false; }));
+  }
+  document.addEventListener("click", (e) => {
+    if (avvisiAperto && !e.target.closest(".hi-avvisi")) {
+      avvisiAperto = false;
+      const p = document.getElementById("hi-pannello");
+      const b = document.getElementById("hi-avvisi");
+      if (p) p.hidden = true;
+      if (b) b.setAttribute("aria-expanded", "false");
+    }
+  });
+
   function paintNav(famiglia, page) {
-    const items = visibleNav(famiglia).filter((it) => voceMenu(it, famiglia));
+    // 12.10.2026: le voci «soloTestata» (Chat dell'admin) si aprono dalla testata, non dal menu.
+    const items = visibleNav(famiglia).filter((it) => voceMenu(it, famiglia) && !it.soloTestata);
     if (!items.length) {
       nav.innerHTML = "";
       if (navFoot) navFoot.innerHTML = "";
@@ -713,7 +789,7 @@
     const railEl = document.getElementById("rail");
     if (railEl) {
       const RAPIDE = ["home", "chat-team", "chat", "task", "documenti", "contratti", "file", "pubblica"];
-      const vede = items.filter((it) => it.gruppo !== "pack" && it.gruppo !== "piede");
+      const vede = items.filter((it) => it.gruppo !== "piede"); // 12.10.2026: anche le voci dentro le categorie
       railEl.innerHTML = RAPIDE.map((id) => vede.find((it) => it.id === id)).filter(Boolean).slice(0, 5)
         .map((it) => html`<a class="rail-btn${it.id === page ? " active" : ""}" href="#/${famiglia}/${it.id}" title="${it.label}" aria-label="${it.label}"${it.id === page ? html` aria-current="page"` : ""}>${icon(it.id === "file" ? "folder" : it.icon)}</a>`.s).join("");
     }
@@ -932,6 +1008,7 @@
     document.title = v.title + " · AncheCasa";
     dateEl.textContent = D.fmt(D.today());
     paintNav(famiglia, page);
+    paintTestata(famiglia, page);
     paintTop(famiglia, page);
     // 11.10.2026: area della rete in sola lettura finché il contratto non è firmato (js/contratto-firma.js).
     if (window.AC && AC.contrattoFirma) AC.contrattoFirma.applica(famiglia, page);

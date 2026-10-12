@@ -1,0 +1,26 @@
+/* Testata senza colonna di icone (12.10.2026, anteprima per Nando).
+   Da computer: niente colonna di icone rapide a sinistra; in alto a destra Messaggi e Avvisi, poi il logo. */
+@media (min-width: 981px) {
+  .side-sticky { grid-template-columns: minmax(0, 1fr); }
+  .when { grid-column: 1; grid-template-columns: 56px minmax(0, 1fr); }
+  .side-rail { display: none !important; }
+  .side-menu, .side-foot { grid-column: 1; }
+  .side-menu { padding-left: 8px; }
+  .head-bar { gap: 6px; }
+  .head-icons { display: flex; align-items: center; gap: 4px; margin-right: 14px; padding-right: 16px; border-right: 1px solid var(--line); }
+  .hi-btn { position: relative; display: grid; place-items: center; width: 42px; height: 42px; border-radius: 12px; border: 0; background: transparent; color: var(--navy); cursor: pointer; text-decoration: none; }
+  .hi-btn:hover, .hi-btn[aria-expanded="true"] { background: var(--paper); }
+  .hi-btn.on { background: var(--orange-soft); color: var(--orange-ink); }
+  .hi-btn .ic { width: 22px; height: 22px; }
+  .hi-num { position: absolute; top: 4px; right: 3px; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 99px; background: #E56B10; color: #fff; font-size: 11px; font-weight: 800; display: grid; place-items: center; box-shadow: 0 0 0 2px #fff; }
+  .hi-avvisi { position: relative; }
+  .hi-pannello { position: absolute; top: 50px; right: -8px; width: 340px; background: #fff; border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); padding: 8px; z-index: 20; }
+  .hi-pannello h3 { margin: 6px 10px 8px; font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+  .hi-voce { display: grid; grid-template-columns: 34px 1fr; gap: 10px; align-items: center; padding: 9px 10px; border-radius: 10px; color: var(--text); text-decoration: none; }
+  .hi-voce:hover { background: var(--paper); }
+  .hi-voce .hi-ico { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; background: var(--orange-soft); color: var(--orange-ink); }
+  .hi-voce b { display: block; font-size: 14px; color: var(--navy); }
+  .hi-voce small { color: var(--muted); font-size: 12px; }
+  .hi-vuoto { padding: 14px 10px; color: var(--muted); font-size: 13px; }
+}
+@media (max-width: 980px) { .head-icons { display: none; } }

@@ -55,7 +55,8 @@
     star: '<path d="M12 3l2.4 6.5H21l-5.2 4 2 6.5L12 16.5 6.2 20l2-6.5L3 9.5h6.6z"/>',
     circle: '<circle cx="12" cy="12" r="8"/>',
     arrow: '<path d="M5 12h14M13 6l6 6-6 6"/>',
-    pause: '<path d="M9 6v12M15 6v12"/>'
+    pause: '<path d="M9 6v12M15 6v12"/>',
+    bell: '<path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20a2 2 0 0 0 4 0"/>'
   };
   function icon(name, size, color) {
     const s = size || 16;

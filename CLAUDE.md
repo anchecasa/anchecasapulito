@@ -20,6 +20,14 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 12.10.2026 07:00 · Claude — admin: menu a categorie, testata con Messaggi e Avvisi (NON pubblicato)
+- Metodo deciso con Nando: si progetta ogni dashboard insieme, si prova in anteprima sul computer, e solo alla fine si aggiornano Supabase e la pubblicazione. Niente push finché non lo decide lui.
+- Menu admin a categorie (cartelle che si aprono): Home sola in cima; Panoramica (Oggi, Appunti), Iscritti (Iscritti registrati, Iscrizioni dal sito, Richieste agenti, Clienti da affidare, Genera link), Rete commerciale (Segnalazioni, Lavori rete, Contratti, Sala strategia), Gare e appalti (Bandi, Terranova, Gare private), Tecnico (AncheBIM), Comunicazione (Magazine), Il mio lavoro (Task, File), Impostazioni piattaforma (Software, Pulsanti per profilo). Per Francesco Appunti resta prima voce.
+- Tolta, da computer, la colonna di icone rapide a sinistra (ripeteva il menu, icone senza nome). In alto a destra, prima del logo: Messaggi (fumetto, non letti, apre la Chat) e Avvisi (campanella, pannello «Da fare»). Gli avvisi veri, profilo per profilo, sono da decidere: oggi l'admin vede le segnalazioni da decidere; con ?demo esempi.
+- Chat dell'admin non è più nel menu ma resta una pagina permessa (soloTestata). Sul telefono la barra in basso è da rivedere quando si lavora sull'app.
+- Provato in locale con ?demo=admin a 1280 px. Copie di prima: `_copie-menu-admin-0655`, `_copie-testata-0700`.
+- File: `area-privata/dashboard/js/app.js`, `js/ui.js` (icona bell), `css/testata.css` (nuovo), `index.html` (app.js ?v=15, ui.js ?v=2, testata.css), `CLAUDE.md`.
+
 ### 12.10.2026 06:52 · Cursor — Pulsanti per profilo pubblicati sull'area privata
 - Invio su GitHub, ramo main, commit `8a680dc`. Pubblicazione Vercel `area-privata-produzione`, deployment `dpl_1yPtsAm9cPekP7f5NQBkaV5rxsuo`, alias https://areaprivata.anchecasa.it.
 - Online il tasto admin «Pulsanti per profilo». Lo script `pulsanti-profili.js` e `app.js?v=13` rispondono. Indirizzo https://areaprivata.anchecasa.it/dashboard/#/admin/pulsanti.
