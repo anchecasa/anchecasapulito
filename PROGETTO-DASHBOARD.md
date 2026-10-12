@@ -11,6 +11,7 @@ Si costruisce solo da qui. Supabase e la pubblicazione si toccano solo alla fine
 3. Solo con l'ok di Nando: Supabase, push su GitHub, pubblicazione.
 4. Ordine: Admin, Privato, Rete, Aziende (impresa, artigiano, fornitore, luce e gas, agenzie…). L'app da telefono alla fine.
 5. La dashboard del cliente Sicura (altro progetto) non si tocca.
+6. **Dove vivono le dashboard** (confermato da Nando il 12.10.2026, regole fisse dell'11.10.2026): privati, aziende e fornitori usano l'**app su https://entra.anchecasa.it**, da computer, tablet e telefono. L'area privata (areaprivata.anchecasa.it) è per l'admin e la rete. Le anteprime dei profili fatte nell'area privata sono modelli: la dashboard vera di privati, aziende e fornitori si costruisce nell'app.
 
 ## Uguale per tutti i profili
 
