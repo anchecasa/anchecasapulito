@@ -1,24 +1,24 @@
-// servizi-avvisa · mail del giro Telefonia e internet / Finanza e assicurazioni (12.10.2026, app-20).
-// Stesso modello di energia-avvisa (luce e gas), che non si tocca.
+// servizi-avvisa · mail del giro Telefono e internet / Finanza e assicurazioni (12.10.2026, app-20).
+// Stesso modello di energia-avvisa (luce e gas). Le mail hanno il look della mail d'invito approvata (../_shared/mail-marchio.ts).
 //   { evento: "richiesta", token }    → al cliente: «richiesta ricevuta, qui vedrai le proposte»; ai fornitori della categoria: «nuova richiesta».
 //   { evento: "proposta", proposta }  → al cliente: «nuova proposta da …» (solo il fornitore che l'ha fatta, con l'accesso).
 //   { evento: "scelta", token }       → al fornitore scelto: «il cliente ha scelto la tua proposta».
-//   { evento: "accordo", azienda }    → al fornitore: «il tuo accordo da confermare» (solo l'admin).
+//   { evento: "accordo", azienda }    → al fornitore (anche luce e gas): «il tuo accordo da confermare» (solo l'admin).
 // Segreti già presenti: SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, RESEND_API_KEY, RESEND_FROM. Deploy con verify_jwt spento.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { mailGiro } from "../_shared/mail-marchio.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 const RESEND = Deno.env.get("RESEND_API_KEY")!;
 const FROM = Deno.env.get("RESEND_FROM") || "AncheCasa <info@anchecasa.it>";
 const SITO = "https://entra.anchecasa.it";
-const LOGO = "https://anchecasa.it/assets/mail/logo.png";
 
 const CAT: Record<string, { nome: string; tipo: string; pre: string }> = {
   telefonia: { nome: "Telefono e internet", tipo: "azienda_telefonia", pre: "tel" },
   finanza: { nome: "Finanza e assicurazioni", tipo: "azienda_finanza", pre: "fin" },
 };
-const PRE_DI_TIPO: Record<string, string> = { azienda_telefonia: "tel", azienda_finanza: "fin", azienda_luce_gas: "energia" };
+const PRE_DI_TIPO: Record<string, [string, string]> = { azienda_telefonia: ["tel", "Telefono e internet"], azienda_finanza: ["fin", "Finanza e assicurazioni"], azienda_luce_gas: ["energia", "Luce e gas"] };
 
 const cors = {
   "Access-Control-Allow-Origin": "*",
@@ -26,27 +26,12 @@ const cors = {
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 const json = (b: unknown, s = 200) => new Response(JSON.stringify(b), { status: s, headers: { ...cors, "Content-Type": "application/json" } });
-const esc = (s: string) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!));
 
-function pagina(etichetta: string, titolo: string, testo: string, bottone: string, link: string) {
-  return `<!doctype html><html><body style="margin:0;background:#f3f6fb;font-family:Arial,Helvetica,sans-serif;color:#24384c">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:24px 12px">
-  <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;background:#ffffff;border-radius:10px;overflow:hidden">
-    <tr><td style="padding:28px 36px 18px;border-bottom:2px solid #E56B10"><img src="${LOGO}" width="170" alt="AncheCasa" style="display:block"></td></tr>
-    <tr><td style="padding:28px 36px 8px"><span style="display:inline-block;background:#fff1e4;color:#c45d0c;font-size:11px;font-weight:bold;letter-spacing:.08em;text-transform:uppercase;border-radius:12px;padding:5px 12px">${esc(etichetta)}</span>
-      <h1 style="margin:14px 0 8px;font-size:24px;line-height:1.2;color:#16304d">${esc(titolo)}</h1>
-      <p style="margin:0 0 20px;font-size:15px;line-height:1.6">${testo}</p>
-      <a href="${link}" style="display:inline-block;padding:14px 30px;background:#c45d0c;color:#ffffff;font-weight:bold;text-decoration:none;border-radius:24px">${esc(bottone)}</a>
-      <p style="margin:18px 0 26px;font-size:12px;color:#66758a">Se il pulsante non funziona: ${esc(link)}</p></td></tr>
-    <tr><td style="background:#16304d;color:#d5deea;font-size:12px;padding:16px 36px">Palumbo Investment S.r.l. · Via Giusti 22, 81057 Teano (CE) · P.IVA 04724830619 · info@anchecasa.it</td></tr>
-  </table></td></tr></table></body></html>`;
-}
-
-async function manda(a: string, oggetto: string, html: string) {
+async function manda(a: string, m: { oggetto: string; html: string }) {
   const r = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: { Authorization: `Bearer ${RESEND}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ from: FROM, to: [a], subject: oggetto, html }),
+    body: JSON.stringify({ from: FROM, to: [a], subject: m.oggetto, html: m.html }),
   });
   if (!r.ok) throw new Error("Resend: " + (await r.text()));
 }
@@ -70,18 +55,13 @@ Deno.serve(async (req) => {
       if (!r) return json({ error: "Richiesta non trovata." }, 404);
       if (r.avvisato_il) return json({ ok: true, gia: true });
       const c = CAT[r.categoria];
-      const link = `${SITO}/servizi.html?t=${r.token}`;
-      const testo = r.fonte === "rete"
-        ? `Ciao ${esc(String(r.nome).split(" ")[0])}, il tuo consulente AncheCasa ha chiesto per te le proposte dei fornitori di ${esc(c.nome.toLowerCase())}. Le trovi tutte qui, una accanto all'altra: scegli quella che preferisci e solo quel fornitore riceverà i tuoi contatti.`
-        : `Ciao ${esc(String(r.nome).split(" ")[0])}, i fornitori di ${esc(c.nome.toLowerCase())} iscritti ad AncheCasa stanno preparando le loro proposte. Le trovi tutte qui, una accanto all'altra: scegli quella che preferisci e solo quel fornitore riceverà i tuoi contatti.`;
-      await manda(r.mail, `AncheCasa · La tua richiesta: ${c.nome.toLowerCase()}`, pagina(c.nome, "Abbiamo ricevuto la tua richiesta", testo, "Vedi le proposte", link));
+      await manda(r.mail, mailGiro("richiesta-cliente", { categoria: c.nome, nome: r.nome, link: `${SITO}/servizi.html?t=${r.token}`, daRete: r.fonte === "rete" }));
       await db.from("servizi_richieste").update({ avvisato_il: new Date().toISOString() }).eq("id", r.id);
       const { data: forn } = await db.from("profiles").select("id").eq("tipo_azienda", c.tipo).eq("verifica", "verificato");
       for (const f of forn || []) {
         const { data: u } = await admin.auth.admin.getUserById(f.id);
         const a = u?.user?.email;
-        if (a) await manda(a, `AncheCasa · Nuova richiesta: ${c.nome.toLowerCase()}`,
-          pagina(c.nome, "Nuova richiesta", `Un cliente${r.regione ? " in " + esc(r.regione) : ""} chiede una proposta (${esc(String(r.tipo).replace(/_/g, " "))}). Apri la tua dashboard, guarda cosa gli serve e manda la tua proposta.`, "Apri le richieste", `${SITO}/dashboard/#/azienda/${c.pre}_richieste`)).catch(() => {});
+        if (a) await manda(a, mailGiro("richiesta-fornitore", { categoria: c.nome, regione: r.regione, cosa: String(r.tipo).replace(/_/g, " "), link: `${SITO}/dashboard/#/azienda/${c.pre}_richieste` })).catch(() => {});
       }
       return json({ ok: true });
     }
@@ -94,10 +74,7 @@ Deno.serve(async (req) => {
       const { data: r } = await db.from("servizi_richieste").select("token, nome, mail, stato").eq("id", p.richiesta_id).maybeSingle();
       if (!r || r.stato !== "aperta") return json({ ok: true, chiusa: true });
       const { data: carta } = await db.from("energia_carta").select("ragione").eq("azienda_id", uid).maybeSingle();
-      const chi = carta?.ragione || "un fornitore AncheCasa";
-      const c = CAT[p.categoria];
-      await manda(r.mail, `AncheCasa · Nuova proposta: ${c.nome.toLowerCase()}`,
-        pagina(c.nome, "Hai una nuova proposta", `Ciao ${esc(String(r.nome).split(" ")[0])}, ${esc(chi)} ti ha mandato la sua proposta. Confrontala con le altre e scegli quella che preferisci.`, "Confronta le proposte", `${SITO}/servizi.html?t=${r.token}`));
+      await manda(r.mail, mailGiro("proposta", { categoria: CAT[p.categoria].nome, nome: r.nome, chi: carta?.ragione || "", link: `${SITO}/servizi.html?t=${r.token}` }));
       return json({ ok: true });
     }
 
@@ -110,8 +87,7 @@ Deno.serve(async (req) => {
       const { data: u } = await admin.auth.admin.getUserById(p.azienda_id);
       const a = u?.user?.email;
       const c = CAT[r.categoria];
-      if (a) await manda(a, "AncheCasa · Il cliente ha scelto la tua proposta",
-        pagina(c.nome, "Il cliente ha scelto te", `Il cliente ha accettato la proposta ${esc(p.numero)}. Nella tua dashboard trovi ora nome, mail e telefono: contattalo e mandagli il contratto.`, "Apri i miei clienti", `${SITO}/dashboard/#/azienda/${c.pre}_clienti`));
+      if (a) await manda(a, mailGiro("scelta", { categoria: c.nome, numero: p.numero, link: `${SITO}/dashboard/#/azienda/${c.pre}_clienti` }));
       return json({ ok: true });
     }
 
@@ -122,13 +98,12 @@ Deno.serve(async (req) => {
       const { data: a } = await db.from("fornitori_accordi").select("azienda_id, tipo, valore, su_cosa").eq("azienda_id", String(body.azienda || "")).maybeSingle();
       if (!a) return json({ error: "Accordo non trovato." }, 404);
       const { data: pr } = await db.from("profiles").select("tipo_azienda").eq("id", a.azienda_id).maybeSingle();
-      const pre = PRE_DI_TIPO[pr?.tipo_azienda || ""] || "energia";
+      const [pre, nome] = PRE_DI_TIPO[pr?.tipo_azienda || ""] || ["energia", "Fornitori AncheCasa"];
       const { data: u } = await admin.auth.admin.getUserById(a.azienda_id);
       const to = u?.user?.email;
       if (!to) return json({ error: "Il fornitore non ha una mail." }, 400);
       const quanto = a.tipo === "percentuale" ? `${a.valore}%` : `${Number(a.valore).toLocaleString("it-IT", { minimumFractionDigits: 2 })} €`;
-      await manda(to, "AncheCasa · Il tuo accordo da confermare",
-        pagina("Fornitori AncheCasa", "Il tuo accordo con AncheCasa", `La provvigione concordata è <b>${esc(quanto)}</b> ${esc(a.su_cosa)}. Aprila nella tua dashboard e confermala: da quel momento puoi mandare le tue proposte ai clienti AncheCasa.`, "Leggi e conferma", `${SITO}/dashboard/#/azienda/${pre}_accordo`));
+      await manda(to, mailGiro("accordo", { categoria: nome, quanto, su: a.su_cosa, link: `${SITO}/dashboard/#/azienda/${pre}_accordo` }));
       return json({ ok: true });
     }
 

@@ -29,6 +29,12 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 12.10.2026 10:45 · Claude — Mail di luce e gas, telefono e finanza con il look della mail d'invito (NON pubblicato)
+- Nando: tutte le mail e i moduli di accesso con lo stesso look. Le mail di `energia-avvisa` e `servizi-avvisa` avevano un look semplificato (logo, filo, pulsante, piede blu): ora usano la stessa impaginazione della mail d'invito approvata (`mail/invito/mail-invito.js`, `impagina`): logo e anchecasa.it, filo arancio, foto, etichetta, spunte, pulsante, riquadro blu con 3 passi, curva del marchio, piede blu con logo bianco.
+- NUOVO `app-anchecasa/supabase/functions/_shared/mail-marchio.ts` (`mailMarchio`, `mailGiro`): le cinque mail del giro fornitori (richiesta al cliente, richiesta al fornitore, proposta, scelta, accordo). `energia-avvisa/index.ts` e `servizi-avvisa/index.ts` riscritti per usarlo; la logica e i link non cambiano. Controllati con esbuild; mail di prova disegnata (immagini da https://anchecasa.it/assets/mail/).
+- Da fare con l'ok di Nando: ripubblicare `energia-avvisa` e `servizi-avvisa` (verify_jwt spento), insieme alla cartella `_shared`.
+- Sito, magazine, app, Sicura e database non toccati.
+
 ### 12.10.2026 10:32 · Cursor — ricontrollo app-20, ok delle 10:26, registro in commit
 - Ok di Nando del 12.10.2026, ore 10:26, per il commit `ec49033`. Lo SQL era già eseguito alle 10:28 e non è stato rilanciato. I due controlli tornano a posto: `servizi_richieste`, `servizi_offerte`, `servizi_proposte`; funzioni `servizi_accetta`, `servizi_categoria_di`, `servizi_contratto_attivato`, `servizi_le_mie_proposte`, `servizi_mia_categoria`, `servizi_nuova_richiesta`, `servizi_offerte_pubbliche`, `servizi_richiesta_aperta`, `servizi_richieste_per_me`.
 - `servizi-avvisa` è già online, verify_jwt spento, versione 1. Non è stata ripubblicata. `energia-avvisa` e le altre funzioni non sono state toccate.
