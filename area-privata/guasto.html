@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>La tua richiesta · AncheCasa</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="favicon.ico">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
+  <style>
+    :root { --navy: #16304d; --ink: #24384c; --muted: #66758a; --orange: #E56B10; --btn: #c45d0c; --soft: #fff1e4; --line: #e4ebf3; --paper: #f3f6fb; --ok: #1f6e40; --okbg: #e8f6ee; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: Manrope, "Segoe UI", Arial, sans-serif; font-size: 15px; line-height: 1.55; }
+    .foglio { max-width: 860px; margin: 24px auto 40px; background: #fff; border-radius: 10px; box-shadow: 0 14px 40px rgba(22, 48, 77, .10); overflow: hidden; }
+    .testa { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 28px 40px 20px; border-bottom: 2px solid var(--orange); }
+    .testa img { width: 180px; display: block; }
+    .testa small { color: var(--muted); text-align: right; }
+    .corpo { padding: 26px 40px 34px; }
+    .eti { display: inline-block; background: var(--soft); color: var(--btn); font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; border-radius: 12px; padding: 5px 12px; }
+    h1 { margin: 12px 0 6px; font-size: 28px; line-height: 1.15; color: var(--navy); }
+    .sotto { margin: 0 0 18px; color: var(--muted); }
+    .riassunto { display: flex; flex-wrap: wrap; gap: 8px 18px; background: var(--paper); border-radius: 12px; padding: 12px 16px; font-size: 14px; margin-bottom: 18px; }
+    .riassunto b { color: var(--navy); }
+    .prop { border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; margin: 12px 0; display: grid; grid-template-columns: 110px 1fr auto; gap: 16px; align-items: center; }
+    .prop.scelta { border-color: var(--ok); box-shadow: 0 0 0 2px var(--okbg); }
+    .prop .logo { width: 110px; height: 60px; border-radius: 10px; background: var(--paper); display: grid; place-items: center; overflow: hidden; font-weight: 800; color: var(--navy); font-size: 13px; text-align: center; padding: 4px; }
+    .prop .logo img { max-width: 100%; max-height: 100%; }
+    .prop h2 { margin: 0; font-size: 17px; color: var(--navy); }
+    .prop .off { color: var(--btn); font-weight: 700; font-size: 14px; }
+    .prop ul { margin: 6px 0 0; padding-left: 18px; font-size: 13px; color: var(--ink); }
+    .prop .nota { font-size: 13px; color: var(--muted); margin-top: 6px; font-style: italic; }
+    .prezzo { text-align: right; }
+    .prezzo b { display: block; font-size: 24px; color: var(--navy); }
+    .prezzo small { color: var(--muted); font-size: 11px; display: block; max-width: 150px; margin-left: auto; }
+    .btn { margin-top: 8px; font: inherit; font-weight: 800; color: #fff; background: var(--btn); border: 0; border-radius: 22px; padding: 10px 18px; cursor: pointer; }
+    .btn:disabled { opacity: .5; cursor: default; }
+    .ok { background: var(--okbg); color: var(--ok); border-radius: 12px; padding: 14px 16px; margin: 12px 0; }
+    .vuoto { background: var(--paper); border-radius: 12px; padding: 22px; text-align: center; color: var(--muted); }
+    .regola { font-size: 12.5px; color: var(--muted); margin-top: 20px; }
+    .piede { background: var(--navy); color: #d5deea; font-size: 12px; padding: 16px 40px; }
+    .conferma { display: none; margin-top: 8px; font-size: 13px; }
+    .conferma.on { display: block; }
+    @media (max-width: 640px) {
+      .testa, .corpo, .piede { padding-left: 18px; padding-right: 18px; }
+      .prop { grid-template-columns: 1fr; }
+      .prezzo { text-align: left; } .prezzo small { margin-left: 0; }
+    }
+      .passi { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 16px 0; }
+    .passo { border-radius: 10px; padding: 10px; background: var(--paper); font-size: 13px; color: var(--muted); text-align: center; }
+    .passo.on { background: var(--soft); color: var(--btn); font-weight: 800; }
+    .passo.fatto { background: var(--okbg); color: var(--ok); font-weight: 700; }
+    .stelle button { font-size: 30px; background: none; border: 0; cursor: pointer; color: #c9d3df; padding: 0 2px; }
+    .stelle button.on { color: var(--orange); }
+    textarea, input { font: inherit; width: 100%; border: 1px solid var(--line); border-radius: 10px; padding: 10px; }
+    @media (max-width: 640px) { .passi { grid-template-columns: 1fr 1fr; } }
+  </style>
+</head>
+<body>
+  <!-- Pagina del privato per «Ho un guasto» / «Trova artigiano» (12.10.2026, app-23): a che punto è, conferma del lavoro,
+       recensione, garanzia AncheCasa 30 giorni. Si apre dalla dashboard e dai link nelle mail. -->
+  <article class="foglio">
+    <header class="testa">
+      <img src="assets/logo/anchecasa-orizzontale-trasparente.png?v=3" alt="AncheCasa">
+      <small>La tua richiesta<br>di intervento</small>
+    </header>
+    <div class="corpo" id="corpo"><p class="sotto">Caricamento…</p></div>
+    <footer class="piede">Palumbo Investment S.r.l. · Via Giusti 22, 81057 Teano (CE) · P.IVA 04724830619 · info@anchecasa.it</footer>
+  </article>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+  <script>
+  (function () {
+    var URL = "https://edsvmnxojsmknjuhobqa.supabase.co";
+    var KEY = "sb_publishable_QbYv61SkMkjA9_GGb1hhOA_6v6GEw87";
+    var corpo = document.getElementById("corpo");
+    var token = new URLSearchParams(location.search).get("t") || "";
+    var esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); };
+    var eur = function (n) { return (Number(n) || 0).toLocaleString("it-IT", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €"; };
+    var data = function (d) { if (!d) return ""; var x = new Date(d); return isNaN(x) ? "" : x.toLocaleDateString("it-IT"); };
+    if (!token || !window.supabase) { corpo.innerHTML = '<div class="vuoto">Link non valido. Apri il link che trovi nella mail di AncheCasa.</div>'; return; }
+    var db = window.supabase.createClient(URL, KEY, { db: { schema: "marketplace" } });
+    var avvisa = function () { db.functions.invoke("preventivi-avvisa", { body: { evento: "guasti" } }).catch(function () {}); };
+    var azione = function (nome, args) {
+      return db.rpc(nome, Object.assign({ p_token: token }, args || {})).then(function (r) {
+        if (r.error) { alertBox("Non riesco a salvare. Riprova tra poco."); return; }
+        avvisa(); carica();
+      });
+    };
+    var alertBox = function (t) { corpo.insertAdjacentHTML("afterbegin", '<div class="vuoto">' + esc(t) + '</div>'); };
+
+    function carica() {
+      db.rpc("guasto_info", { p_token: token }).then(function (res) {
+        if (res.error || !res.data) { corpo.innerHTML = '<div class="vuoto">Non troviamo questa richiesta. Controlla il link nella mail.</div>'; return; }
+        disegna(res.data);
+      }, function () { corpo.innerHTML = '<div class="vuoto">Il server non risponde. Riprova tra poco.</div>'; });
+    }
+
+    function disegna(g) {
+      var passi = [["Richiesta", ["cerca", "assegnato", "admin", "accettato", "fatto", "confermato"]], ["Artigiano trovato", ["accettato", "fatto", "confermato"]], ["Lavoro fatto", ["fatto", "confermato"]], ["Confermato", ["confermato"]]];
+      var h = '<span class="eti">' + esc(g.tipo === "trova" ? "Trova artigiano" : "Ho un guasto") + (g.urgente ? " · urgente" : "") + '</span>' +
+        '<h1>' + (g.nome ? "Ciao " + esc(g.nome) + ", " : "") + titolo(g) + '</h1>' +
+        '<p class="sotto">' + esc(g.mestiere) + ' · ' + esc(g.comune) + ' · chiesto il ' + data(g.creato) + (g.descrizione ? ' · «' + esc(g.descrizione) + '»' : '') + '</p>';
+      if (g.stato !== "annullato") {
+        h += '<div class="passi">' + passi.map(function (p, i) {
+          var dentro = p[1].indexOf(g.stato) >= 0, prossimo = i + 1 < passi.length && passi[i + 1][1].indexOf(g.stato) >= 0;
+          return '<div class="passo ' + (dentro && !prossimo ? "on" : dentro ? "fatto" : "") + '">' + esc(p[0]) + '</div>';
+        }).join("") + '</div>';
+      }
+      if (g.stato === "cerca" || g.stato === "assegnato") h += '<div class="riassunto"><span>La richiesta è arrivata all\'artigiano più vicino e libero. ' + (g.urgente ? "Ha 15 minuti" : "Ha 2 ore") + ' per accettare, poi passa al prossimo. Ti scriviamo appena qualcuno accetta.</span></div>' +
+        '<button class="btn" style="background:#66758a" data-az="annulla">Annulla la richiesta</button>';
+      if (g.stato === "admin") h += '<div class="riassunto"><span>Al momento nessun artigiano della zona può venire. Ti contatta AncheCasa per trovare una soluzione.</span></div>';
+      if (g.stato === "accettato") h += '<div class="ok"><b>' + esc(g.artigiano) + '</b> ha accettato il ' + data(g.accettato_il) + ' e ti chiama a breve.</div>';
+      if (g.stato === "fatto") h += '<div class="ok"><b>' + esc(g.artigiano) + '</b> ha segnato il lavoro come fatto' + (g.importo ? ' (' + eur(g.importo) + ')' : '') + (g.nota_lavoro ? ': «' + esc(g.nota_lavoro) + '»' : '') + '.</div>' +
+        '<p class="sotto">Confermi che il lavoro è fatto? Parte la garanzia AncheCasa di 30 giorni. Se qualcosa non va, scrivi a info@anchecasa.it prima di confermare.</p><button class="btn" data-az="conferma">Sì, il lavoro è fatto</button>';
+      if (g.stato === "confermato") {
+        h += '<div class="ok">Lavoro confermato il ' + data(g.confermato_il) + ' con <b>' + esc(g.artigiano) + '</b>' + (g.importo ? ' · ' + eur(g.importo) : '') + '. Garanzia AncheCasa fino al <b>' + data(g.garanzia_fino) + '</b>.</div>';
+        if (!g.recensione) h += '<h2 style="margin-top:22px">Com\'è andata?</h2><div class="stelle" id="stelle">' + [1, 2, 3, 4, 5].map(function (n) { return '<button type="button" data-v="' + n + '" aria-label="' + n + ' stelle">★</button>'; }).join("") + '</div>' +
+          '<textarea id="rec-t" maxlength="600" rows="3" placeholder="Scrivi due righe per gli altri clienti (facoltativo)"></textarea><button class="btn" data-az="recensione">Pubblica la recensione</button>';
+        else h += '<div class="riassunto"><span><b>La tua recensione:</b> ' + "★".repeat(g.recensione.voto) + (g.recensione.testo ? ' «' + esc(g.recensione.testo) + '»' : '') + (g.recensione.risposta ? '<br><b>Risposta dell\'artigiano:</b> ' + esc(g.recensione.risposta) : '') + '</span></div>';
+        var inGaranzia = g.garanzia_fino && new Date(g.garanzia_fino) >= new Date(new Date().toDateString());
+        if (g.garanzia_il) h += '<div class="riassunto"><span>Hai chiesto la garanzia il ' + data(g.garanzia_il) + ': l\'artigiano e AncheCasa ti contattano.</span></div>';
+        else if (inGaranzia) h += '<h2 style="margin-top:22px">Qualcosa non va?</h2><textarea id="gar-t" maxlength="500" rows="2" placeholder="Descrivi il problema"></textarea><button class="btn" style="background:#16304d" data-az="garanzia">Chiedi la garanzia</button>';
+      }
+      if (g.stato === "annullato") h += '<div class="vuoto">Hai annullato questa richiesta.</div>';
+      h += '<p class="regola">Il tuo numero e il tuo indirizzo li vede solo l\'artigiano che accetta. La garanzia AncheCasa di 30 giorni vale per i lavori confermati qui.</p>';
+      corpo.innerHTML = h;
+      var voto = 0;
+      corpo.querySelectorAll("#stelle button").forEach(function (b) { b.addEventListener("click", function () { voto = Number(b.getAttribute("data-v")); corpo.querySelectorAll("#stelle button").forEach(function (x) { x.classList.toggle("on", Number(x.getAttribute("data-v")) <= voto); }); }); });
+      corpo.querySelectorAll("[data-az]").forEach(function (b) {
+        b.addEventListener("click", function () {
+          var a = b.getAttribute("data-az");
+          if (a === "annulla") { if (b.dataset.c !== "1") { b.dataset.c = "1"; b.textContent = "Confermi? La richiesta si chiude"; return; } b.disabled = true; azione("guasto_annulla"); }
+          if (a === "conferma") { b.disabled = true; azione("guasto_conferma"); }
+          if (a === "recensione") { if (!voto) { alertBox("Scegli da 1 a 5 stelle."); return; } b.disabled = true; azione("guasto_recensione", { p_voto: voto, p_testo: (document.getElementById("rec-t").value || "").trim() }); }
+          if (a === "garanzia") { var t = (document.getElementById("gar-t").value || "").trim(); if (t.length < 5) { alertBox("Descrivi il problema."); return; } b.disabled = true; azione("guasto_garanzia", { p_nota: t }); }
+        });
+      });
+    }
+    function titolo(g) {
+      return { cerca: "cerchiamo il tuo artigiano", assegnato: "cerchiamo il tuo artigiano", admin: "ci pensa AncheCasa", accettato: "l'artigiano sta arrivando", fatto: "il lavoro è finito?", confermato: "lavoro fatto", annullato: "richiesta annullata" }[g.stato] || "la tua richiesta";
+    }
+    carica();
+  })();
+  </script>
+</body>
+</html>

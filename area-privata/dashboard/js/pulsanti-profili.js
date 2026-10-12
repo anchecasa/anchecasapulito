@@ -28,7 +28,7 @@
   }
   const LOCALE = "ac-demo-pulsanti-profili";
   // 12.10.2026 (app-19, app-20): «Guarda come» anche per i fornitori di luce e gas, telefonia e finanza.
-  const GUARDA_FORN = { "azienda:energia": ["azienda_luce_gas", "energia_home"], "azienda:telefonia": ["azienda_telefonia", "tel_home"], "azienda:finanza": ["azienda_finanza", "fin_home"], "azienda:materiali": ["azienda_materiali_edili", "mat_home"], "azienda:noleggio": ["azienda_noleggio_attrezzature", "nol_home"], "azienda:casa": ["azienda_traslochi", "cas_home"] };
+  const GUARDA_FORN = { "azienda:energia": ["azienda_luce_gas", "energia_home"], "azienda:telefonia": ["azienda_telefonia", "tel_home"], "azienda:finanza": ["azienda_finanza", "fin_home"], "azienda:materiali": ["azienda_materiali_edili", "mat_home"], "azienda:noleggio": ["azienda_noleggio_attrezzature", "nol_home"], "azienda:casa": ["azienda_traslochi", "cas_home"], "azienda:artigiano": ["azienda_artigiani", "art_home"] };
 
   let config = { profili: {} };
   let caricato = false;

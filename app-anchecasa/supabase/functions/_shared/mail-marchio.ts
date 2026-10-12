@@ -198,3 +198,64 @@ export function mailVerifica(d: { categoria: string; link: string; nome?: string
     passiTitolo: "Come funziona", passi: ["Apri il pulsante", "Sì o No", "Fatto"],
     perche: "Ricevi questa mail perché hai scelto una proposta su AncheCasa.", tu: true, foto: "privato" }) };
 }
+
+// Le mail dei guasti (Ho un guasto / Trova artigiano, app-23).
+export function mailGuasti(evento: "offerta" | "ricevuta" | "accettato" | "fatto" | "admin" | "garanzia", d: {
+  link: string; nome?: string; mestiere?: string; comune?: string; urgente?: boolean; artigiano?: string; importo?: number | null; descrizione?: string; nota?: string;
+}): { oggetto: string; html: string } {
+  const nome = esc(String(d.nome || "").split(" ")[0]);
+  const mest = esc(d.mestiere || ""), dove = esc(d.comune || "");
+  const eur = (n: number | null | undefined) => (Number(n) || 0).toLocaleString("it-IT", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
+  const T: Record<string, Avviso> = {
+    offerta: {
+      oggetto: (d.urgente ? "URGENTE · " : "") + "AncheCasa · Nuova richiesta: " + (d.mestiere || "") + " a " + (d.comune || ""), anteprima: d.urgente ? "Hai 15 minuti per accettare." : "Hai 2 ore per accettare.",
+      etichetta: d.urgente ? "Urgente" : "Nuova richiesta", titolo: d.urgente ? "Hai 15 minuti per accettare." : "Hai 2 ore per accettare.",
+      intro: "Un cliente a <strong>" + dove + "</strong> cerca un artigiano (" + mest + ")" + (d.descrizione ? ": «" + esc(d.descrizione).slice(0, 160) + "»" : "") + ". La richiesta è arrivata solo a lei.",
+      punti: [["Se non risponde in tempo passa al prossimo", "Chi non risponde spesso scende in classifica."], ["Contatti dopo «Accetto»", "Nome, telefono e indirizzo del cliente li trova subito dopo."]],
+      bottone: "Apra la richiesta", link: d.link, chiusura: "Se non può, prema «Non posso»: la richiesta passa subito al prossimo.",
+      passiTitolo: "Come funziona", passi: ["Apra la richiesta", "Accetti", "Chiami il cliente"],
+      perche: "Riceve questa mail perché è un artigiano AncheCasa libero in questa zona.", tu: false, foto: "azienda" },
+    ricevuta: {
+      oggetto: "AncheCasa · Cerchiamo il tuo artigiano", anteprima: "Ti scriviamo appena un artigiano accetta.",
+      etichetta: "Ho un guasto", titolo: "Cerchiamo il tuo artigiano.",
+      intro: (nome ? "Ciao " + nome + ", " : "") + "abbiamo ricevuto la tua richiesta (" + mest + ", " + dove + "). La mandiamo all'artigiano più vicino e libero: " + (d.urgente ? "ha 15 minuti per accettare" : "ha 2 ore per accettare") + ", poi passa al prossimo.",
+      punti: [["Il tuo numero è protetto", "Lo vede solo l'artigiano che accetta."], ["Garanzia AncheCasa 30 giorni", "Sui lavori confermati nell'app."]],
+      bottone: "Segui la richiesta", link: d.link, chiusura: "Se nessuno può, ti contatta AncheCasa.",
+      passiTitolo: "Come funziona", passi: ["Un artigiano accetta", "Ti chiama", "Conferma il lavoro fatto"],
+      perche: "Ricevi questa mail perché hai chiesto un intervento su AncheCasa.", tu: true, foto: "privato" },
+    accettato: {
+      oggetto: "AncheCasa · " + (d.artigiano || "Un artigiano") + " ha accettato", anteprima: "Ti chiama a breve.",
+      etichetta: "Ho un guasto", titolo: "Un artigiano ha accettato.",
+      intro: (nome ? "Ciao " + nome + ", " : "") + "<strong>" + esc(d.artigiano || "un artigiano AncheCasa") + "</strong> ha accettato la tua richiesta (" + mest + ") e ti chiama a breve.",
+      punti: [["Quando ha finito", "Ti arriva una mail per confermare il lavoro con un tocco."], ["Garanzia AncheCasa 30 giorni", "Parte quando confermi il lavoro."]],
+      bottone: "Segui la richiesta", link: d.link, chiusura: "Se non ti chiama entro poco, scrivi a info@anchecasa.it.",
+      passiTitolo: "Da qui", passi: ["Ti chiama", "Fa il lavoro", "Confermi"],
+      perche: "Ricevi questa mail perché hai chiesto un intervento su AncheCasa.", tu: true, foto: "privato" },
+    fatto: {
+      oggetto: "AncheCasa · Confermi il lavoro?", anteprima: "Un tocco per confermare, e parte la garanzia.",
+      etichetta: "Lavoro fatto", titolo: "Il lavoro è finito?",
+      intro: (nome ? "Ciao " + nome + ", " : "") + "<strong>" + esc(d.artigiano || "l'artigiano") + "</strong> ha segnato il lavoro come fatto" + (d.importo ? " (" + eur(d.importo) + ")" : "") + ". Confermalo con un tocco: parte la garanzia AncheCasa di 30 giorni e puoi lasciare la recensione.",
+      punti: [["Se qualcosa non va", "Scrivi a info@anchecasa.it prima di confermare."], ["Dopo 7 giorni", "Il lavoro vale come confermato."]],
+      bottone: "Conferma il lavoro", link: d.link, chiusura: "La recensione aiuta gli altri a scegliere.",
+      passiTitolo: "Da qui", passi: ["Conferma", "Lascia la recensione", "Garanzia 30 giorni"],
+      perche: "Ricevi questa mail perché hai chiesto un intervento su AncheCasa.", tu: true, foto: "privato" },
+    admin: {
+      oggetto: (d.urgente ? "URGENTE · " : "") + "AncheCasa · Nessun artigiano ha accettato", anteprima: "Il guasto va gestito a mano.",
+      etichetta: "Da gestire", titolo: "Nessun artigiano ha accettato.",
+      intro: "Richiesta " + mest + " a <strong>" + dove + "</strong>" + (d.descrizione ? ": «" + esc(d.descrizione).slice(0, 160) + "»" : "") + ". Nessun artigiano disponibile ha accettato. Il cliente aspetta.",
+      punti: [["Chiama il cliente", "I contatti sono nella pagina Aziende."]],
+      bottone: "Apri Aziende", link: d.link, chiusura: "",
+      passiTitolo: "Da fare", passi: ["Apri Aziende", "Chiama il cliente", "Trova un artigiano"],
+      perche: "Mail di servizio di AncheCasa.", tu: true, foto: "azienda" },
+    garanzia: {
+      oggetto: "AncheCasa · Richiesta di garanzia", anteprima: "Il cliente chiede la garanzia sul lavoro.",
+      etichetta: "Garanzia", titolo: "Il cliente chiede la garanzia.",
+      intro: "Per il lavoro (" + mest + ", " + dove + ") il cliente scrive: «" + esc(d.nota || "") + "». Lo contatti per sistemare: è coperto dalla garanzia AncheCasa di 30 giorni.",
+      punti: [["Contatti del cliente", "Li trova nella pagina Garanzia della sua dashboard."]],
+      bottone: "Apra Garanzia", link: d.link, chiusura: "AncheCasa segue la richiesta.",
+      passiTitolo: "Da fare", passi: ["Apra Garanzia", "Chiami il cliente", "Sistemi il lavoro"],
+      perche: "Riceve questa mail perché un lavoro fatto con AncheCasa è in garanzia.", tu: false, foto: "azienda" }
+  };
+  const t = T[evento];
+  return { oggetto: t.oggetto, html: mailMarchio(t) };
+}

@@ -29,6 +29,33 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 12.10.2026 12:35 · Claude — Artigiano con «Ho un guasto» vero, documenti e prova per tutte le aziende, admin Aziende (NON pubblicato, SQL NON eseguito)
+- Decisioni di Nando delle 12:11 e 12:20: cinque viste delle aziende (gratis, abbonamento, moduli); prova 14 giorni, poi l'admin segna «attiva fino al» quando arriva il bonifico; visura e DURC obbligatori; impresa, subappaltatore e impiantista stesso prezzo; si parte da artigiano e impresa. Il pagamento dentro l'app arriva dopo, solo con artigiani iscritti: per ora si registrano lavoro, importo e 4,99 €.
+- `app-anchecasa/sql/app-23-artigiani-aziende.sql` (da eseguire solo con l'ok di Nando): `aziende_stato` (prova, attiva_fino, documenti_ok), `aziende_documenti` + bucket privato `aziende-documenti`, `artigiani` (mestieri, libero, notte, festivi), `guasti`, `recensioni`; funzioni `guasti_assegna` (uno alla volta: scelto dal privato, più vicino, voto; 15 minuti urgente, 2 ore normale; dopo tre o nessuno → admin), `guasti_nuovo`, `guasti_per_me`, `guasto_accetta/rifiuta/fatto`, `guasto_info/conferma/annulla/recensione/garanzia` (pagina del privato), `guasti_giro` (passa al prossimo, conferma dopo 7 giorni), `artigiani_zona`, `azienda_mio_stato`, `azienda_puo_lavorare`, `aziende_per_admin`, `azienda_admin_stato`, `guasti_admin`, `guasto_admin_affida`. Nuova categoria d'invito `azienda_artigiani`. Sintassi controllata con pglast.
+- `app-anchecasa/sql/app-23b-guasti-ogni-5-minuti.sql`: pg_cron ogni 5 minuti chiama `preventivi-avvisa` con `{"evento":"guasti"}` (niente funzione nuova).
+- `preventivi-avvisa`: evento «guasti» (mail all'artigiano per la richiesta, al cliente ricevuta/accettato/fatto, all'admin se nessuno accetta, garanzia). `_shared/mail-marchio.ts`: `mailGuasti` con il look dell'invito. Admin: `ADMIN_MAIL` (se manca, info@anchecasa.it).
+- NUOVI `area-privata/dashboard/js/artigiani.js` (artigiano `art_*`, `az-documenti` per tutte le aziende, privato `pv-guasto` e `pv-trova` veri, admin `aziende-admin`) e `area-privata/guasto.html` (il privato segue la richiesta, conferma, recensione, garanzia).
+- `app.js` v=26 (pack artigiano rifatto, piega «La mia azienda», tasto admin «Aziende»), `views.js` v=10, `sala-demo.js` v=7 (vetrina Artigiano pronta), `pulsanti-profili.js` v=8, `preventivi.js` v=3 (esporta le province), `energia.css` v=5.
+- Prova in anteprima (Playwright): artigiano (richiesta, accetto, lavoro fatto, recensioni, garanzia, disponibilità, zona, documenti), privato (Ho un guasto, Trova artigiano), admin Aziende, impresa con «Documenti e abbonamento». Nessun errore nuovo.
+- Sito, magazine, app, Sicura e database non toccati.
+
+### 12.10.2026 12:11 · Cursor — mail della password ripubblicata con il look dell'invito
+- Ok di Nando del 12.10.2026, ore 12:05, per i commit `88e46f9` e `336de83`. Ripubblicata `reset-password-marketplace` (versione 16, verify_jwt spento). Con la funzione è salito `_shared/mail-invito.js`. Le altre funzioni non sono state toccate. La versione 15 non è stata rimessa.
+- Prova «Password dimenticata» su https://entra.anchecasa.it, mail `prova-agente-campania-1210@anchecasa.it`. La pagina ha scritto «Se l'indirizzo è registrato, riceverai un'email con il link.» La funzione ha risposto 200. L'indirizzo è un account vero: se l'invio fallisce la pagina mostra l'errore e la funzione risponde 502, quindi la mail è partita.
+- La funzione online ha l'oggetto «Scegli una nuova password» e il pulsante verso `https://entra.anchecasa.it/nuova-password.html`. Resend e il pannello Supabase chiedono l'accesso: la casella non è stata aperta da qui.
+- Git push sul ramo main: `5fda7c2..336de83`.
+- Sito, magazine, app, database e Sicura non toccati.
+- File: `CLAUDE.md`.
+
+### 12.10.2026 12:05 · Cursor — lanciati Magazine, voti SuperMastro e il cron del promemoria
+- Eseguito `supabase/migrations/20261009170000_magazine_statistiche.sql`: ci sono `magazine_eventi`, `magazine_iscritti`, `magazine_riepilogo`.
+- Eseguito `supabase/migrations/20261009183000_supermastro_voti.sql`: ci sono `supermastro_voti` e `supermastro_esempi`.
+- Ripubblicata `preventivi-avvisa` (verify_jwt spento, con `_shared/mail-marchio.ts`): il lavoro del giorno è `{ evento: "giornaliero" }`. Eseguito `app-anchecasa/sql/app-22b-promemoria-ogni-giorno.sql`: cron `fornitori-promemoria`, `0 6 * * *`, attivo, chiama `preventivi-avvisa`.
+- La prima chiamata rispondeva `permission denied for function fornitori_chiudi_scadute`. Dato il permesso a `service_role` (anche in `app-22-fornitori-regole-giro.sql`) e richiamata. Risposta: scadute 0, promemoria 0, verifiche 0, errori nessuno.
+- `reset-password-marketplace` non è stata ripubblicata.
+- Sito, magazine, app e Sicura non toccati. Il permesso nel file SQL è sul computer, non su GitHub.
+- File: `CLAUDE.md`, `app-anchecasa/sql/app-22-fornitori-regole-giro.sql`.
+
 ### 12.10.2026 12:05 · Claude — Promemoria in preventivi-avvisa (limite 100 funzioni) e mail della password con il look dell'invito (NON pubblicato)
 - Il progetto Supabase ha 100 funzioni (voce Cursor 11:55): `fornitori-promemoria` non si può pubblicare. Il lavoro di ogni giorno (scadute, promemoria dopo 3 giorni, «Hai firmato?» dopo 30) è ora in `preventivi-avvisa`, `{ evento: "giornaliero" }`. `app-22b-promemoria-ogni-giorno.sql` chiama `preventivi-avvisa` con quel corpo. La cartella `fornitori-promemoria` resta solo come riferimento (scritto in cima al file).
 - `reset-password-marketplace/index.ts` (scaricata da Cursor): la mail del «Password dimenticata» dell'area privata è ora `MailInvito.avviso("password")` (stesso look dell'invito, `_shared/mail-invito.js`) e il link porta a https://entra.anchecasa.it/nuova-password.html. Token, limite di un invio al minuto e risposte non cambiano.

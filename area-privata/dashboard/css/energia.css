@@ -84,3 +84,9 @@
 .nm-o { display: flex; flex-wrap: wrap; gap: 8px; align-items: end; }
 .nm-o label { display: grid; gap: 2px; font-size: 12.5px; font-weight: 600; }
 .nm-o input { font: inherit; padding: 6px 8px; border: 1px solid #dfe5ee; border-radius: 8px; }
+
+/* 12.10.2026 · Artigiani (artigiani.js) */
+.ar-stelle { color: #E56B10; letter-spacing: 1px; }
+.ar-big { font-size: 16px; margin-bottom: 6px; }
+.az-docs { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 8px; }
+.nm-o label.check { display: flex; flex-direction: row; align-items: center; gap: 6px; }

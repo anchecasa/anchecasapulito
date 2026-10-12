@@ -97,6 +97,8 @@
       ["azienda_imprese_edili", "Imprese edili generali e appalto generale"],
       ["azienda_subappaltatori", "Subappaltatori e maestranze"],
       ["azienda_impiantisti", "Impiantisti e termoidraulici"],
+      // 12.10.2026, app-23: artigiani di «Ho un guasto» e «Trova artigiano».
+      ["azienda_artigiani", "Artigiani: idraulici, elettricisti, fabbri e altri mestieri"],
       ["azienda_materiali_edili", "Fornitori di materiali edili, ferramenta e esposizione"],
       ["azienda_noleggio_attrezzature", "Noleggio attrezzature, ponteggi e macchinari di cantiere"]
     ] },

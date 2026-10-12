@@ -4,10 +4,12 @@
 //   { evento: "scelta", token }       → al fornitore scelto: «il cliente ha scelto il suo preventivo».
 //   { evento: "giornaliero" }         → una volta al giorno (pg_cron, app-22b): chiude le richieste scadute (15 giorni) di tutti i giri,
 //                                       promemoria al cliente dopo 3 giorni, «Hai firmato?» 30 giorni dopo la scelta (luce e gas, telefono, finanza).
+//   { evento: "guasti" }              → ogni 5 minuti (pg_cron, app-23b) e dopo ogni azione: «Ho un guasto» passa al prossimo artigiano
+//                                       chi non ha risposto, conferma i lavori fatti da 7 giorni, manda le mail (artigiano, cliente, admin).
 //                                       Sta qui e non in una funzione a parte perché il progetto ha raggiunto il limite di 100 funzioni (12.10.2026).
 // Look della mail d'invito approvata (../_shared/mail-marchio.ts). Deploy con verify_jwt spento.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { mailPreventivi, mailPromemoria, mailVerifica } from "../_shared/mail-marchio.ts";
+import { mailPreventivi, mailPromemoria, mailVerifica, mailGuasti } from "../_shared/mail-marchio.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -108,6 +110,58 @@ async function giornaliero(admin: any, db: any) {
   return esito;
 }
 
+// Il giro dei guasti (app-23): ogni mail parte una volta sola (avvisato_offerta, avvisato_stato, avvisato_admin).
+const ADMIN_MAIL = Deno.env.get("ADMIN_MAIL") || "info@anchecasa.it";
+// deno-lint-ignore no-explicit-any
+async function giroGuasti(admin: any, db: any) {
+  const esito = { passati: 0, confermati: 0, mail: 0, errori: [] as string[] };
+  const prova = async (fn: () => Promise<void>) => { try { await fn(); } catch (e) { esito.errori.push(String((e as Error).message || e)); } };
+  await prova(async () => {
+    const { data, error } = await db.rpc("guasti_giro");
+    if (error) throw error;
+    esito.passati = data?.passati || 0; esito.confermati = data?.confermati || 0;
+  });
+  const mailDi = async (id: string) => { const { data: u } = await admin.auth.admin.getUserById(id); return u?.user?.email || ""; };
+  const nomeDi = async (id: string) => { const { data: p } = await db.from("profiles").select("nome").eq("id", id).maybeSingle(); return p?.nome || ""; };
+  const pagina = (t: string) => `${SITO}/guasto.html?t=${t}`;
+  await prova(async () => {
+    const { data: righe, error } = await db.from("guasti").select("*").in("stato", ["assegnato", "accettato", "fatto", "admin", "confermato"]).gt("creato", fa(60)).limit(300);
+    if (error) throw error;
+    for (const g of righe || []) {
+      // All'artigiano: la richiesta appena arrivata a lui.
+      if (g.stato === "assegnato" && g.artigiano_id && (!g.avvisato_offerta || new Date(g.avvisato_offerta) < new Date(g.offerto_il)) && new Date(g.scade_il) > new Date()) {
+        const a = await mailDi(g.artigiano_id);
+        if (a) { await manda(a, mailGuasti("offerta", { link: `${SITO}/dashboard/#/azienda/art_richieste`, mestiere: g.mestiere, comune: g.comune, urgente: g.urgente, descrizione: g.descrizione })); esito.mail++; }
+        await db.from("guasti").update({ avvisato_offerta: g.offerto_il }).eq("id", g.id);
+      }
+      // Al cliente: ricevuta, accettato, fatto.
+      const chiave = g.stato === "accettato" || g.stato === "fatto" ? g.stato : g.stato === "assegnato" || g.stato === "admin" ? "ricevuta" : "";
+      if (chiave && g.avvisato_stato !== chiave && !(chiave === "ricevuta" && g.avvisato_stato)) {
+        const art = g.artigiano_id && chiave !== "ricevuta" ? await nomeDi(g.artigiano_id) : "";
+        await manda(g.mail, mailGuasti(chiave as "ricevuta" | "accettato" | "fatto", { link: pagina(g.token), nome: g.nome, mestiere: g.mestiere, comune: g.comune, urgente: g.urgente, artigiano: art, importo: g.importo }));
+        await db.from("guasti").update({ avvisato_stato: chiave }).eq("id", g.id);
+        esito.mail++;
+      }
+      // All'admin: nessuno ha accettato.
+      if (g.stato === "admin" && !g.avvisato_admin) {
+        await manda(ADMIN_MAIL, mailGuasti("admin", { link: `${SITO}/dashboard/#/admin/aziende-admin`, mestiere: g.mestiere, comune: g.comune, urgente: g.urgente, descrizione: g.descrizione }));
+        await db.from("guasti").update({ avvisato_admin: new Date().toISOString() }).eq("id", g.id);
+        esito.mail++;
+      }
+      // Garanzia: all'artigiano e all'admin.
+      if (g.stato === "confermato" && g.garanzia_il && g.avvisato_stato !== "garanzia") {
+        const d = { link: `${SITO}/dashboard/#/azienda/art_garanzia`, mestiere: g.mestiere, comune: g.comune, nota: g.garanzia_nota };
+        const a = g.artigiano_id ? await mailDi(g.artigiano_id) : "";
+        if (a) await manda(a, mailGuasti("garanzia", d));
+        await manda(ADMIN_MAIL, mailGuasti("garanzia", Object.assign({}, d, { link: `${SITO}/dashboard/#/admin/aziende-admin` })));
+        await db.from("guasti").update({ avvisato_stato: "garanzia" }).eq("id", g.id);
+        esito.mail++;
+      }
+    }
+  });
+  return esito;
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
   if (req.method !== "POST") return json({ error: "Solo POST." }, 405);
@@ -118,6 +172,7 @@ Deno.serve(async (req) => {
 
   try {
     if (body.evento === "giornaliero") return json(await giornaliero(admin, db));
+    if (body.evento === "guasti") return json(await giroGuasti(admin, db));
 
     if (body.evento === "richiesta") {
       const { data: r } = await db.from("prev_richieste").select("*").eq("token", String(body.token || "")).maybeSingle();

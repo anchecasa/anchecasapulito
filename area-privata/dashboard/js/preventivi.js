@@ -679,6 +679,9 @@
     },
     cosa(r) { return r.categoria === "casa" ? nomeTipo("casa", r.tipo) : righeTxt(r.righe).slice(0, 70); },
     dove: dove,
-    TIPI_DI_AZIENDA: TIPI_DI_AZIENDA
+    TIPI_DI_AZIENDA: TIPI_DI_AZIENDA,
+    // 12.10.2026, app-23: per «Ho un guasto» e «Trova artigiano» (artigiani.js).
+    PROVINCE: PROVINCE,
+    optProvince: optProvince
   };
 })();
