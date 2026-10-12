@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Il tuo sopralluogo · AncheCasa</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#16304d">
+  <meta property="og:site_name" content="AncheCasa">
+  <meta property="og:title" content="Il tuo sopralluogo AncheCasa">
+  <meta property="og:description" content="Foto, lavori e prossimi passi della tua casa.">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/sopralluogo.css?v=2">
+  <link rel="stylesheet" href="css/relazione.css?v=1">
+</head>
+<body>
+  <header class="so-top">
+    <a href="https://www.anchecasa.it" class="so-logo"><img src="assets/logo/anchecasa-orizzontale-trasparente.png?v=3" alt="AncheCasa"></a>
+    <a class="so-entra" href="index.html">Area privata</a>
+  </header>
+
+  <main id="so" class="so" aria-live="polite">
+    <div class="so-attesa"><span class="so-spin"></span>Sto aprendo il tuo sopralluogo…</div>
+  </main>
+
+  <div class="so-lb" id="so-lb" hidden>
+    <button class="so-lb-x" id="so-lb-x" aria-label="Chiudi">×</button>
+    <img id="so-lb-img" alt="">
+    <p id="so-lb-nota"></p>
+  </div>
+
+  <script src="js/relazione.js?v=1"></script>
+  <script src="js/sopralluogo.js?v=2"></script>
+</body>
+</html>

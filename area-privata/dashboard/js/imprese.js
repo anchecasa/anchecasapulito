@@ -482,6 +482,8 @@
      ADMIN: Ristrutturazioni
      ============================================================ */
   let schedaAdm = "pratiche";
+  // 12.10.2026 app-28: dal link della mail (dashboard/?dossier=<id>) si apre subito il dossier del tecnico.
+  let dossierDaAprire = new URLSearchParams(location.search).get("dossier") || "";
   V["ristrutturazioni-admin"] = {
     title: "Ristrutturazioni",
     sub: "AncheCasa general contractor: richieste, sopralluogo con l'agente, preventivo e firma, scelta dell'impresa, SAL. E i piccoli lavori da smistare.",
@@ -549,6 +551,9 @@
         }
 
         // Pratiche
+        // app-28: prima le pratiche con il preventivo da mandare, la scadenza più vicina in alto.
+        const scadenza = (r) => (r.preventivo_entro && !r.preventivo_mandato_il ? new Date(r.preventivo_entro).getTime() : Infinity);
+        R.sort((a, b) => scadenza(a) - scadenza(b));
         box.innerHTML = R.length ? html`${R.map((r) => {
           const cm = C.filter((c) => c.ristrutturazione_id === r.id);
           return html`<section class="card"><div class="en-rrow"><div class="en-rinfo">
@@ -556,6 +561,8 @@
               <small>${r.descrizione}${r.budget ? " · budget " + r.budget : ""}</small>
               <small><a href="tel:${(r.telefono || "").replace(/\s/g, "")}">${r.telefono}</a>${r.mail ? html` · <a href="mailto:${r.mail}">${r.mail}</a>` : ""}${r.indirizzo ? " · " + r.indirizzo : ""}</small>
               ${r.nota_agente ? html`<small>Sopralluogo (${r.agente}): «${r.nota_agente}»</small>` : ""}
+              ${r.preventivo_entro && !r.preventivo_mandato_il ? html`<small><span class="tag ${r.urgente || new Date(r.preventivo_entro) - Date.now() < 86400000 ? "new" : "wait"}" style="${r.urgente ? "background:#fdeceb;color:#c0392b" : ""}">${r.urgente ? "⚡ Urgente · " : ""}preventivo entro ${new Date(r.preventivo_entro).toLocaleString("it-IT", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}</span></small>` : ""}
+              ${r.preventivo_mandato_il ? html`<small><span class="tag ${r.preventivo_accettato_il ? "ok" : "wait"}">${r.preventivo_accettato_il ? "Preventivo accettato" : "Preventivo mandato"} · ${eur((r.preventivo && r.preventivo.totale) || r.importo_cliente)}</span></small>` : ""}
               ${cm.length ? html`<small>Affidato a: ${cm.map((c) => c.impresa + " (" + STATO_C[c.stato][1].toLowerCase() + ")").join(", ")}</small>` : ""}</div></div>
             <form class="nm-o" data-pr="${r.id}">
               <label>Stato<select name="stato">${Object.keys(STATO_R).map((k) => html`<option value="${k}"${r.stato === k ? " selected" : ""}>${STATO_R[k][1]}</option>`)}</select></label>
@@ -565,7 +572,7 @@
               <button class="btn-ghost" type="submit">Salva</button>
               ${["preventivo", "firmata", "in_cantiere"].includes(r.stato) ? html`<button class="btn-in" type="button" data-affida="${r.id}">Affida a un'impresa</button>` : ""}</form>
             ${profitGuard(r, C, A.margine_minimo)}
-            <div class="row-actions imp-az"><button class="btn-ghost" type="button" data-cmp="${r.id}">Computo (${(r.computo || []).length} voci)</button>
+            <div class="row-actions imp-az"><button class="btn-in" type="button" data-dossier="${r.id}">📋 Apri il dossier</button><button class="btn-ghost" type="button" data-cmp="${r.id}">Computo (${(r.computo || []).length} voci)</button>
               <button class="btn-ghost" type="button" data-fla="${r.id}">Foto e note vocali (${(r.media || []).length})</button>
               ${r.cantiere_id ? html`<button class="btn-ghost" type="button" data-cnt="${r.cantiere_id}">Richieste alle aziende</button>` : ""}</div>
             <div data-box-x="${r.id}"></div><div data-box-affida="${r.id}"></div></section>`;
@@ -582,6 +589,10 @@
         });
         const apriX = (id, fn) => { const r = R.find((x) => x.id === id), bx = box.querySelector("[data-box-x='" + id + "']"); if (bx.dataset.aperto === fn.name) { bx.innerHTML = ""; bx.dataset.aperto = ""; return; } bx.dataset.aperto = fn.name; fn(bx, r, ricarica); };
         box.querySelectorAll("[data-cmp]").forEach((b) => b.addEventListener("click", () => apriX(b.getAttribute("data-cmp"), computoBox)));
+        // app-28: il dossier del tecnico (js/dossier-tecnico.js) si apre al posto dell'elenco.
+        const apriDossier = (id) => { const r = R.find((x) => x.id === id); if (!r || !AC.dossier) return; AC.dossier(box, r, () => V["ristrutturazioni-admin"].render(el)); window.scrollTo(0, 0); };
+        box.querySelectorAll("[data-dossier]").forEach((b) => b.addEventListener("click", () => apriDossier(b.getAttribute("data-dossier"))));
+        if (dossierDaAprire) { const id = dossierDaAprire; dossierDaAprire = ""; apriDossier(id); }
         box.querySelectorAll("[data-fla]").forEach((b) => b.addEventListener("click", () => apriX(b.getAttribute("data-fla"), flashBox)));
         box.querySelectorAll("[data-cnt]").forEach((b) => b.addEventListener("click", () => { if (AC.cantieri) AC.cantieri.apri(b.getAttribute("data-cnt")); location.hash = "#/admin/cnt_cantieri"; }));
         box.querySelectorAll("[data-pr]").forEach((f) => f.addEventListener("submit", (e) => {
@@ -789,5 +800,5 @@
   V["re-sopralluoghi"] = paginaSopralluoghi("Sopralluoghi assegnati", "I sopralluoghi che AncheCasa ti ha affidato. Dal telefono scatti le foto e registri la nota vocale; poi premi «Fatto»: il preventivo lo prepara AncheCasa.");
   V["re-flash"] = paginaSopralluoghi("Sopralluogo Flash", "Sul posto: foto dalla fotocamera e nota vocale, salvate nella pratica. Gratis per la rete e per l'admin.");
 
-  AC.imprese = { STATO_R: STATO_R };
+  AC.imprese = { STATO_R: STATO_R, computoBox: computoBox };
 })();

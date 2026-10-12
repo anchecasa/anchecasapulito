@@ -1,7 +1,8 @@
 /* Contratto compilabile e firmabile dal telefono (11.10.2026, su richiesta di Nando).
    - mostra(): il contratto su carta intestata AncheCasa con i campi da compilare, la firma col dito e «Invia».
-   - Prima della firma l'area della rete è in sola lettura: si guarda tutto, ma non si registra niente.
-   - Dopo l'invio (rpc app_firma_contratto, app-14) l'area si attiva con tutte le funzioni.
+   - Dal 12.10.2026 la rete e l'admin usano sempre l'app, anche senza contratto firmato.
+     La striscia ricorda soltanto «Ricordati di firmare il tuo contratto» e non blocca niente.
+   - Dopo l'invio (rpc app_firma_contratto, app-14) la striscia sparisce.
    Testi dei contratti in contratti-modelli.js. Stile in css/contratto-firma.css. */
 (function () {
   const AC = (window.AC = window.AC || {});
@@ -342,7 +343,7 @@
     w.document.close();
   }
 
-  /* ---------- Sola lettura finché il contratto non è firmato ---------- */
+  /* ---------- Promemoria del contratto: dal 12.10.2026 non blocca più ---------- */
   function azzera() { cache = null; }
 
   async function stato() {
@@ -376,7 +377,7 @@
     if (!st.bloccato) { if (el) el.remove(); return; }
     if (!el) { el = document.createElement("div"); el.id = "cf-striscia"; el.className = "cf-striscia"; }
     const suContratto = page === "documenti" && document.getElementById("cf");
-    el.innerHTML = `<i aria-hidden="true"></i><div><b>La tua area è in sola lettura.</b> Compila e firma il tuo contratto: dopo l'invio si attivano tutte le funzioni.</div>${suContratto ? "" : '<button type="button" class="cf-striscia-btn" id="cf-vai">Firma il contratto</button>'}`;
+    el.innerHTML = `<i aria-hidden="true"></i><div><b>Ricordati di firmare il tuo contratto.</b></div>${suContratto ? "" : '<button type="button" class="cf-striscia-btn" id="cf-vai">Firma il contratto</button>'}`;
     if (view.firstChild !== el) view.insertBefore(el, view.firstChild);
     const vai = el.querySelector("#cf-vai");
     if (vai) vai.addEventListener("click", () => {
@@ -386,37 +387,20 @@
     });
   }
 
-  // Nella sola lettura si blocca chi registra o invia qualcosa; si possono ancora aprire pagine e schede.
-  const BLOCCA = 'button[type="submit"], input[type="submit"], .btn-in, .btn-new, .btn-danger, .btn-mail, [data-azione], form button:not([type="button"])';
-  let paginaCorrente = "";
-  function libero(t) { return !t || paginaCorrente === "documenti" || t.closest(".cf, .cf-striscia, .side, .tabbar, #altro, .acct, .topbar"); }
-  function ferma(e) {
-    if (!document.body.classList.contains("cf-sola-lettura")) return;
-    const t = e.target && e.target.closest ? e.target : null;
-    if (!t || libero(t)) return;
-    if (e.type === "submit" || t.closest(BLOCCA)) {
-      e.preventDefault();
-      e.stopImmediatePropagation();
-      toast("Firma il contratto per usare questa funzione.", "errore");
-    }
-  }
-  document.addEventListener("submit", ferma, true);
-  document.addEventListener("click", ferma, true);
-
   let giro = 0;
   async function applica(famiglia, page) {
     const mio = ++giro;
-    paginaCorrente = page || "";
+    document.body.classList.remove("cf-sola-lettura");
     if (famiglia !== "agente") {
-      document.body.classList.remove("cf-sola-lettura");
       const el = document.getElementById("cf-striscia");
       if (el) el.remove();
       return;
     }
     const st = await stato();
     if (mio !== giro) return;
-    document.body.classList.toggle("cf-sola-lettura", !!st.bloccato);
-    striscia(st, page);
+    // In anteprima (?demo=agente) non c'è una firma: il promemoria si vede, i pulsanti restano attivi.
+    const mostra = st.bloccato || /[?&]demo=agente(?:&|$)/.test(location.search);
+    striscia(mostra ? { bloccato: true, doc: st.doc } : st, page);
   }
 
   function prendiDaAprire() { const x = daAprire; daAprire = ""; return x; }

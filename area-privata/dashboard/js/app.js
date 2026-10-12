@@ -1283,7 +1283,7 @@
     paintNav(famiglia, page);
     paintTestata(famiglia, page);
     paintTop(famiglia, page);
-    // 11.10.2026: area della rete in sola lettura finché il contratto non è firmato (js/contratto-firma.js).
+    // 12.10.2026: il contratto non blocca più. La striscia in js/contratto-firma.js ricorda soltanto di firmarlo.
     if (window.AC && AC.contrattoFirma) AC.contrattoFirma.applica(famiglia, page);
 
     if (fresh) {

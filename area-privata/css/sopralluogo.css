@@ -1,0 +1,134 @@
+/* Il tuo sopralluogo · pagina del cliente (12.10.2026). Chiara, card con ombre, Manrope. */
+:root{
+  --navy:#16304d; --navy2:#2c4a6e; --arancio:#E56B10; --arancio2:#c45d0c; --chiaro:#fff1e4;
+  --fondo:#f3f5f9; --card:#ffffff; --testo:#24384c; --muto:#66758a; --filo:#e3e8ef; --verde:#2c4a6e;
+  --ombra:0 1px 2px rgba(22,48,77,.06),0 8px 24px rgba(22,48,77,.08);
+  --r:20px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--fondo);color:var(--testo);font-family:Manrope,"Segoe UI",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:var(--navy2)}
+button{font-family:inherit;cursor:pointer}
+
+.so-top{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:rgba(255,255,255,.92);backdrop-filter:saturate(1.4) blur(10px);-webkit-backdrop-filter:saturate(1.4) blur(10px);border-bottom:1px solid var(--filo)}
+.so-logo img{height:30px;width:auto}
+.so-entra{font-size:13px;font-weight:700;text-decoration:none;color:var(--navy);padding:8px 12px;border-radius:999px;background:var(--fondo)}
+
+.so{max-width:640px;margin:0 auto;padding:0 0 120px}
+.so-attesa{display:flex;gap:10px;align-items:center;justify-content:center;padding:80px 16px;color:var(--muto);font-weight:600}
+.so-spin{width:18px;height:18px;border-radius:50%;border:2.5px solid var(--filo);border-top-color:var(--arancio);animation:gira .8s linear infinite}
+@keyframes gira{to{transform:rotate(360deg)}}
+
+/* Copertina */
+.so-hero{position:relative;height:min(62vh,440px);min-height:340px;overflow:hidden;background:var(--navy2)}
+.so-hero img{width:100%;height:100%;object-fit:cover;transform:scale(1.04);animation:entra 1.4s ease-out forwards}
+@keyframes entra{to{transform:scale(1)}}
+.so-hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(22,48,77,0) 30%,rgba(22,48,77,.55) 62%,rgba(14,30,49,.92) 100%)}
+.so-hero-txt{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:22px 20px 26px;color:#fff}
+.so-tag{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;background:rgba(255,255,255,.16);backdrop-filter:blur(6px);font-size:12px;font-weight:800;letter-spacing:.4px;text-transform:uppercase}
+.so-tag i{width:7px;height:7px;border-radius:50%;background:#ffb27a}
+.so-hero h1{margin:12px 0 6px;font-size:30px;line-height:1.12;font-weight:800;letter-spacing:-.4px}
+.so-hero p{margin:0;font-size:15px;line-height:1.5;color:rgba(255,255,255,.86)}
+.so-agente{display:flex;align-items:center;gap:10px;margin-top:16px}
+.so-av{width:38px;height:38px;border-radius:50%;background:var(--arancio);color:#fff;display:grid;place-items:center;font-weight:800;font-size:14px;border:2px solid rgba(255,255,255,.7)}
+.so-agente b{display:block;font-size:14px}
+.so-agente span{font-size:12px;color:rgba(255,255,255,.75)}
+
+.so-corpo{padding:0 16px;margin-top:-14px;position:relative;z-index:3;display:flex;flex-direction:column;gap:14px}
+.so-card{background:var(--card);border-radius:var(--r);box-shadow:var(--ombra);padding:20px}
+.so-card h2{margin:0 0 4px;font-size:18px;font-weight:800;color:var(--navy);letter-spacing:-.2px}
+.so-card .sub{margin:0 0 14px;font-size:13px;color:var(--muto)}
+.so-eti{font-size:11px;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--arancio2);margin:0 0 8px}
+
+/* Conto alla rovescia */
+.so-conto{background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);color:#fff}
+.so-conto h2{color:#fff}
+.so-conto .sub{color:rgba(255,255,255,.75)}
+.so-urg{display:inline-block;margin-left:6px;padding:3px 9px;border-radius:999px;background:var(--arancio);font-size:11px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;vertical-align:2px}
+.so-cifre{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:4px}
+.so-cifre div{background:rgba(255,255,255,.1);border-radius:14px;padding:12px 4px;text-align:center}
+.so-cifre b{display:block;font-size:26px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1}
+.so-cifre span{display:block;margin-top:6px;font-size:11px;color:rgba(255,255,255,.7);font-weight:600}
+.so-barra{height:6px;border-radius:6px;background:rgba(255,255,255,.14);margin-top:16px;overflow:hidden}
+.so-barra i{display:block;height:100%;background:linear-gradient(90deg,#ffb27a,var(--arancio));border-radius:6px;transition:width .6s}
+
+/* Testo riepilogo */
+.so-riep{font-size:15px;line-height:1.6;margin:0;white-space:pre-line}
+.so-luogo{display:flex;gap:8px;align-items:center;margin-top:14px;padding-top:14px;border-top:1px solid var(--filo);font-size:13px;color:var(--muto)}
+
+/* Foto */
+.so-foto{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -20px;padding:0 20px 4px;scrollbar-width:none}
+.so-foto::-webkit-scrollbar{display:none}
+.so-foto button{flex:0 0 78%;scroll-snap-align:start;border:0;padding:0;background:none;text-align:left}
+.so-foto img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:16px;background:var(--filo)}
+.so-foto span{display:block;margin-top:8px;font-size:13px;color:var(--muto);font-weight:600}
+
+/* Lavori */
+.so-voci{list-style:none;margin:0;padding:0}
+.so-voci li{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-top:1px solid var(--filo)}
+.so-voci li:first-child{border-top:0;padding-top:4px}
+.so-n{flex:0 0 28px;height:28px;border-radius:50%;background:var(--chiaro);color:var(--arancio2);display:grid;place-items:center;font-size:12px;font-weight:800}
+.so-voci b{display:block;font-size:14px;color:var(--navy);font-weight:700}
+.so-voci small{font-size:12px;color:var(--muto)}
+.so-q{margin-left:auto;font-size:13px;font-weight:800;color:var(--navy);white-space:nowrap}
+
+/* Pacchetti */
+.so-pacc{display:grid;gap:10px}
+.so-p{display:flex;gap:12px;align-items:center;border:1.5px solid var(--filo);border-radius:16px;padding:12px}
+.so-p img{width:72px;height:56px;object-fit:cover;border-radius:10px;flex:0 0 auto}
+.so-p b{display:block;font-size:15px;color:var(--navy)}
+.so-p small{font-size:12px;color:var(--muto);line-height:1.4;display:block}
+.so-p.si{border-color:var(--arancio);background:#fffaf5;box-shadow:0 0 0 3px rgba(229,107,16,.1)}
+.so-p .ok{margin-left:auto;flex:0 0 auto;font-size:11px;font-weight:800;color:#fff;background:var(--arancio);padding:4px 9px;border-radius:999px}
+
+/* Passi */
+.so-passi{list-style:none;margin:0;padding:0;position:relative}
+.so-passi li{position:relative;display:flex;gap:14px;padding:0 0 18px}
+.so-passi li:last-child{padding-bottom:0}
+.so-passi li::before{content:"";position:absolute;left:13px;top:28px;bottom:0;width:2px;background:var(--filo)}
+.so-passi li:last-child::before{display:none}
+.so-pt{flex:0 0 28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:13px;font-weight:800;background:var(--fondo);color:var(--muto);border:2px solid var(--filo);position:relative;z-index:1}
+.so-passi li.fatto .so-pt{background:var(--verde);border-color:var(--verde);color:#fff}
+.so-passi li.ora .so-pt{background:var(--arancio);border-color:var(--arancio);color:#fff;box-shadow:0 0 0 5px rgba(229,107,16,.15)}
+.so-passi b{display:block;font-size:14px;color:var(--navy)}
+.so-passi small{font-size:12px;color:var(--muto)}
+
+/* Consulente */
+.so-cons{display:flex;gap:14px;align-items:center}
+.so-cons .so-av{width:50px;height:50px;font-size:17px;border:0}
+.so-cons b{display:block;font-size:16px;color:var(--navy)}
+.so-cons small{font-size:13px;color:var(--muto)}
+.so-btn2{display:block;margin-top:14px;text-align:center;padding:13px;border-radius:14px;background:var(--fondo);color:var(--navy);font-weight:800;font-size:14px;text-decoration:none}
+
+/* Barra in basso */
+.so-cta{position:fixed;left:0;right:0;bottom:0;z-index:30;padding:12px 16px calc(12px + env(safe-area-inset-bottom));background:linear-gradient(180deg,rgba(243,245,249,0),var(--fondo) 30%)}
+.so-cta button{display:block;width:100%;max-width:608px;margin:0 auto;border:0;border-radius:16px;padding:17px;font-size:16px;font-weight:800;color:#fff;background:var(--arancio2);box-shadow:0 10px 24px rgba(196,93,12,.32);transition:transform .15s}
+.so-cta button:active{transform:scale(.98)}
+.so-cta button.fatto{background:var(--navy);box-shadow:0 10px 24px rgba(22,48,77,.28)}
+.so-cta button:disabled{opacity:.75}
+
+.so-errore{margin:60px 16px;text-align:center}
+.so-errore h1{font-size:22px;color:var(--navy)}
+.so-errore p{color:var(--muto);line-height:1.6}
+.so-piede{text-align:center;font-size:12px;color:var(--muto);padding:10px 16px 0;line-height:1.6}
+
+/* Foto a tutto schermo */
+.so-lb{position:fixed;inset:0;z-index:60;background:rgba(10,20,34,.94);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
+.so-lb[hidden]{display:none}
+.so-lb img{max-height:78vh;border-radius:12px}
+.so-lb p{color:#fff;font-size:14px;margin:14px 0 0;text-align:center}
+.so-lb-x{position:absolute;top:14px;right:14px;width:42px;height:42px;border-radius:50%;border:0;background:rgba(255,255,255,.16);color:#fff;font-size:26px;line-height:1}
+
+.so-appari{opacity:0;transform:translateY(10px);animation:su .55s ease-out forwards}
+@keyframes su{to{opacity:1;transform:none}}
+@media (min-width:700px){.so-hero{border-radius:0 0 28px 28px}.so-foto button{flex-basis:46%}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.so-appari{opacity:1;transform:none}}
+
+/* app-29: stampa della relazione (Scarica PDF) */
+@media print{
+  .so-top,.so-cta,.so-lb,.so-hero,[data-rz-pdf]{display:none!important}
+  body,html{background:#fff}
+  .so{padding:0}.so-corpo{margin:0;padding:0}
+  .so-card{box-shadow:none;border:1px solid #d9e0ea;break-inside:avoid}
+}

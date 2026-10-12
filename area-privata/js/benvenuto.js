@@ -4,6 +4,8 @@
 // subito e mette nel profilo la categoria; il resto dei dati lo compila lui nel Profilo, al primo accesso.
 (function () {
   const token = new URLSearchParams(location.search).get("invito") || "";
+  // 12.10.2026 app-27: dopo la password il cliente torna al suo sopralluogo (solo questa pagina, mai link esterni).
+  const poi = (function () { const p = new URLSearchParams(location.search).get("poi") || ""; return /^sopralluogo\.html\?t=[0-9a-f-]{36}$/i.test(p) ? p : ""; })();
   const el = (id) => document.getElementById(id);
   const attesa = el("bv-attesa");
   const errorePag = el("bv-errore");
@@ -158,14 +160,17 @@
         // Mail già registrata: Supabase non dà errore ma restituisce un utente senza identità.
         if (!user || (user.identities && user.identities.length === 0)) throw new Error("already registered");
         mostra("fine");
+        if (poi) fine.querySelector("a").setAttribute("href", poi);
         if (res.data.session) {
           setTimeout(function () {
-            location.href = "dashboard/#/" + (invito.famiglia === "fornitore" ? "azienda" : invito.famiglia) + "/bacheca";
+            location.href = poi || "dashboard/#/" + (invito.famiglia === "fornitore" ? "azienda" : invito.famiglia) + "/bacheca";
           }, 900);
         }
       })
       .catch(function (x) {
         errore(messaggioErrore(x && x.message));
+        // Ha già un account: il suo sopralluogo lo vede lo stesso.
+        if (poi && /already/i.test((x && x.message) || "")) el("bv-err").insertAdjacentHTML("beforeend", ' <a href="' + poi + '">Guarda il tuo sopralluogo</a>');
       });
   });
 })();
