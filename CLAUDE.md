@@ -29,6 +29,10 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 12.10.2026 14:22 · Cursor — registro di app-25 allineato su GitHub
+- Il commit `3ccaa0e` porta la voce delle 14:10. Con lui è salito anche `02bbc49`. Push `d90622c..3ccaa0e`. main e origin/main sono uguali, cartella pulita.
+- File: `CLAUDE.md`.
+
 ### 12.10.2026 14:10 · Cursor — app-25 eseguito, preventivi-avvisa con i cantieri, area privata online
 - Ok di Nando del 12.10.2026 per il commit `d90622c`. Eseguito `app-anchecasa/sql/app-25-cantieri-richieste.sql` sul progetto ANCHECASA. Controlli: ci sono `cantieri`, `cantiere_richieste`, `cantiere_offerte`, `aziende_offro`, `aziende_voti`. Funzioni: `aziende_voti_scheda`, `cantiere_offri`, `cantiere_pubblica`, `cantiere_richieste_per_me`, `cantiere_scegli`, `cantieri_giro`, `subappaltatori_cerca`.
 - Ripubblicata solo `preventivi-avvisa` (versione 6, verify_jwt spento) con `_shared/mail-marchio.ts`. Le altre funzioni non sono state toccate.
