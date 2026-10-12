@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hai firmato? · AncheCasa</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="favicon.ico">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
+  <style>
+    :root { --navy: #16304d; --ink: #24384c; --muted: #66758a; --orange: #E56B10; --btn: #c45d0c; --soft: #fff1e4; --line: #e4ebf3; --paper: #f3f6fb; --ok: #1f6e40; --okbg: #e8f6ee; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: Manrope, "Segoe UI", Arial, sans-serif; font-size: 15px; line-height: 1.55; }
+    .foglio { max-width: 860px; margin: 24px auto 40px; background: #fff; border-radius: 10px; box-shadow: 0 14px 40px rgba(22, 48, 77, .10); overflow: hidden; }
+    .testa { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 28px 40px 20px; border-bottom: 2px solid var(--orange); }
+    .testa img { width: 180px; display: block; }
+    .testa small { color: var(--muted); text-align: right; }
+    .corpo { padding: 26px 40px 34px; }
+    .eti { display: inline-block; background: var(--soft); color: var(--btn); font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; border-radius: 12px; padding: 5px 12px; }
+    h1 { margin: 12px 0 6px; font-size: 28px; line-height: 1.15; color: var(--navy); }
+    .sotto { margin: 0 0 18px; color: var(--muted); }
+    .riassunto { display: flex; flex-wrap: wrap; gap: 8px 18px; background: var(--paper); border-radius: 12px; padding: 12px 16px; font-size: 14px; margin-bottom: 18px; }
+    .riassunto b { color: var(--navy); }
+    .prop { border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; margin: 12px 0; display: grid; grid-template-columns: 110px 1fr auto; gap: 16px; align-items: center; }
+    .prop.scelta { border-color: var(--ok); box-shadow: 0 0 0 2px var(--okbg); }
+    .prop .logo { width: 110px; height: 60px; border-radius: 10px; background: var(--paper); display: grid; place-items: center; overflow: hidden; font-weight: 800; color: var(--navy); font-size: 13px; text-align: center; padding: 4px; }
+    .prop .logo img { max-width: 100%; max-height: 100%; }
+    .prop h2 { margin: 0; font-size: 17px; color: var(--navy); }
+    .prop .off { color: var(--btn); font-weight: 700; font-size: 14px; }
+    .prop ul { margin: 6px 0 0; padding-left: 18px; font-size: 13px; color: var(--ink); }
+    .prop .nota { font-size: 13px; color: var(--muted); margin-top: 6px; font-style: italic; }
+    .prezzo { text-align: right; }
+    .prezzo b { display: block; font-size: 24px; color: var(--navy); }
+    .prezzo small { color: var(--muted); font-size: 11px; display: block; max-width: 150px; margin-left: auto; }
+    .btn { margin-top: 8px; font: inherit; font-weight: 800; color: #fff; background: var(--btn); border: 0; border-radius: 22px; padding: 10px 18px; cursor: pointer; }
+    .btn:disabled { opacity: .5; cursor: default; }
+    .ok { background: var(--okbg); color: var(--ok); border-radius: 12px; padding: 14px 16px; margin: 12px 0; }
+    .vuoto { background: var(--paper); border-radius: 12px; padding: 22px; text-align: center; color: var(--muted); }
+    .regola { font-size: 12.5px; color: var(--muted); margin-top: 20px; }
+    .piede { background: var(--navy); color: #d5deea; font-size: 12px; padding: 16px 40px; }
+    .conferma { display: none; margin-top: 8px; font-size: 13px; }
+    .conferma.on { display: block; }
+    @media (max-width: 640px) {
+      .testa, .corpo, .piede { padding-left: 18px; padding-right: 18px; }
+      .prop { grid-template-columns: 1fr; }
+      .prezzo { text-align: left; } .prezzo small { margin-left: 0; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Verifica del contratto (12.10.2026, app-22): 30 giorni dopo la scelta AncheCasa chiede al cliente se ha firmato.
+       La risposta la vede l'admin accanto a quello che ha segnato il fornitore. -->
+  <article class="foglio">
+    <header class="testa">
+      <img src="assets/logo/anchecasa-orizzontale-trasparente.png?v=3" alt="AncheCasa">
+      <small>Una domanda<br>veloce</small>
+    </header>
+    <div class="corpo" id="corpo"><p class="sotto">Caricamento…</p></div>
+    <footer class="piede">Palumbo Investment S.r.l. · Via Giusti 22, 81057 Teano (CE) · P.IVA 04724830619 · info@anchecasa.it</footer>
+  </article>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+  <script>
+  (function () {
+    var URL = "https://edsvmnxojsmknjuhobqa.supabase.co";
+    var KEY = "sb_publishable_QbYv61SkMkjA9_GGb1hhOA_6v6GEw87";
+    var corpo = document.getElementById("corpo");
+    var q = new URLSearchParams(location.search);
+    var token = q.get("t") || "", cat = q.get("c") === "energia" ? "energia" : "servizi";
+    var esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); };
+    if (!token || !window.supabase) { corpo.innerHTML = '<div class="vuoto">Link non valido. Apri il link che trovi nella mail di AncheCasa.</div>'; return; }
+    var db = window.supabase.createClient(URL, KEY, { db: { schema: "marketplace" } });
+    var grazie = function (si) {
+      corpo.innerHTML = '<span class="eti">Grazie</span><h1>' + (si ? "Bene, buon contratto!" : "Grazie per avercelo detto.") + '</h1>' +
+        '<p class="sotto">' + (si ? "La tua risposta ci aiuta a controllare che i fornitori AncheCasa facciano quello che promettono." : "Se vuoi altre proposte, puoi fare una nuova richiesta dalla tua area AncheCasa o scriverci a info@anchecasa.it.") + '</p>';
+    };
+    db.rpc("fornitori_verifica_info", { p_categoria: cat, p_token: token }).then(function (res) {
+      var d = res && !res.error ? res.data : null;
+      if (!d) { corpo.innerHTML = '<div class="vuoto">Non troviamo questa richiesta. Controlla il link nella mail.</div>'; return; }
+      corpo.innerHTML = '<span class="eti">' + esc(d.categoria) + '</span><h1>' + (d.nome ? "Ciao " + esc(d.nome) + ", h" : "H") + 'ai firmato il contratto con ' + esc(d.azienda) + '?</h1>' +
+        '<p class="sotto">Un mese fa hai scelto la sua proposta su AncheCasa. Ci basta un clic.</p>' +
+        (d.risposta === true || d.risposta === false ? '<div class="ok">Hai già risposto: <b>' + (d.risposta ? "sì" : "no") + '</b>. Puoi cambiare la risposta qui sotto.</div>' : '') +
+        '<div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:12px"><button class="btn" data-r="si">Sì, ho firmato</button><button class="btn" style="background:#66758a" data-r="no">No, non ho firmato</button></div>';
+      corpo.querySelectorAll("[data-r]").forEach(function (b) {
+        b.addEventListener("click", function () {
+          var si = b.getAttribute("data-r") === "si";
+          corpo.querySelectorAll("[data-r]").forEach(function (x) { x.disabled = true; });
+          db.rpc("fornitori_verifica", { p_categoria: cat, p_token: token, p_firmato: si }).then(function (r) {
+            if (r.error) { corpo.insertAdjacentHTML("beforeend", "<p>Non riesco a salvare la risposta. Riprova tra poco.</p>"); corpo.querySelectorAll("[data-r]").forEach(function (x) { x.disabled = false; }); return; }
+            grazie(si);
+          });
+        });
+      });
+    }, function () { corpo.innerHTML = '<div class="vuoto">Il server non risponde. Riprova tra poco.</div>'; });
+  })();
+  </script>
+</body>
+</html>

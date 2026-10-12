@@ -25,6 +25,8 @@
   const dataIt = (iso) => { const d = new Date(iso); return isNaN(d) ? "" : d.toLocaleDateString("it-IT"); };
   const giorniFa = (iso) => { const g = Math.floor((Date.now() - new Date(iso).getTime()) / 86400000); return g <= 0 ? "oggi" : g === 1 ? "ieri" : g + " giorni fa"; };
   const err = (e) => (e && e.message) || String(e || "errore");
+  // 12.10.2026, app-22: massimo 5 proposte per richiesta, la richiesta scade dopo 15 giorni.
+  const scade = (iso) => { const g = 15 - Math.floor((Date.now() - new Date(iso).getTime()) / 86400000); return g <= 0 ? "scade oggi" : g === 1 ? "scade domani" : "scade tra " + g + " giorni"; };
 
   /* ============================================================
      DATI: database (vero) o esempio nel browser (anteprima)
@@ -206,12 +208,15 @@
             <a class="kpi en-kpi" href="#/azienda/energia_clienti"><span><strong>${scelte.length}</strong><small>clienti da contattare</small></span></a>
             <div class="kpi"><span><strong>${attivati}</strong><small>contratti attivati questo mese</small></span></div>
           </div>
+          <p class="note en-numeri" data-numeri></p>
           <div class="card">
             <h2>Ultime richieste</h2>
             ${nuove.length ? html`<div class="en-lista">${nuove.slice(0, 5).map((r) => html`<a class="en-rich" href="#/azienda/energia_richieste">
               <span class="tag new">${TIPI[r.tipo]}</span><b>${r.comune || r.regione || "Italia"}</b><small>${consumi(r)}${r.spesa_mese ? " · spende " + eur(r.spesa_mese, 0) + "/mese" : ""} · ${giorniFa(r.creato)}</small></a>`)}</div>`
               : html`<p class="note">Nessuna richiesta nuova. Arrivano da Check Bollette sul Magazine e dalla dashboard dei privati.</p>`}
           </div>`.s;
+        // 12.10.2026, app-22: i numeri del mese (servizi.js, AC.numeriMese).
+        if (AC.numeriMese) AC.numeriMese(el.querySelector("[data-numeri]"), { ricevute: (rich || []).length, proposte: (prop || []).length, scelte: (prop || []).filter((p) => p.stato === "accettata" || p.stato === "attivata").length, chiusi: (prop || []).filter((p) => p.stato === "attivata").length }, "contratti attivati");
       }, (e) => nonPronto(el, e));
     }
   };
@@ -234,7 +239,7 @@
           <div class="en-rinfo">
             <div><span class="tag new">${TIPI[r.tipo]}</span> <b>${r.comune || "—"}${r.regione ? ", " + r.regione : ""}</b> <small>· ${r.cliente_tipo === "impresa" ? "Impresa" : "Privato"} · ${FONTE[r.fonte] || r.fonte} · ${giorniFa(r.creato)}</small></div>
             <small>${consumi(r)}${r.spesa_mese ? " · spende " + eur(r.spesa_mese, 0) + " al mese" : ""}${r.fornitore_attuale ? " · oggi con " + r.fornitore_attuale : ""}${r.nota ? " · «" + r.nota + "»" : ""}</small>
-            <small>${r.proposte || 0} ${r.proposte === 1 ? "proposta" : "proposte"} arrivate</small>
+            <small>${r.proposte || 0} di 5 proposte arrivate${r.stato === "aperta" && !r.mia_proposta ? " · " + scade(r.creato) : ""}</small>
           </div>
           <div class="en-ract">${r.mia_proposta
             ? html`<span class="tag ${STATO_P[r.mia_stato] ? STATO_P[r.mia_stato][0] : "wait"}">${STATO_P[r.mia_stato] ? STATO_P[r.mia_stato][1] : "Proposta inviata"}</span>`

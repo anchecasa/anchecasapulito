@@ -75,6 +75,8 @@
   const giorniFa = (iso) => { const g = Math.floor((Date.now() - new Date(iso).getTime()) / 86400000); return g <= 0 ? "oggi" : g === 1 ? "ieri" : g + " giorni fa"; };
   const giorni = (dal, al) => (dal && al ? Math.max(1, Math.round((new Date(al) - new Date(dal)) / 86400000) + 1) : 1);
   const err = (e) => (e && e.message) || String(e || "errore");
+  // 12.10.2026, app-22: massimo 5 preventivi per richiesta, la richiesta scade dopo 15 giorni.
+  const scade = (iso) => { const g = 15 - Math.floor((Date.now() - new Date(iso).getTime()) / 86400000); return g <= 0 ? "scade oggi" : g === 1 ? "scade domani" : "scade tra " + g + " giorni"; };
   const Q = (p) => p.then((r) => { if (r && r.error) throw r.error; return r ? r.data : null; });
   const uid = () => db().auth.getSession().then((s) => (s.data && s.data.session ? s.data.session.user.id : ""));
   const oggiPiu = (g) => new Date(Date.now() + g * 86400000).toISOString().slice(0, 10);
@@ -297,10 +299,12 @@
               <a class="kpi en-kpi" href="${vai("ordini")}"><span><strong>${aperti}</strong><small>${K.ordini.toLowerCase()} da fare</small></span></a>
               <div class="kpi"><span><strong>${chiusi}</strong><small>${K.ordini.toLowerCase()} chiusi</small></span></div>
             </div>
+            <p class="note en-numeri" data-numeri></p>
             <div class="card"><h2>Le richieste più vicine</h2>
               ${nuove.length ? html`<div class="en-lista">${nuove.slice(0, 6).map((r) => html`<a class="en-rich" href="${vai("richieste")}"><span class="tag new">${VICINO[r.vicinanza] || "In zona"}</span><b>${dove(r)}</b><small>${cosaServe(cat, r)} · ${giorniFa(r.creato)}</small></a>`)}</div>`
                 : html`<p class="note">Nessuna richiesta nuova nella tua zona.</p>`}
             </div>`.s;
+          if (AC.numeriMese) AC.numeriMese(el.querySelector("[data-numeri]"), { ricevute: (rich || []).length, proposte: (prop || []).length, scelte: (prop || []).filter((p) => p.stato === "accettata" || p.stato === "chiusa").length, chiusi: chiusi }, K.ordini.toLowerCase() + " chiusi");
         }, (e) => nonPronto(el, e));
       }
     };
@@ -317,7 +321,7 @@
             <div class="en-rinfo">
               <div><span class="tag new">${VICINO[r.vicinanza] || "In zona"}</span> <b>${dove(r)}</b> <small>· ${r.cliente_tipo === "impresa" ? "Impresa" : "Privato"}${r.fonte === "rete" ? " · Commerciale AncheCasa" : ""} · ${giorniFa(r.creato)}</small></div>
               <small>${cosaServe(cat, r)}${r.nota ? " · «" + r.nota + "»" : ""}</small>
-              <small>${r.proposte || 0} ${r.proposte === 1 ? "preventivo arrivato" : "preventivi arrivati"}</small>
+              <small>${r.proposte || 0} di 5 preventivi arrivati${r.stato === "aperta" && !r.mia_proposta ? " · " + scade(r.creato) : ""}</small>
             </div>
             <div class="en-ract">${r.mia_proposta ? html`<span class="tag ${(STATO_P[r.mio_stato] || STATO_P.inviata)[0]}">${(STATO_P[r.mio_stato] || STATO_P.inviata)[1]}</span>`
               : r.stato !== "aperta" ? html`<span class="tag paused">Chiusa</span>` : html`<button class="btn-in" type="button" data-prev="${r.id}">Fai il preventivo</button>`}</div>

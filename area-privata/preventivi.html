@@ -104,6 +104,8 @@
         '<div class="riassunto"><span><b>Richiesta:</b> ' + esc(cosa) + '</span>' + (r.comune ? '<span><b>Dove:</b> ' + esc(r.comune) + (r.provincia ? " (" + esc(r.provincia) + ")" : "") + '</span>' : '') +
         (quando ? '<span><b>Quando:</b> ' + esc(quando) + '</span>' : '') + '<span><b>Preventivi:</b> ' + ps.length + '</span></div>';
       if (scelta) h += '<div class="ok"><b>' + (tu ? "Hai scelto il tuo preventivo." : "Ha scelto il preventivo.") + '</b> Il fornitore ' + (tu ? "ti" : "la") + ' contatterà a breve. Per domande: info@anchecasa.it.</div>';
+      // 12.10.2026, app-22: dopo 15 giorni la richiesta scade.
+      if (r.stato === "scaduta") h += '<div class="vuoto">Questa richiesta è scaduta dopo 15 giorni: non si può più scegliere. Puoi farne una nuova quando vuoi.</div>';
       if (!ps.length) h += '<div class="vuoto">I preventivi stanno arrivando. ' + (tu ? "Ti scriviamo" : "Le scriviamo") + ' per mail appena ce n\'è uno.</div>';
       ps.forEach(function (p) {
         var mia = scelta === p.id;
@@ -116,7 +118,7 @@
           '<ul>' + (p.consegna ? '<li>' + esc(p.consegna) + '</li>' : '') + '<li>Valido ' + esc(p.valida_giorni || 15) + ' giorni</li></ul>' +
           (p.nota ? '<div class="nota">«' + esc(p.nota) + '»</div>' : '') + '</div>' +
           '<div class="prezzo"><b>' + (p.totale != null ? eur(p.totale) : "Su misura") + '</b><small>totale ' + (p.iva_inclusa ? "IVA inclusa" : "IVA esclusa") + '</small>' +
-          (scelta ? (mia ? '<div class="btn" style="background:#1f6e40">Scelto</div>' : '') :
+          (scelta || r.stato === "scaduta" ? (mia ? '<div class="btn" style="background:#1f6e40">Scelto</div>' : '') :
             '<button class="btn" data-scegli="' + esc(p.id) + '">Scelgo questo</button><div class="conferma" data-conf="' + esc(p.id) + '">Confermi? Solo ' + esc(p.azienda) + ' riceverà nome, contatti e indirizzo. <button class="btn" data-ok="' + esc(p.id) + '">Sì, confermo</button></div>') +
           '</div></div>';
       });

@@ -59,6 +59,8 @@
   const dataIt = (iso) => { const d = new Date(iso); return isNaN(d) ? "" : d.toLocaleDateString("it-IT"); };
   const giorniFa = (iso) => { const g = Math.floor((Date.now() - new Date(iso).getTime()) / 86400000); return g <= 0 ? "oggi" : g === 1 ? "ieri" : g + " giorni fa"; };
   const err = (e) => (e && e.message) || String(e || "errore");
+  // 12.10.2026, app-22: massimo 5 proposte per richiesta, la richiesta scade dopo 15 giorni.
+  const scade = (iso) => { const g = 15 - Math.floor((Date.now() - new Date(iso).getTime()) / 86400000); return g <= 0 ? "scade oggi" : g === 1 ? "scade domani" : "scade tra " + g + " giorni"; };
   const Q = (p) => p.then((r) => { if (r && r.error) throw r.error; return r ? r.data : null; });
   const uid = () => db().auth.getSession().then((s) => (s.data && s.data.session ? s.data.session.user.id : ""));
   const nomeTipo = (cat, t) => CAT[cat].tipi[t] || t || "";
@@ -279,12 +281,14 @@
               <a class="kpi en-kpi" href="${vai("clienti")}"><span><strong>${scelte.length}</strong><small>clienti da contattare</small></span></a>
               <div class="kpi"><span><strong>${attivati}</strong><small>contratti attivati questo mese</small></span></div>
             </div>
+            <p class="note en-numeri" data-numeri></p>
             <div class="card">
               <h2>Ultime richieste</h2>
               ${nuove.length ? html`<div class="en-lista">${nuove.slice(0, 5).map((r) => html`<a class="en-rich" href="${vai("richieste")}">
                 <span class="tag new">${nomeTipo(cat, r.tipo)}</span><b>${r.comune || r.regione || "Italia"}</b><small>${r.cliente_tipo === "impresa" ? "Impresa" : "Privato"}${cosaChiede(cat, r) ? " · " + cosaChiede(cat, r) : ""} · ${giorniFa(r.creato)}</small></a>`)}</div>`
                 : html`<p class="note">Nessuna richiesta nuova. Arrivano dalle dashboard di privati e imprese e dai commerciali AncheCasa.</p>`}
             </div>`.s;
+          AC.numeriMese(el.querySelector("[data-numeri]"), { ricevute: (rich || []).length, proposte: (prop || []).length, scelte: (prop || []).filter((p) => p.stato === "accettata" || p.stato === "attivata").length, chiusi: (prop || []).filter((p) => p.stato === "attivata").length }, "contratti attivati");
         }, (e) => nonPronto(el, e));
       }
     };
@@ -303,7 +307,7 @@
             <div class="en-rinfo">
               <div><span class="tag new">${nomeTipo(cat, r.tipo)}</span> <b>${r.comune || "—"}${r.regione ? ", " + r.regione : ""}</b> <small>· ${r.cliente_tipo === "impresa" ? "Impresa" : "Privato"} · ${FONTE[r.fonte] || r.fonte} · ${giorniFa(r.creato)}</small></div>
               <small>${cosaChiede(cat, r) || "nessun dettaglio"}${r.nota ? " · «" + r.nota + "»" : ""}</small>
-              <small>${r.proposte || 0} ${r.proposte === 1 ? "proposta" : "proposte"} arrivate</small>
+              <small>${r.proposte || 0} di 5 proposte arrivate${r.stato === "aperta" && !r.mia_proposta ? " · " + scade(r.creato) : ""}</small>
             </div>
             <div class="en-ract">${r.mia_proposta
               ? html`<span class="tag ${STATO_P[r.mia_stato] ? STATO_P[r.mia_stato][0] : "wait"}">${STATO_P[r.mia_stato] ? STATO_P[r.mia_stato][1] : "Proposta inviata"}</span>`
@@ -801,6 +805,18 @@
       }, (e2) => { btn.disabled = false; toast(/troppe/.test(err(e2)) ? "Troppe richieste oggi con questa mail." : "Richiesta non inviata: " + err(e2), "error"); });
     });
   }
+
+  /* 12.10.2026, app-22: i numeri del mese del fornitore (luce e gas, telefono, finanza, materiali, noleggio, casa).
+     Sul database: rpc fornitore_numeri; in anteprima: i numeri dei dati di esempio. */
+  AC.numeriMese = function (box, esempio, chiusiLab) {
+    if (!box) return;
+    const scrivi = (n) => {
+      if (!n) { box.hidden = true; return; }
+      box.innerHTML = html`<b>Questo mese:</b> ${n.ricevute} ${n.ricevute === 1 ? "richiesta ricevuta" : "richieste ricevute"} · ${n.proposte} ${n.proposte === 1 ? "proposta mandata" : "proposte mandate"} · ${n.scelte} ${n.scelte === 1 ? "scelta" : "scelte"} dal cliente · ${n.chiusi} ${chiusiLab}`.s;
+    };
+    if (!reale()) return scrivi(esempio);
+    db().rpc("fornitore_numeri").then((r) => scrivi(r && !r.error ? r.data : null), () => scrivi(null));
+  };
 
   /* Per la pagina Fornitori dell'admin. */
   AC.servizi = {

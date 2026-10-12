@@ -89,6 +89,8 @@
         '<div class="riassunto"><span><b>Fornitura:</b> ' + esc(TIPI[r.tipo] || r.tipo) + '</span>' + (cons.length ? '<span><b>Consumi:</b> ' + esc(cons.join(" e ")) + ' all\'anno</span>' : '') +
         (r.spesa_mese ? '<span><b>Oggi spendi:</b> ' + eur(r.spesa_mese) + ' al mese</span>' : '') + '<span><b>Proposte:</b> ' + ps.length + '</span></div>';
       if (scelta) h += '<div class="ok"><b>Hai scelto la tua proposta.</b> Il fornitore ti contatterà a breve per il contratto. Se hai domande scrivi a info@anchecasa.it.</div>';
+      // 12.10.2026, app-22: dopo 15 giorni la richiesta scade.
+      if (r.stato === "scaduta") h += '<div class="vuoto">Questa richiesta è scaduta dopo 15 giorni: non si può più scegliere. Puoi farne una nuova quando vuoi.</div>';
       if (!ps.length) h += '<div class="vuoto">Le proposte stanno arrivando. Ti scriviamo per mail appena ce n\'è una: puoi chiudere questa pagina.</div>';
       ps.forEach(function (p) {
         var o = p.offerta || {}, righe = [];
@@ -104,7 +106,7 @@
           '<div><h2>' + esc(p.azienda) + '</h2><div class="off">' + esc(o.nome || "Offerta") + '</div><ul>' + righe.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + '</ul>' +
           (p.nota ? '<div class="nota">«' + esc(p.nota) + '»</div>' : '') + '</div>' +
           '<div class="prezzo"><b>' + eur(p.stima_annua) + '</b><small>stima annua della parte commerciale, sui tuoi consumi</small>' +
-          (scelta ? (mia ? '<div class="btn" style="background:#1f6e40">Scelta</div>' : '') :
+          (scelta || r.stato === "scaduta" ? (mia ? '<div class="btn" style="background:#1f6e40">Scelta</div>' : '') :
             '<button class="btn" data-scegli="' + esc(p.id) + '">Accetto, contattatemi</button><div class="conferma" data-conf="' + esc(p.id) + '">Confermi? Solo ' + esc(p.azienda) + ' riceverà nome, mail e telefono. <button class="btn" data-ok="' + esc(p.id) + '">Sì, confermo</button></div>') +
           '</div></div>';
       });

@@ -28,24 +28,33 @@
     ]
   };
 
+  const VERIFICHE_ESEMPIO = [
+    { categoria: "Luce e gas", cliente: "Marta Riva", mail: "marta.riva@esempio.it", fornitore: "Energia Esempio Srl", scelta_il: new Date(Date.now() - 34 * 86400000).toISOString(), chiesto_il: new Date(Date.now() - 4 * 86400000).toISOString(), cliente_firmato: true, risposta_il: new Date(Date.now() - 3 * 86400000).toISOString(), attivato: false },
+    { categoria: "Telefono e internet", cliente: "Giulia Conte", mail: "giulia.conte@esempio.it", fornitore: "Linea Sud Telecomunicazioni Srl", scelta_il: new Date(Date.now() - 40 * 86400000).toISOString(), chiesto_il: new Date(Date.now() - 10 * 86400000).toISOString(), cliente_firmato: true, risposta_il: new Date(Date.now() - 9 * 86400000).toISOString(), attivato: true },
+    { categoria: "Finanza e assicurazioni", cliente: "Paolo Esposito", mail: "paolo.esposito@esempio.it", fornitore: "Credito Casa Mediazioni Srl", scelta_il: new Date(Date.now() - 12 * 86400000).toISOString(), chiesto_il: null, cliente_firmato: null, risposta_il: null, attivato: false }
+  ];
+
   function carica() {
-    if (!reale()) return Promise.all([AC.servizi ? AC.servizi.richiesteAdmin() : [], AC.preventivi ? AC.preventivi.richiesteAdmin() : []]).then(([sv, pr]) => Object.assign(JSON.parse(JSON.stringify(ESEMPIO)), { servizi: sv, prev: pr }));
+    if (!reale()) return Promise.all([AC.servizi ? AC.servizi.richiesteAdmin() : [], AC.preventivi ? AC.preventivi.richiesteAdmin() : []]).then(([sv, pr]) => Object.assign(JSON.parse(JSON.stringify(ESEMPIO)), { servizi: sv, prev: pr, verifiche: VERIFICHE_ESEMPIO }));
     const db = window.acDb;
     // 12.10.2026, app-20: anche le richieste di telefonia e finanza (se app-20 non c'è ancora, la sezione resta vuota).
     const servizi = AC.servizi ? AC.servizi.richiesteAdmin().catch(() => []) : Promise.resolve([]);
     // 12.10.2026, app-21: richieste di preventivo (materiali, noleggio, casa).
     const prev = AC.preventivi ? AC.preventivi.richiesteAdmin().catch(() => []) : Promise.resolve([]);
+    // 12.10.2026, app-22: verifica dei contratti (la risposta del cliente dopo 30 giorni).
+    const verifiche = db.rpc("fornitori_verifiche_admin").then((x) => (x && !x.error ? x.data || [] : []), () => []);
     return Promise.all([
       db.rpc("fornitori_per_admin"),
       db.from("energia_richieste").select("id, creato, fonte, tipo, regione, comune, nome, stato").order("creato", { ascending: false }).limit(60),
       db.from("energia_proposte").select("richiesta_id").not("richiesta_id", "is", null),
       servizi,
-      prev
-    ]).then(([f, r, p, sv, pr]) => {
+      prev,
+      verifiche
+    ]).then(([f, r, p, sv, pr, vf]) => {
       if (f.error) throw f.error;
       const conta = {};
       (p.data || []).forEach((x) => { conta[x.richiesta_id] = (conta[x.richiesta_id] || 0) + 1; });
-      return { fornitori: f.data || [], richieste: (r.data || []).map((x) => Object.assign(x, { n: conta[x.id] || 0 })), servizi: sv || [], prev: pr || [] };
+      return { fornitori: f.data || [], richieste: (r.data || []).map((x) => Object.assign(x, { n: conta[x.id] || 0 })), servizi: sv || [], prev: pr || [], verifiche: vf || [] };
     });
   }
 
@@ -92,6 +101,20 @@
               </form>` : ""}
             </div>`) : html`<p class="note">Nessun fornitore ancora. Lo inviti da Inviti, categoria «Fornitori di luce, gas e servizi energetici», «Fornitori di telefonia e internet» o «Banche, mediatori creditizi e assicurazioni».</p>`}
           </section>
+          ${(() => {
+            const vf = d.verifiche || [];
+            const daControllare = vf.filter((v) => v.cliente_firmato === true && !v.attivato);
+            return html`<section class="card iv-card">
+            <h2>Contratti da verificare ${daControllare.length ? html`<span class="sw-stato sw-in">${daControllare.length} da controllare</span>` : ""}</h2>
+            <p class="note">30 giorni dopo la scelta AncheCasa chiede al cliente «Hai firmato?». Se il cliente dice sì e il fornitore non ha segnato il contratto, la provvigione è da chiedere.</p>
+            ${vf.length ? html`<table class="mini-table"><thead><tr><th>Cosa</th><th>Cliente</th><th>Fornitore</th><th>Scelto il</th><th>Il cliente dice</th><th>Il fornitore ha segnato</th><th></th></tr></thead>
+              <tbody>${vf.map((v) => html`<tr><td>${v.categoria}</td><td>${v.cliente}<br><small>${v.mail}</small></td><td>${v.fornitore}</td><td>${dataIt(v.scelta_il)}</td>
+                <td>${v.cliente_firmato === true ? "Ho firmato" : v.cliente_firmato === false ? "Non ho firmato" : v.chiesto_il ? "Non ha ancora risposto" : "Domanda dopo 30 giorni"}</td>
+                <td>${v.attivato ? "Contratto attivato" : "Non ancora"}</td>
+                <td>${v.cliente_firmato === true && !v.attivato ? html`<span class="sw-stato sw-in">Da controllare</span>` : v.cliente_firmato === true && v.attivato ? html`<span class="sw-stato sw-ok">Tutto a posto</span>` : ""}</td></tr>`)}</tbody></table>`
+              : html`<p class="note">Ancora nessuna scelta da verificare.</p>`}
+          </section>`;
+          })()}
           <section class="card iv-card">
             <h2>Richieste luce e gas</h2>
             <p class="note">Arrivano a tutti i fornitori di energia, senza nome. Il cliente sceglie una proposta e solo quel fornitore riceve i contatti.</p>

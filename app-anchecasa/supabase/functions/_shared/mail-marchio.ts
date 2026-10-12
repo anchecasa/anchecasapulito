@@ -171,3 +171,30 @@ export function mailPreventivi(evento: "richiesta-cliente" | "richiesta-fornitor
   const t = T[evento];
   return { oggetto: t.oggetto, html: mailMarchio(t) };
 }
+
+// Promemoria al cliente (3 giorni) e verifica del contratto (30 giorni), app-22. Funzione fornitori-promemoria.
+export function mailPromemoria(d: { categoria: string; link: string; tu: boolean; nome?: string; quante: number; preventivi?: boolean }): { oggetto: string; html: string } {
+  const tu = d.tu, nome = esc(String(d.nome || "").split(" ")[0]);
+  const cosa = d.preventivi ? (d.quante === 1 ? "un preventivo" : d.quante + " preventivi") : (d.quante === 1 ? "una proposta" : d.quante + " proposte");
+  return { oggetto: "AncheCasa · " + (tu ? "Hai " : "Ha ") + cosa.replace(/<[^>]+>/g, "") + " da guardare", html: mailMarchio({
+    oggetto: "AncheCasa · " + (tu ? "Hai " : "Ha ") + cosa + " da guardare", anteprima: "La richiesta resta aperta 15 giorni.",
+    etichetta: esc(d.categoria), titolo: (tu ? "Hai " : "Ha ") + esc(cosa) + " da guardare.",
+    intro: (nome ? (tu ? "Ciao " : "Buongiorno ") + nome + ", per " : "Per ") + (tu ? "la tua richiesta" : "la sua richiesta") + " su AncheCasa: <strong>" + esc(cosa) + "</strong>. " + (tu ? "Confronta e scegli quella che ti convince di più." : "Confronti e scelga quella che la convince di più."),
+    punti: [["La richiesta resta aperta 15 giorni", "Poi si chiude da sola e i fornitori non aspettano più una risposta."], [tu ? "Scegliere non ti impegna" : "Scegliere non la impegna", "Solo il fornitore scelto riceve i contatti e manda il contratto o l'ordine."]],
+    bottone: d.preventivi ? "Confronta i preventivi" : "Confronta le proposte", link: d.link,
+    chiusura: tu ? "Se non ti interessano più, puoi ignorare questa mail." : "Se non le interessano più, può ignorare questa mail.",
+    passiTitolo: "Come funziona", passi: [tu ? "Apri la pagina" : "Apra la pagina", tu ? "Confronta" : "Confronti", tu ? "Scegli" : "Scelga"],
+    perche: (tu ? "Ricevi" : "Riceve") + " questa mail per una richiesta fatta su AncheCasa.", tu, foto: tu ? "privato" : "azienda" }) };
+}
+
+export function mailVerifica(d: { categoria: string; link: string; nome?: string; azienda: string }): { oggetto: string; html: string } {
+  const nome = esc(String(d.nome || "").split(" ")[0]);
+  return { oggetto: "AncheCasa · Hai firmato con " + d.azienda + "?", html: mailMarchio({
+    oggetto: "AncheCasa · Hai firmato con " + d.azienda + "?", anteprima: "Una domanda veloce, un clic.",
+    etichetta: esc(d.categoria), titolo: "Hai firmato il contratto?",
+    intro: (nome ? "Ciao " + nome + ", " : "") + "un mese fa hai scelto la proposta di <strong>" + esc(d.azienda) + "</strong> su AncheCasa. Ci dici se hai firmato il contratto?",
+    punti: [["Un clic", "Il pulsante apre una pagina con Sì e No."], ["Ci aiuta a tenere bravi i fornitori", "Sapere com'è andata ci serve per controllare che ogni fornitore AncheCasa faccia quello che promette."]],
+    bottone: "Rispondi", link: d.link, chiusura: "Grazie: ci vogliono 5 secondi.",
+    passiTitolo: "Come funziona", passi: ["Apri il pulsante", "Sì o No", "Fatto"],
+    perche: "Ricevi questa mail perché hai scelto una proposta su AncheCasa.", tu: true, foto: "privato" }) };
+}

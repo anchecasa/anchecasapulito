@@ -102,6 +102,8 @@
         '<div class="riassunto"><span><b>Richiesta:</b> ' + esc(K.tipi[r.tipo] || r.tipo) + '</span>' + (cosa.length ? '<span><b>Dettagli:</b> ' + esc(cosa.join(" · ")) + '</span>' : '') +
         (r.spesa_mese ? '<span><b>Oggi spendi:</b> ' + eur(r.spesa_mese) + ' al mese</span>' : '') + '<span><b>Proposte:</b> ' + ps.length + '</span></div>';
       if (scelta) h += '<div class="ok"><b>Hai scelto la tua proposta.</b> Il fornitore ti contatterà a breve. Se hai domande scrivi a info@anchecasa.it.</div>';
+      // 12.10.2026, app-22: dopo 15 giorni la richiesta scade.
+      if (r.stato === "scaduta") h += '<div class="vuoto">Questa richiesta è scaduta dopo 15 giorni: non si può più scegliere. Puoi farne una nuova quando vuoi.</div>';
       if (!ps.length) h += '<div class="vuoto">Le proposte stanno arrivando. Ti scriviamo per mail appena ce n\'è una: puoi chiudere questa pagina.</div>';
       ps.forEach(function (p) {
         var o = p.offerta || {}, righe = [];
@@ -116,7 +118,7 @@
           (p.iscrizione ? '<div class="nota" style="font-style:normal">' + esc(p.iscrizione) + '</div>' : '') +
           (p.nota ? '<div class="nota">«' + esc(p.nota) + '»</div>' : '') + '</div>' +
           '<div class="prezzo"><b>' + prezzo(p.prezzo, p.prezzo_su) + '</b><small>' + esc(K.prezzo.toLowerCase()) + (p.prezzo != null && SU[p.prezzo_su] ? " " + esc(SU[p.prezzo_su]) : "") + '</small>' +
-          (scelta ? (mia ? '<div class="btn" style="background:#1f6e40">Scelta</div>' : '') :
+          (scelta || r.stato === "scaduta" ? (mia ? '<div class="btn" style="background:#1f6e40">Scelta</div>' : '') :
             '<button class="btn" data-scegli="' + esc(p.id) + '">Accetto, contattatemi</button><div class="conferma" data-conf="' + esc(p.id) + '">Confermi? Solo ' + esc(p.azienda) + ' riceverà nome, mail e telefono. <button class="btn" data-ok="' + esc(p.id) + '">Sì, confermo</button></div>') +
           '</div></div>';
       });

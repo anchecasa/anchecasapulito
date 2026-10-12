@@ -29,6 +29,25 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 12.10.2026 11:55 · Claude — Regole del giro fornitori: 5 proposte, scadenza, promemoria, verifica dei contratti, numeri del mese (NON pubblicato, SQL NON eseguito)
+- Decisioni di Nando delle 11:41 (punti 2, 3, 4 e verifica dopo 30 giorni). Vale per luce e gas, telefono, finanza, materiali, noleggio, casa.
+- `app-anchecasa/sql/app-22-fornitori-regole-giro.sql` (da eseguire solo con l'ok di Nando): massimo 5 proposte per richiesta; richieste aperte solo 15 giorni (stato «scaduta», proposte non scelte → «non scelta»); alla scelta le altre proposte diventano «non scelta»; colonne `promemoria_il`, `verifica_il`, `cliente_firmato`, `cliente_risposta_il`; funzioni `fornitori_chiudi_scadute`, `fornitori_verifica`, `fornitori_verifica_info`, `fornitori_verifiche_admin`, `fornitore_numeri`. Stesse firme delle funzioni già online. Sintassi controllata con pglast.
+- `app-anchecasa/sql/app-22b-promemoria-ogni-giorno.sql`: pg_cron alle 6:00 UTC chiama `fornitori-promemoria` (da eseguire dopo aver pubblicato la funzione).
+- NUOVA funzione `fornitori-promemoria` (verify_jwt spento): chiude le scadute, promemoria al cliente dopo 3 giorni se ha proposte, mail «Hai firmato con …?» 30 giorni dopo la scelta (luce e gas, telefono, finanza). Ogni mail parte una volta sola. Mail con il look dell'invito (`_shared/mail-marchio.ts`: `mailPromemoria`, `mailVerifica`).
+- NUOVA pagina `area-privata/verifica.html` (Sì / No del cliente).
+- Dashboard: nella Home di ogni fornitore «Questo mese: richieste ricevute · proposte mandate · scelte · contratti o lavori chiusi» (`AC.numeriMese` in `servizi.js`); nelle richieste «x di 5 proposte · scade tra N giorni». Admin Fornitori: «Contratti da verificare» (il cliente dice firmato, il fornitore non l'ha segnato → «Da controllare»). Pagine del cliente (`offerte.html`, `servizi.html`, `preventivi.html`): richiesta scaduta senza pulsanti. `energia.js` v=3, `servizi.js` v=3, `preventivi.js` v=2, `fornitori-admin.js` v=4.
+- Prova in anteprima (Playwright): numeri del mese e righe delle richieste per luce e gas, telefono, materiali; admin. Nessun errore nuovo.
+- Da sapere (voce Cursor 11:40): il «Password dimenticata» dell'area privata usa `reset-password-marketplace` (mail vecchia, link su areaprivata), non `auth-email-hook`. Da scaricare in cartella e portare al look dell'invito.
+- Sito, magazine, app, Sicura e database non toccati.
+
+### 12.10.2026 11:40 · Cursor — auth-email-hook pubblicata con il look dell'invito
+- Ok di Nando del 12.10.2026, ore 11:40, per il commit `c8b8c14`. Pubblicata `auth-email-hook` (versione 170, verify_jwt spento). Con la funzione sono saliti `_shared/mail-invito.js` e `_shared/mail-marchio.ts`. Il gancio «Send email» e i segreti non sono stati toccati. La versione 169 non è stata rimessa: la prova non ha dato errore.
+- `invia-invito-marketplace` non è stata ripubblicata. Era già la versione 23, verify_jwt acceso, con il link `https://entra.anchecasa.it/benvenuto.html`.
+- Git push sul ramo main: `d4aaf3f..c8b8c14`.
+- Prova «Password dimenticata» su https://entra.anchecasa.it, mail `prova-agente-campania-1210@anchecasa.it`. La pagina ha scritto «Se l'indirizzo è registrato, riceverai un'email con il link.» Quel pulsante non passa da `auth-email-hook`: chiama `reset-password-marketplace` (versione 15, non ripubblicata). La mail di quella funzione è quella di prima, più semplice, e il pulsante apre `https://areaprivata.anchecasa.it/nuova-password.html`. La pagina si apre, titolo «AncheCasa · Nuova password». Il look nuovo è nelle mail che partono da `auth-email-hook` (iscrizione e recupero di Auth). La casella non è stata aperta da qui.
+- Sito, magazine, app, database e Sicura non toccati.
+- File: `CLAUDE.md`.
+
 ### 12.10.2026 11:40 · Claude — Mail di iscrizione e di password con il look dell'invito (NON pubblicato)
 - Nando: tutte le mail con lo stesso look. Le mail di Supabase Auth le manda `auth-email-hook` (scaricata da Cursor alle 11:20): avevano il layout vecchio (blu chiaro e giallo, logo al centro).
 - `app-anchecasa/supabase/functions/auth-email-hook/index.ts`: «signup» e «recovery» usano ora le mail approvate di `mail/invito/mail-invito.js` (copiata in `_shared/mail-invito.js`): `MailInvito.iscrizione(famiglia, {link, nome})` per privato, azienda, agente (richiesta di collaborazione), fornitore; `MailInvito.avviso("password")` per la password. Agente invitato (metadato `invito`): mail «Benvenuto nella rete» con `_shared/mail-marchio.ts`. Gli altri tipi (invite, magiclink, email_change, reauthentication) restano come prima. Firma del webhook, mittente e link non cambiano.
