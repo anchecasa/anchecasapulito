@@ -304,3 +304,44 @@ button.rp-apri:hover { text-decoration: underline; }
 .iv-rete-invito span { display: block; }
 .iv-link { display: inline-flex; align-items: center; height: 36px; text-decoration: none; }
 @media (max-width: 980px) { .iv-campi { grid-template-columns: 1fr; } }
+
+/* Inviti: campo Zona per la rete (12.10.2026) */
+#iv-form.con-zona .iv-campi { grid-template-columns: 1.3fr 0.9fr 1fr 1fr 0.8fr; }
+/* Rete dell'admin (12.10.2026, js/rete-admin.js) */
+.ra-testa { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+.ra-kpi { margin-bottom: 6px; }
+.ra-due { display: grid; grid-template-columns: 1.3fr 1fr; gap: 14px; margin-top: 10px; align-items: start; }
+.ra-due h2, .ra-classifica h2, .ra-lato h2 { margin: 0 0 4px; font-size: 16px; color: var(--navy); display: flex; align-items: center; gap: 8px; }
+.ra-n { background: var(--orange-soft); color: var(--orange-ink); border-radius: 99px; padding: 0 9px; font-size: 13px; }
+.ra-riga { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #f0f3f7; flex-wrap: wrap; }
+.ra-chi { flex: 1 1 160px; min-width: 0; display: grid; }
+.ra-chi b { color: var(--navy); }
+.ra-chi small, .ra-perche small { color: var(--muted); font-size: 12px; }
+.ra-perche { display: grid; gap: 4px; flex: 1 1 170px; justify-items: start; }
+.ra-nota { font-style: italic; }
+.ra-azioni { display: flex; gap: 6px; flex-wrap: wrap; }
+.ra-btn { height: 30px; padding: 0 12px; font-size: 12px; display: inline-flex; align-items: center; text-decoration: none; }
+.ra-notaform { flex: 1 1 100%; display: flex; gap: 6px; }
+.ra-notaform input { flex: 1; height: 32px; border: 1px solid #ccd6e2; border-radius: 8px; padding: 0 10px; font: inherit; }
+.ra-pos { flex: none; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; color: #fff; background: var(--navy-soft); }
+.ra-pos-1 { background: #E56B10; } .ra-pos-2 { background: #2c4a6e; } .ra-pos-3 { background: #5b7ea3; }
+.ra-classifica { margin-top: 14px; }
+.ra-classifica tr.ra-fermo td { color: var(--muted); }
+.ra-barra { display: inline-block; vertical-align: middle; width: 80px; height: 8px; border-radius: 99px; background: #e4ebf3; overflow: hidden; }
+.ra-barra i { display: block; height: 100%; background: var(--orange); border-radius: 99px; }
+.ra-metriche { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 6px; }
+.ra-carta { display: grid; grid-template-columns: minmax(280px, 1fr) minmax(300px, 1fr); gap: 14px; align-items: start; }
+.ra-svg svg { width: 100%; height: auto; max-height: 620px; display: block; }
+.ra-legenda { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--muted); margin-top: 8px; flex-wrap: wrap; }
+.ra-legenda i { width: 18px; height: 10px; border-radius: 3px; display: inline-block; }
+.ra-lato { display: grid; gap: 14px; }
+.ra-regbtn { width: 100%; display: grid; grid-template-columns: 1fr 90px 44px; align-items: center; gap: 10px; padding: 7px 8px; border: 0; background: transparent; border-radius: 8px; font: inherit; font-size: 13px; color: var(--text); cursor: pointer; text-align: left; }
+.ra-regbtn:hover, .ra-regbtn.on { background: var(--paper); }
+.ra-regbtn b { text-align: right; color: var(--navy); }
+.ra-regbtn .ra-barra { width: 90px; }
+.ra-vuote { margin-top: 10px; }
+.ra-mini { padding: 4px 0; font-size: 13px; }
+.ra-mini small { color: var(--muted); }
+.ra-obf { grid-template-columns: 0.8fr 1.4fr 1.2fr 0.6fr !important; }
+@media (max-width: 1100px) { .ra-due, .ra-carta { grid-template-columns: 1fr; } }
+.iv-campi label[hidden] { display: none; }

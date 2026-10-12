@@ -33,10 +33,20 @@
     { mail: "info@edilnord.it", telefono: "", categoria: "Imprese edili generali e appalto generale", stato: "aperto", created_at: "2026-10-11T15:40:00Z", inviato_at: "2026-10-11T15:40:00Z", nome: "Edil Nord Srl" }
   ];
 
-  function chi(valore) {
+  // 12.10.2026: la zona dei ruoli di rete (la decide l'admin). Sviluppo rete: un'area; capo area, agente, sub-agente: una regione.
+  const AREE = ["Nord", "Centro", "Sud e isole"];
+  const REGIONI = ["Abruzzo", "Basilicata", "Calabria", "Campania", "Emilia-Romagna", "Friuli-Venezia Giulia", "Lazio", "Liguria", "Lombardia", "Marche", "Molise", "Piemonte", "Puglia", "Sardegna", "Sicilia", "Toscana", "Trentino-Alto Adige", "Umbria", "Valle d'Aosta", "Veneto"];
+  function opzioniZona(ruolo) {
+    if (ruolo === "reteitalia") return ["Tutta Italia"];
+    if (ruolo === "sviluppo") return AREE;
+    return REGIONI;
+  }
+
+  function chi(valore, zona) {
     if (valore.indexOf("rete:") === 0) {
       const r = valore.slice(5);
-      return { famiglia: "agente", categoria: "Rete - " + NOME_RUOLO[r], categoria_id: null, etichetta: NOME_RUOLO[r] };
+      // Ruolo e zona vanno nel profilo (decisione di Nando): finché Supabase non ha le colonne, restano scritti nella categoria.
+      return { famiglia: "agente", categoria: "Rete - " + NOME_RUOLO[r] + (zona ? " - " + zona : ""), categoria_id: null, etichetta: NOME_RUOLO[r], ruolo: r, zona: zona || "" };
     }
     const info = (AC.categorieInvito && AC.categorieInvito.mappa[valore]) || null;
     if (!info) return null;
@@ -127,6 +137,7 @@
                   ${opzAziende}
                 </select>
               </label>
+              <label class="iv-zona" hidden>Zona<select name="zona"></select></label>
               <label>Nome e cognome o ragione sociale<input name="nome" type="text" autocomplete="off" placeholder="es. Mario Rossi"></label>
               <label>Mail<input name="mail" type="email" required autocomplete="off" placeholder="nome@esempio.it"></label>
               <label>Telefono<input name="telefono" type="tel" autocomplete="off" placeholder="es. 333 1234567"></label>
@@ -140,10 +151,18 @@
         <div class="card iv-card"><h2>Inviti mandati</h2><div id="iv-elenco"></div></div>`.s;
       const f = el.querySelector("#iv-form");
       const mount = el.querySelector("#iv-elenco");
+      const zonaBox = f.querySelector(".iv-zona");
+      f.chi.addEventListener("change", () => {
+        const v = f.chi.value;
+        const rete = v.indexOf("rete:") === 0;
+        zonaBox.hidden = !rete;
+        f.classList.toggle("con-zona", rete);
+        f.zona.innerHTML = rete ? opzioniZona(v.slice(5)).map((z) => '<option>' + z.replace(/</g, "&lt;") + "</option>").join("") : "";
+      });
       elenco(mount);
       f.addEventListener("submit", (e) => {
         e.preventDefault();
-        const c = chi(f.chi.value);
+        const c = chi(f.chi.value, f.zona.value);
         const mail = f.mail.value.trim().toLowerCase();
         const telefono = f.telefono.value.trim();
         const nome = f.nome.value.trim();

@@ -29,6 +29,24 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 12.10.2026 09:00 · Claude — pagina Rete dell'admin con andamento e cartina; Zona negli inviti (NON pubblicato)
+- `js/rete-admin.js` (sostituisce la pagina Rete di inviti-admin.js): quattro schede, niente soldi (decisione di Nando).
+  - Andamento: persone nella rete, crescita sul mese prima, clienti attivi, fermi da 30 giorni; «Da richiamare» con Scrivi, Chiama, Nota; «Da premiare» (primi 3) con «Dai il riconoscimento»; classifica completa (solo admin).
+  - Cartina: l'Italia colorata per regione (Copertura della rete, Clienti per regione, Obiettivo del mese, Clienti attivi), clic su una regione per le persone, elenco regione per regione, regioni da aprire. Usa `AC.ITALIA_SVG` di `cartina-italia.js`.
+  - Obiettivi: per zona o persona, su cosa e quanti; bozza e Pubblica.
+  - Strumenti: Segnalazioni e catena, Richieste agenti, Inviti, Contratti, Lavori rete, Sala strategia, Oggi.
+- I numeri sono di esempio, con la scritta in alto: quelli veri arrivano con il collegamento a Supabase. Note, riconoscimento e obiettivi in questa versione restano nella pagina.
+- Inviti: per i ruoli di rete compare «Zona» (Rete Italia: tutta Italia; Sviluppo rete: Nord, Centro, Sud e isole; gli altri: la regione). Finché Supabase non ha le colonne, ruolo e zona sono scritti nella categoria («Rete - Capo area - Campania»).
+- Provato in locale con ?demo=admin. Copia di prima: `_copie-rete-admin-0900`.
+- File: `area-privata/dashboard/js/rete-admin.js` (nuovo), `js/inviti-admin.js`, `css/admin-task.css`, `index.html` (inviti-admin ?v=2, rete-admin ?v=1, admin-task.css ?v=12), `PROGETTO-DASHBOARD.md`, `CLAUDE.md`.
+
+### 12.10.2026 08:46 · Cursor — dashboard della Rete e Regole della Rete pubblicate
+- Invio su GitHub, ramo main, da `7a78646` a `5df1e95`. I cinque commit chiesti: `7b44e58`, `97b26d9`, `99f6259`, `8d2a58f`, `d5f39b8`. Con loro è salito anche `5df1e95`, già sul ramo (vendere fuori zona, una riga in `regole/rete.html`).
+- Pubblicata solo la cartella `area-privata` sul progetto Vercel `area-privata-produzione`, deployment `dpl_6yMkxYh2spzZmCm3rQAAkdZ1vYcx`, alias https://entra.anchecasa.it. Sito, magazine, sicura, app e database non toccati.
+- Controllo online: https://entra.anchecasa.it/dashboard/regole/rete.html risponde 200, titolo «Regole della Rete · AncheCasa», 14775 byte. https://entra.anchecasa.it/dashboard/js/rete-progetto.js?v=1 risponde 200, 7817 byte. La dashboard carica quello script.
+- La voce delle 08:50 diceva non pubblicato. Ora è pubblicato.
+- File: `CLAUDE.md`.
+
 ### 12.10.2026 08:50 · Claude — dashboard della Rete per ruolo e «Regole della Rete» (NON pubblicato)
 - Rete a categorie, deciso da Nando (PROGETTO-DASHBOARD.md): Home; I miei clienti (I miei clienti, Registra un cliente, Invita un cliente); Vendi (Vendi, Sopralluogo Flash); La mia squadra (La mia squadra, Chi è fermo, La cartina, Recensioni della zona, Regioni da aprire, Segnala una persona); Guadagni; Io e AncheCasa (Il mio ruolo, Contratto e documenti, Formazione); Direzione (Linee decise, Sala strategia). Chat dal fumetto.
 - Ogni pulsante ha un livello minimo (`vociRete` in `js/app.js`): sub-agente 12 voci, agente 15, capo area 17, sviluppo rete e Rete Italia 18. Il ruolo, in anteprima, arriva da `?ruolo=`; per gli utenti veri si leggerà dal profilo (`ruoloRete`, da collegare su Supabase).

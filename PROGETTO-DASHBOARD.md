@@ -163,6 +163,14 @@ Livelli: Responsabile Rete Italia → Sviluppo rete (Nord, Centro, Sud e isole) 
 - **Ruolo e zona dei commerciali:** si salvano nel profilo quando si invitano, anche su Supabase.
 - **Pagina Rete dell'admin: niente soldi** (quelli Nando li vede altrove). Serve l'**andamento**, per sapere chi **richiamare** e chi **premiare**: catena, cartina, da decidere, andamento per persona e per zona, obiettivi.
 
+### Decisioni di Nando · quinta parte (12.10.2026, 08:47)
+
+- **Premiare:** un riconoscimento visibile («Migliore di ottobre») che vede tutta la rete.
+- **Classifica:** completa solo all'admin; ognuno nella rete vede la sua posizione e i primi 3.
+- **Richiamare:** su ogni persona Scrivi (chat), Chiama, Nota (la vede anche il suo responsabile).
+- **Obiettivi:** li decidono l'admin e il Responsabile Rete Italia e li pubblicano; per zona o per persona (nuovi clienti, clienti attivi, canoni, lavori).
+- **Chi resta nella rete:** lo decide l'admin caso per caso, niente limite automatico.
+
 ### Proposta di Claude (accolta come base)
 
 | Funzione | Sub-agente | Agente | Capo area | Sviluppo rete | Rete Italia |
