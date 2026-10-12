@@ -149,6 +149,17 @@ Livelli: Responsabile Rete Italia → Sviluppo rete (Nord, Centro, Sud e isole) 
 - **Fermo:** nessuna vendita da 30 giorni.
 - **Contratto:** finché non è firmato, la dashboard del commerciale è in sola lettura.
 
+### Decisioni di Nando · seconda parte (12.10.2026, 08:31)
+
+- **Ristrutturazioni:** il responsabile è quello diretto (sub-agente → agente → capo area → sviluppo rete → Rete Italia). Il responsabile decide se si prende il lavoro e chi fa il sopralluogo, poi passa all'admin per preventivo e firma. **L'admin può delegare** quel lavoro a qualcuno.
+- **Provvigioni:** da rivedere (oggi nell'app: 70% chi porta, 17% sviluppo rete, 8% capo area, 5% Rete Italia; sub-agente 70/30 con il suo agente). Si decidono alla fine, con il listino.
+- **Cartina dell'Italia:** più percentuali insieme. Serve a capire cosa succede e chi gestisce bene. La vedono tutti, ognuno per la sua parte (capo area la regione, sviluppo rete l'area, Rete Italia e admin tutta Italia).
+- **Zona:** si assegna nell'invito per i ruoli di rete. **Chi sta sotto chi lo decide la zona.**
+- **I commerciali invitano privati e aziende** direttamente; il cliente diventa loro.
+- **Il cliente è per sempre di chi lo registra**, azienda e privato. L'admin può intervenire e chiedere perché un'azienda non fa niente.
+- **Fermo:** nessuna vendita da 30 giorni.
+- **Contratto:** finché non è firmato, la dashboard del commerciale è in sola lettura.
+
 ### Proposta di Claude (accolta come base)
 
 | Funzione | Sub-agente | Agente | Capo area | Sviluppo rete | Rete Italia |
