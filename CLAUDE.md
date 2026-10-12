@@ -29,6 +29,23 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 12.10.2026 11:30 · Cursor — invito ripubblicato con il link di entra; copia di auth-email-hook nel commit
+- Ok di Nando del 12.10.2026, ore 11:26, per il commit `53e5933`. Ripubblicata `invia-invito-marketplace` dal file `mail/invito/funzione-caricata-invia-invito-marketplace.ts` (versione 23). verify_jwt resta acceso. La funzione online ha `https://entra.anchecasa.it/benvenuto.html`. `auth-email-hook` non è stata ripubblicata: resta versione 169.
+- Prova del pulsante, senza scrivere sul database e senza mandare una mail: l'indirizzo del pulsante è `https://entra.anchecasa.it/benvenuto.html?invito=…`. Aperto `https://entra.anchecasa.it/benvenuto.html?invito=prova-entra-1210`: titolo «Benvenuto · AncheCasa», la pagina resta su entra. Con un token che non esiste compare «Link non valido».
+- Nel commit, insieme a questa voce, la voce delle 11:20 e i file scaricati di `auth-email-hook` (`index.ts`, `deno.json`, `_shared/email-templates/`, `_shared/email-brand/enterprise-layout.tsx`).
+- Sito, magazine, app, database e Sicura non toccati.
+- File: `CLAUDE.md`, `app-anchecasa/supabase/functions/auth-email-hook/`, `app-anchecasa/supabase/functions/_shared/email-templates/`, `app-anchecasa/supabase/functions/_shared/email-brand/enterprise-layout.tsx`.
+
+### 12.10.2026 11:20 · Cursor — app-21 eseguito, preventivi-avvisa e invito pubblicati, area privata online
+- Ok di Nando del 12.10.2026 per il commit `7b63cbf`. Eseguito `app-anchecasa/sql/app-21-fornitori-preventivi-zona.sql` sul progetto ANCHECASA. Controlli: ci sono `prev_richieste`, `prev_proposte`, `fornitori_zona`, `noleggio_mezzi`, `noleggio_occupato`. Funzioni: `prev_accetta`, `prev_categoria_di`, `prev_chiudi`, `prev_copre`, `prev_i_miei_preventivi`, `prev_io`, `prev_nuova_richiesta`, `prev_posso_proporre`, `prev_richieste_per_me`, `prev_tipi_di`, `prev_vicinanza`, `noleggio_liberi`. Nel controllo dei nomi compare anche `preview_invite_link_public`, già presente, perché il nome comincia con `prev_`.
+- Pubblicata `preventivi-avvisa` (versione 1, verify_jwt spento) con `_shared/mail-marchio.ts`. `energia-avvisa` resta versione 4 e `servizi-avvisa` versione 2: non sono state ripubblicate.
+- Pubblicata `invia-invito-marketplace` dal file `mail/invito/funzione-caricata-invia-invito-marketplace.ts` (versione 22). verify_jwt resta acceso. La voce delle 10:50 diceva che online c'era ancora la copia del 06.10.2026: ora online è questo file.
+- Scaricata, senza ripubblicarla, `auth-email-hook` (resta versione 169, verify_jwt spento). In `app-anchecasa/supabase/functions/auth-email-hook/` ci sono `index.ts` e `deno.json`. I modelli che la funzione importa, e che in cartella non c'erano, sono in `_shared/email-templates/` e `_shared/email-brand/enterprise-layout.tsx`. `brand.ts` era già uguale e non è stato riscritto.
+- Git push sul ramo main: `d06a837..7b63cbf`.
+- Area privata, progetto Vercel `area-privata-produzione`, deployment `dpl_8CD5RSHciNg3zrRqMz1MSY8jvLMJ`, alias https://entra.anchecasa.it e https://areaprivata.anchecasa.it. Online: `js/preventivi.js?v=1`, `js/app.js?v=25`, `js/servizi.js?v=2`. https://entra.anchecasa.it/preventivi.html risponde 200, 12414 byte. La voce delle 11:05 diceva non pubblicato e SQL non eseguito: ora lo SQL è eseguito e le pagine sono online.
+- Sito, magazine, app e Sicura non toccati.
+- File: `CLAUDE.md`, `app-anchecasa/supabase/functions/auth-email-hook/`, `app-anchecasa/supabase/functions/_shared/email-templates/`, `app-anchecasa/supabase/functions/_shared/email-brand/enterprise-layout.tsx`.
+
 ### 12.10.2026 11:05 · Claude — Materiali edili, Noleggio, Servizi per la casa: preventivi con la zona (NON pubblicato, SQL NON eseguito)
 - Decisioni di Nando delle 10:47 in `PROGETTO-DASHBOARD.md`. Tabelle e pagine nuove; luce e gas, telefonia e finanza non cambiano (solo la pagina «Offerte per i clienti» della rete ha tre schede in più).
 - `app-anchecasa/sql/app-21-fornitori-preventivi-zona.sql` (da eseguire solo con l'ok di Nando): `fornitori_zona`, `prev_richieste`, `prev_proposte`, `noleggio_mezzi`, `noleggio_occupato`; funzioni `prev_*` e `noleggio_liberi`; `fornitori_per_admin` con le nuove categorie. Sintassi controllata con pglast.
@@ -37,13 +54,13 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 - `area-privata/dashboard/js/preventivi.js` (nuovo): fornitore `mat_*`, `nol_*` (con «I miei mezzi»), `cas_*`; impresa `az-materiali`, `az-noleggio` (piega «Per il cantiere»); privato `pv-casa`; rete: schede in `re-offerte` (`servizi.js` v=2).
 - `app.js` v=25: tipi `azienda_materiali_edili` → materiali, `azienda_noleggio_attrezzature` → noleggio, `azienda_traslochi`, `_facchinaggio`, `_pulizie`, `_manutenzione_stabili` → casa; profili in Pulsanti per profilo; prima pagina. `fornitori-admin.js` v=3, `sala-demo.js` v=6, `pulsanti-profili.js` v=7, `energia.css` v=4.
 - Prova in anteprima (Playwright): i tre fornitori (richiesta, preventivo, ordini, zona, mezzi), impresa (materiali, noleggio con «cosa è libero»), privato, rete, admin. Nessun errore nuovo.
-- Sito, magazine, app, Sicura e database non toccati.
+- Fatto alle 11:20, con l'ok di Nando: lo SQL è eseguito, `preventivi-avvisa` è online e l'area privata è pubblicata. Sito, magazine, app e Sicura non toccati.
 
 ### 12.10.2026 10:50 · Cursor — energia-avvisa e servizi-avvisa ripubblicate; controllo mail di accesso e invito
 - Ok di Nando del 12.10.2026. Ripubblicate `energia-avvisa` (versione 4) e `servizi-avvisa` (versione 2), verify_jwt spento, con `_shared/mail-marchio.ts`. Le altre funzioni non sono state ripubblicate. Il database non è stato toccato.
 - Git push sul ramo main: `b98bb7f..d06a837`.
 - Solo lettura, niente modifiche. Modelli in Authentication → Email Templates: «Confirm signup» ha oggetto «Conferma il tuo accesso — SuperMastro». «Reset password» ha oggetto «Reset your password» (l'inglese di base). Il corpo di questi due modelli, e quindi il logo dentro il modello, non esce dal config che la CLI sa leggere. Il gancio «Send email» è acceso e punta a `auth-email-hook`: le mail che partono sono quelle della funzione, AncheCasa. Conferma: oggetto «Conferma il tuo Profilo AncheCasa», logo `logo-anchecasa-email.png`. Reset: oggetto «Reimposta la password AncheCasa», stesso logo. Il nome del mittente è «AncheCasa Registrazioni».
-- `invia-invito-marketplace` online (versione 21, verify_jwt acceso) non è il file `mail/invito/funzione-caricata-invia-invito-marketplace.ts`. Online è la copia del 06.10.2026: AncheCasa, «Sei invitato su AncheCasa», logo `anchecasa.it/assets/logo/anchecasa-orizzontale-trasparente.png`. Il file in cartella è la mail del 10.10.2026, con logo, curva e dati Palumbo Investment. Nessuna delle due è SuperMastro. La funzione online non è stata ripubblicata.
+- `invia-invito-marketplace` online (versione 21, verify_jwt acceso) non è il file `mail/invito/funzione-caricata-invia-invito-marketplace.ts`. Online è la copia del 06.10.2026: AncheCasa, «Sei invitato su AncheCasa», logo `anchecasa.it/assets/logo/anchecasa-orizzontale-trasparente.png`. Il file in cartella è la mail del 10.10.2026, con logo, curva e dati Palumbo Investment. Nessuna delle due è SuperMastro. Alle 11:20, con l'ok di Nando, la funzione online è stata sostituita con questo file (versione 22, verify_jwt acceso).
 - Sito, magazine, area privata, app e Sicura non toccati.
 - File: `CLAUDE.md`.
 
