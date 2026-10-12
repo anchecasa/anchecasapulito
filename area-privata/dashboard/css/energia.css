@@ -90,3 +90,14 @@
 .ar-big { font-size: 16px; margin-bottom: 6px; }
 .az-docs { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 8px; }
 .nm-o label.check { display: flex; flex-direction: row; align-items: center; gap: 6px; }
+
+/* Imprese e ristrutturazioni (12.10.2026, app-24, js/imprese.js) */
+.imp-foto { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.imp-foto img { width: 96px; height: 72px; object-fit: cover; border-radius: 8px; display: block; }
+.imp-foto-x { width: 96px; height: 72px; border-radius: 8px; background: #eef2f7; color: #66758a; font-size: 12px; display: flex; align-items: center; justify-content: center; }
+.imp-passi { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; padding: 0; margin: 4px 0 12px; counter-reset: p; }
+.imp-passi li { counter-increment: p; font-size: 12px; padding: 4px 10px; border-radius: 99px; background: #eef2f7; color: #66758a; }
+.imp-passi li::before { content: counter(p) ". "; }
+.imp-passi li.fatto { background: #16304d; color: #fff; }
+#ra-box .nm-o select, #sb-box .nm-o select { height: 38px; border: 1px solid #d5deea; border-radius: 10px; padding: 0 8px; background: #fff; font: inherit; color: inherit; }
+.en-grid input[type=file] { max-width: 100%; min-width: 0; }

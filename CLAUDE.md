@@ -29,6 +29,39 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 12.10.2026 12:50 · Claude — Imprese: lavori AncheCasa, cantieri, «Il mio cantiere», subappalti, piccoli lavori (NON pubblicato, SQL NON eseguito)
+- Decisioni di Nando delle 12:11 e 12:20. AncheCasa è il general contractor e Nando sceglie l'impresa. L'impresa vede solo il suo importo. Il privato vede solo AncheCasa. I piccoli lavori vanno alle imprese della zona, massimo 5, con l'admin sempre avvisato. Subappaltatore e impiantista hanno la stessa vista dell'impresa.
+- `app-anchecasa/sql/app-24-imprese-ristrutturazioni.sql` (da eseguire solo con l'ok di Nando). Crea:
+  - tabelle `ristrutturazioni`, `commesse` (lavori affidati), `cantiere_giornale` (con il bucket privato `cantieri` per le foto), `commesse_sal` (cliente e impresa), `subappalti_richieste`;
+  - funzioni `ristrutturazione_nuova`, `ristrutturazione_agente`, `commessa_rispondi`, `commessa_avanzamento`, `mio_cantiere`, `aziende_cerca`, `subappalto_chiedi`, `subappalto_rispondi`, `subappalti_miei`, `lavori_smista`, `ristrutturazioni_admin`;
+  - categoria `lavori` nei preventivi: vincoli, `prev_categoria_di`, `prev_posso_proporre` e `prev_richieste_per_me` (solo per le imprese con documenti e prova o abbonamento), `prev_nuova_richiesta`.
+  Sintassi controllata con pglast.
+- `preventivi-avvisa`: categoria «Piccoli lavori» (massimo 5 imprese, mail all'admin). Nuovo evento `imprese`, che gira anche dentro `guasti` ogni 5 minuti: mail ad admin, agente, impresa e subappalti. `_shared/mail-marchio.ts`: `mailImprese`. Controllati con esbuild.
+- Dashboard: nuovo `js/imprese.js` con:
+  - impresa: `imp_home`, `imp_lavori`, `imp_cantieri`, `imp_subappalti`;
+  - privato: `pv-ristruttura` e `pv-mio-cantiere` veri;
+  - rete: `re-ristruttura` e `re-sopralluoghi`;
+  - admin: `ristrutturazioni-admin`.
+- `js/preventivi.js` v=4: categoria `lavori` (pagine `lav_*` e `pv-lavori`). `js/app.js` v=27:
+  - pieghe «Lavori AncheCasa» e «Lavori della zona» in cima a impresa, subappaltatore e impiantista, che arrivano su `imp_home`;
+  - voce privato «Piccoli lavori con le imprese»;
+  - voci rete «Segnala una ristrutturazione» e «Sopralluoghi assegnati»;
+  - tasto admin «Ristrutturazioni».
+- `js/pulsanti-profili.js` v=9: «Guarda come» per impresa, subappaltatore e impiantista. `css/energia.css` v=7. `preventivi.html` con «Piccoli lavori».
+- Provato in anteprima: impresa, subappaltatore, impiantista, privato, rete e admin, nessun errore. Ufficio e moduli a pagamento restano com'erano.
+- `PROGETTO-DASHBOARD.md`: sezione Aziende scritta.
+- Sicura, sito, magazine e app non toccati.
+
+### 12.10.2026 12:35 · Cursor — app-23 eseguito, preventivi-avvisa con i guasti, area privata online
+- Ok di Nando del 12.10.2026 per il commit `fbcf12c`. Eseguito `app-anchecasa/sql/app-23-artigiani-aziende.sql` sul progetto ANCHECASA. Controlli: ci sono `guasti`, `artigiani`, `aziende_stato`, `aziende_documenti`, `recensioni`. Il bucket `aziende-documenti` c'è ed è privato. Funzioni: `artigiani_zona`, `artigiano_voto`, `azienda_admin_stato`, `azienda_mio_stato`, `azienda_puo_lavorare`, `aziende_per_admin`, `guasti_admin`, `guasti_assegna`, `guasti_giro`, `guasti_nuovo`, `guasti_per_me`, `guasto_accetta`, `guasto_admin_affida`, `guasto_annulla`, `guasto_conferma`, `guasto_fatto`, `guasto_garanzia`, `guasto_info`, `guasto_recensione`, `guasto_rifiuta`, `recensione_rispondi`.
+- Ripubblicata `preventivi-avvisa` (versione 4, verify_jwt spento) con `_shared/mail-marchio.ts`. Le altre funzioni non sono state toccate.
+- Eseguito `app-anchecasa/sql/app-23b-guasti-ogni-5-minuti.sql`: cron `guasti-giro`, `*/5 * * * *`, attivo. Chiamata a mano di `preventivi-avvisa` con `{"evento":"guasti"}`. Risposta: passati 0, confermati 0, mail 0, errori nessuno.
+- Git push sul ramo main: `336de83..fbcf12c`.
+- Area privata, progetto Vercel `area-privata-produzione`, deployment `dpl_3g4G1Ti7YkgMVHCp7uwxVNYx1B4g`, alias https://entra.anchecasa.it e https://areaprivata.anchecasa.it. https://entra.anchecasa.it/guasto.html e https://areaprivata.anchecasa.it/guasto.html rispondono 200, 13272 byte. La dashboard online carica `js/artigiani.js?v=1` e `js/app.js?v=26`.
+- La voce delle 12:35 diceva non pubblicato e SQL non eseguito: ora lo SQL è eseguito e le pagine sono online.
+- Sito, magazine, app e Sicura non toccati.
+- File: `CLAUDE.md`.
+
 ### 12.10.2026 12:35 · Claude — Artigiano con «Ho un guasto» vero, documenti e prova per tutte le aziende, admin Aziende (NON pubblicato, SQL NON eseguito)
 - Decisioni di Nando delle 12:11 e 12:20: cinque viste delle aziende (gratis, abbonamento, moduli); prova 14 giorni, poi l'admin segna «attiva fino al» quando arriva il bonifico; visura e DURC obbligatori; impresa, subappaltatore e impiantista stesso prezzo; si parte da artigiano e impresa. Il pagamento dentro l'app arriva dopo, solo con artigiani iscritti: per ora si registrano lavoro, importo e 4,99 €.
 - `app-anchecasa/sql/app-23-artigiani-aziende.sql` (da eseguire solo con l'ok di Nando): `aziende_stato` (prova, attiva_fino, documenti_ok), `aziende_documenti` + bucket privato `aziende-documenti`, `artigiani` (mestieri, libero, notte, festivi), `guasti`, `recensioni`; funzioni `guasti_assegna` (uno alla volta: scelto dal privato, più vicino, voto; 15 minuti urgente, 2 ore normale; dopo tre o nessuno → admin), `guasti_nuovo`, `guasti_per_me`, `guasto_accetta/rifiuta/fatto`, `guasto_info/conferma/annulla/recensione/garanzia` (pagina del privato), `guasti_giro` (passa al prossimo, conferma dopo 7 giorni), `artigiani_zona`, `azienda_mio_stato`, `azienda_puo_lavorare`, `aziende_per_admin`, `azienda_admin_stato`, `guasti_admin`, `guasto_admin_affida`. Nuova categoria d'invito `azienda_artigiani`. Sintassi controllata con pglast.

@@ -6,10 +6,13 @@
 //                                       promemoria al cliente dopo 3 giorni, «Hai firmato?» 30 giorni dopo la scelta (luce e gas, telefono, finanza).
 //   { evento: "guasti" }              → ogni 5 minuti (pg_cron, app-23b) e dopo ogni azione: «Ho un guasto» passa al prossimo artigiano
 //                                       chi non ha risposto, conferma i lavori fatti da 7 giorni, manda le mail (artigiano, cliente, admin).
+//                                       Nello stesso giro passano anche le mail delle imprese (evento «imprese», app-24).
+//   { evento: "imprese" }             → dopo ogni azione su ristrutturazioni, lavori affidati e subappalti: mail all'admin, all'agente,
+//                                       all'impresa, ai subappaltatori. Ogni mail parte una volta sola (colonne avvisato_*).
 //                                       Sta qui e non in una funzione a parte perché il progetto ha raggiunto il limite di 100 funzioni (12.10.2026).
 // Look della mail d'invito approvata (../_shared/mail-marchio.ts). Deploy con verify_jwt spento.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { mailPreventivi, mailPromemoria, mailVerifica, mailGuasti } from "../_shared/mail-marchio.ts";
+import { mailPreventivi, mailPromemoria, mailVerifica, mailGuasti, mailImprese } from "../_shared/mail-marchio.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -21,6 +24,7 @@ const CAT: Record<string, { nome: string; pre: string; tipi: string[] }> = {
   materiali: { nome: "Materiali edili", pre: "mat", tipi: ["azienda_materiali_edili"] },
   noleggio: { nome: "Noleggio", pre: "nol", tipi: ["azienda_noleggio_attrezzature"] },
   casa: { nome: "Servizi per la casa", pre: "cas", tipi: ["azienda_traslochi", "azienda_facchinaggio", "azienda_pulizie", "azienda_manutenzione_stabili"] },
+  lavori: { nome: "Piccoli lavori", pre: "lav", tipi: ["impresa", "azienda_imprese_edili", "azienda_subappaltatori", "azienda_impiantisti"] },
 };
 const TIPI_CASA: Record<string, string[]> = {
   azienda_traslochi: ["trasloco", "facchinaggio", "sgombero"], azienda_facchinaggio: ["facchinaggio", "trasloco", "sgombero"],
@@ -49,7 +53,7 @@ const righeTxt = (righe: { voce?: string; qta?: number; um?: string }[]) =>
 const GIORNO = 86400000;
 const fa = (giorni: number) => new Date(Date.now() - giorni * GIORNO).toISOString();
 const NOMI_SERVIZI: Record<string, string> = { telefonia: "Telefono e internet", finanza: "Finanza e assicurazioni" };
-const NOMI_PREV: Record<string, string> = { materiali: "Materiali edili", noleggio: "Noleggio", casa: "Servizi per la casa" };
+const NOMI_PREV: Record<string, string> = { materiali: "Materiali edili", noleggio: "Noleggio", casa: "Servizi per la casa", lavori: "Piccoli lavori" };
 
 // deno-lint-ignore no-explicit-any
 async function giornaliero(admin: any, db: any) {
@@ -162,6 +166,69 @@ async function giroGuasti(admin: any, db: any) {
   return esito;
 }
 
+// Imprese e ristrutturazioni (app-24): ogni mail parte una volta sola.
+// deno-lint-ignore no-explicit-any
+async function giroImprese(admin: any, db: any) {
+  const esito = { mail: 0, errori: [] as string[] };
+  const prova = async (fn: () => Promise<void>) => { try { await fn(); } catch (e) { esito.errori.push(String((e as Error).message || e)); } };
+  const mailDi = async (id: string) => { const { data: u } = await admin.auth.admin.getUserById(id); return u?.user?.email || ""; };
+  const nomeDi = async (id: string) => { const { data: p } = await db.from("profiles").select("nome").eq("id", id).maybeSingle(); return p?.nome || ""; };
+  const adminLink = `${SITO}/dashboard/#/admin/ristrutturazioni-admin`;
+  // 1. Nuove ristrutturazioni → admin. Agente assegnato → agente.
+  await prova(async () => {
+    const { data: righe, error } = await db.from("ristrutturazioni").select("*").gt("creato", fa(120)).limit(300);
+    if (error) throw error;
+    for (const r of righe || []) {
+      if (!r.avvisato_admin && r.origine !== "admin") {
+        await manda(ADMIN_MAIL, mailImprese("ristrutturazione", { link: adminLink, nome: r.nome, comune: r.comune, descrizione: r.descrizione }));
+        await db.from("ristrutturazioni").update({ avvisato_admin: new Date().toISOString() }).eq("id", r.id);
+        esito.mail++;
+      }
+      if (r.agente_id && r.avvisato_agente !== r.agente_id) {
+        const a = await mailDi(r.agente_id);
+        if (a) { await manda(a, mailImprese("sopralluogo", { link: `${SITO}/dashboard/#/rete/re-sopralluoghi`, nome: r.nome, comune: r.comune, descrizione: r.descrizione })); esito.mail++; }
+        await db.from("ristrutturazioni").update({ avvisato_agente: r.agente_id }).eq("id", r.id);
+      }
+    }
+  });
+  // 2. Lavori affidati → impresa; risposta dell'impresa → admin.
+  await prova(async () => {
+    const { data: righe, error } = await db.from("commesse").select("*").gt("creato", fa(120)).limit(300);
+    if (error) throw error;
+    for (const c of righe || []) {
+      if (c.stato === "proposta" && !c.avvisato_impresa) {
+        const a = await mailDi(c.impresa_id);
+        if (a) { await manda(a, mailImprese("commessa", { link: `${SITO}/dashboard/#/azienda/imp_lavori`, titolo: c.titolo, comune: c.comune, importo: c.importo_impresa })); esito.mail++; }
+        await db.from("commesse").update({ avvisato_impresa: new Date().toISOString() }).eq("id", c.id);
+      }
+      if ((c.stato === "accettata" || c.stato === "rifiutata") && c.risposta_il && !c.avvisato_admin) {
+        await manda(ADMIN_MAIL, mailImprese("risposta", { link: adminLink, chi: await nomeDi(c.impresa_id), accetta: c.stato === "accettata", titolo: c.titolo, nota: c.nota_impresa }));
+        await db.from("commesse").update({ avvisato_admin: new Date().toISOString() }).eq("id", c.id);
+        esito.mail++;
+      }
+    }
+  });
+  // 3. Subappalti: richiesta → destinatario; risposta → chi l'ha chiesta.
+  await prova(async () => {
+    const { data: righe, error } = await db.from("subappalti_richieste").select("*").gt("creato", fa(60)).limit(300);
+    if (error) throw error;
+    const link = `${SITO}/dashboard/#/azienda/imp_subappalti`;
+    for (const s of righe || []) {
+      if (!s.avvisato) {
+        const a = await mailDi(s.a_azienda);
+        if (a) { await manda(a, mailImprese("subappalto", { link, chi: await nomeDi(s.da_azienda), lavorazione: s.lavorazione, comune: s.comune, descrizione: s.descrizione })); esito.mail++; }
+        await db.from("subappalti_richieste").update({ avvisato: "inviata" }).eq("id", s.id);
+      }
+      if (s.stato !== "inviata" && s.avvisato !== s.stato) {
+        const a = await mailDi(s.da_azienda);
+        if (a) { await manda(a, mailImprese("subappalto-risposta", { link, chi: await nomeDi(s.a_azienda), accetta: s.stato === "accettata", lavorazione: s.lavorazione, nota: s.risposta })); esito.mail++; }
+        await db.from("subappalti_richieste").update({ avvisato: s.stato }).eq("id", s.id);
+      }
+    }
+  });
+  return esito;
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
   if (req.method !== "POST") return json({ error: "Solo POST." }, 405);
@@ -172,7 +239,8 @@ Deno.serve(async (req) => {
 
   try {
     if (body.evento === "giornaliero") return json(await giornaliero(admin, db));
-    if (body.evento === "guasti") return json(await giroGuasti(admin, db));
+    if (body.evento === "guasti") return json(Object.assign(await giroGuasti(admin, db), { imprese: await giroImprese(admin, db) }));
+    if (body.evento === "imprese") return json(await giroImprese(admin, db));
 
     if (body.evento === "richiesta") {
       const { data: r } = await db.from("prev_richieste").select("*").eq("token", String(body.token || "")).maybeSingle();
@@ -185,10 +253,18 @@ Deno.serve(async (req) => {
       await db.from("prev_richieste").update({ avvisato_il: new Date().toISOString() }).eq("id", r.id);
       // Fornitori della categoria che coprono la provincia, dal più vicino.
       const { data: forn } = await db.from("profiles").select("id, tipo_azienda").in("tipo_azienda", c.tipi).eq("verifica", "verificato");
-      const { data: zone } = await db.from("fornitori_zona").select("*").in("azienda_id", (forn || []).map((f) => f.id));
+      let ammesse = forn || [];
+      if (r.categoria === "lavori") {
+        // Piccoli lavori: solo imprese con documenti verificati e prova o abbonamento attivo (app-23).
+        const oggi = new Date().toISOString().slice(0, 10);
+        const { data: st } = await db.from("aziende_stato").select("*").in("azienda_id", ammesse.map((f) => f.id)).eq("documenti_ok", true);
+        const ok = new Set((st || []).filter((x) => (x.attiva_fino && x.attiva_fino >= oggi) || new Date(new Date(x.prova_dal).getTime() + 13 * GIORNO).toISOString().slice(0, 10) >= oggi).map((x) => x.azienda_id));
+        ammesse = ammesse.filter((f) => ok.has(f.id));
+      }
+      const { data: zone } = await db.from("fornitori_zona").select("*").in("azienda_id", ammesse.map((f) => f.id));
       const zonaDi: Record<string, { sede_comune: string; sede_provincia: string; province: string[] }> = {};
       (zone || []).forEach((z) => { zonaDi[z.azienda_id] = z; });
-      const elenco = (forn || []).map((f) => {
+      let elenco = ammesse.map((f) => {
         const z = zonaDi[f.id];
         if (!z) return null;
         const copre = (z.province || []).length ? z.province.includes(r.provincia) : z.sede_provincia === r.provincia;
@@ -197,7 +273,13 @@ Deno.serve(async (req) => {
         const v = z.sede_comune && r.comune && z.sede_comune.trim().toLowerCase() === r.comune.trim().toLowerCase() ? 0 : z.sede_provincia === r.provincia ? 1 : 2;
         return { id: f.id, v };
       }).filter(Boolean).sort((a, b) => a!.v - b!.v);
-      const cosa = r.categoria === "casa" ? String(r.tipo) : righeTxt(r.righe);
+      if (r.categoria === "lavori") {
+        elenco = elenco.slice(0, 5);
+        // L'admin è sempre avvisato: può lasciarla alle imprese o passarla a una ristrutturazione (agente).
+        await manda(ADMIN_MAIL, mailImprese("lavori-admin", { link: `${SITO}/dashboard/#/admin/ristrutturazioni-admin`, nome: r.nome, comune: r.comune, descrizione: r.nota })).catch(() => {});
+        await db.from("prev_richieste").update({ avvisato_admin: new Date().toISOString() }).eq("id", r.id);
+      }
+      const cosa = r.categoria === "casa" ? String(r.tipo) : r.categoria === "lavori" ? String(r.tipo || "") + (r.nota ? " · " + String(r.nota).slice(0, 120) : "") : righeTxt(r.righe);
       for (const f of elenco) {
         const { data: u } = await admin.auth.admin.getUserById(f!.id);
         const a = u?.user?.email;

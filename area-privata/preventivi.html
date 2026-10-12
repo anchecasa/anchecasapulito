@@ -73,9 +73,11 @@
     var CAT = {
       materiali: { nome: "Materiali edili", regola: "Prezzi come indicati dal fornitore. Scegliere un preventivo non è un ordine: l'ordine, la consegna e il pagamento li fai direttamente con il fornitore." },
       noleggio: { nome: "Noleggio", regola: "Prezzi come indicati dal noleggiatore. Scegliere un preventivo non è un contratto: il contratto di noleggio lo firmi direttamente con il noleggiatore." },
-      casa: { nome: "Servizi per la casa", regola: "Prezzi come indicati dalla ditta. Scegliere un preventivo non è un contratto: i dettagli e il pagamento li concordi direttamente con la ditta." }
+      casa: { nome: "Servizi per la casa", regola: "Prezzi come indicati dalla ditta. Scegliere un preventivo non è un contratto: i dettagli e il pagamento li concordi direttamente con la ditta." },
+      lavori: { nome: "Piccoli lavori", regola: "Prezzi come indicati dall'impresa, dopo il sopralluogo possono cambiare. Scegliere un preventivo non è un contratto: lavori e pagamento li concordi direttamente con l'impresa. Le imprese AncheCasa sono verificate (visura e DURC)." }
     };
-    var TIPI = { trasloco: "Trasloco", facchinaggio: "Facchinaggio", sgombero: "Sgombero", pulizie: "Pulizie", sanificazione: "Sanificazione", giardinaggio: "Giardinaggio", manutenzione: "Piccola manutenzione" };
+    var TIPI = { trasloco: "Trasloco", facchinaggio: "Facchinaggio", sgombero: "Sgombero", pulizie: "Pulizie", sanificazione: "Sanificazione", giardinaggio: "Giardinaggio", manutenzione: "Piccola manutenzione",
+      muratura: "Opere murarie", bagno: "Bagno", tinteggiatura: "Tinteggiatura", elettrico: "Impianto elettrico", idraulico: "Impianto idraulico", clima: "Climatizzazione", infissi: "Infissi", tetto: "Tetto e impermeabilizzazione", pavimenti: "Pavimenti", altro: "Altro" };
     var VICINO = ["Stesso comune", "Stessa provincia", "In zona"];
     var esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); };
     var eur = function (n) { return (Number(n) || 0).toLocaleString("it-IT", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €"; };
@@ -97,7 +99,7 @@
       var tu = r.cliente_tipo === "privato";
       document.getElementById("cat-testa").innerHTML = "I tuoi preventivi<br>" + esc(K.nome.toLowerCase());
       var scelta = r.proposta_scelta;
-      var cosa = r.categoria === "casa" ? (TIPI[r.tipo] || r.tipo) : righeTxt(r.righe);
+      var cosa = r.categoria === "casa" || r.categoria === "lavori" ? (TIPI[r.tipo] || r.tipo) : righeTxt(r.righe);
       var quando = r.categoria === "noleggio" && r.dal ? "dal " + data(r.dal) + (r.al ? " al " + data(r.al) : "") : r.dal ? data(r.dal) : "";
       var h = '<span class="eti">' + esc(K.nome) + '</span><h1>' + (tu ? "Ciao " : "Buongiorno ") + esc(r.nome) + ', ecco i preventivi</h1>' +
         '<p class="sotto">' + (tu ? "Li hanno preparati le ditte AncheCasa della tua zona, dalla più vicina. Scegli quello che preferisci: solo quella ditta riceverà nome, contatti e indirizzo." : "Li hanno preparati i fornitori AncheCasa che coprono la zona del cantiere, dal più vicino. Scelga quello che preferisce: solo quel fornitore riceverà nome, contatti e indirizzo.") + '</p>' +

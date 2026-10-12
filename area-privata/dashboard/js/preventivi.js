@@ -62,8 +62,16 @@
       perche: "Trasloco, pulizie, giardino: descrivi cosa ti serve. Ti rispondono le ditte AncheCasa della tua zona, dalla più vicina.",
       dataLab: "Quando", ph: "Es. trasloco bilocale, 3° piano senza ascensore", um: "",
       tipi: { trasloco: "Trasloco", facchinaggio: "Facchinaggio", sgombero: "Sgombero", pulizie: "Pulizie", sanificazione: "Sanificazione", giardinaggio: "Giardinaggio", manutenzione: "Piccola manutenzione" }
+    },
+    // 12.10.2026, app-24: piccoli lavori dei privati alle imprese della zona (massimo 5), l'admin è sempre avvisato.
+    lavori: {
+      pre: "lav", nome: "Piccoli lavori", sigla: "AC-LV", tipoAzienda: "azienda_imprese_edili", ordini: "Lavori", chiuso: "Lavoro fatto", chiudi: "Segna lavoro fatto",
+      perche: "Descrivi il lavoro: ti rispondono fino a cinque imprese AncheCasa verificate della tua zona, dalla più vicina. AncheCasa segue la richiesta.",
+      dataLab: "Quando", ph: "Es. tinteggiare 3 stanze e il corridoio, circa 90 m²", um: "",
+      tipi: { muratura: "Opere murarie", bagno: "Bagno", tinteggiatura: "Tinteggiatura", elettrico: "Impianto elettrico", idraulico: "Impianto idraulico", clima: "Climatizzazione", infissi: "Infissi", tetto: "Tetto e impermeabilizzazione", pavimenti: "Pavimenti", altro: "Altro" }
     }
   };
+  const conTipo = (cat) => cat === "casa" || cat === "lavori";
   const TIPI_DI_AZIENDA = { azienda_traslochi: ["trasloco", "facchinaggio", "sgombero"], azienda_facchinaggio: ["facchinaggio", "trasloco", "sgombero"], azienda_pulizie: ["pulizie", "sanificazione"], azienda_manutenzione_stabili: ["giardinaggio", "manutenzione"] };
   const VICINO = ["Stesso comune", "Stessa provincia", "In zona"];
   const STATO_P = { inviata: ["wait", "Inviato"], accettata: ["ok", "Scelto dal cliente"], rifiutata: ["paused", "Non scelto"], chiusa: ["ok", "Chiuso"] };
@@ -80,7 +88,7 @@
   const Q = (p) => p.then((r) => { if (r && r.error) throw r.error; return r ? r.data : null; });
   const uid = () => db().auth.getSession().then((s) => (s.data && s.data.session ? s.data.session.user.id : ""));
   const oggiPiu = (g) => new Date(Date.now() + g * 86400000).toISOString().slice(0, 10);
-  const nomeTipo = (cat, t) => (cat === "casa" ? CAT.casa.tipi[t] || t : t) || "";
+  const nomeTipo = (cat, t) => (conTipo(cat) ? CAT[cat].tipi[t] || t : t) || "";
   const dove = (r) => (r.comune ? r.comune + (r.provincia ? " (" + r.provincia + ")" : "") : r.provincia && PROV[r.provincia] ? PROV[r.provincia][1] : r.provincia || "");
   const righeTxt = (righe) => (righe || []).map((x) => (x.qta ? x.qta + " " + (x.um || "") + " " : "") + (x.voce || "")).join(" · ");
 
@@ -91,7 +99,7 @@
   function demoTutto() {
     let d = null;
     try { d = JSON.parse(localStorage.getItem(DEMO_KEY) || "null"); } catch (e) { d = null; }
-    if (d && d.materiali) return d;
+    if (d && d.materiali && d.lavori) return d;
     const ora = new Date().toISOString(), ieri = new Date(Date.now() - 86400000).toISOString(), tre = new Date(Date.now() - 3 * 86400000).toISOString();
     d = {
       materiali: {
@@ -129,6 +137,15 @@
         ],
         proposte: [],
         mie: [{ token: "", creato: ieri, categoria: "casa", tipo: "pulizie", stato: "aperta", nome: "", righe: [] }]
+      },
+      lavori: {
+        zona: { sede_comune: "Caserta", sede_provincia: "CE", sede_regione: "Campania", province: ["CE", "NA"] },
+        richieste: [
+          { id: "lr1", creato: ora, categoria: "lavori", fonte: "dashboard", tipo: "tinteggiatura", cliente_tipo: "privato", comune: "Caserta", provincia: "CE", regione: "Campania", dal: oggiPiu(20), al: null, righe: [], nota: "Tinteggiare 4 stanze e il corridoio, circa 110 m² di pareti", stato: "aperta", vicinanza: 0, mia_proposta: null, mio_stato: null, scelta_mia: false, nome: "", mail: "", telefono: "", indirizzo: "", proposte: 1 },
+          { id: "lr2", creato: tre, categoria: "lavori", fonte: "rete", tipo: "bagno", cliente_tipo: "privato", comune: "Marcianise", provincia: "CE", regione: "Campania", dal: oggiPiu(30), al: null, righe: [], nota: "Sostituire la vasca con un box doccia", stato: "aperta", vicinanza: 1, mia_proposta: null, mio_stato: null, scelta_mia: false, nome: "", mail: "", telefono: "", indirizzo: "", proposte: 2 }
+        ],
+        proposte: [],
+        mie: [{ token: "", creato: ieri, categoria: "lavori", tipo: "infissi", stato: "aperta", nome: "", righe: [] }]
       }
     };
     return d;
@@ -224,7 +241,7 @@
   }
   function cosaServe(cat, r) {
     const x = [];
-    if (cat === "casa") x.push(nomeTipo(cat, r.tipo));
+    if (conTipo(cat)) x.push(nomeTipo(cat, r.tipo));
     if (r.righe && r.righe.length) x.push(righeTxt(r.righe));
     if (cat === "noleggio" && r.dal) x.push("dal " + dataIt(r.dal) + (r.al ? " al " + dataIt(r.al) : "") + " (" + giorni(r.dal, r.al) + " gg)");
     else if (r.dal) x.push((cat === "materiali" ? "consegna entro il " : "per il ") + dataIt(r.dal));
@@ -353,7 +370,7 @@
           const gg = giorni(r.dal, r.al);
           const base = (r.righe || []).map((x) => ({ voce: x.voce, qta: cat === "noleggio" ? gg * (x.qta || 1) : x.qta, um: cat === "noleggio" ? "giorni" : x.um }));
           if (cat === "noleggio") base.push({ voce: "Trasporto andata e ritorno", qta: 1, um: "a corpo" });
-          if (cat === "casa" && !base.length) base.push({ voce: nomeTipo(cat, r.tipo), qta: 1, um: "a corpo" });
+          if (conTipo(cat) && !base.length) base.push({ voce: nomeTipo(cat, r.tipo), qta: 1, um: "a corpo" });
           el.innerHTML = html`
             <div class="card en-banner"><div><h2>Preventivo per ${dove(r)}</h2><p class="note">${cosaServe(cat, r)}${r.nota ? " · «" + r.nota + "»" : ""}</p></div></div>
             <div class="card">
@@ -514,7 +531,7 @@
   }
   function elencoMie(box, cat, comeRete) {
     mieRichieste(cat, comeRete).then((l) => {
-      box.innerHTML = (l || []).length ? html`<div class="en-lista">${l.map((r) => html`<div class="en-rrow"><div class="en-rinfo"><b>${cat === "casa" ? nomeTipo(cat, r.tipo) : righeTxt(r.righe).slice(0, 60) || CAT[cat].nome}</b><small>${comeRete && r.nome ? r.nome + " · " : ""}${dataIt(r.creato)}</small></div>
+      box.innerHTML = (l || []).length ? html`<div class="en-lista">${l.map((r) => html`<div class="en-rrow"><div class="en-rinfo"><b>${conTipo(cat) ? nomeTipo(cat, r.tipo) : righeTxt(r.righe).slice(0, 60) || CAT[cat].nome}</b><small>${comeRete && r.nome ? r.nome + " · " : ""}${dataIt(r.creato)}</small></div>
         <div class="en-ract"><span class="tag ${(STATO_R[r.stato] || STATO_R.aperta)[0]}">${(STATO_R[r.stato] || STATO_R.aperta)[1]}</span>${r.token ? html` <a class="btn-mini" href="../preventivi.html?t=${r.token}" target="_blank" rel="noopener">Vedi i preventivi</a>` : ""}</div></div>`)}</div>`.s
         : html`<p class="note">Ancora nessuna richiesta.</p>`.s;
     }, () => { box.innerHTML = html`<p class="note">Non riesco a leggere le richieste.</p>`.s; });
@@ -526,18 +543,18 @@
     const mio = chi !== "rete";
     pre = pre || {};
     return html`<form id="${id}" class="prefs wide">
-      ${cat === "casa" ? html`<div class="en-grid"><label class="span2">Cosa ti serve<select name="tipo">${Object.keys(K.tipi).map((k) => html`<option value="${k}">${K.tipi[k]}</option>`)}</select></label></div>` : ""}
-      ${cat !== "casa" ? html`<p class="note">${cat === "materiali" ? "Cosa ti serve, riga per riga." : "Quali mezzi o attrezzature."}</p><div data-righe>${editorRighe(pre.righe || [], false, K.ph, K.um)}</div>` : ""}
+      ${conTipo(cat) ? html`<div class="en-grid"><label class="span2">Cosa ti serve<select name="tipo">${Object.keys(K.tipi).map((k) => html`<option value="${k}">${K.tipi[k]}</option>`)}</select></label></div>` : ""}
+      ${!conTipo(cat) ? html`<p class="note">${cat === "materiali" ? "Cosa ti serve, riga per riga." : "Quali mezzi o attrezzature."}</p><div data-righe>${editorRighe(pre.righe || [], false, K.ph, K.um)}</div>` : ""}
       <div class="en-grid">
         ${cat === "noleggio" ? html`<label>Dal<input type="date" name="dal" required value="${pre.dal || ""}"></label><label>Al<input type="date" name="al" required value="${pre.al || ""}"></label>
           <label class="span2">Operatore<select name="op"><option value="false">Senza operatore</option><option value="true">Con operatore</option></select></label>`
           : html`<label class="span2">${K.dataLab}<input type="date" name="dal"></label>`}
-        <label>Comune ${cat === "casa" ? "" : "del cantiere"}<input name="comune" required maxlength="80" value="${pre.comune || (mio && cat === "casa" ? p.zona || "" : "")}"></label>
+        <label>Comune ${conTipo(cat) ? "" : "del cantiere"}<input name="comune" required maxlength="80" value="${pre.comune || (mio && conTipo(cat) ? p.zona || "" : "")}"></label>
         <label>Provincia<select name="prov" required><option value="">Scegli…</option>${optProvince(pre.provincia || "")}</select></label>
         <label class="span2">Indirizzo (lo vede solo il fornitore che scegli)<input name="indirizzo" maxlength="160"></label>
-        ${cat === "casa" ? html`<label class="span2">Descrivi il lavoro<textarea name="nota" maxlength="800" placeholder="${K.ph}"></textarea></label>` : html`<label class="span2">Note per il fornitore<input name="nota" maxlength="800" placeholder="Es. scarico con gru, accesso stretto"></label>`}
-        ${chi === "rete" && cat === "casa" ? html`<label class="span2">Il cliente è<select name="cliente_tipo"><option value="privato">Un privato</option><option value="impresa">Un'azienda o un condominio</option></select></label>` : ""}
-        <label>${chi === "rete" ? "Nome del cliente" : cat === "casa" ? "Nome e cognome" : "Impresa o referente"}<input name="nome" required maxlength="120" value="${mio ? p.nome || "" : ""}"></label>
+        ${conTipo(cat) ? html`<label class="span2">Descrivi il lavoro<textarea name="nota" maxlength="800" placeholder="${K.ph}"></textarea></label>` : html`<label class="span2">Note per il fornitore<input name="nota" maxlength="800" placeholder="Es. scarico con gru, accesso stretto"></label>`}
+        ${chi === "rete" && conTipo(cat) ? html`<label class="span2">Il cliente è<select name="cliente_tipo"><option value="privato">Un privato</option><option value="impresa">Un'azienda o un condominio</option></select></label>` : ""}
+        <label>${chi === "rete" ? "Nome del cliente" : conTipo(cat) ? "Nome e cognome" : "Impresa o referente"}<input name="nome" required maxlength="120" value="${mio ? p.nome || "" : ""}"></label>
         <label>Telefono<input name="tel" maxlength="30"></label>
         <label class="span2">${chi === "rete" ? "Mail del cliente (i preventivi arrivano a lui)" : "Mail"}<input name="mail" type="email" required value="${mio ? (S.data.account && S.data.account.mail) || "" : ""}"></label>
         <label class="check span2"><input type="checkbox" name="consenso"> ${chi === "rete" ? "Il cliente è d'accordo a ricevere i preventivi dei fornitori AncheCasa. Nome e contatti li riceve solo il fornitore che sceglie." : "Voglio ricevere i preventivi dei fornitori AncheCasa. Nome, contatti e indirizzo li riceve solo il fornitore che scelgo."}</label>
@@ -556,7 +573,7 @@
       if (cat === "noleggio" && f.al.value < f.dal.value) return toast("La data di fine viene prima dell'inizio.", "error");
       const sigla = f.prov.value;
       const d = { categoria: cat, fonte: chi === "rete" ? "rete" : "dashboard", tipo: f.tipo ? f.tipo.value : "",
-        cliente_tipo: cat === "casa" ? (f.cliente_tipo ? f.cliente_tipo.value : chi === "impresa" ? "impresa" : "privato") : "impresa",
+        cliente_tipo: conTipo(cat) ? (f.cliente_tipo ? f.cliente_tipo.value : chi === "impresa" ? "impresa" : "privato") : "impresa",
         comune: f.comune.value.trim(), provincia: sigla, regione: PROV[sigla] ? PROV[sigla][2] : "", indirizzo: f.indirizzo.value.trim(),
         dal: f.dal.value || null, al: f.al ? f.al.value || null : null, con_operatore: f.op ? f.op.value === "true" : null, righe: righe, nota: f.nota.value.trim(),
         nome: f.nome.value.trim(), telefono: f.tel.value.trim(), mail: f.mail.value.trim(), consenso: true };
@@ -588,6 +605,8 @@
   }
   V["az-materiali"] = paginaCliente("materiali", "impresa", "Preventivo materiali");
   V["pv-casa"] = paginaCliente("casa", "privato", "Traslochi, pulizie e giardino");
+  // 12.10.2026, app-24: piccoli lavori alle imprese della zona.
+  V["pv-lavori"] = paginaCliente("lavori", "privato", "Piccoli lavori");
 
   /* Impresa: noleggio con «cosa è libero». */
   function liberi(prov, comune, dal, al) {
@@ -666,7 +685,7 @@
     richiesteAdmin() {
       if (!reale()) {
         const t = demoTutto();
-        return Promise.resolve([].concat(t.materiali.richieste, t.noleggio.richieste, t.casa.richieste).map((r) => Object.assign({}, r, { nome: r.nome || "Cliente di esempio", n: r.proposte || 0 })));
+        return Promise.resolve([].concat(t.materiali.richieste, t.noleggio.richieste, t.casa.richieste, t.lavori.richieste).map((r) => Object.assign({}, r, { nome: r.nome || "Cliente di esempio", n: r.proposte || 0 })));
       }
       return Promise.all([
         Q(db().from("prev_richieste").select("id, creato, categoria, fonte, tipo, cliente_tipo, comune, provincia, nome, stato, righe").order("creato", { ascending: false }).limit(80)),
@@ -677,7 +696,7 @@
         return (r || []).map((x) => Object.assign(x, { n: conta[x.id] || 0 }));
       });
     },
-    cosa(r) { return r.categoria === "casa" ? nomeTipo("casa", r.tipo) : righeTxt(r.righe).slice(0, 70); },
+    cosa(r) { return conTipo(r.categoria) ? nomeTipo(r.categoria, r.tipo) : righeTxt(r.righe).slice(0, 70); },
     dove: dove,
     TIPI_DI_AZIENDA: TIPI_DI_AZIENDA,
     // 12.10.2026, app-23: per «Ho un guasto» e «Trova artigiano» (artigiani.js).

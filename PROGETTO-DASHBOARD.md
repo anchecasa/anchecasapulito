@@ -237,6 +237,35 @@ Sei famiglie: **Energia** (luce e gas; fotovoltaico e pompe di calore come offer
 - **Rete**: il commerciale chiede per un cliente; a lavoro chiuso la vendita va a lui.
 - Informatica e promozione: da progettare.
 
-## Aziende
+## Aziende (decise da Nando il 12.10.2026, 12:11 e 12:20)
 
-Da progettare.
+Regole per tutte le aziende:
+- Prova gratis 14 giorni, poi abbonamento. Il bonifico lo segna l'admin in «Aziende» («attiva fino al»).
+- Visura e DURC obbligatori, verificati dall'admin. Senza documenti verificati e senza prova o abbonamento attivi non si ricevono lavori.
+- Impresa, subappaltatore e impiantista pagano lo stesso prezzo (49 € al mese). I moduli (cantiere, gare, mezzi, squadre) sono a parte, a pagamento.
+- «Documenti e abbonamento» in «La mia azienda» per tutti.
+
+Artigiano (app-23, online):
+- «Ho un guasto» e «Trova artigiano» del privato. La richiesta va a un artigiano alla volta: prima quello scelto dal privato, poi il più vicino, poi quello con il voto migliore.
+- Tempo per accettare: 15 minuti se urgente, 2 ore se normale. Dopo tre giri, o se non c'è nessuno, la richiesta passa all'admin.
+- Lavoro fatto con l'importo. Commissione di 4,99 €, per ora solo registrata: il pagamento dentro l'app arriva dopo, e solo con l'artigiano iscritto.
+- Il privato conferma il lavoro (dopo 7 giorni vale come confermato) e lascia la recensione. Garanzia AncheCasa di 30 giorni.
+
+Impresa, subappaltatore, impiantista (app-24):
+- Lavori AncheCasa. AncheCasa fa da general contractor.
+  1. Il privato chiede «Ristruttura con AncheCasa», oppure la rete segnala il cliente.
+  2. L'admin manda un agente per il sopralluogo; l'agente scrive la nota e preme «Fatto».
+  3. L'admin fa preventivo e firma con il cliente.
+  4. Nando sceglie l'impresa e le manda il lavoro.
+  L'impresa vede solo il suo importo, mai il prezzo al cliente; risponde «Accetto» o «Non posso».
+- I miei cantieri: giornale dei lavori con foto, avanzamento e SAL dell'impresa (li segna l'admin).
+- Il mio cantiere (privato): avanzamento, diario con le foto e SAL da pagare ad AncheCasa. Il privato vede solo AncheCasa, mai il nome dell'impresa.
+- Piccoli lavori della zona: il privato descrive il lavoro e la richiesta va a massimo cinque imprese verificate della zona, dalla più vicina. Funziona come i preventivi dei fornitori: il cliente sceglie, i contatti vanno solo a chi è scelto. L'admin è sempre avvisato per mail e può lasciarla alle imprese o passarla ad AncheCasa: in quel caso diventa una pratica di ristrutturazione e la affida a un agente.
+- Subappalti in zona: l'impresa cerca subappaltatori, impiantisti e imprese verificati che coprono la provincia e chiede la disponibilità. Mail e contatti si vedono solo dopo «Accetto».
+- Admin, tasto «Ristrutturazioni»:
+  - pratiche: stato, agente, prezzo al cliente, «Affida a un'impresa»;
+  - lavori affidati, con i SAL del cliente e quelli dell'impresa;
+  - piccoli lavori da smistare.
+- Mail (preventivi-avvisa, evento «imprese», anche nel giro ogni 5 minuti): nuova ristrutturazione all'admin, sopralluogo all'agente, lavoro all'impresa, risposta dell'impresa all'admin, subappalto all'azienda e risposta a chi l'ha chiesto, piccoli lavori all'admin.
+
+Da progettare: studio tecnico, agenzia, committente.

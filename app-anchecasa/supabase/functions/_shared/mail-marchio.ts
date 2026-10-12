@@ -259,3 +259,71 @@ export function mailGuasti(evento: "offerta" | "ricevuta" | "accettato" | "fatto
   const t = T[evento];
   return { oggetto: t.oggetto, html: mailMarchio(t) };
 }
+
+// Imprese e ristrutturazioni (app-24): AncheCasa general contractor. Funzione preventivi-avvisa, eventi «imprese» e «guasti».
+export function mailImprese(evento: "ristrutturazione" | "sopralluogo" | "commessa" | "risposta" | "subappalto" | "subappalto-risposta" | "lavori-admin", d: {
+  link: string; nome?: string; comune?: string; descrizione?: string; titolo?: string; importo?: number | null; accetta?: boolean; chi?: string; lavorazione?: string; nota?: string;
+}): { oggetto: string; html: string } {
+  const dove = esc(d.comune || ""), desc = d.descrizione ? "«" + esc(d.descrizione).slice(0, 180) + "»" : "";
+  const eur = (n: number | null | undefined) => (Number(n) || 0).toLocaleString("it-IT", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
+  const T: Record<string, Avviso> = {
+    ristrutturazione: {
+      oggetto: "AncheCasa · Nuova richiesta di ristrutturazione" + (d.comune ? " a " + d.comune : ""), anteprima: "Manda un agente per il sopralluogo.",
+      etichetta: "Ristrutturazione", titolo: "Nuova richiesta di ristrutturazione.",
+      intro: "<strong>" + esc(d.nome || "Un cliente") + "</strong>" + (dove ? " a <strong>" + dove + "</strong>" : "") + " chiede una ristrutturazione" + (desc ? ": " + desc : "") + ".",
+      punti: [["Contatti nella pagina Ristrutturazioni", "Assegna un agente per il sopralluogo, poi il preventivo."]],
+      bottone: "Apri Ristrutturazioni", link: d.link, chiusura: "",
+      passiTitolo: "Da fare", passi: ["Assegna l'agente", "Preventivo e firma", "Scegli l'impresa"],
+      perche: "Mail di servizio di AncheCasa.", tu: true, foto: "privato" },
+    sopralluogo: {
+      oggetto: "AncheCasa · Sopralluogo da fare" + (d.comune ? " a " + d.comune : ""), anteprima: "Ti è stato assegnato un sopralluogo.",
+      etichetta: "Sopralluogo", titolo: "Ti è stato assegnato un sopralluogo.",
+      intro: "Cliente <strong>" + esc(d.nome || "") + "</strong>" + (dove ? " a <strong>" + dove + "</strong>" : "") + (desc ? ": " + desc : "") + ". Contatti e indirizzo nella tua dashboard.",
+      punti: [["Dopo il sopralluogo", "Scrivi com'è andata e premi «Fatto»: AncheCasa prepara il preventivo."]],
+      bottone: "Apri i sopralluoghi", link: d.link, chiusura: "",
+      passiTitolo: "Da fare", passi: ["Chiama il cliente", "Fai il sopralluogo", "Scrivi la nota"],
+      perche: "Ricevi questa mail perché sei nella rete AncheCasa.", tu: true, foto: "agente" },
+    commessa: {
+      oggetto: "AncheCasa · Un lavoro per la sua impresa" + (d.comune ? " a " + d.comune : ""), anteprima: "AncheCasa le propone un lavoro.",
+      etichetta: "Lavoro AncheCasa", titolo: "AncheCasa le propone un lavoro.",
+      intro: "<strong>" + esc(d.titolo || "Lavoro") + "</strong>" + (dove ? " a " + dove : "") + (d.importo ? ", importo per la sua impresa <strong>" + eur(d.importo) + "</strong>" : "") + ". Il cliente è di AncheCasa: lei lavora per AncheCasa.",
+      punti: [["Risponda dalla dashboard", "«Accetto» o «Non posso», con una nota."], ["SAL e pagamenti", "Li segue AncheCasa, li trova nella pagina del cantiere."]],
+      bottone: "Apra Lavori AncheCasa", link: d.link, chiusura: "",
+      passiTitolo: "Come funziona", passi: ["Accetti", "Apra il cantiere", "Aggiorni giornale e foto"],
+      perche: "Riceve questa mail perché è un'impresa verificata AncheCasa.", tu: false, foto: "azienda" },
+    risposta: {
+      oggetto: "AncheCasa · " + (d.chi || "L'impresa") + (d.accetta ? " ha accettato" : " non può") + ": " + (d.titolo || ""), anteprima: d.accetta ? "Il cantiere può partire." : "Scegli un'altra impresa.",
+      etichetta: d.accetta ? "Accettato" : "Rifiutato", titolo: d.accetta ? "L'impresa ha accettato." : "L'impresa non può.",
+      intro: "<strong>" + esc(d.chi || "") + "</strong> " + (d.accetta ? "ha accettato" : "non può fare") + " il lavoro <strong>" + esc(d.titolo || "") + "</strong>" + (d.nota ? ": «" + esc(d.nota) + "»" : "") + ".",
+      punti: [[d.accetta ? "Prepara i SAL" : "Scegli un'altra impresa", "Dalla pagina Ristrutturazioni."]],
+      bottone: "Apri Ristrutturazioni", link: d.link, chiusura: "",
+      passiTitolo: "Da fare", passi: d.accetta ? ["SAL del cliente", "SAL dell'impresa", "Inizio lavori"] : ["Apri la pratica", "Scegli l'impresa", "Manda il lavoro"],
+      perche: "Mail di servizio di AncheCasa.", tu: true, foto: "azienda" },
+    subappalto: {
+      oggetto: "AncheCasa · Richiesta di subappalto: " + (d.lavorazione || ""), anteprima: (d.chi || "Un'impresa") + " chiede la sua disponibilità.",
+      etichetta: "Subappalto", titolo: "Un'impresa chiede la sua disponibilità.",
+      intro: "<strong>" + esc(d.chi || "Un'impresa AncheCasa") + "</strong> cerca " + esc(d.lavorazione || "") + (dove ? " a <strong>" + dove + "</strong>" : "") + (desc ? ": " + desc : "") + ".",
+      punti: [["Contatti dopo «Accetto»", "Mail e dati dell'impresa li vedete entrambi solo se accetta."]],
+      bottone: "Apra Subappalti", link: d.link, chiusura: "Accordi e pagamenti sono tra voi.",
+      passiTitolo: "Come funziona", passi: ["Apra la richiesta", "Accetti o no", "Vi sentite"],
+      perche: "Riceve questa mail perché è un'azienda verificata AncheCasa in questa zona.", tu: false, foto: "azienda" },
+    "subappalto-risposta": {
+      oggetto: "AncheCasa · " + (d.chi || "") + (d.accetta ? " è disponibile" : " non è disponibile"), anteprima: d.accetta ? "Trova i contatti nella dashboard." : "Provi con un'altra azienda.",
+      etichetta: "Subappalto", titolo: d.accetta ? "È disponibile." : "Non è disponibile.",
+      intro: "<strong>" + esc(d.chi || "") + "</strong> " + (d.accetta ? "ha accettato" : "non può accettare") + " la richiesta (" + esc(d.lavorazione || "") + ")" + (d.nota ? ": «" + esc(d.nota) + "»" : "") + ".",
+      punti: [[d.accetta ? "Contatti in Subappalti" : "Altre aziende della zona", d.accetta ? "Mail dell'azienda nella richiesta." : "Le trova in Subappalti, dal più vicino."]],
+      bottone: "Apra Subappalti", link: d.link, chiusura: "",
+      passiTitolo: "Da qui", passi: d.accetta ? ["Apra Subappalti", "Contatti l'azienda", "Fissate il lavoro"] : ["Apra Subappalti", "Cerchi", "Chieda a un'altra"],
+      perche: "Riceve questa mail per una sua richiesta di subappalto su AncheCasa.", tu: false, foto: "azienda" },
+    "lavori-admin": {
+      oggetto: "AncheCasa · Piccoli lavori" + (d.comune ? " a " + d.comune : ""), anteprima: "Lasciala alle imprese o passala a un agente.",
+      etichetta: "Piccoli lavori", titolo: "Nuova richiesta di lavori.",
+      intro: "<strong>" + esc(d.nome || "Un cliente") + "</strong>" + (dove ? " a <strong>" + dove + "</strong>" : "") + (desc ? ": " + desc : "") + ". È andata alle imprese della zona (massimo 5).",
+      punti: [["Se è una ristrutturazione", "Premi «Passa ad AncheCasa»: diventa una pratica e la affidi a un agente."]],
+      bottone: "Apri Ristrutturazioni", link: d.link, chiusura: "",
+      passiTitolo: "Da fare", passi: ["Leggi la richiesta", "Lasciala o passala", "Segui il cliente"],
+      perche: "Mail di servizio di AncheCasa.", tu: true, foto: "azienda" }
+  };
+  const t = T[evento];
+  return { oggetto: t.oggetto, html: mailMarchio(t) };
+}
