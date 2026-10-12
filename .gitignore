@@ -8,3 +8,6 @@ Thumbs.db
 *.log
 .env
 .env.*
+
+# file locali di Supabase CLI (12.10.2026)
+supabase/.temp/
