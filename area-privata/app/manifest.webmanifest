@@ -1,0 +1,33 @@
+{
+  "name": "AncheCasa",
+  "short_name": "AncheCasa",
+  "description": "La tua area AncheCasa dal telefono: casa, lavori, cantieri, clienti e rete.",
+  "start_url": "/app/",
+  "scope": "/app/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f4f6f9",
+  "theme_color": "#f4f6f9",
+  "lang": "it",
+  "icons": [
+    {
+      "src": "/img/app/icona-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/img/app/icona-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/img/app/icona-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "id": "/app/"
+}
