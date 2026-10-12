@@ -160,6 +160,15 @@ Livelli: Responsabile Rete Italia → Sviluppo rete (Nord, Centro, Sud e isole) 
 - **Fermo:** nessuna vendita da 30 giorni.
 - **Contratto:** finché non è firmato, la dashboard del commerciale è in sola lettura.
 
+### Decisioni di Nando · terza parte (12.10.2026, 08:35)
+
+- **Zone:** in una regione possono esserci anche due capi area; per ora la zona di ognuno la decide Nando.
+- **Zona senza capo area:** l'agente va sotto lo sviluppo rete dell'area; quando arriva il capo area passa sotto di lui.
+- **Chi lascia AncheCasa:** i suoi clienti passano al suo responsabile diretto. Le provvigioni finiscono con il contratto.
+- **Cliente fermo:** avviso all'admin e a chi l'ha portato quando un'azienda iscritta non attiva niente da 30 giorni, o disdice. L'admin chiede spiegazioni o riassegna.
+- **Chi gestisce bene** (cartina e classifica), per persona e per zona: crescita (nuovi clienti sul mese prima), clienti attivi, obiettivo del mese, squadra ferma.
+- **Delega di un lavoro:** solo a qualcuno della rete. Se serve un'altra persona, l'admin la invita ed entra nella rete (anche come impresa, professionista o altro).
+
 ### Proposta di Claude (accolta come base)
 
 | Funzione | Sub-agente | Agente | Capo area | Sviluppo rete | Rete Italia |
