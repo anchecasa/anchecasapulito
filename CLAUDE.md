@@ -29,6 +29,16 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 12.10.2026 14:10 · Cursor — app-25 eseguito, preventivi-avvisa con i cantieri, area privata online
+- Ok di Nando del 12.10.2026 per il commit `d90622c`. Eseguito `app-anchecasa/sql/app-25-cantieri-richieste.sql` sul progetto ANCHECASA. Controlli: ci sono `cantieri`, `cantiere_richieste`, `cantiere_offerte`, `aziende_offro`, `aziende_voti`. Funzioni: `aziende_voti_scheda`, `cantiere_offri`, `cantiere_pubblica`, `cantiere_richieste_per_me`, `cantiere_scegli`, `cantieri_giro`, `subappaltatori_cerca`.
+- Ripubblicata solo `preventivi-avvisa` (versione 6, verify_jwt spento) con `_shared/mail-marchio.ts`. Le altre funzioni non sono state toccate.
+- Chiamata con `{"evento":"cantieri"}`. Risposta: mail 0, allargate 0, errori nessuno. Chiamata con `{"evento":"guasti"}`. Risposta: passati 0, confermati 0, mail 0, errori nessuno, imprese con mail 0 e errori nessuno, e `cantieri` con mail 0, allargate 0 e errori nessuno.
+- Git push sul ramo main: `f189d8f..d90622c`.
+- Area privata, progetto Vercel `area-privata-produzione`, deployment `dpl_E8zbp2oH6kuY2yevNP93jmt1bT5t`, alias https://entra.anchecasa.it e https://areaprivata.anchecasa.it. La dashboard online carica `js/cantieri.js?v=1`, `js/app.js?v=28`, `js/imprese.js?v=2`, `js/artigiani.js?v=2` e `css/energia.css?v=8`. I cinque file rispondono 200.
+- La voce delle 14:05 diceva non pubblicato e SQL non eseguito: ora lo SQL è eseguito e le pagine sono online.
+- Sito, magazine, app, Sicura e le altre funzioni non toccati.
+- File: `CLAUDE.md`.
+
 ### 12.10.2026 14:05 · Claude — Cantieri e richieste tra aziende: ogni azienda general contractor (NON pubblicato, SQL NON eseguito)
 - Decisioni di Nando 13:24-13:42 (scritte in `PROGETTO-DASHBOARD.md`, sezione Aziende).
 - `app-anchecasa/sql/app-25-cantieri-richieste.sql` (solo con l'ok di Nando). Crea:
