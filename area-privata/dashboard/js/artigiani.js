@@ -1,8 +1,8 @@
 /* ARTIGIANI e regole comuni delle aziende (12.10.2026, decisioni di Nando 12:11 e 12:20, PROGETTO-DASHBOARD.md, app-23).
-   Artigiano: Home · Richieste (una alla volta, 15 minuti se urgente, 2 ore se normale) · Interventi (Lavoro fatto, 4,99 €)
+   Artigiano: Home · Richieste (una alla volta, 15 minuti se urgente, 2 ore se normale) · Interventi (Lavoro fatto: 0 € nei primi 3 mesi, poi 5,90 €)
               · Recensioni · Garanzia · Disponibilità · La mia zona · Documenti e abbonamento.
    Privato: «Ho un guasto» e «Trova artigiano» veri; la pagina guasto.html segue la richiesta (conferma, recensione, garanzia).
-   Admin: «Aziende» (documenti da verificare, prova e abbonamenti, 4,99 € del mese) e «Guasti».
+   Admin: «Aziende» (documenti da verificare, prova e abbonamenti, costi per lavoro del mese) e «Guasti».
    Tutte le aziende: «Documenti e abbonamento» (prova 14 giorni, visura e DURC obbligatori per ricevere lavori).
    Anteprima (?demo=…): dati di esempio in questo browser, niente sul database e nessuna mail. */
 (function () {
@@ -60,7 +60,7 @@
       guasti: [
         { id: "g1", creato: new Date(ora - 6 * 60000).toISOString(), tipo: "guasto", mestiere: "Idraulico", descrizione: "Perdita sotto il lavello della cucina, acqua sul pavimento", urgente: true, comune: "Caserta", provincia: "CE", stato: "assegnato", scade_il: new Date(ora + 9 * 60000).toISOString(), nome: "", telefono: "", indirizzo: "", mail: "" },
         { id: "g2", creato: ieri, tipo: "trova", mestiere: "Caldaie e climatizzatori", descrizione: "Caldaia in blocco, errore E04", urgente: false, comune: "San Nicola la Strada", provincia: "CE", stato: "accettato", accettato_il: ieri, nome: "Anna Ferri", telefono: "333 4455667", indirizzo: "Via Appia 12", mail: "anna.ferri@esempio.it" },
-        { id: "g3", creato: dieci, tipo: "guasto", mestiere: "Idraulico", descrizione: "Scarico del bagno intasato", urgente: false, comune: "Caserta", provincia: "CE", stato: "confermato", accettato_il: dieci, fatto_il: dieci, confermato_il: dieci, importo: 90, nota_lavoro: "Sostituito sifone", garanzia_fino: new Date(ora + 20 * 86400000).toISOString().slice(0, 10), fee: 4.99, nome: "Marco Russo", telefono: "347 1122334", indirizzo: "Corso Trieste 8", mail: "marco.russo@esempio.it", voto: 5, recensione: "Puntuale e pulito, consigliato.", risposta: "", recensione_id: "r1" }
+        { id: "g3", creato: dieci, tipo: "guasto", mestiere: "Idraulico", descrizione: "Scarico del bagno intasato", urgente: false, comune: "Caserta", provincia: "CE", stato: "confermato", accettato_il: dieci, fatto_il: dieci, confermato_il: dieci, importo: 90, nota_lavoro: "Sostituito sifone", garanzia_fino: new Date(ora + 20 * 86400000).toISOString().slice(0, 10), fee: 5.9, nome: "Marco Russo", telefono: "347 1122334", indirizzo: "Corso Trieste 8", mail: "marco.russo@esempio.it", voto: 5, recensione: "Puntuale e pulito, consigliato.", risposta: "", recensione_id: "r1" }
       ],
       miei: [{ token: "", creato: ieri, mestiere: "Idraulico", stato: "accettato", artigiano: "Termoidraulica Rossi" }]
     };
@@ -161,7 +161,7 @@
           <div class="en-kpis">
             <a class="kpi en-kpi" href="#/azienda/art_richieste"><span><strong>${nuove.length}</strong><small>richieste da accettare</small></span></a>
             <a class="kpi en-kpi" href="#/azienda/art_interventi"><span><strong>${aperti.length}</strong><small>interventi da fare</small></span></a>
-            <div class="kpi"><span><strong>${fatti.length}</strong><small>lavori confermati questo mese · ${eur(fatti.reduce((x, g) => x + Number(g.fee || 4.99), 0))} di commissioni</small></span></div>
+            <div class="kpi"><span><strong>${fatti.length}</strong><small>lavori confermati questo mese · ${eur(fatti.reduce((x, g) => x + (g.fee != null ? Number(g.fee) : 5.9), 0))} per i lavori (gratis nei primi 3 mesi)</small></span></div>
             <a class="kpi en-kpi" href="#/azienda/art_recensioni"><span><strong>${media ? media.toFixed(1) : "—"}</strong><small>voto medio (${voti.length} recensioni)</small></span></a>
           </div>
           <div class="card"><h2>Da accettare adesso</h2>
@@ -201,7 +201,7 @@
 
   V.art_interventi = {
     title: "Interventi",
-    sub: "Gli interventi accettati. A lavoro finito premi «Lavoro fatto»: il cliente conferma e scatta la commissione di 4,99 €.",
+    sub: "Gli interventi accettati. A lavoro finito premi «Lavoro fatto»: il cliente conferma. Nei primi 3 mesi è gratis, poi costano 5,90 € a lavoro.",
     render(el) {
       el.innerHTML = html`<div class="card"><p class="note">Caricamento…</p></div>`.s;
       D.guasti().then((gs) => {
@@ -217,7 +217,7 @@
           ${att.length ? html`<div class="card"><h2>In attesa della conferma del cliente</h2>${att.map((g) => html`<div class="en-rrow"><div class="en-rinfo"><b>${g.nome}</b><small>${g.mestiere} · ${eur(g.importo)} · fatto il ${dataIt(g.fatto_il)} · dopo 7 giorni vale come confermato</small></div></div>`)}</div>` : ""}
           <div class="card"><h2>Confermati</h2>
             ${ok.length ? html`<div class="en-scroll"><table class="mini-table"><thead><tr><th>Data</th><th>Cliente</th><th>Lavoro</th><th class="num">Importo</th><th class="num">Commissione</th><th>Garanzia</th></tr></thead>
-              <tbody>${ok.map((g) => html`<tr><td>${dataIt(g.confermato_il)}</td><td>${g.nome}</td><td>${g.mestiere}${g.nota_lavoro ? " · " + g.nota_lavoro : ""}</td><td class="num">${eur(g.importo)}</td><td class="num">${eur(g.fee || 4.99)}</td><td>${g.garanzia_fino && new Date(g.garanzia_fino) >= new Date(new Date().toDateString()) ? "fino al " + dataIt(g.garanzia_fino) : "finita"}</td></tr>`)}</tbody></table></div>`
+              <tbody>${ok.map((g) => html`<tr><td>${dataIt(g.confermato_il)}</td><td>${g.nome}</td><td>${g.mestiere}${g.nota_lavoro ? " · " + g.nota_lavoro : ""}</td><td class="num">${eur(g.importo)}</td><td class="num">${eur((g.fee != null ? Number(g.fee) : 5.9))}</td><td>${g.garanzia_fino && new Date(g.garanzia_fino) >= new Date(new Date().toDateString()) ? "fino al " + dataIt(g.garanzia_fino) : "finita"}</td></tr>`)}</tbody></table></div>`
               : html`<p class="note">Qui trovi i lavori confermati dai clienti.</p>`}</div>`.s;
         el.querySelectorAll("[data-fatto]").forEach((f) => f.addEventListener("submit", (e) => {
           e.preventDefault();
@@ -409,7 +409,7 @@
      ============================================================ */
   const ESEMPIO_AZ = [
     { id: "z1", nome: "Termoidraulica Rossi", mail: "info@termorossi.it", tipo_azienda: "azienda_artigiani", creato: new Date(Date.now() - 5 * 86400000).toISOString(), prova_dal: new Date(Date.now() - 5 * 86400000).toISOString().slice(0, 10), attiva_fino: null, documenti_ok: false,
-      documenti: [{ id: "d1", tipo: "visura", file: "z1/visura.pdf", stato: "caricato" }, { id: "d2", tipo: "durc", file: "z1/durc.pdf", scadenza: "2027-01-15", stato: "caricato" }], interventi_mese: 6, fee_mese: 29.94 },
+      documenti: [{ id: "d1", tipo: "visura", file: "z1/visura.pdf", stato: "caricato" }, { id: "d2", tipo: "durc", file: "z1/durc.pdf", scadenza: "2027-01-15", stato: "caricato" }], interventi_mese: 6, fee_mese: 35.4 },
     { id: "z2", nome: "Edil Nord Srl", mail: "info@edilnord.it", tipo_azienda: "azienda_imprese_edili", creato: new Date(Date.now() - 30 * 86400000).toISOString(), prova_dal: new Date(Date.now() - 30 * 86400000).toISOString().slice(0, 10), attiva_fino: new Date(Date.now() + 25 * 86400000).toISOString().slice(0, 10), documenti_ok: true, documenti: [], interventi_mese: 0, fee_mese: 0 }
   ];
   const ESEMPIO_GU = [
@@ -441,7 +441,7 @@
             <div class="kpi"><span><strong>${daVerificare.length}</strong><small>aziende da verificare</small></span></div>
             <div class="kpi"><span><strong>${az.filter((a) => statoAz(a)[0] === "sw-in").length}</strong><small>in prova</small></span></div>
             <div class="kpi"><span><strong>${az.filter((a) => statoAz(a)[0] === "sw-ok").length}</strong><small>abbonamenti attivi</small></span></div>
-            <div class="kpi"><span><strong>${eur(fee)}</strong><small>commissioni 4,99 € del mese</small></span></div>
+            <div class="kpi"><span><strong>${eur(fee)}</strong><small>costi per lavoro del mese (5,90 € dal 4° mese)</small></span></div>
           </div>
           ${guAdmin.length || garanzie.length ? html`<section class="card iv-card"><h2>Guasti da gestire <span class="sw-stato sw-in">${guAdmin.length + garanzie.length}</span></h2>
             <p class="note">Nessun artigiano ha accettato, oppure il cliente ha chiesto la garanzia.</p>

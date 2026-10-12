@@ -16,7 +16,7 @@
       ruoli: [["subagente", "Sub-agente"], ["agente", "Agente"], ["capoarea", "Capo area"], ["sviluppo", "Sviluppo rete"], ["reteitalia", "Rete Italia"]] },
     // 12.10.2026, app-24 e app-25: lavori AncheCasa, i propri cantieri da general contractor, richieste della zona.
     { nome: "Impresa edile", desc: "Lavori affidati da AncheCasa, i miei cantieri da general contractor, richieste alle aziende della zona, piccoli lavori, gare.", ico: "building", demo: "azienda", tipo: "azienda_imprese_edili", pagina: "imp_home", regole: "regole/aziende.html", pronta: true },
-    { nome: "Artigiano", desc: "Ho un guasto: una richiesta alla volta, 15 minuti o 2 ore, lavoro fatto, 5,90 € (9,90 € urgente), recensioni, garanzia.", ico: "gear", demo: "azienda", tipo: "azienda_artigiani", pagina: "art_home", regole: "regole/aziende.html", pronta: true },
+    { nome: "Artigiano", desc: "Ho un guasto: una richiesta alla volta, 15 minuti o 2 ore, lavoro fatto, 1 mese gratis, poi 14,90 €, dal 4° mese 19,90 € + 5,90 € a lavoro, recensioni, garanzia.", ico: "gear", demo: "azienda", tipo: "azienda_artigiani", pagina: "art_home", regole: "regole/aziende.html", pronta: true },
     { nome: "Subappaltatore e impiantista", desc: "Richieste dei cantieri della zona, offerta voce per voce, bollino documenti, voti.", ico: "gear", demo: "azienda", tipo: "azienda_subappaltatori", pagina: "cnt_perme", regole: "regole/aziende.html", pronta: true },
     { nome: "Studio tecnico", desc: "Pratiche, gare, presenze di cantiere.", ico: "doc" },
     { nome: "Fornitore", desc: "Informatica e promozione.", ico: "folder" },

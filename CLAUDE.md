@@ -29,6 +29,38 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 12.10.2026 16:20 · Claude — prezzo dell'artigiano e niente provvigioni su luce, gas e telefonia
+- Decisioni di Nando del 12.10.2026, 16:04.
+- **Artigiano:** il primo mese è gratis. Il secondo e il terzo mese costano 14,90 € al mese, senza costo per lavoro. Dal quarto mese costa 19,90 € al mese più 5,90 € per lavoro fatto; il cliente prenota e paga con l'app.
+- **Provvigioni:** su luce, gas e telefonia, che sono servizi di AncheCasa, la rete non prende niente, per nessun cliente. Su tutto il resto prende il 35%.
+- Nuovo SQL `app-anchecasa/sql/app-30-artigiano-prezzi.sql`, **DA ESEGUIRE solo con l'ok di Nando**. Porta il costo per lavoro predefinito a 5,90 € e aggiunge un trigger: quando un lavoro passa a «confermato», il costo è 0 € nei primi 3 mesi da `aziende_stato.prova_dal`, poi 5,90 €.
+  - Provato in Postgres 16 locale, eseguito due volte: artigiano iscritto da 20 giorni 0,00 €; iscritto da 120 giorni 5,90 €; senza stato 5,90 €; lavoro già confermato a 4,99 € resta 4,99 €.
+  - Si chiama app-30 perché i numeri da 27 a 29 sono già usati dai file non committati dell'altra sessione.
+- La prova nel database resta di 14 giorni (`prova_dal + 13`). Per dare il mese gratis, l'admin segna «attiva fino» a 30 giorni.
+- `js/artigiani.js`:
+  - testi e valori di esempio portati da 4,99 € a 5,90 €, con «gratis nei primi 3 mesi»;
+  - il costo 0 non viene più letto come 4,99: prima il codice faceva `fee || 4.99`.
+- Contratti (`js/contratti-modelli.js`, tutti e 5):
+  - A.1 esclude i contratti di luce, gas e telefonia offerti dalla Società;
+  - A.3(b) non elenca più luce, gas e telefonia;
+  - B.3 Utenze: «Su quest'area non spetta alcuna provvigione».
+- `regole/listino.html`:
+  - nuova tabella dell'artigiano;
+  - riga «Luce, gas e telefonia 0%»;
+  - il secondo esempio ora è un fornitore di materiali a 99 €/mese: alla rete 29,45 € al mese.
+- `regole/rete.html`, `regole/aziende.html` e `js/sala-demo.js` aggiornati con gli stessi testi.
+- `index.html`: nel commit solo `artigiani.js?v=4`, `sala-demo.js?v=11` e `contratti-modelli.js?v=4`.
+- File: quelli elencati sopra, più `CLAUDE.md`.
+
+### 12.10.2026 16:04 · Cursor — sopralluogo al cliente, passo 1 in locale (niente online)
+- Comando v3, solo anteprima su http://127.0.0.1:5500 (server nella cartella area-privata). SQL, funzioni, pubblicazione e push non toccati.
+- Computer (1366) e telefono (390): le pagine del cliente, la pagina dell'agente e i due dossier non scorrono di lato.
+- Cliente con `?demo=1`: «Anna, il tuo sopralluogo», conto alla rovescia (3 giorni), «Mi piace, preparate il preventivo». Con `&preventivo=1`: «Il tuo preventivo è pronto», 8222,00 €, dieci voci, «Accetto il preventivo». Con `&relazione=1`: relazione di tutta la casa di Giovanni, tre cursori «Confronta prima e dopo» (si spostano), la parola «simulazione» sei volte, «Scarica la relazione (PDF)».
+- Agente, Sopralluoghi assegnati: «Misure e casa · per il tecnico», «Fotografa la planimetria», «Video del giro della casa», «Leggi tutto con l'IA» (esempio: bagno 2,4 × 2,5 × 2,7), «Domande del tecnico», mail lucia@esempio.it, casella Urgente, «Invia al cliente per mail». In anteprima non parte nessuna mail.
+- Admin, dossier r9 (Giovanni, Aversa): si apre da solo con «Pubblica la relazione al cliente», «Crea il dopo» e «Metti le 8 voci nel computo».
+- Admin, dossier r2 (Lucia Bianco, bagno, urgente): si apre da solo. Il tasto dell'esempio si chiama «Prepara la relazione con l'IA». Poi «Metti le 1 voci nel computo» (avviso «Anteprima: 1 voci nel computo. Ora metti i prezzi.»). Doppio tocco su «Manda il preventivo al cliente»: prima «Confermi? Parte la mail al cliente · 8222,00 €», poi «Anteprima: il preventivo di 8222,00 € partirebbe a lucia@esempio.it.» Nessuna mail partita. Il tasto diventa «Manda di nuovo il preventivo aggiornato».
+- File: `CLAUDE.md`. Nessun altro file toccato in questo passo.
+
 ### 12.10.2026 16:10 · Claude — il 40% è tolto: alla rete sempre il 35%
 - Decisione di Nando del 12.10.2026, 16:02: «togliamo il 40, e rimaniamo il 35 fisso». Anche sui cantieri e sulle ristrutturazioni la rete prende il 35% dell'utile, calcolato secondo la sezione A.3. La ripartizione resta: chi segnala 10%, chi chiude 25%, chi segue 30%, chi ha portato l'impresa 10%, sviluppo 12%, capo area 8%, Rete Italia 5%.
 - Contratti online (`js/contratti-modelli.js`, tutti e 5): in A.2 il 40% diventa 35%. Nella nota finale: «dal 12 ottobre 2026 … 35% dell'utile (prima 40% del margine lordo)».
