@@ -29,6 +29,10 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 12.10.2026 14:30 · Claude — Sala demo: Impresa edile e Subappaltatore pronti (NON pubblicato)
+- `js/sala-demo.js` v=8: le schede «Impresa edile» (apre `imp_home`) e «Subappaltatore e impiantista» (apre `cnt_perme`) ora si aprono in vetrina. Prima erano «in arrivo».
+- Niente SQL. Commit `4c41ac1`.
+
 ### 12.10.2026 14:22 · Cursor — registro di app-25 allineato su GitHub
 - Il commit `3ccaa0e` porta la voce delle 14:10. Con lui è salito anche `02bbc49`. Push `d90622c..3ccaa0e`. main e origin/main sono uguali, cartella pulita.
 - File: `CLAUDE.md`.
