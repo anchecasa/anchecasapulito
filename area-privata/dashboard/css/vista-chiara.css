@@ -1,0 +1,113 @@
+/* «Vista A chiara» sul telefono per tutti i profili (privato, azienda/fornitori, rete, admin) · 12.10.2026
+   Decisa da Nando alle 19:34: stessa grafica dell'app della rete (area-privata/app/).
+   SOLO aspetto: nessun menu aggiunto, tolto o rinominato (le parti CONGELATE di js/app.js non si toccano).
+   Vale solo sotto i 980px: da computer la dashboard resta com'è. Va caricato per ultimo. */
+@media (max-width: 980px) {
+  :root {
+    --vc-n: #1a334f;
+    --vc-n2: #2c4a6e;
+    --vc-m: #566579;
+    --vc-a: #f07a1a;
+    --vc-a2: #bd580a;
+    --vc-f: #f4f6f9;
+    --vc-l: #e3e9f1;
+    --vc-sh: 0 1px 2px rgba(16, 32, 56, .05), 0 6px 20px rgba(16, 32, 56, .07);
+  }
+
+  html, body, .stage { background: var(--vc-f); }
+  body { font-family: Manrope, system-ui, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; }
+  button, input, select, textarea { font-family: inherit; }
+  .app-frame { background: var(--vc-f); }
+
+  /* Testata chiara: logo senza riquadro, saluto in una pillola bianca */
+  .side {
+    background: rgba(244, 246, 249, .92);
+    color: var(--vc-n);
+    -webkit-backdrop-filter: saturate(1.4) blur(10px);
+    backdrop-filter: saturate(1.4) blur(10px);
+  }
+  .side-sticky { padding: 10px 14px 6px max(14px, env(safe-area-inset-left, 0px)); }
+  .side-brand .mark { background: transparent; padding: 0; border-radius: 0; }
+  .side-brand .mark img { height: 32px; }
+  .side-brand a.mark:focus-visible { outline-color: var(--vc-a2); }
+  .acct-btn {
+    background: #fff;
+    color: var(--vc-n);
+    box-shadow: var(--vc-sh);
+    font-weight: 700;
+  }
+  .acct-btn > svg.ic { background: #fff0e1; color: var(--vc-a2); }
+
+  /* Pagina */
+  .main, .main.is-fit { background: var(--vc-f); padding-left: 16px; padding-right: 16px; padding-top: 6px; }
+  .topbar { margin-bottom: 14px; }
+  .topbar h1 { font-size: 24px; font-weight: 800; letter-spacing: -.02em; color: var(--vc-n); }
+  .topbar h1 .sub { color: var(--vc-m); }
+  .top-meta > span, .clock { display: none; }
+
+  /* Card e riquadri: angoli 20, ombra morbida a due livelli, niente bordi duri */
+  .card, .kpi, .ind {
+    border-radius: 20px;
+    box-shadow: var(--vc-sh);
+  }
+  .card { padding: 16px; }
+  .card h2 { color: var(--vc-a2); font-weight: 800; letter-spacing: .06em; font-size: 11px; }
+  .kpi strong { color: var(--vc-n); font-weight: 800; }
+  .kpi .ico, .ind .ico { border-radius: 14px; }
+
+  /* Bottoni */
+  .btn-new, .btn-in {
+    background: var(--vc-a2);
+    border-radius: 14px;
+    min-height: 44px;
+    font-weight: 800;
+    box-shadow: 0 6px 14px rgba(189, 88, 10, .22);
+  }
+  .btn-ghost {
+    border-radius: 14px;
+    min-height: 44px;
+    border-color: var(--vc-l);
+    color: var(--vc-n);
+    font-weight: 700;
+    box-shadow: var(--vc-sh);
+  }
+
+  /* Campi */
+  .toolbar input, .toolbar select, .field input, .field select, .field textarea,
+  .prefs input, .prefs select, .prefs textarea {
+    border-radius: 12px;
+    border-color: var(--vc-l);
+    font-size: 16px; /* niente zoom automatico su iPhone */
+  }
+
+  /* Barra in basso: bianca, attivo arancio con lineetta in alto */
+  .tabbar {
+    border-top: 0;
+    box-shadow: 0 -1px 0 var(--vc-l), 0 -6px 20px rgba(16, 32, 56, .06);
+  }
+  .tab-it { color: #7a8799; font-weight: 700; font-size: 11px; }
+  .tab-it.active { color: var(--vc-a2); }
+  .tab-it.active::before { background: var(--vc-a); left: 26%; right: 26%; }
+
+  /* Scheda «Altro» come foglio dal basso */
+  .altro:not([hidden]) { background: rgba(16, 32, 56, .35); }
+  .altro-panel { border-radius: 22px; padding: 8px; box-shadow: 0 12px 34px rgba(16, 32, 56, .28); }
+  .altro-sec { color: var(--vc-a2); font-weight: 800; letter-spacing: .06em; }
+  .altro-panel a { border-radius: 14px; color: var(--vc-n); font-weight: 600; }
+  .altro-panel a.active { background: #fff0e1; color: var(--vc-a2); font-weight: 800; }
+
+  .acct-menu { border-radius: 16px; box-shadow: 0 12px 34px rgba(16, 32, 56, .22); }
+  .toast { border-radius: 14px; }
+}
+
+/* 19:43 · Dentro l'app AncheCasa (/app/, ?inapp=1): la barra in alto, il menu e la barra in basso li fa l'app. */
+html.inapp .side,
+html.inapp .tabbar,
+html.inapp .altro,
+html.inapp .head-bar,
+html.inapp .dots { display: none !important; }
+html.inapp .stage { padding: 0; }
+html.inapp .app-frame { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); border-radius: 0; box-shadow: none; }
+html.inapp .main,
+html.inapp .main.is-fit { border-radius: 0; padding-top: 10px; padding-bottom: 28px; }
+html.inapp .toast { bottom: 16px; }

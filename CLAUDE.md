@@ -43,12 +43,34 @@ Sulla cartella e sul GitHub `anchecasa/anchecasapulito` lavorano tre persone o s
 
 | Chi | Cosa | File | Da |
 |---|---|---|---|
-| Nando + Cursor | Sopralluogo, dossier e relazione: prova vera. Già online, da committare. | `area-privata/sopralluogo.html`, `area-privata/js/sopralluogo.js`, `relazione.js`, `area-privata/css/sopralluogo.css`, `relazione.css`, `dashboard/js/sopralluogo-invio.js`, `dossier-tecnico.js`, `imprese.js`, `contratto-firma.js`, `app.js`, `index.html`, `app-anchecasa/sql/app-27/28/29` (da rinominare 31/32/33), funzioni `dossier-ia` e `sopralluogo-invito` | 12.10 |
 | Nando + Claude | SuperMastro: video diagnosi. Non pubblicato. | `supermastro-sos/`, `sito/vercel.json` | 12.10 |
-| Nando + Claude | Listino, provvigioni e contratti della rete: fatto (commit fac50af…f00d6be), manca il push. app-30 da eseguire con l'ok. | `dashboard/regole/listino.html`, `contratto.html`, `docs/*.pdf`, `js/contratti-modelli.js`, `testi-rete.js`, `artigiani.js`, `app-anchecasa/sql/app-30-artigiano-prezzi.sql` | 12.10 |
+| Nando + Claude | Listino, provvigioni e contratti della rete: i commit fac50af…f00d6be partono con questo invio su main. `app-30-artigiano-prezzi.sql` non è stato eseguito. | `dashboard/regole/listino.html`, `contratto.html`, `docs/*.pdf`, `js/contratti-modelli.js`, `testi-rete.js`, `artigiani.js`, `app-anchecasa/sql/app-30-artigiano-prezzi.sql` | 12.10 |
 | Francesco | (da scrivere da Francesco) | | |
 
 ## Registro delle modifiche
+
+### 12.10.2026 20:12 · Cursor — vista da telefono online per ogni profilo
+- Ok di Nando. La vista da telefono è su https://entra.anchecasa.it/app/ e su https://areaprivata.anchecasa.it/app/. Il computer, da 1400 px, resta sulla dashboard.
+- Confronto con il deployment precedente `dpl_2Syga92GewEiAntPGRK4cSquggML`: 133 file online, nessuno manca in locale.
+- Eseguito `app-anchecasa/sql/app-31-app-agente.sql` sul progetto `edsvmnxojsmknjuhobqa`. Controllo: c'è `marketplace.ristrutturazione_nuova_mia`.
+- Pubblicata l'area privata, progetto Vercel `area-privata-produzione`, deployment `dpl_GwTJkqMBNvfnG5p7E7Y5egbgcwHJ`, alias entra e areaprivata. Rispondono 200: `/app/`, `/app/app.js?v=2` (87700 byte), `/app/app.css`, `/dashboard/css/vista-chiara.css?v=2`, `/dashboard/js/cartina-italia.js`. Il manifest è `application/manifest+json`. `/app` senza slash risponde 307 verso `/app/`.
+- A 390 px, + arancio:
+  - privato: Bacheca, Guasto, Ristruttura, Richieste. Titolo «La mia bacheca».
+  - azienda: Home, Cantieri, Richieste, Lavori. Titolo «I lavori che ti affida AncheCasa».
+  - agente: Home, Clienti, Rete, Altro. «Mario, hai 1 sopralluogo aperto», 680 € questo mese. La barra resta questa anche dopo il caricamento della dashboard.
+  - admin: Home, Aziende, Pratiche, Rete. Titolo «Come sta andando».
+- A 1400 px, `/dashboard/?demo=admin` resta su `/dashboard/`, senza classe inapp. Menu: Home, Rete, Inviti, Fornitori, Aziende, Ristrutturazioni, Cantieri AncheCasa, Gare, Presentazione.
+- In `area-privata/app/app.js` la barra dell'agente verificato è Home, Clienti, Rete, Altro. Il foglio del + ha quattro voci: Sopralluogo Flash, Invita un cliente, Segnala una ristrutturazione, Porta una persona in rete.
+- File: `area-privata/app/`, `area-privata/vercel.json`, `area-privata/dashboard/index.html`, `area-privata/dashboard/css/vista-chiara.css`, `app-anchecasa/sql/app-31-app-agente.sql`, `CLAUDE.md`.
+
+### 12.10.2026 20:10 · Claude — comando per Cursor: pubblicazione di SuperMastro
+- Nando non vuole che Claude usi il computer: la pubblicazione la fa Cursor. Nuovo file `COMANDO-CURSOR-pubblica-supermastro.md` (chiavi, npm ci, prove, Worker, controllo online, poi sito; si ferma se un passo fallisce). Dopo, si passa a `COMANDO-CURSOR-supermastro-procione.md`.
+- File: `COMANDO-CURSOR-pubblica-supermastro.md`, `CLAUDE.md`.
+
+### 12.10.2026 20:05 · Claude — comando per Cursor: SuperMastro con il procione per chi cerca un guasto o un artigiano
+- Su richiesta di Nando. Nuovo file `COMANDO-CURSOR-supermastro-procione.md`: sito (menu, home, ricerca, vercel.json), area privata (Ho un guasto, Trova artigiano, voce «Cerca un artigiano» per azienda, fornitore, rete e admin) e app telefono (+ arancio) portano tutti all'app SuperMastro con il procione. Nessun codice cambiato in questo passo.
+- `PUBBLICA-SUPERMASTRO.bat` non risulta ancora lanciato (manca `supermastro-sos/pubblica-esito.txt`): il comando dice a Cursor di fermarsi finché l'app nuova non è online.
+- File: `COMANDO-CURSOR-supermastro-procione.md`, `CLAUDE.md`.
 
 ### 12.10.2026 17:25 · Claude — SuperMastro: migrazione eseguita, file di pubblicazione pronto
 - Ok di Nando per migrazione, app e sito.

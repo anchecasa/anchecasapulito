@@ -3,6 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1">
+  <!-- 12.10.2026 19:43 (Nando): dal telefono l'area privata si apre nell'app AncheCasa (/app/), per tutti i profili.
+       Dentro l'app la dashboard gira con ?inapp=1 (senza barra e menu suoi). «Versione per computer» nell'app la riapre intera. -->
+  <script>(function(){try{var d=document.documentElement,q=location.search;
+    if(/[?&]inapp=1/.test(q)){d.className+=" inapp";return;}
+    if(window.top!==window.self||!window.matchMedia("(max-width: 980px)").matches)return;
+    try{if(sessionStorage.getItem("ac-vista")==="computer")return;}catch(e){}
+    location.replace("../app/"+q+location.hash);}catch(e){}})();</script>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#1f4d7a">
@@ -25,6 +32,7 @@
   <link rel="stylesheet" href="css/home.css?v=1">
   <link rel="stylesheet" href="css/aspetto-dock.css?v=1">
   <link rel="stylesheet" href="css/testata.css?v=1">
+  <link rel="stylesheet" href="css/vista-chiara.css?v=2">
 </head>
 <body>
   <div class="stage">
@@ -81,7 +89,7 @@
   <script src="js/direzione.js?v=3"></script>
   <script src="js/testi-rete.js?v=3"></script>
   <script src="js/contratti-modelli.js?v=5"></script>
-  <script src="js/contratto-firma.js?v=1"></script>
+  <script src="js/contratto-firma.js?v=2"></script>
   <script src="js/contratti.js?v=3"></script>
   <script src="js/energia.js?v=3"></script>
   <script src="js/magazine-admin.js"></script>
@@ -95,8 +103,9 @@
   <script src="js/servizi.js?v=3"></script>
   <script src="js/preventivi.js?v=4"></script>
   <script src="js/artigiani.js?v=4"></script>
-  <script src="js/sopralluogo-invio.js?v=1"></script>
-  <script src="js/imprese.js?v=4"></script>
+  <script src="js/sopralluogo-invio.js?v=3"></script>
+  <script src="js/dossier-tecnico.js?v=2"></script>
+  <script src="js/imprese.js?v=5"></script>
   <script src="js/cantieri.js?v=3"></script>
   <script src="js/gare.js?v=1"></script>
   <script src="js/regole-admin.js?v=4"></script>
