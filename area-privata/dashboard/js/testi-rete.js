@@ -24,7 +24,7 @@ const RUOLI_TESTI = {
    [
     "Quota Rete Italia sui lavori",
     "5% della quota della rete su tutti i cantieri",
-    "200 € ogni 10.000 € di margine"
+    "175 € ogni 10.000 € di utile"
    ],
    [
     "Clienti tuoi",
@@ -64,7 +64,7 @@ const RUOLI_TESTI = {
    [
     "Quota sviluppo sui lavori",
     "12% della quota della rete sui cantieri della tua linea",
-    "480 € ogni 10.000 € di margine"
+    "420 € ogni 10.000 € di utile"
    ],
    [
     "Quando ti assegnano un'area",
@@ -104,12 +104,12 @@ const RUOLI_TESTI = {
    [
     "Quota capo area sui lavori",
     "8% della quota della rete sui cantieri",
-    "320 € ogni 10.000 € di margine"
+    "280 € ogni 10.000 € di utile"
    ],
    [
     "Lavori che chiudi o segui tu",
     "Chi chiude 25%, chi segue il cantiere 30% della quota della rete",
-    "1.000 € + 1.200 € ogni 10.000 € di margine"
+    "875 € + 1.050 € ogni 10.000 € di utile"
    ]
   ],
   "attenzione": [
@@ -149,7 +149,7 @@ const RUOLI_TESTI = {
    [
     "Lavori",
     "Segnali 10%, chiudi 25%, segui 30%, porti l'impresa 10% della quota della rete",
-    "fino a 3.000 € ogni 10.000 € di margine"
+    "fino a 2.625 € ogni 10.000 € di utile"
    ]
   ],
   "attenzione": [
@@ -178,7 +178,7 @@ const RUOLI_TESTI = {
    [
     "Lavori",
     "Le quote di ruolo dei lavori, divise 70% a te e 30% al tuo agente",
-    "per esempio 280 € se segnali un lavoro con 10.000 € di margine"
+    "per esempio 245 € se segnali un lavoro con 10.000 € di utile"
    ]
   ],
   "attenzione": [

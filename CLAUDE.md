@@ -29,6 +29,26 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 12.10.2026 16:10 · Claude — il 40% è tolto: alla rete sempre il 35%
+- Decisione di Nando del 12.10.2026, 16:02: «togliamo il 40, e rimaniamo il 35 fisso». Anche sui cantieri e sulle ristrutturazioni la rete prende il 35% dell'utile, calcolato secondo la sezione A.3. La ripartizione resta: chi segnala 10%, chi chiude 25%, chi segue 30%, chi ha portato l'impresa 10%, sviluppo 12%, capo area 8%, Rete Italia 5%.
+- Contratti online (`js/contratti-modelli.js`, tutti e 5): in A.2 il 40% diventa 35%. Nella nota finale: «dal 12 ottobre 2026 … 35% dell'utile (prima 40% del margine lordo)».
+- Esempi per ruolo (`js/testi-rete.js`), calcolati su 10.000 € di utile:
+
+  | Ruolo | Prima | Ora |
+  |---|---|---|
+  | Rete Italia | 200 € | 175 € |
+  | Sviluppo | 480 € | 420 € |
+  | Capo area | 320 € | 280 € |
+  | Chi chiude + chi segue | 1.000 + 1.200 € | 875 + 1.050 € |
+  | Agente, fino a | 3.000 € | 2.625 € |
+  | Sub-agente che segnala | 280 € | 245 € |
+
+- `js/direzione.js`: la nota delle ristrutturazioni dice «35% dell'utile del cantiere». `js/contratti.js`: gli esempi sono «su 10.000 € di utile».
+- `regole/listino.html`: cantieri al 35%. Nell'esempio da 40.000 € vanno 2.660 € alla rete e restano 4.940 € ad AncheCasa; chi fa tutto da solo prende 1.729 €. `regole/rete.html`: «sempre 35%, su tutto».
+- `index.html`: nel commit solo le versioni `direzione.js?v=3`, `testi-rete.js?v=3`, `contratti.js?v=3`, `contratti-modelli.js?v=3`. Le modifiche dell'altra sessione restano fuori.
+- `app-anchecasa/js/testi-rete.js` (app) non toccato: ha ancora gli esempi vecchi.
+- Niente SQL.
+
 ### 12.10.2026 16:20 · Claude — listino e provvigioni della rete sull'utile
 - Decisioni di Nando del 12.10.2026, 15:56. La rete prende il 35% dell'utile di AncheCasa su tutti i servizi, anche sui rinnovi e per sempre. Sui cantieri prende il 40% dell'utile. L'utile si calcola così:
   - software (abbonamenti, moduli, costo per lavoro, sponsor): incassato senza IVA, meno le commissioni di pagamento, meno il 25% per i costi del software;

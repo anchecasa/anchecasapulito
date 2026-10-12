@@ -476,7 +476,7 @@
       </div>
       ${tr.length ? html`<h2 class="rp-nome-h" style="margin-top:16px">Le tranche</h2>${trancheH}` : (a.stato === "proposta" ? html`<p class="note">Quando AncheCasa firma il contratto con il cliente, qui compaiono le tre tranche: 30% firma e acconto, 30% metà lavori, 40% collaudo.</p>` : "")}
       ${prov.length ? html`<h2 class="rp-nome-h" style="margin-top:16px">Provvigioni del lavoro</h2>${prov.map((p) => html`<p class="note">${euro(p.importo)} · ${nome(p.beneficiario)} · ${RUOLI_PROV[p.ruolo] || p.ruolo} · lavoro, tranche ${p.tranche}</p>`)}` : ""}
-      <p class="note">Alla rete va il 40% del margine: chi segnala 10%, chi chiude 25%, chi segue il cantiere 30%, chi ha portato l'impresa 10%, sviluppo rete 12%, capo area 8%, Rete Italia 5%. Maturano solo sull'incassato.</p>
+      <p class="note">Alla rete va il 35% dell'utile del cantiere: chi segnala 10%, chi chiude 25%, chi segue il cantiere 30%, chi ha portato l'impresa 10%, sviluppo rete 12%, capo area 8%, Rete Italia 5%. Maturano solo sull'incassato.</p>
       ${(a.stato === "proposta" || a.stato === "firmato") ? html`<form id="dir-firma" class="card" style="margin-top:12px" novalidate>
         <h2 class="rp-nome-h">${a.stato === "proposta" ? "Firma il lavoro" : "Correggi ruoli e margine"}</h2>
         <div class="fields">

@@ -108,7 +108,7 @@
         <tr><td>Responsabile Rete Italia</td><td>5%</td><td>Non spettante (Responsabile Rete Italia)</td></tr>
       </tbody></table></div>
     <p>Cliente segnalato da un terzo: a chi chiude il 45% e a chi segnala il 25% della quota della rete.</p>
-    <p>A.2 Cantieri e subappalti. Alla rete è destinato il 40% dell'utile di ciascun cantiere ovvero, nei subappalti, della quota spettante alla Società, calcolati come indicato alla sezione A.3, ripartito come segue.</p>
+    <p>A.2 Cantieri e subappalti. Alla rete è destinato il 35% dell'utile di ciascun cantiere ovvero, nei subappalti, della quota spettante alla Società, calcolati come indicato alla sezione A.3, ripartito come segue.</p>
     <div class="tab"><table>
       <thead><tr><th>Ruolo</th><th>Quota della rete</th><th>Spettanza</th></tr></thead>
       <tbody>
@@ -122,7 +122,7 @@
       </tbody></table></div>
     <p>A.3 Come si calcola l'utile. (a) Software (abbonamenti e moduli delle app AncheCasa, commissioni per lavoro, sponsorizzazioni): importo incassato al netto dell'IVA, meno le commissioni di pagamento sostenute, meno una quota fissa per i costi del software (sviluppo, server, assistenza) pari al 25% dell'importo incassato al netto dell'IVA. (b) Tutti gli altri servizi (luce e gas, telefonia, fornitori, finanza e assicurazioni, servizi per la casa e ogni altro servizio presente o futuro): compenso incassato dalla Società al netto dell'IVA, meno una quota fissa per i costi di gestione pari al 15% del compenso incassato al netto dell'IVA. (c) Cantieri: importo incassato dal cliente al netto dell'IVA, meno i costi diretti del cantiere (imprese e subappalti, materiali e forniture, oneri della sicurezza, spese tecniche e pratiche); le spese generali della Società non si sottraggono. Nei subappalti l'utile è la quota spettante alla Società, al netto dell'IVA. Le quote del 25% e del 15% restano invariate per tutta la durata del contratto, salvo accordo scritto.</p>
     <p class="fine">Le quote si applicano nei limiti delle regole di maturazione (incasso e tranche). L'utile è determinato secondo la sezione A.3.</p>
-    <p class="fine">Quote in vigore dal 9 ottobre 2026, con l'introduzione del Responsabile Rete Italia: rendite 70% chi porta il cliente, 17% sviluppo rete, 8% capo area, 5% Responsabile Rete Italia; cantieri 10% chi segnala, 25% chi chiude, 30% chi segue, 10% chi ha portato l'impresa, 12% sviluppo rete, 8% capo area, 5% Responsabile Rete Italia. Calcolo dell'utile (sezione A.3) in vigore dal 12 ottobre 2026.</p>
+    <p class="fine">Quote in vigore dal 9 ottobre 2026, con l'introduzione del Responsabile Rete Italia: rendite 70% chi porta il cliente, 17% sviluppo rete, 8% capo area, 5% Responsabile Rete Italia; cantieri 10% chi segnala, 25% chi chiude, 30% chi segue, 10% chi ha portato l'impresa, 12% sviluppo rete, 8% capo area, 5% Responsabile Rete Italia. Dal 12 ottobre 2026 la quota della rete sui cantieri è il 35% dell'utile (prima 40% del margine lordo) e l'utile si calcola secondo la sezione A.3.</p>
 
     <h2>ALLEGATO B – SERVIZI ANCHECASA</h2>
     <p>Sono Servizi AncheCasa tutti i prodotti e servizi offerti dalla Società, direttamente o tramite aziende partner, presenti e futuri. L'elenco che segue è esemplificativo e non esaustivo; il listino aggiornato è sempre consultabile nella dashboard AncheCasa.</p>
@@ -270,7 +270,7 @@
         <tr><td>Responsabile Rete Italia</td><td>5%</td><td>No</td><td>No</td></tr>
       </tbody></table></div>
 <p>Cliente segnalato da un terzo: a chi chiude il 45% e a chi segnala il 25% della quota della rete.</p>
-<p>A.2 Cantieri e subappalti. Alla rete è destinato il 40% dell'utile di ciascun cantiere ovvero, nei subappalti, della quota spettante alla Società, calcolati come indicato alla sezione A.3, ripartito come segue.</p>
+<p>A.2 Cantieri e subappalti. Alla rete è destinato il 35% dell'utile di ciascun cantiere ovvero, nei subappalti, della quota spettante alla Società, calcolati come indicato alla sezione A.3, ripartito come segue.</p>
 <div class="tab"><table>
       <thead><tr><th>Ruolo</th><th>Quota della rete</th><th>Periodo di avvio</th><th>Dall'assegnazione dell'area</th></tr></thead>
       <tbody>
@@ -284,7 +284,7 @@
       </tbody></table></div>
 <p>A.3 Come si calcola l'utile. (a) Software (abbonamenti e moduli delle app AncheCasa, commissioni per lavoro, sponsorizzazioni): importo incassato al netto dell'IVA, meno le commissioni di pagamento sostenute, meno una quota fissa per i costi del software (sviluppo, server, assistenza) pari al 25% dell'importo incassato al netto dell'IVA. (b) Tutti gli altri servizi (luce e gas, telefonia, fornitori, finanza e assicurazioni, servizi per la casa e ogni altro servizio presente o futuro): compenso incassato dalla Società al netto dell'IVA, meno una quota fissa per i costi di gestione pari al 15% del compenso incassato al netto dell'IVA. (c) Cantieri: importo incassato dal cliente al netto dell'IVA, meno i costi diretti del cantiere (imprese e subappalti, materiali e forniture, oneri della sicurezza, spese tecniche e pratiche); le spese generali della Società non si sottraggono. Nei subappalti l'utile è la quota spettante alla Società, al netto dell'IVA. Le quote del 25% e del 15% restano invariate per tutta la durata del contratto, salvo accordo scritto.</p>
 <p class="fine">Le quote si applicano nei limiti dell'art. 5 (maturazione all'incasso e per tranche) e dell'Allegato C (attribuzione dei clienti, clienti affidati, privati). L'utile è determinato secondo la sezione A.3.</p>
-<p class="fine">Quote in vigore dal 9 ottobre 2026, con l'introduzione del Responsabile Rete Italia: rendite 70% chi porta il cliente, 17% sviluppo rete, 8% capo area, 5% Responsabile Rete Italia; cantieri 10% chi segnala, 25% chi chiude, 30% chi segue, 10% chi ha portato l'impresa, 12% sviluppo rete, 8% capo area, 5% Responsabile Rete Italia. Calcolo dell'utile (sezione A.3) in vigore dal 12 ottobre 2026.</p>
+<p class="fine">Quote in vigore dal 9 ottobre 2026, con l'introduzione del Responsabile Rete Italia: rendite 70% chi porta il cliente, 17% sviluppo rete, 8% capo area, 5% Responsabile Rete Italia; cantieri 10% chi segnala, 25% chi chiude, 30% chi segue, 10% chi ha portato l'impresa, 12% sviluppo rete, 8% capo area, 5% Responsabile Rete Italia. Dal 12 ottobre 2026 la quota della rete sui cantieri è il 35% dell'utile (prima 40% del margine lordo) e l'utile si calcola secondo la sezione A.3.</p>
 <h2>ALLEGATO B – SERVIZI ANCHECASA</h2>
     <p>Sono Servizi AncheCasa tutti i prodotti e servizi offerti dalla Società, direttamente o tramite aziende partner, presenti e futuri. L'elenco che segue è esemplificativo e non esaustivo; il listino aggiornato è sempre consultabile nella dashboard AncheCasa.</p>
     <div class="tab"><table>
@@ -417,7 +417,7 @@
         <tr><td>Responsabile Rete Italia</td><td>5%</td><td>Non spettante (Responsabile Rete Italia)</td></tr>
       </tbody></table></div>
 <p>Cliente segnalato da un terzo: a chi chiude il 45% e a chi segnala il 25% della quota della rete.</p>
-<p>A.2 Cantieri e subappalti. Alla rete è destinato il 40% dell'utile di ciascun cantiere ovvero, nei subappalti, della quota spettante alla Società, calcolati come indicato alla sezione A.3, ripartito come segue.</p>
+<p>A.2 Cantieri e subappalti. Alla rete è destinato il 35% dell'utile di ciascun cantiere ovvero, nei subappalti, della quota spettante alla Società, calcolati come indicato alla sezione A.3, ripartito come segue.</p>
 <div class="tab"><table>
       <thead><tr><th>Ruolo</th><th>Quota della rete</th><th>Spettanza</th></tr></thead>
       <tbody>
@@ -431,7 +431,7 @@
       </tbody></table></div>
 <p>A.3 Come si calcola l'utile. (a) Software (abbonamenti e moduli delle app AncheCasa, commissioni per lavoro, sponsorizzazioni): importo incassato al netto dell'IVA, meno le commissioni di pagamento sostenute, meno una quota fissa per i costi del software (sviluppo, server, assistenza) pari al 25% dell'importo incassato al netto dell'IVA. (b) Tutti gli altri servizi (luce e gas, telefonia, fornitori, finanza e assicurazioni, servizi per la casa e ogni altro servizio presente o futuro): compenso incassato dalla Società al netto dell'IVA, meno una quota fissa per i costi di gestione pari al 15% del compenso incassato al netto dell'IVA. (c) Cantieri: importo incassato dal cliente al netto dell'IVA, meno i costi diretti del cantiere (imprese e subappalti, materiali e forniture, oneri della sicurezza, spese tecniche e pratiche); le spese generali della Società non si sottraggono. Nei subappalti l'utile è la quota spettante alla Società, al netto dell'IVA. Le quote del 25% e del 15% restano invariate per tutta la durata del contratto, salvo accordo scritto.</p>
 <p class="fine">Le quote si applicano nei limiti delle regole di maturazione (incasso e tranche). L'utile è determinato secondo la sezione A.3.</p>
-<p class="fine">Quote in vigore dal 9 ottobre 2026, con l'introduzione del Responsabile Rete Italia: rendite 70% chi porta il cliente, 17% sviluppo rete, 8% capo area, 5% Responsabile Rete Italia; cantieri 10% chi segnala, 25% chi chiude, 30% chi segue, 10% chi ha portato l'impresa, 12% sviluppo rete, 8% capo area, 5% Responsabile Rete Italia. Calcolo dell'utile (sezione A.3) in vigore dal 12 ottobre 2026.</p>
+<p class="fine">Quote in vigore dal 9 ottobre 2026, con l'introduzione del Responsabile Rete Italia: rendite 70% chi porta il cliente, 17% sviluppo rete, 8% capo area, 5% Responsabile Rete Italia; cantieri 10% chi segnala, 25% chi chiude, 30% chi segue, 10% chi ha portato l'impresa, 12% sviluppo rete, 8% capo area, 5% Responsabile Rete Italia. Dal 12 ottobre 2026 la quota della rete sui cantieri è il 35% dell'utile (prima 40% del margine lordo) e l'utile si calcola secondo la sezione A.3.</p>
 <h2>ALLEGATO B – SERVIZI ANCHECASA</h2>
     <p>Sono Servizi AncheCasa tutti i prodotti e servizi offerti dalla Società, direttamente o tramite aziende partner, presenti e futuri. L'elenco che segue è esemplificativo e non esaustivo; il listino aggiornato è sempre consultabile nella dashboard AncheCasa.</p>
     <div class="tab"><table>
@@ -566,7 +566,7 @@
         <tr><td>Responsabile Rete Italia</td><td>5%</td><td>Non spettante</td></tr>
       </tbody></table></div>
 <p>Cliente segnalato da un terzo: a chi chiude il 45% e a chi segnala il 25% della quota della rete.</p>
-<p>A.2 Cantieri e subappalti. Alla rete è destinato il 40% dell'utile di ciascun cantiere ovvero, nei subappalti, della quota spettante alla Società, calcolati come indicato alla sezione A.3, ripartito come segue.</p>
+<p>A.2 Cantieri e subappalti. Alla rete è destinato il 35% dell'utile di ciascun cantiere ovvero, nei subappalti, della quota spettante alla Società, calcolati come indicato alla sezione A.3, ripartito come segue.</p>
 <div class="tab"><table>
       <thead><tr><th>Ruolo</th><th>Quota della rete</th><th>Spettanza</th></tr></thead>
       <tbody>
@@ -580,7 +580,7 @@
       </tbody></table></div>
 <p>A.3 Come si calcola l'utile. (a) Software (abbonamenti e moduli delle app AncheCasa, commissioni per lavoro, sponsorizzazioni): importo incassato al netto dell'IVA, meno le commissioni di pagamento sostenute, meno una quota fissa per i costi del software (sviluppo, server, assistenza) pari al 25% dell'importo incassato al netto dell'IVA. (b) Tutti gli altri servizi (luce e gas, telefonia, fornitori, finanza e assicurazioni, servizi per la casa e ogni altro servizio presente o futuro): compenso incassato dalla Società al netto dell'IVA, meno una quota fissa per i costi di gestione pari al 15% del compenso incassato al netto dell'IVA. (c) Cantieri: importo incassato dal cliente al netto dell'IVA, meno i costi diretti del cantiere (imprese e subappalti, materiali e forniture, oneri della sicurezza, spese tecniche e pratiche); le spese generali della Società non si sottraggono. Nei subappalti l'utile è la quota spettante alla Società, al netto dell'IVA. Le quote del 25% e del 15% restano invariate per tutta la durata del contratto, salvo accordo scritto.</p>
 <p class="fine">Le quote si applicano nei limiti delle regole di maturazione (incasso e tranche). L'utile è determinato secondo la sezione A.3.</p>
-<p class="fine">Quote in vigore dal 9 ottobre 2026, con l'introduzione del Responsabile Rete Italia: rendite 70% chi porta il cliente, 17% sviluppo rete, 8% capo area, 5% Responsabile Rete Italia; cantieri 10% chi segnala, 25% chi chiude, 30% chi segue, 10% chi ha portato l'impresa, 12% sviluppo rete, 8% capo area, 5% Responsabile Rete Italia. Calcolo dell'utile (sezione A.3) in vigore dal 12 ottobre 2026.</p>
+<p class="fine">Quote in vigore dal 9 ottobre 2026, con l'introduzione del Responsabile Rete Italia: rendite 70% chi porta il cliente, 17% sviluppo rete, 8% capo area, 5% Responsabile Rete Italia; cantieri 10% chi segnala, 25% chi chiude, 30% chi segue, 10% chi ha portato l'impresa, 12% sviluppo rete, 8% capo area, 5% Responsabile Rete Italia. Dal 12 ottobre 2026 la quota della rete sui cantieri è il 35% dell'utile (prima 40% del margine lordo) e l'utile si calcola secondo la sezione A.3.</p>
 <h2>ALLEGATO B – SERVIZI ANCHECASA</h2>
     <p>Sono Servizi AncheCasa tutti i prodotti e servizi offerti dalla Società, direttamente o tramite aziende partner, presenti e futuri. L'elenco che segue è esemplificativo e non esaustivo; il listino aggiornato è sempre consultabile nella dashboard AncheCasa.</p>
     <div class="tab"><table>
@@ -713,7 +713,7 @@
         <tr><td>Responsabile Rete Italia</td><td>5%</td><td>Su tutti gli affari del territorio nazionale</td></tr>
       </tbody></table></div>
 <p>Cliente segnalato da un terzo: a chi chiude il 45% e a chi segnala il 25% della quota della rete.</p>
-<p>A.2 Cantieri e subappalti. Alla rete è destinato il 40% dell'utile di ciascun cantiere ovvero, nei subappalti, della quota spettante alla Società, calcolati come indicato alla sezione A.3, ripartito come segue.</p>
+<p>A.2 Cantieri e subappalti. Alla rete è destinato il 35% dell'utile di ciascun cantiere ovvero, nei subappalti, della quota spettante alla Società, calcolati come indicato alla sezione A.3, ripartito come segue.</p>
 <div class="tab"><table>
       <thead><tr><th>Ruolo</th><th>Quota della rete</th><th>Spettanza</th></tr></thead>
       <tbody>
@@ -727,7 +727,7 @@
       </tbody></table></div>
 <p>A.3 Come si calcola l'utile. (a) Software (abbonamenti e moduli delle app AncheCasa, commissioni per lavoro, sponsorizzazioni): importo incassato al netto dell'IVA, meno le commissioni di pagamento sostenute, meno una quota fissa per i costi del software (sviluppo, server, assistenza) pari al 25% dell'importo incassato al netto dell'IVA. (b) Tutti gli altri servizi (luce e gas, telefonia, fornitori, finanza e assicurazioni, servizi per la casa e ogni altro servizio presente o futuro): compenso incassato dalla Società al netto dell'IVA, meno una quota fissa per i costi di gestione pari al 15% del compenso incassato al netto dell'IVA. (c) Cantieri: importo incassato dal cliente al netto dell'IVA, meno i costi diretti del cantiere (imprese e subappalti, materiali e forniture, oneri della sicurezza, spese tecniche e pratiche); le spese generali della Società non si sottraggono. Nei subappalti l'utile è la quota spettante alla Società, al netto dell'IVA. Le quote del 25% e del 15% restano invariate per tutta la durata del contratto, salvo accordo scritto.</p>
 <p class="fine">Le quote si applicano nei limiti delle regole di maturazione (incasso e tranche). L'utile è determinato secondo la sezione A.3.</p>
-<p class="fine">Quote in vigore dal 9 ottobre 2026, con l'introduzione del Responsabile Rete Italia: rendite 70% chi porta il cliente, 17% sviluppo rete, 8% capo area, 5% Responsabile Rete Italia; cantieri 10% chi segnala, 25% chi chiude, 30% chi segue, 10% chi ha portato l'impresa, 12% sviluppo rete, 8% capo area, 5% Responsabile Rete Italia. Calcolo dell'utile (sezione A.3) in vigore dal 12 ottobre 2026.</p>
+<p class="fine">Quote in vigore dal 9 ottobre 2026, con l'introduzione del Responsabile Rete Italia: rendite 70% chi porta il cliente, 17% sviluppo rete, 8% capo area, 5% Responsabile Rete Italia; cantieri 10% chi segnala, 25% chi chiude, 30% chi segue, 10% chi ha portato l'impresa, 12% sviluppo rete, 8% capo area, 5% Responsabile Rete Italia. Dal 12 ottobre 2026 la quota della rete sui cantieri è il 35% dell'utile (prima 40% del margine lordo) e l'utile si calcola secondo la sezione A.3.</p>
 <h2>ALLEGATO B – SERVIZI ANCHECASA</h2>
     <p>Sono Servizi AncheCasa tutti i prodotti e servizi offerti dalla Società, direttamente o tramite aziende partner, presenti e futuri. L'elenco che segue è esemplificativo e non esaustivo; il listino aggiornato è sempre consultabile nella dashboard AncheCasa.</p>
     <div class="tab"><table>

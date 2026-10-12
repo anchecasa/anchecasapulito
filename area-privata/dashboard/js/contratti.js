@@ -460,7 +460,7 @@
       <div class="card"><ul class="doc-fai">${(r.fai || []).map((x) => html`<li>${x}</li>`)}</ul></div>
       <h2 class="rp-nome-h">Come guadagni</h2>
       ${(r.guadagni || []).map(([t, q, e]) => html`<div class="card" style="margin-top:8px"><b>${t}</b><p>${q}</p>${e ? html`<p class="note">Esempio: ${e}</p>` : ""}</div>`)}
-      <p class="note">Esempi su 100 € di utile AncheCasa (servizi) e 10.000 € di margine (lavori): numeri di esempio, non promesse. Sui lavori le provvigioni maturano a tranche quando AncheCasa incassa: 30% firma, 30% metà lavori, 40% collaudo.</p>
+      <p class="note">Esempi su 100 € di utile AncheCasa (servizi) e 10.000 € di utile (lavori): numeri di esempio, non promesse. Sui lavori le provvigioni maturano a tranche quando AncheCasa incassa: 30% firma, 30% metà lavori, 40% collaudo.</p>
       ${c ? html`<h2 class="rp-nome-h">Fai un conto (esempio)</h2><div class="card"><div class="doc-due"><label>${c.label} <input id="conto-n" type="number" min="0" step="1" value="10"></label><label>Utile AncheCasa al mese per azienda (€) <input id="conto-u" type="number" min="0" step="1" value="30"></label></div><p>Ogni mese: <b id="conto-r">–</b></p><p class="note">${c.nota}. L'utile per azienda dipende dai servizi venduti: il numero qui è solo un esempio da cambiare.</p></div>` : ""}
       <h2 class="rp-nome-h">Attenzione</h2>
       ${(r.attenzione || []).map((x) => html`<div class="card" style="margin-top:8px"><p>${x}</p></div>`)}
