@@ -137,18 +137,6 @@ Livelli: Responsabile Rete Italia → Sviluppo rete (Nord, Centro, Sud e isole) 
 - **Sopralluogo Flash:** lo usano tutti, admin compreso.
 - **Admin:** oltre alla catena, una **cartina dell'Italia** con la posizione della rete e dei clienti, con le percentuali.
 
-### Decisioni di Nando · secondo giro (12.10.2026, 08:30)
-
-- **Il proprio responsabile:** sub-agente → agente; agente → capo area; capo area → sviluppo rete; sviluppo rete → Responsabile Rete Italia.
-- **Ristrutturazioni:** il responsabile decide se il lavoro si prende e chi fa il sopralluogo; poi passa all'admin per preventivo e firma. L'admin può **delegare** un lavoro a qualcuno.
-- **Quote sui lavori** (oggi 70 chi porta, 17 sviluppo, 8 capo area, 5 Rete Italia; sub-agente 70/30 con l'agente): **da rivedere**.
-- **Cartina:** più percentuali insieme; serve all'admin per capire cosa succede e chi gestisce bene. La vedono tutti, ognuno per la sua parte (capo area la regione, sviluppo l'area, Rete Italia l'Italia).
-- **Zona:** si assegna nell'invito. Chi sta sotto chi lo decide la zona.
-- **Commerciali:** invitano privati e aziende direttamente; il cliente è loro.
-- **Il cliente è di chi lo registra, per sempre** (azienda e privato). L'admin può intervenire e chiedere perché un cliente non fa niente.
-- **Fermo:** nessuna vendita da 30 giorni.
-- **Contratto:** finché non è firmato, la dashboard del commerciale è in sola lettura.
-
 ### Decisioni di Nando · seconda parte (12.10.2026, 08:31)
 
 - **Ristrutturazioni:** il responsabile è quello diretto (sub-agente → agente → capo area → sviluppo rete → Rete Italia). Il responsabile decide se si prende il lavoro e chi fa il sopralluogo, poi passa all'admin per preventivo e firma. **L'admin può delegare** quel lavoro a qualcuno.
