@@ -612,7 +612,7 @@
           admin.nome = p.data.nome || nomeUtente(user);
           S.usaUtente(user.id, admin.nome);
           // Profilo reale da Supabase; per l'azienda anche i luoghi (sedi, cantieri...).
-          const luoghi = p.data.famiglia === "azienda"
+          const luoghi = admin.tipo === "azienda"
             ? conTimeout(window.acDb.from("luoghi").select("*").eq("azienda_id", user.id).order("created_at"), 25000)
             : Promise.resolve({ data: null });
           return luoghi.then((l) => {
@@ -634,7 +634,7 @@
               const chiave = "ac-primo-ingresso:" + user.id;
               if (S.data.profilo.livello !== "apro" && !localStorage.getItem(chiave)) {
                 localStorage.setItem(chiave, "1");
-                history.replaceState(null, "", "#/" + p.data.famiglia + "/profilo");
+                history.replaceState(null, "", "#/" + admin.tipo + "/profilo");
               }
             } catch (e) {}
             // Annunci veri: se il caricamento fallisce non blocca l'ingresso (si riprova aprendo Pubblica).

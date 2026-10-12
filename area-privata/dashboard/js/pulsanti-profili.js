@@ -4,7 +4,8 @@
    Le scelte stanno in marketplace.app_impostazioni, chiave «pulsanti_profili»
    (tutti gli iscritti leggono, solo l'admin scrive: regole già sul database, app-02).
    Forma: { profili: { "<profilo>": { voci: { "<id pulsante>": "gratis" | "pagamento" }, salvato, da } } }
-   Un pulsante che non c'è nell'elenco è nascosto. Un profilo mai salvato non vede nessun pulsante.
+   Un pulsante che non c'è nell'elenco è nascosto. Un profilo mai salvato non vede nessun pulsante,
+   tranne (12.10.2026, deciso da Nando): Privato, Rete, Azienda e Fornitori finché non li salvi vedono tutti i loro pulsanti, gratis.
    Restano sempre: Bacheca (dal logo), Profilo, Impostazioni, Esci. L'admin non è toccato.
    Anteprima locale (?demo=…): le scelte stanno nel browser, non sul database. */
 (function () {
@@ -29,6 +30,9 @@
 
   let config = { profili: {} };
   let caricato = false;
+  let letto = false; // true solo se la lettura delle scelte è riuscita (anche se vuote)
+  // 12.10.2026, deciso da Nando: Privato, i 5 ruoli Rete, Azienda e Fornitori al primo accesso vedono tutti i loro pulsanti.
+  const TUTTI_AL_PRIMO = (k) => k === "privato" || /^(agente|azienda):/.test(k || "");
 
   function pulisci(v) {
     const out = { profili: {} };
@@ -48,7 +52,7 @@
 
   function locale() {
     try { config = pulisci(JSON.parse(localStorage.getItem(LOCALE) || "{}")); } catch (e) { config = { profili: {} }; }
-    caricato = true;
+    caricato = true; letto = true;
     return config;
   }
   function daDb() {
@@ -64,7 +68,7 @@
       return window.acDb.auth.getSession().then((r) => {
         if (!(r && r.data && r.data.session)) return locale();
         return daDb().then((res) => {
-          if (res && !res.error && res.data) { config = pulisci(res.data.valore); caricato = true; return config; }
+          if (res && !res.error && res.data) { config = pulisci(res.data.valore); caricato = true; letto = true; return config; }
           return locale();
         }, () => locale());
       }, () => locale());
@@ -74,6 +78,7 @@
       .then((res) => {
         // Se la lettura non riesce, nessun pulsante: meglio vuoto che tutto aperto.
         config = res && !res.error && res.data ? pulisci(res.data.valore) : { profili: {} };
+        letto = !!(res && !res.error);
         caricato = true;
         return config;
       }, () => { config = { profili: {} }; caricato = true; return config; });
@@ -99,7 +104,8 @@
   function stato(profilo, id) {
     if (VETRINA) return "gratis";
     const p = config.profili[profilo];
-    return (p && p.voci[id]) || "";
+    if (!p) return letto && TUTTI_AL_PRIMO(profilo) ? "gratis" : "";
+    return p.voci[id] || "";
   }
 
   AC.pulsanti = { carica, stato, caricato: () => caricato, vetrina: VETRINA };
@@ -139,8 +145,9 @@
       const prof = profili.find((p) => p.k === scelto);
       const lista = AC.catalogoPulsanti(prof);
       const salvato = config.profili[scelto];
-      if (!bozza) bozza = Object.assign({}, (salvato && salvato.voci) || {});
-      const modificato = JSON.stringify(bozza) !== JSON.stringify((salvato && salvato.voci) || {});
+      const iniziali = salvato ? salvato.voci : TUTTI_AL_PRIMO(scelto) ? Object.fromEntries(lista.map((it) => [it.id, "gratis"])) : {};
+      if (!bozza) bozza = Object.assign({}, iniziali);
+      const modificato = JSON.stringify(bozza) !== JSON.stringify(iniziali);
       const c = conta(bozza, lista);
 
       const gruppi = [];
@@ -162,7 +169,7 @@
               const sv = config.profili[p.k];
               const n = sv ? Object.keys(sv.voci).length : 0;
               return html`<button type="button" class="pp-prof${p.k === scelto ? " on" : ""}" data-prof="${p.k}">
-                <b>${p.nome}</b><small>${sv ? n + " pulsanti visibili" : "Mai salvato: vede solo la bacheca"}</small>
+                <b>${p.nome}</b><small>${sv ? n + " pulsanti visibili" : TUTTI_AL_PRIMO(p.k) ? "Mai salvato: vede tutti i pulsanti" : "Mai salvato: vede solo la bacheca"}</small>
               </button>`;
             })}
           </aside>
@@ -170,7 +177,7 @@
             <div class="pp-testa">
               <div>
                 <h2>${prof.nome}</h2>
-                <p class="note">${salvato ? "Salvato il " + dataOra(salvato.salvato) + (salvato.da ? " da " + salvato.da : "") : "Non ancora salvato: oggi questo profilo non vede nessun pulsante."}</p>
+                <p class="note">${salvato ? "Salvato il " + dataOra(salvato.salvato) + (salvato.da ? " da " + salvato.da : "") : TUTTI_AL_PRIMO(scelto) ? "Non ancora salvato: oggi questo profilo vede tutti i suoi pulsanti, gratis. Quando salvi, conta la tua scelta." : "Non ancora salvato: oggi questo profilo non vede nessun pulsante."}</p>
               </div>
               <div class="pp-conti">
                 ${prof.famiglia === "privato" || prof.famiglia === "agente" || prof.k === "azienda:impresa"

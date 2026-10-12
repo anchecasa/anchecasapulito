@@ -29,6 +29,32 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 12.10.2026 09:42 · Cursor — area privata: profili mai salvati vedono i pulsanti
+- Ok di Nando del 12.10.2026, ore 09:38. Pubblicata solo la cartella `area-privata` sul progetto Vercel `area-privata-produzione`, deployment `dpl_2aWKwDE3wcJbszzzzMguG1WA3ccp`, alias https://entra.anchecasa.it e https://areaprivata.anchecasa.it. Sito, magazine, app, database e Sicura non toccati.
+- Privato, i cinque ruoli della Rete, Azienda e Fornitori, finché l’admin non salva i pulsanti, vedono tutti i loro pulsanti, gratis. Un profilo già salvato resta sulla scelta salvata. Se la lettura delle scelte non riesce, il menu resta vuoto.
+- Il fornitore, al primo ingresso, va su `#/azienda/profilo` (prima l’indirizzo usava la famiglia `fornitore`, che la dashboard non apre).
+- Controllo online: le due dashboard caricano `js/pulsanti-profili.js?v=5`. In anteprima, senza scelte salvate, il privato vede le sei categorie e il fornitore di materiali vede Pubblica, Chat, Inviti, Il tuo mese, Ufficio e Vendita. Lo script `app.js` online manda il primo ingresso su `#/` più `admin.tipo` più `/profilo`.
+- File: `area-privata/dashboard/js/pulsanti-profili.js`, `area-privata/dashboard/js/app.js`, `area-privata/dashboard/index.html`, `CLAUDE.md`.
+
+### 12.10.2026 09:37 · Cursor — ricontrollo di app-19: era già fatto, niente da rifare
+- Stessa richiesta delle 09:36, con l’ok di Nando del 12.10.2026 ore 09:25. Push: `Everything up-to-date`, ramo main su `997096a`.
+- app-18 non è stato rilanciato. La copia in `_backup-db-1210/handle_new_user_marketplace.sql` è ancora quella di prima di app-18. Le cinque colonne di `inviti_admin` ci sono.
+- app-19 non è stato rilanciato. I controlli tornano a posto: `energia_richieste`, `fornitori_accordi`, `energia_proposte`; le undici funzioni `energia_*` e `fornitori_*`.
+- `energia-avvisa` è già online, verify_jwt spento, versione 1. Non è stata ripubblicata. Le altre funzioni non sono state toccate.
+- Area privata e magazine non sono stati ripubblicati: online restano `dpl_297ohEkVynAXH6W6o6kBKmMZJnk1` e `dpl_4usTGjGKdTBs8Rg5dYbQo9w47dT2`. https://entra.anchecasa.it/offerte.html risponde 200, 10516 byte. Su https://magazine.anchecasa.it/check-bollette c’è «Ricevi offerte migliori» (`check-bollette.js?v=2`); l’analisi luce 228,40 €, 420 kWh, 2 mesi è quella già fatta sulle 09:36, stessa pagina.
+- Sito, sicura e app non toccati.
+- File: `CLAUDE.md`.
+
+### 12.10.2026 09:36 · Cursor — app-19 eseguito, funzione energia-avvisa, area privata e magazine pubblicati
+- GitHub, ramo main: prima `dbd1c03..31c0af7` (fornitori di luce e gas), poi `31c0af7..997096a` (regole del fornitore, già nella cartella al momento della pubblicazione).
+- app-18 era già eseguito: colonne nome, ruolo_rete, area, regione, superiore e tabelle `app_rete_note`, `app_riconoscimenti`, `app_rete_obiettivi`. Non è stato rilanciato.
+- Eseguito `app-anchecasa/sql/app-19-fornitori-energia.sql` sul progetto ANCHECASA, ok di Nando del 12.10.2026. Controlli: ci sono `energia_richieste`, `fornitori_accordi`, `energia_proposte`, e anche `energia_carta` e `energia_offerte`. Funzioni: `energia_accetta`, `energia_contratto_attivato`, `energia_le_mie_proposte`, `energia_nuova_richiesta`, `energia_richiesta_aperta`, `energia_richieste_per_me`, `energia_sono_fornitore`, `fornitori_accordo_cambiato`, `fornitori_accordo_ok`, `fornitori_conferma_accordo`, `fornitori_per_admin`.
+- Pubblicata solo la funzione `energia-avvisa` (verify_jwt spento, stato attivo, versione 1). Le altre funzioni non sono state toccate.
+- Area privata, progetto Vercel `area-privata-produzione`, deployment `dpl_297ohEkVynAXH6W6o6kBKmMZJnk1`, alias https://entra.anchecasa.it. https://entra.anchecasa.it/offerte.html risponde 200, 10516 byte. Con la stessa pubblicazione è online anche `dashboard/regole/energia.html` (200, 11987 byte): la voce delle 10:00 diceva non pubblicato. Online: `energia.js?v=2`, `fornitori-admin.js?v=1`, `app.js?v=23`, `regole-admin.js?v=3`, `sala-demo.js?v=4`, `rete-progetto.js?v=2`.
+- Magazine, progetto Vercel `magazine-anchecasa`, deployment `dpl_4usTGjGKdTBs8Rg5dYbQo9w47dT2`, alias https://magazine.anchecasa.it. Il primo invio dalla sola cartella si è fermato perché il progetto ha Root Directory `magazine-sito`; il secondo è partito dalla cartella principale. Online: `stile.css?v=5`, `check-bollette.js?v=2`. Su https://magazine.anchecasa.it/check-bollette, luce 228,40 €, 420 kWh, 2 mesi: «Paghi il 25% in più del giusto» e il tasto «Ricevi offerte migliori».
+- Sito, sicura e app non toccati.
+- File: `CLAUDE.md`.
+
 ### 12.10.2026 10:00 · Claude — «Regole del Fornitore di luce e gas» (NON pubblicato)
 - `area-privata/dashboard/regole/energia.html`: stessa carta intestata. Chi è, la dashboard, il giro in sei passi, la privacy del cliente, l'accordo (senza conferma niente proposte), offerte e proposta, frasi, domande. 4 pagine A4.
 - Pronto in Regole iscritti, in Sala demo (Luce e gas e documenti) e nella Formazione della rete.
