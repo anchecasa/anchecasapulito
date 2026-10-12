@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contratto · AncheCasa</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="../favicon.ico">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="css/contratto-firma.css">
+  <!-- 12.10.2026: i contratti della rete da leggere e stampare in PDF, presi dal testo in vigore (js/contratti-modelli.js).
+       Uso: contratto.html?c=agente | subagente | capoarea | sviluppo | reteitalia. Niente firma qui: si firma in Documenti. -->
+  <style>
+    :root { color-scheme: light; }
+    body { margin: 0; background: #eef2f7; font-family: Manrope, Arial, sans-serif; }
+    .ct-barra { position: sticky; top: 0; z-index: 5; display: flex; gap: 10px; align-items: center; justify-content: space-between; padding: 10px 16px; background: #1A2432; color: #fff; }
+    .ct-barra a { color: #fff; font-weight: 700; text-decoration: none; font-size: 14px; }
+    .ct-barra select { font: inherit; font-size: 14px; padding: 6px 8px; border-radius: 8px; border: 0; max-width: 46vw; }
+    .ct-barra button { font: inherit; font-weight: 800; font-size: 14px; background: #E8731A; color: #fff; border: 0; border-radius: 10px; padding: 8px 14px; cursor: pointer; }
+    #ct { max-width: 860px; margin: 18px auto 40px; padding: 0 12px; }
+    #ct [data-cf-fuori], #ct .cf-invia, #ct .cf-firma .cf-nota { display: none !important; }
+    #ct input, #ct select, #ct textarea { pointer-events: none; }
+    #ct input[type=date] { color: transparent; }
+    .ct-nota { max-width: 860px; margin: 0 auto; padding: 0 16px; color: #4a5566; font-size: 13px; }
+    @media print { .ct-barra, .ct-nota { display: none; } body { background: #fff; } #ct { margin: 0; padding: 0; max-width: none; } }
+  </style>
+</head>
+<body>
+  <div class="ct-barra">
+    <a href="index.html#/admin/sala-demo">‹ Sala demo</a>
+    <select id="ct-scelta" aria-label="Contratto"></select>
+    <button type="button" onclick="window.print()">Scarica PDF</button>
+  </div>
+  <p class="ct-nota" id="ct-nota"></p>
+  <div id="ct"></div>
+  <script src="js/contratti-modelli.js?v=4"></script>
+  <script src="js/contratto-firma.js"></script>
+  <script>
+  (function () {
+    var C = {
+      agente: ["Agente", "docs/AncheCasa-3Contratto-Agente.pdf"],
+      subagente: ["Sub-agente", "docs/AncheCasa-4Contratto-Subagente.pdf"],
+      capoarea: ["Capo area", "docs/AncheCasa-2Contratto-Capo-Area.pdf"],
+      sviluppo: ["Assistente sviluppo rete", "docs/AncheCasa-1Contratto-Assistente-Sviluppo-Rete.pdf"],
+      reteitalia: ["Responsabile Rete Italia", "docs/AncheCasa-5Contratto-Responsabile-Rete-Italia.pdf"]
+    };
+    var q = new URLSearchParams(location.search).get("c");
+    if (!C[q]) q = "agente";
+    var sel = document.getElementById("ct-scelta");
+    Object.keys(C).forEach(function (k) {
+      var o = document.createElement("option"); o.value = k; o.textContent = C[k][0]; if (k === q) o.selected = true; sel.appendChild(o);
+    });
+    sel.addEventListener("change", function () { location.search = "?c=" + sel.value; });
+    var box = document.getElementById("ct");
+    var m = window.AC && AC.contrattiModelli && AC.contrattiModelli[C[q][1]];
+    document.title = "Contratto " + C[q][0] + " · AncheCasa";
+    if (!m || !AC.contrattoFirma) { box.textContent = "Contratto non trovato."; return; }
+    AC.contrattoFirma.mostra(box, { file: C[q][1] }, {});
+    document.getElementById("ct-nota").textContent = "Testo in vigore, versione " + m.versione + ". Si firma nell'area privata, in Documenti.";
+  })();
+  </script>
+</body>
+</html>

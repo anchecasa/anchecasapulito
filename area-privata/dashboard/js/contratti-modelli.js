@@ -7,8 +7,8 @@
   AC.contrattiModelli = AC.contrattiModelli || {};
 
   AC.contrattiModelli["docs/AncheCasa-3Contratto-Agente.pdf"] = {
-    versione: "10.10.2026",
-    etichetta: "Rete commerciale AncheCasa · Versione 10.10.2026",
+    versione: "12.10.2026",
+    etichetta: "Rete commerciale AncheCasa · Versione 12.10.2026",
     titolo: "Contratto di agenzia",
     sotto: "Agente · Rete commerciale AncheCasa",
     chiFirma: "L'Agente",
@@ -156,8 +156,8 @@
   };
 
   AC.contrattiModelli["docs/AncheCasa-1Contratto-Assistente-Sviluppo-Rete.pdf"] = {
-    versione: "10.10.2026",
-    etichetta: "Rete commerciale AncheCasa · Versione 10.10.2026",
+    versione: "12.10.2026",
+    etichetta: "Rete commerciale AncheCasa · Versione 12.10.2026",
     titolo: "Contratto di collaborazione autonoma occasionale",
     sotto: "Incarico di Assistente Sviluppo Rete · Rete commerciale AncheCasa",
     chiFirma: "Il Collaboratore",
@@ -317,8 +317,8 @@
   };
 
   AC.contrattiModelli["docs/AncheCasa-2Contratto-Capo-Area.pdf"] = {
-    versione: "10.10.2026",
-    etichetta: "Rete commerciale AncheCasa · Versione 10.10.2026",
+    versione: "12.10.2026",
+    etichetta: "Rete commerciale AncheCasa · Versione 12.10.2026",
     titolo: "Contratto di agenzia con funzioni di Capo Area",
     sotto: "Capo Area regionale · Rete commerciale AncheCasa",
     chiFirma: "Il Capo Area",
@@ -464,8 +464,8 @@
   };
 
   AC.contrattiModelli["docs/AncheCasa-4Contratto-Subagente.pdf"] = {
-    versione: "10.10.2026",
-    etichetta: "Rete commerciale AncheCasa · Versione 10.10.2026",
+    versione: "12.10.2026",
+    etichetta: "Rete commerciale AncheCasa · Versione 12.10.2026",
     titolo: "Contratto di sub-agenzia e segnalazione",
     sotto: "Sub-agente · Rete commerciale AncheCasa",
     chiFirma: "Il Sub-agente",
@@ -613,8 +613,8 @@
   };
 
   AC.contrattiModelli["docs/AncheCasa-5Contratto-Responsabile-Rete-Italia.pdf"] = {
-    versione: "10.10.2026",
-    etichetta: "Rete commerciale AncheCasa · Versione 10.10.2026",
+    versione: "12.10.2026",
+    etichetta: "Rete commerciale AncheCasa · Versione 12.10.2026",
     titolo: "Contratto di agenzia con funzioni di Responsabile Rete Italia",
     sotto: "Responsabile Rete Italia · Rete commerciale AncheCasa",
     chiFirma: "Il Responsabile Rete Italia",
@@ -765,11 +765,11 @@
   const LUNGA = "analisi e partecipazione a gare, BIM 5D); professionisti tecnici; condomini e amministratori; agenzie immobiliari; industria; logistica e trasporti; alberghi e ristorazione; negozi; artigiani";
   Object.keys(AC.contrattiModelli).slice().forEach(function (k) {
     const m = AC.contrattiModelli[k];
-    if (!m || m.versione !== "10.10.2026") return;
+    if (!m || m.versione !== "12.10.2026") return;
     AC.contrattiModelli["bozza-1110/" + k] = Object.assign({}, m, {
       versione: "11.10.2026",
       firmabile: false,
-      etichetta: String(m.etichetta || "").replace("10.10.2026", "11.10.2026") + " · da far vedere all'avvocato, non firmabile"
+      etichetta: String(m.etichetta || "").replace("12.10.2026", "11.10.2026") + " · da far vedere all'avvocato, non firmabile"
     });
     if (m.corpo && m.corpo.indexOf(BREVE) >= 0) m.corpo = m.corpo.split(BREVE).join(LUNGA);
     m.firmabile = true;

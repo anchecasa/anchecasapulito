@@ -29,6 +29,28 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 12.10.2026 16:25 · Claude — PDF dei contratti rifatti, versione 12.10.2026, index.html sistemato
+- I 5 contratti hanno la versione «12.10.2026», con le provvigioni al 35% dell'utile, la sezione A.3 e luce, gas e telefonia esclusi.
+  - Prima i testi nuovi erano rimasti sotto «10.10.2026»; per questo la versione cambia.
+  - La bozza non firmabile «11.10.2026» si genera ora dalla 12.10.2026.
+  - Nessuno ha ancora firmato: oggi solo Sicura ha accesso.
+- Nuova pagina `area-privata/dashboard/contratto.html?c=agente|subagente|capoarea|sviluppo|reteitalia`: il contratto in vigore su carta intestata, letto da `js/contratti-modelli.js`, con il tasto «Scarica PDF». Non si firma lì: si firma in Documenti.
+- Rifatti da quella pagina i 5 PDF in `dashboard/docs/` (Agente, Sub-agente, Capo area, Assistente sviluppo rete, Responsabile Rete Italia), con Chromium in A4.
+  - Controllato: c'è «35% dell'utile di ciascun cantiere» e la versione 12.10.2026. Il 40% compare solo nella tranche al collaudo e nella nota «prima 40% del margine lordo».
+  - La Sala demo apre questi PDF.
+- `index.html`: nel commit `contratti-modelli.js?v=5`.
+  - Ho sistemato la copia di lavoro: ora è uguale al commit più le sole aggiunte dell'altra sessione (`sopralluogo-invio.js?v=3`, `dossier-tecnico.js?v=2`, `imprese.js?v=5`), che restano non committate.
+  - Non riporta più indietro `admin-task.css`, `regole-admin.js`, `sala-demo.js` e `app.js`.
+- File: `dashboard/contratto.html`, `dashboard/docs/AncheCasa-1…5*.pdf`, `js/contratti-modelli.js`, `index.html`, `CLAUDE.md`.
+
+### 12.10.2026 16:09 · Cursor — app-27, app-28 e app-29 eseguiti sul database
+- Ok di Nando per il passo 2 del comando v3. `$env:SUPABASE_DB_URL` non c'era: usato il collegamento già attivo al progetto ANCHECASA. I tre file aprono e chiudono da soli la transazione. Funzioni Edge, pubblicazione e push non toccati.
+- Controllo iniziale: le tabelle `ristrutturazioni` e `ristrutturazioni_media` ci sono (conteggio 2).
+- `app-27-sopralluogo-invito.sql`: colonne `aperto_cliente_il`, `cliente_ok_il`, `inviato_cliente_il`, `invito_token`, `link`, `pacchetto`, `preventivo_entro`, `riepilogo`, `urgente`. Funzioni `miei_sopralluoghi` e `ristrutturazione_prepara_invio`.
+- `app-28-dossier-tecnico.sql`: colonne `ambienti`, `criticita`, `immobile`, `preventivo`, `preventivo_accettato_il`, `preventivo_mandato_il`, `tecnico_id`. Tabelle `marketplace.ristrutturazioni_messaggi` e `marketplace.comuni_dati`. Funzioni `ristrutturazione_dossier`, `ristrutturazione_messaggio`, `ristrutturazione_misure`, `ristrutturazione_prepara_preventivo`.
+- `app-29-relazione-ia.sql`: colonne `fonte` e `prima_id` su `ristrutturazioni_media`. Vincoli: `fonte` solo `agente` o `ia`; `tipo` foto, audio o video (`ristrutturazioni_media_tipo_v2`); nota e path al massimo 300 caratteri. Funzione `ristrutturazione_pubblica_relazione`.
+- File: `CLAUDE.md`. Lo SQL era già in cartella. Nel commit finale va inclusa anche la correzione di `area-privata/dashboard/js/dossier-tecnico.js`.
+
 ### 12.10.2026 16:20 · Claude — prezzo dell'artigiano e niente provvigioni su luce, gas e telefonia
 - Decisioni di Nando del 12.10.2026, 16:04.
 - **Artigiano:** il primo mese è gratis. Il secondo e il terzo mese costano 14,90 € al mese, senza costo per lavoro. Dal quarto mese costa 19,90 € al mese più 5,90 € per lavoro fatto; il cliente prenota e paga con l'app.
