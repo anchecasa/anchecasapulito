@@ -288,7 +288,11 @@ button.rp-apri:hover { text-decoration: underline; }
 .sd-contratti { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
 .sd-contratti p { margin: 0; }
 .vetrina-nastro { position: fixed; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 50; background: #16304d; color: #fff; font-size: 12px; font-weight: 700; padding: 6px 14px; border-radius: 99px; box-shadow: 0 8px 20px rgba(22, 48, 77, .25); pointer-events: none; }
-@media (max-width: 980px) { .vetrina-nastro { bottom: 76px; } }
+/* 12.10.2026: sul telefono una striscia sottile sopra la barra in basso, che non copre i bottoni della pagina */
+@media (max-width: 980px) {
+  .vetrina-nastro { left: 0; right: 0; transform: none; bottom: calc(62px + env(safe-area-inset-bottom, 0px)); border-radius: 0; font-size: 11px; padding: 3px 10px; text-align: center; box-shadow: none; z-index: 39; }
+  body.con-vetrina .main, body.con-vetrina .main.is-fit { padding-bottom: calc(110px + env(safe-area-inset-bottom, 0px)); }
+}
 
 /* Inviti e Rete (12.10.2026, js/inviti-admin.js) */
 .iv-card { margin-top: 14px; }

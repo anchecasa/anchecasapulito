@@ -29,6 +29,22 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 12.10.2026 14:58 · Claude — Barra del telefono per ogni profilo, scritta «Vetrina» che non copre i bottoni (NON pubblicato)
+- Richiesta di Nando delle 14:51. La barra in basso del telefono (e del tablet in verticale) ora ha le 4 voci che ogni profilo usa di più, poi «Altro». Prima privato e rete avevano solo «Altro» o «Home + Altro», e le aziende «Pubblica, Chat, Inviti, Mese».
+  - **privato:** Bacheca, Guasto, Ristruttura, Richieste;
+  - **rete:** Home, Clienti, Vendi, Guadagni;
+  - **admin:** Home, Aziende, Pratiche (Ristrutturazioni), Rete;
+  - **impresa:** Home, Cantieri, Richieste, Lavori (subappaltatore e impiantista con Richieste prima di Cantieri);
+  - **artigiano:** Home, Richieste, Interventi, Disponibile;
+  - **materiali e noleggio:** Home, Richieste, Cantieri (richieste dai cantieri), Ordini o Mezzi;
+  - **casa:** Home, Richieste, Preventivi, Lavori;
+  - **luce e gas, telefono, finanza:** Home, Richieste, Proposte, Clienti;
+  - **le altre aziende:** Bacheca, Pubblica, Cantieri, Chat.
+- Si usano solo voci che la persona vede (Pulsanti per profilo). Con meno di due voci vale la regola di prima.
+- `js/app.js` v=30 (`barraTelefono`).
+- Sul telefono la scritta «Vetrina» è una striscia sottile sopra la barra e la pagina ha più spazio sotto: `css/admin-task.css` v=15, `js/pulsanti-profili.js` v=10.
+- Provato su 16 profili a 390 px: ogni voce apre la pagina giusta, nessuna etichetta tagliata.
+
 ### 12.10.2026 14:48 · Cursor — app-26 eseguito, area privata online
 - Ok di Nando del 12.10.2026 per il commit `f9e85a8`. Eseguito `app-anchecasa/sql/app-26-ristrutturazioni-flash-profit.sql` sul progetto ANCHECASA. Controlli: c'è `ristrutturazioni_media`. Il bucket `sopralluoghi` c'è ed è privato. Funzioni: `miei_sopralluoghi`, `ristrutturazione_cantiere`, `ristrutturazione_computo`, `ristrutturazione_costi`, `ristrutturazione_media_aggiungi`. Le funzioni Edge non sono state ripubblicate.
 - Git push sul ramo main: `b671645..f9e85a8`.

@@ -985,6 +985,28 @@
     }
   });
 
+  // Le voci della barra in basso del telefono, per profilo (12.10.2026, Nando 14:51).
+  function barraTelefono(famiglia) {
+    if (famiglia === "privato") return ["bacheca", "pv-guasto", "pv-ristruttura", "pv-mie-richieste"];
+    if (famiglia === "agente") return ["home", "re-clienti", "re-vendi", "guadagno"];
+    if (famiglia === "admin") return ["home", "aziende-admin", "ristrutturazioni-admin|Pratiche", "rete-admin"];
+    if (famiglia !== "azienda") return [];
+    const pk = packKey(S.data.profilo && S.data.profilo.tipoAzienda);
+    const B = {
+      impresa: ["imp_home", "cnt_cantieri", "cnt_perme", "imp_lavori"],
+      subappaltatore: ["imp_home", "cnt_perme", "cnt_cantieri", "imp_lavori"],
+      impiantista: ["imp_home", "cnt_perme", "cnt_cantieri", "imp_lavori"],
+      artigiano: ["art_home", "art_richieste", "art_interventi", "art_disponibilita"],
+      materiali: ["mat_home", "mat_richieste", "cnt_perme|Cantieri", "mat_ordini"],
+      noleggio: ["nol_home", "nol_richieste", "cnt_perme|Cantieri", "nol_mezzi"],
+      casa: ["cas_home", "cas_richieste", "cas_preventivi", "cas_ordini"],
+      energia: ["energia_home", "energia_richieste", "proposte_energia", "energia_clienti"],
+      telefonia: ["tel_home", "tel_richieste", "tel_proposte", "tel_clienti"],
+      finanza: ["fin_home", "fin_richieste", "fin_proposte", "fin_clienti"]
+    };
+    return B[pk] || ["bacheca", "pubblica", "cnt_cantieri", "chat"];
+  }
+
   function paintNav(famiglia, page) {
     // 12.10.2026: le voci «soloTestata» (Chat dell'admin) si aprono dalla testata, non dal menu.
     const items = visibleNav(famiglia).filter((it) => voceMenu(it, famiglia) && !it.soloTestata);
@@ -1057,13 +1079,23 @@
 
     // Telefono (01.10.2026): barra delle sezioni in basso, come un'app. Fino a 5 voci stanno tutte nella barra;
     // altrimenti le prime 4 e «Altro», che apre una scheda con il resto e con le cartelle (Ufficio, Cantiere...).
-    const BREVE = { home: "Home", software: "Software", pulsanti: "Pulsanti", "rete-admin": "Rete", "inviti-admin": "Inviti", "fornitori-admin": "Fornitori", energia_home: "Home", energia_richieste: "Richieste", proposte_energia: "Proposte", offerte_energia: "Offerte", energia_clienti: "Clienti", energia_accordo: "Accordo", tel_home: "Home", tel_richieste: "Richieste", tel_proposte: "Proposte", tel_offerte: "Offerte", tel_clienti: "Clienti", tel_accordo: "Accordo", fin_home: "Home", fin_richieste: "Richieste", fin_proposte: "Proposte", fin_offerte: "Offerte", fin_clienti: "Clienti", fin_accordo: "Accordo", "re-offerte": "Offerte", mat_home: "Home", mat_richieste: "Richieste", mat_preventivi: "Preventivi", mat_ordini: "Ordini", mat_zona: "Zona", nol_home: "Home", nol_richieste: "Richieste", nol_preventivi: "Preventivi", nol_ordini: "Noleggi", nol_mezzi: "Mezzi", nol_zona: "Zona", cas_home: "Home", cas_richieste: "Richieste", cas_preventivi: "Preventivi", cas_ordini: "Lavori", cas_zona: "Zona", "az-materiali": "Materiali", "az-noleggio": "Noleggio", "pv-casa": "Casa", "aziende-admin": "Aziende", art_home: "Home", art_richieste: "Richieste", art_interventi: "Interventi", art_recensioni: "Recensioni", art_garanzia: "Garanzia", art_disponibilita: "Disponibile", art_zona: "Zona", "az-documenti": "Documenti", "pv-guasto": "Guasto", "pv-trova": "Trova", imp_home: "Home", imp_lavori: "Lavori", imp_cantieri: "Cantieri", imp_subappalti: "Subappalti", cnt_cantieri: "Cantieri", cnt_perme: "Richieste", cnt_cerca: "Cerca", cnt_offro: "Offro", "aziende-voti": "Voti", "re-recensioni": "Voti", lav_home: "Home", lav_richieste: "Zona", lav_preventivi: "Preventivi", lav_ordini: "Presi", lav_zona: "Zona", "pv-lavori": "Lavori", "pv-ristruttura": "Ristruttura", "pv-mio-cantiere": "Cantiere", "re-ristruttura": "Ristruttura", "re-sopralluoghi": "Sopralluoghi", "ristrutturazioni-admin": "Ristrutturazioni", "re-clienti": "Clienti", "re-vendi": "Vendi", "re-formazione": "Formazione", "sala-demo": "Demo", regole: "Regole", bacheca: "Bacheca", iscritti: "Iscritti", appunti: "Appunti", bandi: "Bandi", terranova: "Terranova", "gare-private": "Gare", anchebim: "BIM", contratti: "Contratti", affida: "Affida", iscrizioni: "Iscrizioni", "richieste-agenti": "Agenti", "proposte-rete": "Segnala", "oggi-rete": "Oggi", strategia: "Strategia", "lavori-rete": "Lavori", "linee-decise": "Linee", "tuo-mese": "Mese", "genera-link": "Link", task: "Task", file: "File", "chat-team": "Chat", "mio-ruolo": "Ruolo", documenti: "Documenti" };
-    const conAltro = folds.length > 0 || top.length > 5;
-    const tabs = conAltro ? top.slice(0, 4) : top;
-    const extra = conAltro ? top.slice(4) : [];
+    const BREVE = { home: "Home", software: "Software", pulsanti: "Pulsanti", "rete-admin": "Rete", "inviti-admin": "Inviti", "fornitori-admin": "Fornitori", energia_home: "Home", energia_richieste: "Richieste", proposte_energia: "Proposte", offerte_energia: "Offerte", energia_clienti: "Clienti", energia_accordo: "Accordo", tel_home: "Home", tel_richieste: "Richieste", tel_proposte: "Proposte", tel_offerte: "Offerte", tel_clienti: "Clienti", tel_accordo: "Accordo", fin_home: "Home", fin_richieste: "Richieste", fin_proposte: "Proposte", fin_offerte: "Offerte", fin_clienti: "Clienti", fin_accordo: "Accordo", "re-offerte": "Offerte", mat_home: "Home", mat_richieste: "Richieste", mat_preventivi: "Preventivi", mat_ordini: "Ordini", mat_zona: "Zona", nol_home: "Home", nol_richieste: "Richieste", nol_preventivi: "Preventivi", nol_ordini: "Noleggi", nol_mezzi: "Mezzi", nol_zona: "Zona", cas_home: "Home", cas_richieste: "Richieste", cas_preventivi: "Preventivi", cas_ordini: "Lavori", cas_zona: "Zona", "az-materiali": "Materiali", "az-noleggio": "Noleggio", "pv-casa": "Casa", "aziende-admin": "Aziende", art_home: "Home", art_richieste: "Richieste", art_interventi: "Interventi", art_recensioni: "Recensioni", art_garanzia: "Garanzia", art_disponibilita: "Disponibile", art_zona: "Zona", "az-documenti": "Documenti", "pv-guasto": "Guasto", "pv-mie-richieste": "Richieste", guadagno: "Guadagni", pubblica: "Pubblica", chat: "Chat", "pv-trova": "Trova", imp_home: "Home", imp_lavori: "Lavori", imp_cantieri: "Cantieri", imp_subappalti: "Subappalti", cnt_cantieri: "Cantieri", cnt_perme: "Richieste", cnt_cerca: "Cerca", cnt_offro: "Offro", "aziende-voti": "Voti", "re-recensioni": "Voti", lav_home: "Home", lav_richieste: "Zona", lav_preventivi: "Preventivi", lav_ordini: "Presi", lav_zona: "Zona", "pv-lavori": "Lavori", "pv-ristruttura": "Ristruttura", "pv-mio-cantiere": "Cantiere", "re-ristruttura": "Ristruttura", "re-sopralluoghi": "Sopralluoghi", "ristrutturazioni-admin": "Ristrutturazioni", "re-clienti": "Clienti", "re-vendi": "Vendi", "re-formazione": "Formazione", "sala-demo": "Demo", regole: "Regole", bacheca: "Bacheca", iscritti: "Iscritti", appunti: "Appunti", bandi: "Bandi", terranova: "Terranova", "gare-private": "Gare", anchebim: "BIM", contratti: "Contratti", affida: "Affida", iscrizioni: "Iscrizioni", "richieste-agenti": "Agenti", "proposte-rete": "Segnala", "oggi-rete": "Oggi", strategia: "Strategia", "lavori-rete": "Lavori", "linee-decise": "Linee", "tuo-mese": "Mese", "genera-link": "Link", task: "Task", file: "File", "chat-team": "Chat", "mio-ruolo": "Ruolo", documenti: "Documenti" };
+    // 12.10.2026 (Nando 14:51): la barra del telefono ha le 4 voci che ogni profilo usa di più, poi «Altro».
+    // Si prendono solo tra quelle che la persona vede (Pulsanti per profilo). Bacheca e Home si aprono sempre.
+    // Se ne restano meno di due, vale la regola di prima: le prime voci fisse.
+    const tutte = top.concat(pack);
+    const SEMPRE = { bacheca: { id: "bacheca", label: "Bacheca", icon: "grid" }, home: { id: "home", label: "Home", icon: "home" } };
+    // «id|Etichetta»: un'etichetta corta diversa per la barra (es. «Cantieri» per le richieste dai cantieri dei fornitori).
+    const etichetta = {};
+    const voluteId = barraTelefono(famiglia).map((x) => { const [id, lab] = x.split("|"); if (lab) etichetta[id] = lab; return id; });
+    const volute = voluteId.map((id) => tutte.find((it) => it.id === id) || (SEMPRE[id] && (id !== "home" || famiglia !== "privato") ? SEMPRE[id] : null)).filter(Boolean).slice(0, 4);
+    const conBarra = volute.length >= 2;
+    const conAltro = conBarra || folds.length > 0 || top.length > 5;
+    const tabs = conBarra ? volute : conAltro ? top.slice(0, 4) : top;
+    const extra = conBarra ? top.filter((it) => !tabs.some((t) => t.id === it.id)) : conAltro ? top.slice(4) : [];
     const link = (it) => html`<a href="#/${famiglia}/${it.id}" class="${it.id === page ? "active" : ""}">${icon(it.icon)}${it.label}</a>`.s;
-    const altroAttivo = extra.some((it) => it.id === page) || folds.some((f) => f.items.some((it) => it.id === page));
-    let htmlTab = tabs.map((it) => html`<a href="#/${famiglia}/${it.id}" class="tab-it${it.id === page ? " active" : ""}"${it.id === page ? html` aria-current="page"` : ""}>${icon(it.icon)}<span>${BREVE[it.id] || it.label}</span></a>`.s).join("");
+    const altroAttivo = !tabs.some((it) => it.id === page) && (extra.some((it) => it.id === page) || folds.some((f) => f.items.some((it) => it.id === page)));
+    let htmlTab = tabs.map((it) => html`<a href="#/${famiglia}/${it.id}" class="tab-it${it.id === page ? " active" : ""}"${it.id === page ? html` aria-current="page"` : ""}>${icon(it.icon)}<span>${etichetta[it.id] || BREVE[it.id] || it.label}</span></a>`.s).join("");
     if (conAltro) {
       htmlTab += html`<button type="button" class="tab-it${altroAttivo ? " active" : ""}" id="tab-altro" aria-expanded="false" aria-controls="altro">${icon("bars")}<span>Altro</span></button>`.s;
     }

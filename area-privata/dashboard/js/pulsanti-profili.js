@@ -23,6 +23,7 @@
       n.className = "vetrina-nastro";
       n.textContent = "Vetrina · dati di esempio, non collegata a nessuno";
       document.body.appendChild(n);
+      document.body.classList.add("con-vetrina");
     };
     if (document.body) nastro(); else document.addEventListener("DOMContentLoaded", nastro);
   }
