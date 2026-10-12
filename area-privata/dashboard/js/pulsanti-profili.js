@@ -13,6 +13,18 @@
   const V = AC.views;
   const CHIAVE = "pulsanti_profili";
   const DEMO = /[?&]demo=/.test(location.search);
+  // 12.10.2026 Sala demo: in vetrina (?demo=…&vetrina=1) si vedono tutti i pulsanti del profilo,
+  // con dati di esempio, senza leggere né scrivere niente sul database.
+  const VETRINA = DEMO && /[?&]vetrina=1\b/.test(location.search);
+  if (VETRINA) {
+    const nastro = () => {
+      const n = document.createElement("div");
+      n.className = "vetrina-nastro";
+      n.textContent = "Vetrina · dati di esempio, non collegata a nessuno";
+      document.body.appendChild(n);
+    };
+    if (document.body) nastro(); else document.addEventListener("DOMContentLoaded", nastro);
+  }
   const LOCALE = "ac-demo-pulsanti-profili";
 
   let config = { profili: {} };
@@ -44,6 +56,7 @@
   }
 
   function carica() {
+    if (VETRINA) { caricato = true; return Promise.resolve(config); }
     if (DEMO) {
       // 12.10.2026 «Guarda come»: se nel browser c'è l'accesso dell'admin, l'anteprima usa le scelte vere
       // salvate su Supabase (solo lettura). Senza accesso, quelle di prova del browser.
@@ -84,11 +97,12 @@
 
   /** "gratis" | "pagamento" | "" (nascosto) per il pulsante id del profilo. */
   function stato(profilo, id) {
+    if (VETRINA) return "gratis";
     const p = config.profili[profilo];
     return (p && p.voci[id]) || "";
   }
 
-  AC.pulsanti = { carica, stato, caricato: () => caricato };
+  AC.pulsanti = { carica, stato, caricato: () => caricato, vetrina: VETRINA };
 
   /* ---------- pagina admin ---------- */
   const SCELTE = [

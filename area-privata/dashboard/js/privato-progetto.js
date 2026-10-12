@@ -136,7 +136,7 @@
       render(el) {
         el.innerHTML = html`
           <div class="pv-scheda">
-            <p><span class="sw-stato ${st.cls}">${st.lab}</span> <span class="note">Scheda del progetto: qui si vede cosa farà il pulsante.</span></p>
+            <p><span class="sw-stato ${st.cls}">${st.lab}</span>${AC.pulsanti && AC.pulsanti.vetrina ? "" : html` <span class="note">Scheda del progetto: qui si vede cosa farà il pulsante.</span>`}</p>
             <div class="pv-due">
               <section class="card"><h2>Come funziona</h2><ol class="pv-lista">${s.passi.map((p) => html`<li>${p}</li>`)}</ol></section>
               ${s.regole.length ? html`<section class="card"><h2>Regole</h2><ul class="pv-lista">${s.regole.map((p) => html`<li>${p}</li>`)}</ul></section>` : ""}

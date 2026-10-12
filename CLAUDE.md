@@ -29,6 +29,15 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 12.10.2026 08:05 · Claude — Sala demo per la presentazione alla rete (NON pubblicato)
+- Su richiesta di Nando, per la demo ai commerciali del 13.10: in Formazione nuova voce «Sala demo» (`js/sala-demo.js`).
+- Le dashboard: un riquadro per profilo. Pronto il Privato: «Apri la dashboard» (vetrina) e «Regole». Gli altri «In preparazione»; la Rete ha già il tasto Contratti.
+- Vetrina (`?demo=<profilo>&vetrina=1`): dati di esempio, nessuna lettura o scrittura sul database, tutti i pulsanti del profilo visibili anche se l'admin non li ha salvati, nastro in basso «Vetrina · dati di esempio, non collegata a nessuno». Nelle schede del privato sparisce la nota interna «Scheda del progetto».
+- I documenti per la rete, da scrivere: AncheCasa in 10 minuti, Il listino, Come guadagna la rete, Il percorso del cliente, Regole della rete, Si parte: i primi 90 giorni, Il primo giorno. Pronto: Regole del Privato.
+- I contratti: tasto che apre la pagina Contratti dell'admin.
+- Provato in locale con ?demo=admin: Sala demo, vetrina del privato, navigazione nelle schede. Copia di prima: `_copie-sala-demo-0805`.
+- File: `area-privata/dashboard/js/sala-demo.js` (nuovo), `js/pulsanti-profili.js`, `js/privato-progetto.js`, `js/app.js`, `css/admin-task.css`, `index.html` (app.js ?v=19, pulsanti-profili ?v=3, privato-progetto ?v=2, admin-task.css ?v=10), `CLAUDE.md`.
+
 ### 12.10.2026 08:02 · Cursor — entra.anchecasa.it passa all'area privata
 - Invio su GitHub, ramo main, commit `b0b0896` e `dffacb4`. Pubblicata solo la cartella `area-privata` sul progetto Vercel `area-privata-produzione`, deployment `dpl_F8peyVQNpbEJvHRvpTBSD8vrVa4y`, alias https://areaprivata.anchecasa.it. Sito, magazine, sicura, app e database non toccati.
 - Sul progetto Vercel `area-privata-produzione` è aggiunto il dominio `entra.anchecasa.it`. Vercel lo segna ancora con DNS da sistemare. Il record da scrivere, nuvola grigia, è CNAME `entra` verso `4b63e92ec2e89ae6.vercel-dns-017.com`. Oggi il nome punta ancora a `app-anchecasa.pages.dev`.
