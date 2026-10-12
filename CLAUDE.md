@@ -29,6 +29,14 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 12.10.2026 08:02 · Cursor — entra.anchecasa.it passa all'area privata
+- Invio su GitHub, ramo main, commit `b0b0896` e `dffacb4`. Pubblicata solo la cartella `area-privata` sul progetto Vercel `area-privata-produzione`, deployment `dpl_F8peyVQNpbEJvHRvpTBSD8vrVa4y`, alias https://areaprivata.anchecasa.it. Sito, magazine, sicura, app e database non toccati.
+- Sul progetto Vercel `area-privata-produzione` è aggiunto il dominio `entra.anchecasa.it`. Vercel lo segna ancora con DNS da sistemare. Il record da scrivere, nuvola grigia, è CNAME `entra` verso `4b63e92ec2e89ae6.vercel-dns-017.com`. Oggi il nome punta ancora a `app-anchecasa.pages.dev`.
+- Sul progetto Cloudflare Pages `app-anchecasa` è tolto il dominio `entra.anchecasa.it`. Resta solo `app-anchecasa.pages.dev`.
+- Su Supabase, Authentication, URL Configuration, è aggiunto `https://entra.anchecasa.it/**`. Gli indirizzi che c'erano restano, ora sono 15.
+- La voce delle 07:55 diceva non pubblicato. L'area privata di quel commit ora è pubblicata. Il nome entra si apre sull'area privata solo dopo il cambio del CNAME.
+- File: `CLAUDE.md`.
+
 ### 12.10.2026 07:55 · Claude — l'area privata è la dashboard di tutti; accesso senza rimando all'app; «Guarda come» (NON pubblicato)
 - Decisione di Nando: la dashboard ufficiale di tutti è l'area privata, con il suo accesso anche da entra.anchecasa.it. Nuove regole fisse in cima a questo file; la 2 e la 3 dell'11.10 sono barrate. `PROGETTO-DASHBOARD.md` regola 6 corretta.
 - Accesso (`area-privata/js/app.js`): nessuno viene più mandato su https://entra.anchecasa.it (l'app). Tutti vanno in `dashboard/#/<famiglia>/`; il fornitore usa la dashboard dell'azienda (anche in `dashboard/js/app.js`).
