@@ -29,6 +29,14 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 12.10.2026 14:31 · Cursor — Sala demo imprese e subappaltatore online
+- Ok di Nando del 12.10.2026 per i commit `4c41ac1` e `a4dd636`. Git push sul ramo main: `c2b45ac..a4dd636`.
+- Area privata, progetto Vercel `area-privata-produzione`, deployment `dpl_9su6NV4GoaEUC4f3FpGBM1RT62o9`, alias https://entra.anchecasa.it. La dashboard carica `js/sala-demo.js?v=8` (200, 8401 byte).
+- In Sala demo le schede si aprono. «Impresa edile» apre la Home con i lavori AncheCasa, i cantieri e i piccoli lavori. «Subappaltatore e impiantista» apre «Richieste per te».
+- La voce delle 14:30 diceva non pubblicato: ora le schede sono online.
+- Supabase, sito, magazine, app e Sicura non toccati.
+- File: `CLAUDE.md`.
+
 ### 12.10.2026 14:30 · Claude — Sala demo: Impresa edile e Subappaltatore pronti (NON pubblicato)
 - `js/sala-demo.js` v=8: le schede «Impresa edile» (apre `imp_home`) e «Subappaltatore e impiantista» (apre `cnt_perme`) ora si aprono in vetrina. Prima erano «in arrivo».
 - Niente SQL. Commit `4c41ac1`.
