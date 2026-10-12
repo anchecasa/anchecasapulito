@@ -11,9 +11,8 @@
   const DOCUMENTI = [
     { k: "privato", nome: "Privato", desc: "Chi ha una casa: guasti, ristrutturazioni, bacheca, bollette, passaparola.", ico: "home", file: "regole/privato.html", pronto: true, versione: "12.10.2026" },
     { k: "rete", nome: "Rete", desc: "Agente, sub-agente, capo area, sviluppo rete, Rete Italia.", ico: "team", file: "regole/rete.html", pronto: true, versione: "12.10.2026" },
-    { k: "impresa", nome: "Impresa edile", desc: "Cantieri, SAL, gare, subappalti, squadre.", ico: "building" },
-    { k: "artigiano", nome: "Artigiano", desc: "Interventi, SuperMastro, 4,99 € a lavoro fatto.", ico: "gear" },
-    { k: "subappaltatore", nome: "Subappaltatore e impiantista", desc: "Lavori per i general contractor, interventi, certificazioni.", ico: "gear" },
+    // 12.10.2026: impresa, artigiano, subappaltatore e impiantista in un documento solo (regole/aziende.html).
+    { k: "aziende", nome: "Aziende: impresa, subappaltatore, impiantista, artigiano", desc: "Cantieri e richieste, lavori AncheCasa, piccoli lavori, Ho un guasto, gare.", ico: "building", file: "regole/aziende.html", pronto: true, versione: "12.10.2026" },
     { k: "studio", nome: "Studio tecnico", desc: "Pratiche, gare, presenze di cantiere.", ico: "doc" },
     { k: "fornitore", nome: "Fornitore", desc: "Materiali, noleggio, IT: listino, ordini, consegne.", ico: "folder" },
     { k: "energia", nome: "Luce e gas", desc: "Richieste, proposte su carta AncheCasa, privacy del cliente, accordo.", ico: "pulse", file: "regole/energia.html", pronto: true, versione: "12.10.2026" },

@@ -29,6 +29,26 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 12.10.2026 15:28 · Claude — Presentazione del 13.10 in un posto solo (NON pubblicato)
+- Richiesta di Nando delle 15:20. La Sala demo diventa il posto unico della presentazione. In cima c'è la scaletta in 10 passi, ognuno con il tasto che apre la pagina in vetrina:
+  1. AncheCasa in un colpo d'occhio;
+  2. privato;
+  3. rete;
+  4. imprese general contractor;
+  5. chi riceve le richieste;
+  6. artigiano;
+  7. Ristrutturazioni;
+  8. gare;
+  9. fornitori;
+  10. documenti.
+- Nuovo profilo in vetrina: «AncheCasa (admin)». Impresa, subappaltatore e artigiano hanno il tasto «Regole».
+- Documenti pronti nella Sala demo:
+  - regole di privato, rete, luce e gas e **aziende** (nuovo `regole/aziende.html`: imprese, subappaltatori, impiantisti, artigiani, cantieri e richieste, lavori AncheCasa, gare);
+  - Regolamento della rete e Circolare 1/2026 (PDF);
+  - i 5 contratti in PDF.
+- Tasto admin «Presentazione» sempre visibile (`js/app.js` v=32; tolto dalla cartella Formazione). `js/sala-demo.js` v=9, `js/regole-admin.js` v=4 (le aziende in un documento solo), `css/admin-task.css` v=16.
+- Provato: i 9 tasti della scaletta aprono la pagina giusta, tutti i documenti rispondono, nessun errore.
+
 ### 12.10.2026 15:20 · Claude — Gare per le aziende, tasto Gare per l'admin, prezzo nelle richieste (NON pubblicato, SQL NON eseguito)
 - Decisioni di Nando delle 15:10 (scritte in `PROGETTO-DASHBOARD.md`).
 - `app-anchecasa/sql/app-27-gare-aziende.sql` (solo con l'ok di Nando):

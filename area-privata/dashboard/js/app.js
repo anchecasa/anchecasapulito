@@ -505,6 +505,8 @@
         { id: "cnt_cantieri", label: "Cantieri AncheCasa", icon: "calendar", gruppo: "fisso" },
         // 12.10.2026 (Nando 15:10): Bandi, Terranova, Predict, AncheBIM e Software da un tasto sempre visibile (js/gare.js).
         { id: "gare-admin", label: "Gare", icon: "doc", gruppo: "fisso" },
+        // 12.10.2026: la presentazione alla rete in un posto solo (Sala demo), sempre visibile.
+        { id: "sala-demo", label: "Presentazione", icon: "star", gruppo: "fisso" },
         c("cnt_cerca", "Cerca subappaltatori", "team", "adm_iscritti"),
         c("aziende-voti", "Voti delle aziende", "star", "adm_iscritti"),
         // Pagine della rete: si aprono dalla pagina Rete, non dal menu (soloTestata).
@@ -531,7 +533,6 @@
         c("magazine", "Magazine", "chart", "adm_comunicazione"),
         // 12.10.2026, su richiesta: un documento di regole per ogni profilo, per la formazione della rete (js/regole-admin.js).
         // 12.10.2026, su richiesta: Sala demo per presentare AncheCasa alla rete (js/sala-demo.js).
-        c("sala-demo", "Sala demo", "star", "adm_formazione"),
         c("regole", "Regole iscritti", "doc", "adm_formazione"),
         // id «chat-team» (non «chat»): «chat» è la Chat demo di Privato/Azienda/Agente.
         c("chat-team", "Chat", "chat", "adm_lavoro", { soloTestata: true }),

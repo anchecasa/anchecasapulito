@@ -359,3 +359,11 @@ button.rp-apri:hover { text-decoration: underline; }
 .fo-form input, .fo-form select { height: 38px; border: 1px solid #ccd6e2; border-radius: 10px; padding: 0 10px; font: inherit; font-weight: 400; background: #fff; }
 .fo-tutto { grid-column: 1 / -1; }
 @media (max-width: 980px) { .fo-form { grid-template-columns: 1fr; } }
+/* Sala demo: scaletta della presentazione (12.10.2026) */
+.sd-scaletta h2 { margin: 0 0 4px; }
+.sd-passi { list-style: none; counter-reset: sd; margin: 12px 0 0; padding: 0; display: grid; gap: 8px; }
+.sd-passi li { counter-increment: sd; display: flex; align-items: center; gap: 12px; padding: 10px 12px; border: 1px solid var(--line, #dfe6ef); border-radius: 12px; }
+.sd-passi li::before { content: counter(sd); flex: 0 0 30px; height: 30px; border-radius: 50%; background: #16304d; color: #fff; display: grid; place-items: center; font-weight: 800; font-size: 14px; }
+.sd-passi li > div { flex: 1; min-width: 0; display: grid; gap: 2px; }
+.sd-passi li small { color: var(--muted, #66758a); }
+@media (max-width: 640px) { .sd-passi li { flex-wrap: wrap; } .sd-passi li .sd-btn { margin-left: 42px; } }
