@@ -29,6 +29,15 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 12.10.2026 15:25 · Cursor — app-27 eseguito, gare online sull'area privata
+- Ok di Nando del 12.10.2026 per il commit `56960fe`. Eseguito `app-anchecasa/sql/app-27-gare-aziende.sql` sul progetto ANCHECASA. Controlli: c'è `marketplace.gare_mie`. La colonna `cantiere_richieste.prezzo` c'è. Funzioni: `gare_cerca`, `cantiere_pubblica`, `cantiere_richieste_per_me`. Le funzioni Edge non sono state toccate.
+- `area-privata/js/benvenuto.js` è stato modificato da Claude (Opus), sessione del commit `56960fe`, il 12.10.2026 alle 15:03, insieme a `COMANDO-CURSOR-sopralluogo-invito.md`. È il ritorno al sopralluogo dopo la password (`poi`). Non è in nessun commit. Non è stato incluso né pubblicato: online `js/benvenuto.js?v=2` è la versione di prima, 7483 byte, senza quel ritorno.
+- Git push sul ramo main: `1e73243..56960fe`.
+- Area privata, progetto Vercel `area-privata-produzione`, deployment `dpl_5pJx9Rr57GKpnLiicfsEBeBhKX8a`, alias https://entra.anchecasa.it e https://areaprivata.anchecasa.it. La dashboard online carica `js/gare.js?v=1`, `js/app.js?v=31`, `js/pulsanti-profili.js?v=11`, `js/artigiani.js?v=3`, `js/cantieri.js?v=3` e `css/energia.css?v=10`. I sei file rispondono 200. Nel commit c'è anche `js/sopralluogo-invio.js?v=1` e `js/imprese.js?v=4`: la funzione `sopralluogo-invito` non è stata pubblicata. https://entra.anchecasa.it/sopralluogo.html risponde 404.
+- La voce delle 15:20 diceva non pubblicato e SQL non eseguito: ora lo SQL è eseguito e le pagine delle gare sono online.
+- Sito, magazine, app e Sicura non toccati.
+- File: `CLAUDE.md`.
+
 ### 12.10.2026 15:28 · Claude — Presentazione del 13.10 in un posto solo (NON pubblicato)
 - Richiesta di Nando delle 15:20. La Sala demo diventa il posto unico della presentazione. In cima c'è la scaletta in 10 passi, ognuno con il tasto che apre la pagina in vetrina:
   1. AncheCasa in un colpo d'occhio;
