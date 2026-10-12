@@ -29,6 +29,36 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 12.10.2026 08:50 · Claude — dashboard della Rete per ruolo e «Regole della Rete» (NON pubblicato)
+- Rete a categorie, deciso da Nando (PROGETTO-DASHBOARD.md): Home; I miei clienti (I miei clienti, Registra un cliente, Invita un cliente); Vendi (Vendi, Sopralluogo Flash); La mia squadra (La mia squadra, Chi è fermo, La cartina, Recensioni della zona, Regioni da aprire, Segnala una persona); Guadagni; Io e AncheCasa (Il mio ruolo, Contratto e documenti, Formazione); Direzione (Linee decise, Sala strategia). Chat dal fumetto.
+- Ogni pulsante ha un livello minimo (`vociRete` in `js/app.js`): sub-agente 12 voci, agente 15, capo area 17, sviluppo rete e Rete Italia 18. Il ruolo, in anteprima, arriva da `?ruolo=`; per gli utenti veri si leggerà dal profilo (`ruoloRete`, da collegare su Supabase).
+- Pulsanti per profilo: la Rete è divisa nei cinque ruoli, ognuno con «Guarda come».
+- Pagine nuove come schede del progetto (`js/rete-progetto.js`, id `re-…`); «Formazione» è una pagina vera con i documenti.
+- `regole/rete.html`: Regole della Rete (livelli, chi vede cosa, di chi è il cliente, cosa si vende e ristrutturazioni, come si entra, chi lavora bene, cosa c'è oggi, domande). 5 pagine A4. In Regole iscritti e in Sala demo è «pronto».
+- Sala demo: la Rete ha cinque tasti (Sub-agente, Agente, Capo area, Sviluppo rete, Rete Italia), Regole e Contratti.
+- Provato in locale con ?demo=agente&ruolo=… per i cinque ruoli e il documento. Copia di prima: `_copie-rete-0845`.
+- File: `area-privata/dashboard/js/rete-progetto.js`, `regole/rete.html` (nuovi), `js/app.js`, `js/pulsanti-profili.js`, `js/sala-demo.js`, `js/regole-admin.js`, `regole/regole.css`, `regole/privato.html` (css ?v=2), `index.html` (app.js ?v=21), `CLAUDE.md`.
+
+### 12.10.2026 08:27 · Cursor — prime decisioni sulla Rete su GitHub; area privata ripubblicata
+- Invio su GitHub, ramo main: `c909131` c'era già, aggiunto `7a78646` (solo `PROGETTO-DASHBOARD.md`). Pubblicata di nuovo solo la cartella `area-privata` sul progetto Vercel `area-privata-produzione`, deployment `dpl_A7Kgh4cVXuAjS2TYGWQrm6Ax8pCx`, alias https://entra.anchecasa.it e https://areaprivata.anchecasa.it. Sito, magazine, sicura, app e database non toccati. Nessuna funzione ripubblicata.
+- Controllo online: https://entra.anchecasa.it/dashboard/index.html carica `js/inviti-admin.js?v=1` (10973 byte) e `js/app.js?v=20` (55891 byte). Entrambi rispondono 200.
+- Su Supabase, progetto ANCHECASA, `APP_URL` resta `https://app-anchecasa.pages.dev`. Aggiornato solo quel segreto. Gli altri restano com'erano.
+- File: `CLAUDE.md`.
+
+### 12.10.2026 08:24 · Cursor — Rete e Inviti pubblicati; APP_URL torna all'app
+- Invio su GitHub, ramo main, commit `c909131`. Pubblicata solo la cartella `area-privata` sul progetto Vercel `area-privata-produzione`, deployment `dpl_8CVxJ1EqNuirJdaC6r2JkYEdiR7v`, alias https://entra.anchecasa.it e https://areaprivata.anchecasa.it. Sito, magazine, sicura, app e database non toccati. Nessuna funzione ripubblicata.
+- Controllo online: https://entra.anchecasa.it/dashboard/index.html carica `js/inviti-admin.js?v=1` e `js/app.js?v=20`. Lo script risponde 200.
+- Su Supabase, progetto ANCHECASA, segreti delle funzioni: `APP_URL` è ora `https://app-anchecasa.pages.dev`. Gli altri segreti restano com'erano. I link delle mail dell'app tornano all'app, perché entra.anchecasa.it apre l'area privata.
+- La voce delle 08:20 diceva non pubblicato. Rete e Inviti di quel commit ora sono pubblicati. La voce delle 08:21 diceva che `c909131` era rimasto sul computer: ora è su GitHub e online.
+- File: `CLAUDE.md`.
+
+### 12.10.2026 08:21 · Cursor — Sala demo pubblicata sull'area privata
+- Invio su GitHub, ramo main, commit `634051e` e `ad145f2`. Pubblicata solo la cartella `area-privata` sul progetto Vercel `area-privata-produzione`, deployment `dpl_3mQfUGJxVomRcgnC97tPkB4MXM3g`, alias https://areaprivata.anchecasa.it e https://entra.anchecasa.it. Sito, magazine, sicura, app e database non toccati.
+- Controllo online: https://areaprivata.anchecasa.it/dashboard/index.html carica `js/sala-demo.js?v=1` e `js/app.js?v=19`. Lo script risponde 200.
+- La voce delle 08:05 diceva non pubblicato. La Sala demo di quei commit ora è pubblicata.
+- Il commit locale `c909131` (pulsanti Rete e Inviti) non è stato inviato né pubblicato: la voce delle 08:20 resta non pubblicata.
+- File: `CLAUDE.md`.
+
 ### 12.10.2026 08:20 · Claude — admin: pulsanti «Rete» e «Inviti» in cima (NON pubblicato)
 - Su richiesta di Nando: sotto Home due pulsanti, Rete e Inviti (`js/inviti-admin.js`).
 - Inviti: un modulo per rete e aziende. Chi inviti (Rete: Responsabile Rete Italia, Sviluppo rete, Capo area, Agente, Sub-agente; poi le categorie delle aziende), nome, mail, telefono. «Invia invito» crea la riga in `inviti_admin` e manda subito la mail con `invia-invito-marketplace`, in un passaggio solo. Sotto, gli inviti mandati con lo stato (mail inviata, aperto, iscritto) e «Rimanda».

@@ -10,7 +10,8 @@
 
   const PROFILI = [
     { nome: "Privato", desc: "Guasti, ristrutturazioni, bacheca, bollette, passaparola.", ico: "home", demo: "privato", regole: "regole/privato.html", pronta: true },
-    { nome: "Rete", desc: "Agente, sub-agente, capo area, sviluppo rete, Rete Italia.", ico: "team", contratti: true },
+    { nome: "Rete", desc: "Una dashboard per ruolo: ognuno vede sé stesso e chi ha sotto.", ico: "team", demo: "agente", regole: "regole/rete.html", contratti: true, pronta: true,
+      ruoli: [["subagente", "Sub-agente"], ["agente", "Agente"], ["capoarea", "Capo area"], ["sviluppo", "Sviluppo rete"], ["reteitalia", "Rete Italia"]] },
     { nome: "Impresa edile", desc: "Cantieri, SAL, gare, subappalti, squadre.", ico: "building" },
     { nome: "Artigiano", desc: "Interventi, SuperMastro, lavoro fatto.", ico: "gear" },
     { nome: "Subappaltatore e impiantista", desc: "Lavori per i general contractor, certificazioni.", ico: "gear" },
@@ -30,10 +31,13 @@
     { nome: "Regole della rete", desc: "Chi entra, a chi è il cliente, segnalazioni, contratto da firmare.", ico: "shield" },
     { nome: "Si parte: i primi 90 giorni", desc: "Cosa c'è oggi, cosa arriva e quando, obiettivi del trimestre.", ico: "calendar" },
     { nome: "Il primo giorno", desc: "La lista da fare: contratto, profilo, link di invito, i primi 20 contatti.", ico: "doc" },
-    { nome: "Regole del Privato", desc: "Il primo profilo finito, da studiare.", ico: "home", file: "regole/privato.html", pronto: true }
+    { nome: "Regole del Privato", desc: "Il primo profilo finito, da studiare.", ico: "home", file: "regole/privato.html", pronto: true },
+    { nome: "Regole della Rete", desc: "Ruoli, chi vede cosa, clienti, ristrutturazioni, zone.", ico: "team", file: "regole/rete.html", pronto: true }
   ];
 
-  const apri = (p) => `index.html?demo=${p.demo}&vetrina=1#/${p.demo}/bacheca`;
+  const apri = (p, ruolo) => ruolo
+    ? `index.html?demo=${p.demo}&ruolo=${ruolo}&vetrina=1#/${p.demo}/home`
+    : `index.html?demo=${p.demo}&vetrina=1#/${p.demo}/bacheca`;
 
   V["sala-demo"] = {
     title: "Sala demo",
@@ -49,8 +53,11 @@
             <b>${p.nome}</b><small>${p.desc}</small>
             ${p.pronta
               ? html`<span class="sd-tasti">
-                  <a class="sd-btn" href="${apri(p)}" target="_blank" rel="noopener">Apri la dashboard</a>
+                  ${p.ruoli
+                    ? p.ruoli.map(([k, l]) => html`<a class="sd-btn" href="${apri(p, k)}" target="_blank" rel="noopener">${l}</a>`)
+                    : html`<a class="sd-btn" href="${apri(p)}" target="_blank" rel="noopener">Apri la dashboard</a>`}
                   ${p.regole ? html`<a class="sd-btn sd-chiaro" href="${p.regole}" target="_blank" rel="noopener">Regole</a>` : ""}
+                  ${p.contratti ? html`<a class="sd-btn sd-chiaro" href="#/admin/contratti">Contratti</a>` : ""}
                 </span>`
               : html`<span class="sd-tasti">
                   <span class="sw-stato sw-off">In preparazione</span>

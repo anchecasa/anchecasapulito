@@ -174,7 +174,7 @@
               </div>
               <div class="pp-conti">
                 ${prof.famiglia === "privato" || prof.famiglia === "agente" || prof.k === "azienda:impresa"
-                  ? html`<a class="pp-guarda" href="index.html?demo=${prof.famiglia}#/${prof.famiglia}/bacheca" target="_blank" rel="noopener" title="Si apre in una scheda nuova, senza password, con dati di esempio e i pulsanti salvati">Guarda come ${prof.nome}</a>`
+                  ? html`<a class="pp-guarda" href="index.html?demo=${prof.famiglia}${prof.ruolo ? "&ruolo=" + prof.ruolo : ""}#/${prof.famiglia}/${prof.famiglia === "agente" ? "home" : "bacheca"}" target="_blank" rel="noopener" title="Si apre in una scheda nuova, senza password, con dati di esempio e i pulsanti salvati">Guarda come ${prof.nome}</a>`
                   : ""}
                 <span class="pp-c sw-ok">${c.g} gratis</span>
                 <span class="pp-c sw-off">${c.a} a pagamento</span>

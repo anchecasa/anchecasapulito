@@ -4,7 +4,7 @@
   const S = AC.store;
   const D = AC.date;
 
-  /* CONGELATO 20.09.2026. Famiglie e pulsanti. Non cambiare FOLD_LAB, UFFICIO, PACKS, packFornitore, navItems, HEADER_OPP. Non aggiungere, togliere o rinominare pieghe o tasti. Eccezione 11.10.2026, su richiesta esplicita di Nando: tasto «Home» (grafici, js/home.js) primo per admin e agenti. Eccezione 11.10.2026 sera: tasti admin Terranova, Gare private e AncheBIM (js/funzioni-interne.js), funzioni interne, non siti a parte. Eccezione 12.10.2026: tasto admin «Software» (js/software-admin.js), secondo dopo Home, con tutti i software per categoria. Eccezione 12.10.2026: tasto admin «Pulsanti per profilo» (js/pulsanti-profili.js); i menu di privato, azienda e agente mostrano solo i pulsanti che l'admin ha scelto lì. Eccezione 12.10.2026: menu admin a categorie (pieghe adm_* in FOLD_LAB). Eccezione 12.10.2026: tasti admin «Rete» e «Inviti» in cima (js/inviti-admin.js); le pagine della rete si aprono da Rete.
+  /* CONGELATO 20.09.2026. Famiglie e pulsanti. Non cambiare FOLD_LAB, UFFICIO, PACKS, packFornitore, navItems, HEADER_OPP. Non aggiungere, togliere o rinominare pieghe o tasti. Eccezione 11.10.2026, su richiesta esplicita di Nando: tasto «Home» (grafici, js/home.js) primo per admin e agenti. Eccezione 11.10.2026 sera: tasti admin Terranova, Gare private e AncheBIM (js/funzioni-interne.js), funzioni interne, non siti a parte. Eccezione 12.10.2026: tasto admin «Software» (js/software-admin.js), secondo dopo Home, con tutti i software per categoria. Eccezione 12.10.2026: tasto admin «Pulsanti per profilo» (js/pulsanti-profili.js); i menu di privato, azienda e agente mostrano solo i pulsanti che l'admin ha scelto lì. Eccezione 12.10.2026: menu admin a categorie (pieghe adm_* in FOLD_LAB). Eccezione 12.10.2026: tasti admin «Rete» e «Inviti» in cima (js/inviti-admin.js); le pagine della rete si aprono da Rete. Eccezione 12.10.2026: menu della rete a categorie per ruolo (vociRete, js/rete-progetto.js).
      ECCEZIONE 22.09.2026, su richiesta esplicita: aggiunta "admin" come quarta famiglia
      (prima era una pagina admin.html a sé, mai approvata graficamente). Non tocca le pieghe
      o i tasti delle tre famiglie originali: admin ha un suo ramo separato ovunque sotto.
@@ -50,7 +50,14 @@
     pv_mie: "Le mie cose",
     pv_risparmio: "Risparmia",
     pv_app: "Le mie app",
-    pv_passaparola: "Passaparola"
+    pv_passaparola: "Passaparola",
+    // Rete a categorie (12.10.2026, PROGETTO-DASHBOARD.md)
+    rt_clienti: "I miei clienti",
+    rt_vendi: "Vendi",
+    rt_squadra: "La mia squadra",
+    rt_soldi: "Guadagni",
+    rt_io: "Io e AncheCasa",
+    rt_direzione: "Direzione"
   };
 
   const TIPO_SETTORE = {
@@ -275,6 +282,37 @@
 
   const PACK_NASCOSTO = { hse: 1, sicurezza_armata: 1, apl: 1, condominio: 1, agenzia: 1, industria: 1, logistica: 1, albergo: 1, negozio: 1 };
 
+  /* RETE a categorie (12.10.2026, deciso da Nando, PROGETTO-DASHBOARD.md). Ognuno vede sé stesso e chi ha sotto.
+     «ruoli»: da quale livello in su si vede il pulsante. Le pagine «re-…» sono schede del progetto (js/rete-progetto.js). */
+  const LIVELLO_RETE = { subagente: 1, agente: 2, capoarea: 3, sviluppo: 4, reteitalia: 5 };
+  function vociRete(ruolo) {
+    const c = (id, label, iconName, fold, daLivello, extra) => Object.assign({ id: id, label: label, icon: iconName, gruppo: "pack", fold: fold, daLivello: daLivello || 1 }, extra || {});
+    const tutte = [
+      // 11.10.2026, su richiesta: Home con grafici e andamenti (js/home.js), primo tasto anche sul telefono.
+      { id: "home", label: "Home", icon: "home", gruppo: "fisso", daLivello: 1 },
+      c("re-clienti", "I miei clienti", "team", "rt_clienti", 1),
+      c("re-registra", "Registra un cliente", "plus", "rt_clienti", 1),
+      c("inviti", "Invita un cliente", "send", "rt_clienti", 1),
+      c("re-vendi", "Vendi", "wallet", "rt_vendi", 1, { cuore: true }),
+      c("re-flash", "Sopralluogo Flash", "pulse", "rt_vendi", 1),
+      c("catena", "La mia squadra", "team", "rt_squadra", 2),
+      c("re-fermi", "Chi è fermo", "clock", "rt_squadra", 2),
+      c("re-cartina", "La cartina", "grid", "rt_squadra", 2),
+      c("re-recensioni", "Recensioni della zona", "star", "rt_squadra", 3),
+      c("re-aprire", "Regioni da aprire", "building", "rt_squadra", 4),
+      c("re-segnala", "Segnala una persona", "send", "rt_squadra", 1),
+      c("guadagno", "I miei guadagni", "wallet", "rt_soldi", 1),
+      c("mio-ruolo", "Il mio ruolo", "star", "rt_io", 1),
+      c("documenti", "Contratto e documenti", "doc", "rt_io", 1),
+      c("re-formazione", "Formazione", "doc", "rt_io", 1),
+      c("linee-decise", "Linee decise", "doc", "rt_direzione", 1),
+      c("strategia", "Sala strategia", "chat", "rt_direzione", 3),
+      { id: "chat", label: "Chat", icon: "chat", gruppo: "fisso", soloTestata: true, daLivello: 1 }
+    ];
+    const liv = LIVELLO_RETE[ruolo] || 2;
+    return tutte.filter((v) => liv >= v.daLivello);
+  }
+
   function navItems(famiglia) {
     if (famiglia === "privato") {
       /* 12.10.2026, deciso da Nando (PROGETTO-DASHBOARD.md): privato a categorie, tutto gratis.
@@ -312,22 +350,7 @@
       );
     }
     if (famiglia === "agente") {
-      const voci = [
-        // 11.10.2026, su richiesta: Home con grafici e andamenti (js/home.js), primo tasto anche sul telefono.
-        { id: "home", label: "Home", icon: "home", gruppo: "fisso" },
-        { id: "pubblica", label: "Pubblica", icon: "send", gruppo: "fisso", cuore: true },
-        { id: "mio-ruolo", label: "Il mio ruolo", icon: "star", gruppo: "fisso" },
-        { id: "documenti", label: "Documenti", icon: "doc", gruppo: "fisso" },
-        { id: "chat", label: "Chat", icon: "chat", gruppo: "fisso" },
-        { id: "catena", label: "Catena", icon: "team", gruppo: "comune" },
-        { id: "guadagno", label: "Guadagno", icon: "wallet", gruppo: "comune" },
-        { id: "inviti", label: "Inviti", icon: "send", gruppo: "comune" },
-        { id: "linee-decise", label: "Linee decise", icon: "doc", gruppo: "fisso" }
-      ];
-      if (window.AC && AC.direzione && AC.direzione.vedeSala()) {
-        voci.push({ id: "strategia", label: "Sala strategia", icon: "chat", gruppo: "fisso" });
-      }
-      return voci;
+      return vociRete(AC.ruoloRete ? AC.ruoloRete() : "agente");
     }
     if (famiglia === "admin") {
       /* 12.10.2026, su richiesta di Nando: menu admin a categorie (cartelle che si aprono, come quelle
@@ -407,7 +430,11 @@
     { k: "azienda:fornitore", nome: "Fornitore (materiali, noleggio, IT)", famiglia: "azienda", pack: "fornitore" },
     { k: "azienda:energia", nome: "Luce e gas", famiglia: "azienda", pack: "energia" },
     { k: "azienda:committente", nome: "Committente (condominio, amministratore, fondi)", famiglia: "azienda", pack: "committente" },
-    { k: "agente", nome: "Rete (agenti e ruoli)", famiglia: "agente" }
+    { k: "agente:subagente", nome: "Rete · Sub-agente", famiglia: "agente", ruolo: "subagente" },
+    { k: "agente:agente", nome: "Rete · Agente", famiglia: "agente", ruolo: "agente" },
+    { k: "agente:capoarea", nome: "Rete · Capo area", famiglia: "agente", ruolo: "capoarea" },
+    { k: "agente:sviluppo", nome: "Rete · Sviluppo rete", famiglia: "agente", ruolo: "sviluppo" },
+    { k: "agente:reteitalia", nome: "Rete · Responsabile Rete Italia", famiglia: "agente", ruolo: "reteitalia" }
   ];
   const GRUPPO_LAB = { fisso: "In alto nel menu", comune: "In alto nel menu" };
   function catalogoPulsanti(prof) {
@@ -420,8 +447,7 @@
         { id: "tuo-mese", label: "Il tuo mese", icon: "chart", gruppo: "comune" }
       ].concat(prof.pack === "fornitore" ? packFornitore("entrambi") : PACKS[prof.pack] || []);
     } else if (prof.famiglia === "agente") {
-      voci = navItems("agente");
-      if (!voci.some((v) => v.id === "strategia")) voci = voci.concat([{ id: "strategia", label: "Sala strategia", icon: "chat", gruppo: "fisso", nota: "Solo per chi è nella direzione" }]);
+      voci = vociRete(prof.ruolo || "agente");
     } else {
       voci = navItems(prof.famiglia);
     }
@@ -434,6 +460,7 @@
   }
   function profiloPulsanti(famiglia) {
     if (famiglia === "azienda") return "azienda:" + packKey(S.data.profilo && S.data.profilo.tipoAzienda);
+    if (famiglia === "agente") return "agente:" + (AC.ruoloRete ? AC.ruoloRete() : "agente");
     return famiglia;
   }
   /** "gratis" | "pagamento" | "" per il pulsante id nel menu della famiglia. L'admin vede tutto. */
@@ -872,7 +899,7 @@
 
     // Telefono (01.10.2026): barra delle sezioni in basso, come un'app. Fino a 5 voci stanno tutte nella barra;
     // altrimenti le prime 4 e «Altro», che apre una scheda con il resto e con le cartelle (Ufficio, Cantiere...).
-    const BREVE = { home: "Home", software: "Software", pulsanti: "Pulsanti", "rete-admin": "Rete", "inviti-admin": "Inviti", "sala-demo": "Demo", regole: "Regole", bacheca: "Bacheca", iscritti: "Iscritti", appunti: "Appunti", bandi: "Bandi", terranova: "Terranova", "gare-private": "Gare", anchebim: "BIM", contratti: "Contratti", affida: "Affida", iscrizioni: "Iscrizioni", "richieste-agenti": "Agenti", "proposte-rete": "Segnala", "oggi-rete": "Oggi", strategia: "Strategia", "lavori-rete": "Lavori", "linee-decise": "Linee", "tuo-mese": "Mese", "genera-link": "Link", task: "Task", file: "File", "chat-team": "Chat", "mio-ruolo": "Ruolo", documenti: "Documenti" };
+    const BREVE = { home: "Home", software: "Software", pulsanti: "Pulsanti", "rete-admin": "Rete", "inviti-admin": "Inviti", "re-clienti": "Clienti", "re-vendi": "Vendi", "re-formazione": "Formazione", "sala-demo": "Demo", regole: "Regole", bacheca: "Bacheca", iscritti: "Iscritti", appunti: "Appunti", bandi: "Bandi", terranova: "Terranova", "gare-private": "Gare", anchebim: "BIM", contratti: "Contratti", affida: "Affida", iscrizioni: "Iscrizioni", "richieste-agenti": "Agenti", "proposte-rete": "Segnala", "oggi-rete": "Oggi", strategia: "Strategia", "lavori-rete": "Lavori", "linee-decise": "Linee", "tuo-mese": "Mese", "genera-link": "Link", task: "Task", file: "File", "chat-team": "Chat", "mio-ruolo": "Ruolo", documenti: "Documenti" };
     const conAltro = folds.length > 0 || top.length > 5;
     const tabs = conAltro ? top.slice(0, 4) : top;
     const extra = conAltro ? top.slice(4) : [];

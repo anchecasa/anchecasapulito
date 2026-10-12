@@ -10,7 +10,7 @@
 
   const DOCUMENTI = [
     { k: "privato", nome: "Privato", desc: "Chi ha una casa: guasti, ristrutturazioni, bacheca, bollette, passaparola.", ico: "home", file: "regole/privato.html", pronto: true, versione: "12.10.2026" },
-    { k: "rete", nome: "Rete", desc: "Agente, sub-agente, capo area, sviluppo rete, Rete Italia.", ico: "team" },
+    { k: "rete", nome: "Rete", desc: "Agente, sub-agente, capo area, sviluppo rete, Rete Italia.", ico: "team", file: "regole/rete.html", pronto: true, versione: "12.10.2026" },
     { k: "impresa", nome: "Impresa edile", desc: "Cantieri, SAL, gare, subappalti, squadre.", ico: "building" },
     { k: "artigiano", nome: "Artigiano", desc: "Interventi, SuperMastro, 4,99 € a lavoro fatto.", ico: "gear" },
     { k: "subappaltatore", nome: "Subappaltatore e impiantista", desc: "Lavori per i general contractor, interventi, certificazioni.", ico: "gear" },

@@ -139,3 +139,28 @@ td b { color: var(--navy); }
   .sez { break-inside: avoid; }
   .salto { break-before: page; }
 }
+
+/* Regole della Rete (12.10.2026) */
+.scala { display: grid; gap: 6px; margin: 12px 0 14px; }
+.gradino { display: flex; justify-content: space-between; align-items: center; gap: 12px; border-radius: 12px; padding: 11px 16px; color: #fff; font-size: 13px; }
+.gradino b { font-size: 15px; }
+.gradino span { opacity: .85; text-align: right; }
+.g5 { background: #0b1a2c; margin-right: 0; }
+.g4 { background: #16304d; margin-left: 4%; }
+.g3 { background: #2c4a6e; margin-left: 8%; }
+.g2 { background: #3a5f8a; margin-left: 12%; }
+.g1 { background: var(--orange); margin-left: 16%; }
+.matrice th:not(:first-child), .matrice td:not(:first-child) { text-align: center; white-space: nowrap; }
+.matrice td.si { color: var(--orange); font-size: 16px; }
+.matrice td { font-size: 13px; }
+.idea-chiara { margin: 12px 0; background: var(--orange-soft); color: var(--ink); }
+.idea-chiara b { color: var(--navy); }
+.quattro { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 12px 0; }
+.quattro .num { border: 1px solid var(--line); border-radius: 14px; padding: 14px; text-align: center; }
+.quattro .num .ic { width: 26px; height: 26px; color: var(--orange); display: block; margin: 0 auto 6px; }
+.quattro .num b { display: block; color: var(--navy); }
+.quattro .num span { font-size: 12px; color: var(--muted); }
+@media (max-width: 720px) {
+  .g4, .g3, .g2, .g1 { margin-left: 0; }
+  .quattro { grid-template-columns: 1fr 1fr; }
+}
