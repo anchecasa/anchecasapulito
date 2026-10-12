@@ -29,8 +29,8 @@
       nome: "Dashboard e app",
       desc: "Dove lavorano iscritti, rete e admin.",
       voci: [
-        { nome: "App AncheCasa", desc: "La dashboard di privati, aziende e fornitori. entra.anchecasa.it aspetta il DNS.", stato: "online", url: "https://app-anchecasa.pages.dev" },
-        { nome: "Area privata", desc: "Questa dashboard: admin e rete.", stato: "interno", pagina: "home" }
+        { nome: "App AncheCasa (riserva)", desc: "Non la usano più i clienti: le sue funzioni si portano nell'area privata.", stato: "online", url: "https://app-anchecasa.pages.dev" },
+        { nome: "Area privata", desc: "La dashboard di tutti, da areaprivata.anchecasa.it e da entra.anchecasa.it.", stato: "interno", pagina: "home" }
       ]
     },
     {

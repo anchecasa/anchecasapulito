@@ -195,7 +195,8 @@
             email: data.email,
             password: password,
             options: {
-              emailRedirectTo: (famiglia === "privato" || famiglia === "azienda" || famiglia === "fornitore") ? "https://entra.anchecasa.it/" : "https://areaprivata.anchecasa.it/",
+              // 12.10.2026: tutti tornano su questo sito (entra o areaprivata), non nell'app.
+              emailRedirectTo: location.origin + "/",
               // "invito": il database lo usa per collegare l'iscritto a chi l'ha invitato e, se
               // l'invito è di un utente (non dell'admin), per verificarlo subito.
               data: { nome: data.nome || data.ragione || "", cognome: data.cognome || "", famiglia: famiglia, zona: zonaProfilo, invito: invitoToken || null }
@@ -250,8 +251,9 @@
           form._utenteId = null;
           form.reset();
           if (btn) btn.disabled = false;
+          // 12.10.2026: privato, azienda e fornitore entrano nella loro dashboard qui, non nell'app.
           if (famiglia === "privato" || famiglia === "azienda" || famiglia === "fornitore") {
-            window.location.href = "https://entra.anchecasa.it/";
+            window.location.href = "index.html";
             return;
           }
           if (ok) ok.classList.add("show");

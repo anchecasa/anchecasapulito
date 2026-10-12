@@ -14,11 +14,30 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 ## Regole fisse · 11.10.2026, 17:25 (decisioni di Nando)
 
 1. ANCHECASA-PULITO è l'unica cartella ufficiale di AncheCasa. Le cartelle fuori (ANCHECASA-LAVORO, BIM-SICUR, 04-SuperMastro e le altre) non sono più ufficiali: non si lavora più lì.
-2. L'app AncheCasa (cartella `app-anchecasa`) è l'unica dashboard per privati, aziende e fornitori. Indirizzo: https://entra.anchecasa.it
-3. Le funzioni nuove si fanno solo nell'app. Nell'area privata (areaprivata.anchecasa.it) solo correzioni, finché tutto non è passato nell'app.
+2. ~~L'app AncheCasa è l'unica dashboard per privati, aziende e fornitori.~~ **Cambiata il 12.10.2026 da Nando, vedi sotto.**
+3. ~~Le funzioni nuove si fanno solo nell'app.~~ **Cambiata il 12.10.2026 da Nando, vedi sotto.**
 4. app.anchecasa.it non si usa più per l'app nuova e non si tocca.
 
+## Regole fisse · 12.10.2026, 07:50 (decisioni di Nando)
+
+1. **La dashboard ufficiale di tutti è l'area privata** (cartella `area-privata`): admin, rete, privati, aziende e fornitori. Si adatta al profilo; i pulsanti di ogni profilo li decide l'admin in «Pulsanti per profilo».
+2. **Si entra con l'accesso dell'area privata**, anche da https://entra.anchecasa.it: entra.anchecasa.it e areaprivata.anchecasa.it aprono lo stesso sito. L'accesso dell'app (la pagina «Un'app sola per la casa e per il lavoro») non si usa.
+3. Le funzioni che oggi esistono solo nell'app (`app-anchecasa`: Ufficio, Cantieri e SAL, Gare, Lotti, Magazzino…) si portano nell'area privata, un profilo alla volta, seguendo `PROGETTO-DASHBOARD.md`. L'app resta come riserva su app-anchecasa.pages.dev.
+4. Stile unico: quello dell'area privata (dashboard, accesso e mail).
+5. Si progetta, si prova in anteprima e solo con l'ok di Nando si toccano Supabase e la pubblicazione.
+6. La dashboard del cliente Sicura (altro progetto) non si tocca.
+
 ## Registro delle modifiche
+
+### 12.10.2026 07:55 · Claude — l'area privata è la dashboard di tutti; accesso senza rimando all'app; «Guarda come» (NON pubblicato)
+- Decisione di Nando: la dashboard ufficiale di tutti è l'area privata, con il suo accesso anche da entra.anchecasa.it. Nuove regole fisse in cima a questo file; la 2 e la 3 dell'11.10 sono barrate. `PROGETTO-DASHBOARD.md` regola 6 corretta.
+- Accesso (`area-privata/js/app.js`): nessuno viene più mandato su https://entra.anchecasa.it (l'app). Tutti vanno in `dashboard/#/<famiglia>/`; il fornitore usa la dashboard dell'azienda (anche in `dashboard/js/app.js`).
+- Iscrizione e benvenuto (`js/iscrizione.js`, `js/benvenuto.js`): la mail di conferma torna allo stesso sito da cui ci si iscrive (`location.origin`), non più all'app; dopo l'iscrizione privato, azienda e fornitore vanno all'accesso dell'area privata, che li fa entrare.
+- «Guarda come»: in Pulsanti per profilo un tasto apre in una scheda nuova la dashboard di Privato, Rete o Impresa edile senza password (`?demo=`), con dati di esempio. Se nel browser c'è l'accesso dell'admin, il menu usa le scelte vere salvate su Supabase (solo lettura); in anteprima nessuna scrittura sul database.
+- Software: l'app diventa «riserva», l'area privata «la dashboard di tutti».
+- Da fare fuori dal codice, prima che entra.anchecasa.it apra l'area privata: dominio `entra.anchecasa.it` aggiunto al progetto Vercel `area-privata-produzione` (e tolto dal progetto Cloudflare Pages `app-anchecasa`), record DNS `entra` su Cloudflare verso Vercel, `https://entra.anchecasa.it/**` tra gli indirizzi ammessi di Supabase Authentication.
+- Provato in locale: «Guarda come Privato» apre la bacheca del privato con le 6 categorie; pagina di accesso invariata. Copia di prima: `_copie-accesso-0755`.
+- File: `CLAUDE.md`, `PROGETTO-DASHBOARD.md`, `area-privata/js/app.js`, `js/iscrizione.js`, `js/benvenuto.js`, `dashboard/js/app.js`, `dashboard/js/pulsanti-profili.js`, `dashboard/js/software-admin.js`, `dashboard/css/admin-task.css`, `dashboard/index.html` (app.js ?v=18, pulsanti-profili ?v=2, software-admin ?v=2, admin-task.css ?v=9).
 
 ### 12.10.2026 07:31 · Cursor — progetto dashboard e Regole del Privato pubblicati
 - Invio su GitHub, ramo main, commit `377ecde` e `c227481`. Pubblicata solo la cartella `area-privata` sul progetto Vercel `area-privata-produzione`, deployment `dpl_J5PUqyF5bYbjhRPz7jzTw3SDq63V`, alias https://areaprivata.anchecasa.it. Sito, app, magazine, sicura e Supabase non toccati.

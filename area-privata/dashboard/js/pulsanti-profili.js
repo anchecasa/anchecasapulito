@@ -34,14 +34,30 @@
     return out;
   }
 
+  function locale() {
+    try { config = pulisci(JSON.parse(localStorage.getItem(LOCALE) || "{}")); } catch (e) { config = { profili: {} }; }
+    caricato = true;
+    return config;
+  }
+  function daDb() {
+    return window.acDb.from("app_impostazioni").select("valore").eq("chiave", CHIAVE).maybeSingle();
+  }
+
   function carica() {
     if (DEMO) {
-      try { config = pulisci(JSON.parse(localStorage.getItem(LOCALE) || "{}")); } catch (e) { config = { profili: {} }; }
-      caricato = true;
-      return Promise.resolve(config);
+      // 12.10.2026 «Guarda come»: se nel browser c'è l'accesso dell'admin, l'anteprima usa le scelte vere
+      // salvate su Supabase (solo lettura). Senza accesso, quelle di prova del browser.
+      if (!window.acDb || !window.acDb.auth) return Promise.resolve(locale());
+      return window.acDb.auth.getSession().then((r) => {
+        if (!(r && r.data && r.data.session)) return locale();
+        return daDb().then((res) => {
+          if (res && !res.error && res.data) { config = pulisci(res.data.valore); caricato = true; return config; }
+          return locale();
+        }, () => locale());
+      }, () => locale());
     }
     if (!window.acDb) { caricato = true; return Promise.resolve(config); }
-    return window.acDb.from("app_impostazioni").select("valore").eq("chiave", CHIAVE).maybeSingle()
+    return daDb()
       .then((res) => {
         // Se la lettura non riesce, nessun pulsante: meglio vuoto che tutto aperto.
         config = res && !res.error && res.data ? pulisci(res.data.valore) : { profili: {} };
@@ -143,6 +159,9 @@
                 <p class="note">${salvato ? "Salvato il " + dataOra(salvato.salvato) + (salvato.da ? " da " + salvato.da : "") : "Non ancora salvato: oggi questo profilo non vede nessun pulsante."}</p>
               </div>
               <div class="pp-conti">
+                ${prof.famiglia === "privato" || prof.famiglia === "agente" || prof.k === "azienda:impresa"
+                  ? html`<a class="pp-guarda" href="index.html?demo=${prof.famiglia}#/${prof.famiglia}/bacheca" target="_blank" rel="noopener" title="Si apre in una scheda nuova, senza password, con dati di esempio e i pulsanti salvati">Guarda come ${prof.nome}</a>`
+                  : ""}
                 <span class="pp-c sw-ok">${c.g} gratis</span>
                 <span class="pp-c sw-off">${c.a} a pagamento</span>
                 <span class="pp-c pp-grigio">${c.n} nascosti</span>

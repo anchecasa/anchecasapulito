@@ -147,7 +147,8 @@
       email: email,
       password: password,
       options: {
-        emailRedirectTo: (invito.famiglia === "privato" || invito.famiglia === "azienda" || invito.famiglia === "fornitore") ? "https://entra.anchecasa.it/" : "https://areaprivata.anchecasa.it/",
+        // 12.10.2026: tutti tornano su questo sito (entra o areaprivata), non nell'app.
+        emailRedirectTo: location.origin + "/",
         data: { famiglia: invito.famiglia, invito: token }
       }
     }), 25000)
@@ -159,9 +160,7 @@
         mostra("fine");
         if (res.data.session) {
           setTimeout(function () {
-            location.href = (invito.famiglia === "privato" || invito.famiglia === "azienda" || invito.famiglia === "fornitore")
-              ? "https://entra.anchecasa.it/"
-              : "dashboard/#/" + invito.famiglia + "/bacheca";
+            location.href = "dashboard/#/" + (invito.famiglia === "fornitore" ? "azienda" : invito.famiglia) + "/bacheca";
           }, 900);
         }
       })

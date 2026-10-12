@@ -12,13 +12,12 @@
   }
 
   var form = document.getElementById("login-form");
-  var APP = "https://entra.anchecasa.it/";
-
-  function vaNellApp(famiglia) {
-    return famiglia === "privato" || famiglia === "azienda" || famiglia === "fornitore";
+  // 12.10.2026, decisione di Nando: la dashboard di tutti è questa. Nessuno viene più mandato nell'app.
+  // Il fornitore usa la dashboard dell'azienda.
+  function famigliaDashboard(famiglia) {
+    return famiglia === "fornitore" ? "azienda" : famiglia;
   }
 
-  // Admin e rete restano nell'area privata. Privato, azienda e fornitore vanno nell'app.
   function dopoAccesso(userId) {
     return window.acDb.from("admins").select("id").eq("id", userId).maybeSingle()
       .then(function (adminRes) {
@@ -39,11 +38,7 @@
               if (!rifiutato) errVerifica.tipo = "info";
               return window.acDb.auth.signOut().then(function () { throw errVerifica; }, function () { throw errVerifica; });
             }
-            if (vaNellApp(prof.famiglia)) {
-              window.location.href = APP;
-              return;
-            }
-            window.location.href = "dashboard/#/" + prof.famiglia + "/";
+            window.location.href = "dashboard/#/" + famigliaDashboard(prof.famiglia) + "/";
           });
       });
   }

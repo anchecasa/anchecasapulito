@@ -274,3 +274,5 @@ button.rp-apri:hover { text-decoration: underline; }
 .rg-tile { gap: 4px; }
 .rg-ico { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: var(--orange-soft); color: var(--orange-ink); margin-bottom: 4px; }
 .rg-ico-off { background: #eef1f5; color: var(--muted); }
+.pp-guarda { display: inline-flex; align-items: center; height: 26px; padding: 0 12px; border-radius: 99px; background: var(--navy); color: #fff; font-size: 12px; font-weight: 700; text-decoration: none; }
+.pp-guarda:hover { background: #1a334f; }

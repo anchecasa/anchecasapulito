@@ -563,7 +563,8 @@
             fuori();
             return "fuori";
           }
-          admin.tipo = p.data.famiglia;
+          // 12.10.2026: il fornitore usa la dashboard dell'azienda.
+          admin.tipo = p.data.famiglia === "fornitore" ? "azienda" : p.data.famiglia;
           admin.nome = p.data.nome || nomeUtente(user);
           S.usaUtente(user.id, admin.nome);
           // Profilo reale da Supabase; per l'azienda anche i luoghi (sedi, cantieri...).
