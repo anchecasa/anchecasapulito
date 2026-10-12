@@ -20,6 +20,12 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 12.10.2026 06:35 · Cursor — pagina Software pubblicata sull'area privata
+- Invio su GitHub, ramo main, commit `4c65990`. Pubblicazione Vercel `area-privata-produzione`, deployment `dpl_2LrUSpECWhwCxp8EzinhZaGUbzV5`, alias https://areaprivata.anchecasa.it.
+- Online la pagina Software: lo script `software-admin.js` risponde e il menu admin ha la voce Software. Indirizzo https://areaprivata.anchecasa.it/dashboard/#/admin/software.
+- La voce delle 06:30 diceva non pubblicato. Ora è pubblicato.
+- File: `CLAUDE.md`.
+
 ### 12.10.2026 06:30 · Claude — pagina «Software» per categoria nell'admin (NON pubblicato)
 - Su richiesta di Nando: nel menu admin dell'area privata, secondo tasto dopo Home, c'è «Software». Mostra i 14 software dell'inventario in 6 categorie: Siti pubblici, Dashboard e app, Gare e appalti, Tecnico e progettazione, Rete e contratti, In preparazione. Ogni scheda dice se è online, se è un tasto di questa area o se non è pubblicata.
 - I tasti interni (Bandi, Terranova, Gare private, AncheBIM, Contratti, Genera link, Sala strategia) aprono la loro pagina; i siti aprono il loro indirizzo in una scheda nuova. Le voci del menu di prima restano tutte.
