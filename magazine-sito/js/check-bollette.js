@@ -267,5 +267,34 @@
   $("cb-go").addEventListener("click", analizza);
   $("cb-edit").addEventListener("click", function () { vista(false); $("cb-importo").focus(); });
   $("cb-pdf").addEventListener("click", scaricaPdf);
+
+  /* 12.10.2026 · «Ricevi offerte migliori»: la richiesta va a tutti i fornitori di luce e gas iscritti ad AncheCasa
+     (app-19, energia_nuova_richiesta). Partono solo i dati che il cliente scrive qui, con il suo consenso, più i consumi
+     calcolati. La mail con il link alle proposte la manda la funzione energia-avvisa. */
+  var SB = "https://edsvmnxojsmknjuhobqa.supabase.co", SBK = "sb_publishable_QbYv61SkMkjA9_GGb1hhOA_6v6GEw87";
+  var off = $("cb-off");
+  if (off) {
+    $("cb-off-apri").addEventListener("click", function () { off.hidden = !off.hidden; if (!off.hidden) off.nome.focus(); STAT.traccia("bollette_offerte_apri", null, bolletta.tipo); });
+    off.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var msg = off.querySelector(".cb-off-msg"), btn = off.querySelector("button[type=submit]");
+      var nome = off.nome.value.trim(), mail = off.mail.value.trim();
+      if (nome.length < 2) { msg.textContent = "Scrivi nome e cognome."; return; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(mail)) { msg.textContent = "Controlla la mail."; return; }
+      if (!off.consenso.checked) { msg.textContent = "Serve il consenso per ricevere le proposte."; return; }
+      var c = calcolaBolletta(), luce = bolletta.tipo === "luce";
+      var dati = { fonte: "magazine", tipo: bolletta.tipo, cliente_tipo: "privato", nome: nome, mail: mail, telefono: off.tel.value.trim(), comune: off.comune.value.trim(),
+        consumo_luce: luce ? Math.round(c.annuo) : null, consumo_gas: luce ? null : Math.round(c.annuo), spesa_mese: Math.round(c.spesaAnnua / 12), consenso: true };
+      btn.disabled = true; msg.textContent = "Invio…";
+      fetch(SB + "/rest/v1/rpc/energia_nuova_richiesta", { method: "POST", headers: { apikey: SBK, "Content-Type": "application/json", "Content-Profile": "marketplace" }, body: JSON.stringify({ p: dati }) })
+        .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+        .then(function (x) {
+          if (!x.ok) { btn.disabled = false; msg.textContent = /troppe/.test(JSON.stringify(x.j)) ? "Hai già fatto tre richieste oggi." : "Non riesco a inviare. Riprova tra poco."; return; }
+          fetch(SB + "/functions/v1/energia-avvisa", { method: "POST", headers: { apikey: SBK, "Content-Type": "application/json" }, body: JSON.stringify({ evento: "richiesta", token: x.j }) }).catch(function () {});
+          STAT.traccia("bollette_offerte_inviata", null, bolletta.tipo);
+          off.innerHTML = '<p class="cb-off-t"><b>Fatto.</b> Ti abbiamo scritto a ' + mail.replace(/[<>&"]/g, "") + ': in quella mail c’è il link dove arrivano le proposte. Le confronti e scegli tu.</p>';
+        }, function () { btn.disabled = false; msg.textContent = "Non riesco a inviare. Controlla la connessione."; });
+    });
+  }
   $("cb-out").addEventListener("click", function (e) { var b = e.target.closest("[data-pers]"); if (!b) return; cb.setAttribute("data-persone", b.getAttribute("data-pers")); risultato(); });
 })();

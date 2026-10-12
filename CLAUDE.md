@@ -29,6 +29,41 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 12.10.2026 09:50 · Claude — Fornitori di luce e gas: giro completo (NON eseguito su Supabase, NON pubblicato)
+- `app-anchecasa/sql/app-19-fornitori-energia.sql` (solo aggiunte, rilanciabile): comprende le tabelle del 09.10 mai applicate (energia_carta, energia_offerte, energia_proposte) e aggiunge energia_richieste (contatti visibili solo all'admin e al privato), `energia_nuova_richiesta` (anche senza accesso, max 3 al giorno per mail), `energia_richieste_per_me` (al fornitore senza contatti, con i contatti solo se il cliente ha scelto lui), `energia_le_mie_proposte` e `energia_accetta` (pagina del cliente dal link), `energia_contratto_attivato`, fornitori_accordi con `fornitori_conferma_accordo` (se l'admin cambia la provvigione la conferma si azzera), `fornitori_accordo_ok` (senza accordo confermato niente proposte), `fornitori_per_admin`.
+- Nuova funzione `app-anchecasa/supabase/functions/energia-avvisa`: mail al cliente (richiesta ricevuta, nuova proposta), ai fornitori (nuova richiesta, scelta del cliente), al fornitore (accordo da confermare, solo dall'admin). Usa RESEND_API_KEY e RESEND_FROM già presenti.
+- Dashboard del fornitore di energia (`js/energia.js` riscritto, tutto sul database): Home, Richieste, Proposte, Le mie offerte con la carta intestata, I miei clienti, Il mio accordo. Niente più pagine vuote dell'Ufficio nel pack energia. Prima pagina: Home.
+- Admin: pulsante «Fornitori» in cima (`js/fornitori-admin.js`): elenco, accordo da scrivere e inviare, richieste luce e gas.
+- Privato: «Offerte luce e gas» è una pagina vera (`js/energia-privato.js`).
+- Pagina pubblica del cliente `area-privata/offerte.html?t=…` (anche su entra.anchecasa.it): proposte una accanto all'altra, «Accetto, contattatemi».
+- Magazine, Check Bollette: «Confronta le offerte» (portale ARERA) diventa «Ricevi offerte migliori» con un modulo (nome, mail, telefono, comune, consenso) che manda la richiesta a tutti i fornitori.
+- Sala demo: Luce e gas pronta (vetrina con `?tipo=azienda_luce_gas`).
+- Provato in locale: vetrina del fornitore (accordo, proposta su richiesta, clienti), Fornitori dell'admin, pagina del privato, modulo del Magazine (richiesta preparata correttamente). Copie di prima: `_copie-energia-0930`, `_copie-magazine-0945`.
+- File: `app-anchecasa/sql/app-19-fornitori-energia.sql`, `app-anchecasa/supabase/functions/energia-avvisa/index.ts`, `area-privata/offerte.html`, `area-privata/dashboard/js/energia.js`, `energia-privato.js`, `fornitori-admin.js`, `app.js`, `sala-demo.js`, `css/energia.css`, `css/admin-task.css`, `index.html` (app.js ?v=23), `magazine-sito/check-bollette.html`, `magazine-sito/js/check-bollette.js` (?v=2), `magazine-sito/css/stile.css` (?v=5), `PROGETTO-DASHBOARD.md`, `CLAUDE.md`.
+
+### 12.10.2026 09:11 · Cursor — ricontrollo di app-18: era già fatto, la prova resta
+- Stessa richiesta delle 09:07. Ramo main già allineato a `dbd1c03`, push senza commit nuovi.
+- La copia in `_backup-db-1210/handle_new_user_marketplace.sql` è quella di prima di app-18: non è stata sovrascritta.
+- I due controlli tornano a posto: colonne nome, ruolo_rete, area, regione, superiore; tabelle `app_rete_note`, `app_riconoscimenti`, `app_rete_obiettivi`; la funzione di iscrizione ha il blocco della rete. Lo SQL non è stato rilanciato.
+- L'area privata online è ancora il deployment `dpl_4SV8ywGDjyx85LVcmMxbyjE1e7Nj`, con `rete-admin.js?v=2`. Sito, magazine, sicura, app e le altre funzioni non toccati.
+- La riga di prova c'è ancora e non è stata cancellata: mail `prova-agente-campania-1210@anchecasa.it`, utente `82d4cdc5-e708-4b7b-abf7-a584ad70326c`, ruolo agente, regione Campania, area Sud e isole, stato attivo. Invito `98bfd4d2-0962-44e6-85d8-961e1bcab215`, stato iscritto.
+- File: `CLAUDE.md`.
+
+### 12.10.2026 09:07 · Cursor — app-18 eseguito su Supabase e area privata pubblicata
+- GitHub, ramo main: già allineato, `dbd1c03`. Nessun commit nuovo.
+- Prima di app-18, copia della funzione `marketplace.handle_new_user_marketplace` in `_backup-db-1210/handle_new_user_marketplace.sql`.
+- Eseguito `app-anchecasa/sql/app-18-rete-area-privata.sql` sul progetto ANCHECASA, ok scritto di Nando del 12.10.2026. Controlli: `inviti_admin` ha nome, ruolo_rete, area, regione, superiore. Esistono `app_rete_note`, `app_riconoscimenti`, `app_rete_obiettivi`. La funzione di iscrizione contiene il blocco della rete.
+- Pubblicata solo la cartella `area-privata` sul progetto Vercel `area-privata-produzione`, deployment `dpl_4SV8ywGDjyx85LVcmMxbyjE1e7Nj`, alias https://entra.anchecasa.it. Online: `inviti-admin.js?v=3`, `rete-admin.js?v=2`, `app.js?v=22`. Sito, magazine, sicura, app e le altre funzioni non toccati.
+- Prova, non cancellata. Invito come Agente, zona Campania, mail `prova-agente-campania-1210@anchecasa.it`, nome «Prova Agente Campania», id invito `98bfd4d2-0962-44e6-85d8-961e1bcab215`, stato iscritto. Iscrizione dal token dell'invito. In `marketplace.app_rete`: utente `82d4cdc5-e708-4b7b-abf7-a584ad70326c`, ruolo agente, regione Campania, area «Sud e isole», stato attivo. Il responsabile è vuoto: in rete non c'è ancora un capo area della Campania, né uno sviluppo del Sud, né il Responsabile Rete Italia.
+- La voce delle 09:15 diceva app-18 non eseguito e non pubblicato. Lo SQL ora è eseguito e le pagine che lo usano sono online.
+- File: `_backup-db-1210/handle_new_user_marketplace.sql`, `CLAUDE.md`.
+
+### 12.10.2026 08:59 · Cursor — pagina Rete pubblicata sull'area privata
+- Invio su GitHub, ramo main: `8bf0c45` (pagina Rete con andamento, cartina e obiettivi; Zona negli inviti). Con lui è salito anche `dbd1c03`, già sul ramo (app-18, non eseguito).
+- Pubblicata solo la cartella `area-privata` del commit `8bf0c45` sul progetto Vercel `area-privata-produzione`, deployment `dpl_DypxozUupvzSETs2Rfoc1Y2N8xgo`, alias https://entra.anchecasa.it. Sito, magazine, sicura, app e database non toccati. `dbd1c03` resta fuori da questa pubblicazione, come dice la voce delle 09:15.
+- Controllo online: https://entra.anchecasa.it/dashboard/index.html carica `js/rete-admin.js?v=1`. Lo script risponde 200, 18901 byte.
+- File: `CLAUDE.md`.
+
 ### 12.10.2026 09:15 · Claude — Rete collegata a Supabase: app-18 pronto (NON eseguito, NON pubblicato)
 - Nuovo `app-anchecasa/sql/app-18-rete-area-privata.sql`, solo aggiunte, rilanciabile:
   1. `inviti_admin`: colonne nome, ruolo_rete, area, regione, superiore.

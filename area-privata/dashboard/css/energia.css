@@ -46,3 +46,18 @@
 .en-mini-l { height: 7px; background: #eef2f7; border-radius: 4px; margin: 8px 0; }
 .en-mini-l.s { width: 60%; }
 .en-prev-card { position: sticky; top: 12px; }
+
+/* 12.10.2026 · giro luce e gas (energia.js, energia-privato.js) */
+.en-kpi { text-decoration: none; color: inherit; }
+.en-kpi:hover { box-shadow: 0 0 0 2px #f4c9a3; }
+.en-lista { display: grid; gap: 6px; }
+.en-rich { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 10px 12px; border-radius: 10px; background: #f7f8fb; text-decoration: none; color: var(--text); }
+.en-rich b { color: var(--navy); }
+.en-rich small { color: var(--muted); }
+.en-rrow { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #eef1f5; flex-wrap: wrap; }
+.en-rinfo { display: grid; gap: 3px; flex: 1 1 320px; min-width: 0; }
+.en-rinfo b { color: var(--navy); }
+.en-rinfo small { color: var(--muted); }
+.en-ract { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.en-accordo .en-acc-v { font-size: 34px; font-weight: 800; color: var(--navy); margin: 6px 0; }
+.en-accordo .en-acc-v small { font-size: 15px; font-weight: 500; color: var(--muted); }

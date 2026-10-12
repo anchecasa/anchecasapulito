@@ -247,10 +247,15 @@
     ]),
     /* ECCEZIONE 09.10.2026, su richiesta esplicita: pack Energia per i fornitori di luce e gas.
        Offerte in tutta Italia e proposte su carta intestata AncheCasa con il logo dell'azienda (js/energia.js). */
-    energia: withUfficio([
+    /* 12.10.2026 (app-19, decisioni di Nando): dashboard completa del fornitore di energia, senza le pagine vuote dell'Ufficio. */
+    energia: [
+      n("energia_home", "Home", "home", "utenze"),
+      n("energia_richieste", "Richieste", "send", "utenze"),
+      n("proposte_energia", "Proposte", "doc", "utenze"),
       n("offerte_energia", "Le mie offerte", "star", "utenze"),
-      n("proposte_energia", "Proposte su carta intestata", "doc", "utenze")
-    ]),
+      n("energia_clienti", "I miei clienti", "team", "utenze"),
+      n("energia_accordo", "Il mio accordo", "wallet", "utenze")
+    ],
     artigiano: withUfficio([
       n("vetrina", "Vetrina", "star", "bottega"),
       n("app", "App di campo", "pulse", "bottega"),
@@ -363,6 +368,8 @@
         // 12.10.2026, su richiesta: Rete e Inviti come pulsanti in cima (js/inviti-admin.js).
         { id: "rete-admin", label: "Rete", icon: "team", gruppo: "fisso" },
         { id: "inviti-admin", label: "Inviti", icon: "send", gruppo: "fisso" },
+        // 12.10.2026, su richiesta: i fornitori, l'accordo di ognuno, il giro luce e gas (js/fornitori-admin.js).
+        { id: "fornitori-admin", label: "Fornitori", icon: "building", gruppo: "fisso" },
         // Pagine della rete: si aprono dalla pagina Rete, non dal menu (soloTestata).
         c("oggi-rete", "Oggi", "chart", "adm_rete", { soloTestata: true }),
         c("appunti", "Appunti", "doc", "adm_panoramica"),
@@ -523,6 +530,8 @@
   function primaPagina(tipo) {
     if (tipo === "admin") return admin.perFrancesco ? "appunti" : "home";
     if (tipo === "agente") return "home";
+    // 12.10.2026: il fornitore di energia arriva sulla sua Home.
+    if (tipo === "azienda" && packKey(S.data.profilo && S.data.profilo.tipoAzienda) === "energia") return "energia_home";
     return "bacheca";
   }
   // Anteprima locale (?demo=privato|azienda|agente|admin): niente login.
@@ -537,7 +546,8 @@
       S.updateProfilo({
         nome: "Anteprima locale - Azienda",
         zona: "Bergamo",
-        tipoAzienda: "azienda_imprese_edili"
+        // 12.10.2026: ?tipo=… sceglie il mestiere dell'anteprima (es. azienda_luce_gas per la Sala demo).
+        tipoAzienda: new URLSearchParams(location.search).get("tipo") || "azienda_imprese_edili"
       });
     }
   }
@@ -908,7 +918,7 @@
 
     // Telefono (01.10.2026): barra delle sezioni in basso, come un'app. Fino a 5 voci stanno tutte nella barra;
     // altrimenti le prime 4 e «Altro», che apre una scheda con il resto e con le cartelle (Ufficio, Cantiere...).
-    const BREVE = { home: "Home", software: "Software", pulsanti: "Pulsanti", "rete-admin": "Rete", "inviti-admin": "Inviti", "re-clienti": "Clienti", "re-vendi": "Vendi", "re-formazione": "Formazione", "sala-demo": "Demo", regole: "Regole", bacheca: "Bacheca", iscritti: "Iscritti", appunti: "Appunti", bandi: "Bandi", terranova: "Terranova", "gare-private": "Gare", anchebim: "BIM", contratti: "Contratti", affida: "Affida", iscrizioni: "Iscrizioni", "richieste-agenti": "Agenti", "proposte-rete": "Segnala", "oggi-rete": "Oggi", strategia: "Strategia", "lavori-rete": "Lavori", "linee-decise": "Linee", "tuo-mese": "Mese", "genera-link": "Link", task: "Task", file: "File", "chat-team": "Chat", "mio-ruolo": "Ruolo", documenti: "Documenti" };
+    const BREVE = { home: "Home", software: "Software", pulsanti: "Pulsanti", "rete-admin": "Rete", "inviti-admin": "Inviti", "fornitori-admin": "Fornitori", energia_home: "Home", energia_richieste: "Richieste", proposte_energia: "Proposte", offerte_energia: "Offerte", energia_clienti: "Clienti", energia_accordo: "Accordo", "re-clienti": "Clienti", "re-vendi": "Vendi", "re-formazione": "Formazione", "sala-demo": "Demo", regole: "Regole", bacheca: "Bacheca", iscritti: "Iscritti", appunti: "Appunti", bandi: "Bandi", terranova: "Terranova", "gare-private": "Gare", anchebim: "BIM", contratti: "Contratti", affida: "Affida", iscrizioni: "Iscrizioni", "richieste-agenti": "Agenti", "proposte-rete": "Segnala", "oggi-rete": "Oggi", strategia: "Strategia", "lavori-rete": "Lavori", "linee-decise": "Linee", "tuo-mese": "Mese", "genera-link": "Link", task: "Task", file: "File", "chat-team": "Chat", "mio-ruolo": "Ruolo", documenti: "Documenti" };
     const conAltro = folds.length > 0 || top.length > 5;
     const tabs = conAltro ? top.slice(0, 4) : top;
     const extra = conAltro ? top.slice(4) : [];

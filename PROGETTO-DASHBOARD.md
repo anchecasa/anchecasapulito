@@ -192,6 +192,28 @@ Livelli: Responsabile Rete Italia → Sviluppo rete (Nord, Centro, Sud e isole) 
 
 Admin, pagina Rete: catena, cartina dell'Italia, da decidere (segnalazioni, richieste, contratti, lavori a SAL), soldi (provvigioni da pagare, incassi), obiettivi, strumenti (Inviti, Contratti, Sala strategia, Clienti da affidare).
 
+## Come si divide chi lavora su AncheCasa (deciso il 12.10.2026)
+
+Regola: **se va a casa del cliente a fare un lavoro è un'azienda di servizi o un artigiano; se vende un prodotto o un contratto è un fornitore.**
+
+1. **Imprese e artigiani**: imprese edili, subappaltatori, impiantisti, artigiani.
+2. **Servizi per la casa**: traslochi, facchinaggio, giardinaggio, pulizie, sgomberi, disinfestazione, manutenzione stabili. Lavorano come l'artigiano (richiesta → preventivo → intervento), senza cantiere.
+3. **Fornitori**: le sei famiglie qui sotto.
+4. **Professionisti**: studi tecnici, consulenti.
+
+## Fornitori (12.10.2026)
+
+Sei famiglie: **Energia** (luce e gas; fotovoltaico e pompe di calore come offerta), **Telefonia e internet**, **Finanza e assicurazioni**, **Materiali edili**, **Noleggio**, **Informatica e promozione**. Energia, telefonia e finanza funzionano allo stesso modo.
+
+### Energia · luce e gas (decisioni di Nando)
+
+- La richiesta del cliente (da Check Bollette sul Magazine o dalla dashboard del privato) arriva **a tutti** i fornitori di energia; poi Nando decide se cambiare.
+- Il fornitore vede consumi, zona e spesa; **nome, mail e telefono solo dopo che il cliente sceglie la sua proposta**.
+- Il cliente riceve una mail con il link alle proposte, le confronta e preme «Accetto, contattatemi»; poi il fornitore gli manda il suo contratto.
+- **Provvigione:** la decide Nando dalla sua dashboard (Fornitori) e la invia; il fornitore la conferma, **e solo da lì può mandare proposte**. Se cambia, va confermata di nuovo.
+- Dashboard del fornitore: Home, Richieste, Proposte (PDF su carta AncheCasa con il suo logo), Le mie offerte (e carta intestata), I miei clienti (contratto attivato), Il mio accordo.
+- A pagamento, da decidere: in evidenza, la rete vende per te, report.
+
 ## Aziende
 
 Da progettare.

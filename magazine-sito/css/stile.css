@@ -326,3 +326,13 @@ dl.glossario dd { margin: 2px 0 0; border-bottom: 1px solid var(--linea); paddin
 .cb-fonte { font-size: 13px; line-height: 1.6; color: var(--muto); margin-top: 16px; }
 .cb-fonte a { color: var(--or-testo); }
 @media (max-width: 520px) { .cb-q { grid-template-columns: 30px 1fr; } .cb-in { grid-column: 2; } .cb-in input, .cb-in select { width: 100%; } .cb-gauge { grid-template-columns: 1fr; } }
+
+/* Check Bollette · Ricevi offerte migliori (12.10.2026) */
+.cb-off { margin-top: 18px; padding: 18px; border-radius: 14px; background: #fff7ef; border: 1px solid #f6d3b2; }
+.cb-off-t { margin: 0 0 12px; }
+.cb-off-campi { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.cb-off-campi label { display: grid; gap: 4px; font-size: 14px; font-weight: 600; }
+.cb-off-campi input { border: 2px solid var(--linea); border-radius: 12px; padding: 10px 12px; font: 500 16px var(--sans); background: #fff; }
+.cb-off-ok { display: flex; gap: 8px; align-items: flex-start; margin: 12px 0; font-size: 13px; }
+.cb-off-msg { min-height: 1.3em; color: #b23a1e; font-weight: 600; margin: 8px 0 0; }
+@media (max-width: 560px) { .cb-off-campi { grid-template-columns: 1fr; } }

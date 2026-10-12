@@ -17,7 +17,7 @@
     { nome: "Subappaltatore e impiantista", desc: "Lavori per i general contractor, certificazioni.", ico: "gear" },
     { nome: "Studio tecnico", desc: "Pratiche, gare, presenze di cantiere.", ico: "doc" },
     { nome: "Fornitore", desc: "Materiali, noleggio, IT.", ico: "folder" },
-    { nome: "Luce e gas", desc: "Offerte ai privati dentro AncheCasa.", ico: "pulse" },
+    { nome: "Luce e gas", desc: "Richieste dai privati, proposte su carta AncheCasa, clienti, accordo.", ico: "pulse", demo: "azienda", tipo: "azienda_luce_gas", pagina: "energia_home", pronta: true },
     { nome: "Agenzia immobiliare", desc: "Annunci in bacheca.", ico: "home" },
     { nome: "Committente", desc: "Condomini, amministratori, grandi aziende e fondi.", ico: "building" }
   ];
@@ -37,7 +37,7 @@
 
   const apri = (p, ruolo) => ruolo
     ? `index.html?demo=${p.demo}&ruolo=${ruolo}&vetrina=1#/${p.demo}/home`
-    : `index.html?demo=${p.demo}&vetrina=1#/${p.demo}/bacheca`;
+    : `index.html?demo=${p.demo}${p.tipo ? "&tipo=" + p.tipo : ""}&vetrina=1#/${p.demo}/${p.pagina || "bacheca"}`;
 
   V["sala-demo"] = {
     title: "Sala demo",
