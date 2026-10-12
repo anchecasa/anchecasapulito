@@ -157,6 +157,12 @@ Livelli: Responsabile Rete Italia → Sviluppo rete (Nord, Centro, Sud e isole) 
 - **Chi gestisce bene** (cartina e classifica), per persona e per zona: crescita (nuovi clienti sul mese prima), clienti attivi, obiettivo del mese, squadra ferma.
 - **Delega di un lavoro:** solo a qualcuno della rete. Se serve un'altra persona, l'admin la invita ed entra nella rete (anche come impresa, professionista o altro).
 
+### Decisioni di Nando · quarta parte (12.10.2026, 08:44)
+
+- **Vendere fuori zona:** sì. Il cliente resta di chi lo porta; la zona decide solo chi sta sopra.
+- **Ruolo e zona dei commerciali:** si salvano nel profilo quando si invitano, anche su Supabase.
+- **Pagina Rete dell'admin: niente soldi** (quelli Nando li vede altrove). Serve l'**andamento**, per sapere chi **richiamare** e chi **premiare**: catena, cartina, da decidere, andamento per persona e per zona, obiettivi.
+
 ### Proposta di Claude (accolta come base)
 
 | Funzione | Sub-agente | Agente | Capo area | Sviluppo rete | Rete Italia |
