@@ -29,6 +29,14 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 12.10.2026 14:48 · Cursor — app-26 eseguito, area privata online
+- Ok di Nando del 12.10.2026 per il commit `f9e85a8`. Eseguito `app-anchecasa/sql/app-26-ristrutturazioni-flash-profit.sql` sul progetto ANCHECASA. Controlli: c'è `ristrutturazioni_media`. Il bucket `sopralluoghi` c'è ed è privato. Funzioni: `miei_sopralluoghi`, `ristrutturazione_cantiere`, `ristrutturazione_computo`, `ristrutturazione_costi`, `ristrutturazione_media_aggiungi`. Le funzioni Edge non sono state ripubblicate.
+- Git push sul ramo main: `b671645..f9e85a8`.
+- Area privata, progetto Vercel `area-privata-produzione`, deployment `dpl_BvaAEXNzS8A9TKYKkEfAkwZoAPmp`, alias https://entra.anchecasa.it e https://areaprivata.anchecasa.it. La dashboard online carica `js/imprese.js?v=3`, `js/cantieri.js?v=2`, `js/app.js?v=29` e `css/energia.css?v=9`. I quattro file rispondono 200.
+- La voce delle 14:40 diceva non pubblicato e SQL non eseguito: ora lo SQL è eseguito e le pagine sono online.
+- Sito, magazine, app e Sicura non toccati.
+- File: `CLAUDE.md`.
+
 ### 12.10.2026 14:40 · Claude — Ristrutturazioni con Flash, computo e Profit Guard; menu delle aziende (NON pubblicato, SQL NON eseguito)
 - Decisioni di Nando delle 14:28 (scritte in `PROGETTO-DASHBOARD.md`).
 - `app-anchecasa/sql/app-26-ristrutturazioni-flash-profit.sql` (solo con l'ok di Nando):
