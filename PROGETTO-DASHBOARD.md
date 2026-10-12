@@ -123,6 +123,41 @@ Poi anche: Il percorso del cliente, Regole della rete, Il primo giorno.
 
 Restano aperti anche: cifre del credito del passaparola, sistema di recensioni, avvisi della campanella per ogni profilo.
 
-## Rete, Aziende
+## Rete (in corso, 12.10.2026)
+
+Livelli: Responsabile Rete Italia → Sviluppo rete (Nord, Centro, Sud e isole) → Capo area → Agente → Sub-agente. Il segnalatore (privato che segnala) è fuori dalla rete.
+
+### Decisioni di Nando
+
+- **Regola d'oro:** ognuno vede sé stesso e chi ha sotto, mai chi sta sopra o accanto. L'admin vede tutto.
+- **Chi entra nella rete:** per ora decide solo l'admin. Gli altri segnalano.
+- **Soldi dei sotto:** ognuno vede le vendite di chi ha sotto e la propria parte, non quanto guadagnano gli altri.
+- **Clienti dei sotto:** il superiore vede nome e stato dei clienti di chi ha sotto; telefono e mail solo chi l'ha registrato.
+- **Cosa si vende:** tutti vendono tutto. Le **ristrutturazioni** si segnalano al proprio responsabile, che decide, e mette sempre a conoscenza sviluppo rete e Responsabile Rete Italia, che possono intervenire.
+- **Sopralluogo Flash:** lo usano tutti, admin compreso.
+- **Admin:** oltre alla catena, una **cartina dell'Italia** con la posizione della rete e dei clienti, con le percentuali.
+
+### Proposta di Claude (accolta come base)
+
+| Funzione | Sub-agente | Agente | Capo area | Sviluppo rete | Rete Italia |
+|---|:-:|:-:|:-:|:-:|:-:|
+| Oggi: obiettivo del mese, cosa fare | sì | sì | sì | sì | sì |
+| I miei clienti, Registra un cliente | sì | sì | sì | sì | sì |
+| Vendi (abbonamenti, moduli; ristrutturazioni = segnalazione) | sì | sì | sì | sì | sì |
+| Sopralluogo Flash | sì | sì | sì | sì | sì |
+| I miei guadagni | sì | sì | sì | sì | sì |
+| Il mio ruolo, contratto, documenti | sì | sì | sì | sì | sì |
+| Formazione (regole, Sala demo) | sì | sì | sì | sì | sì |
+| Segnala una persona | sì | sì | sì | sì | sì |
+| La mia squadra | — | sub-agenti | regione | area | Italia |
+| Chi è fermo | — | sì | sì | sì | sì |
+| Recensioni della zona | — | — | regione | area | Italia |
+| Regioni da aprire | — | — | — | sì | sì |
+| Sala strategia | — | — | sì | sì | sì |
+| Linee decise (lettura) | sì | sì | sì | sì | sì |
+
+Admin, pagina Rete: catena, cartina dell'Italia, da decidere (segnalazioni, richieste, contratti, lavori a SAL), soldi (provvigioni da pagare, incassi), obiettivi, strumenti (Inviti, Contratti, Sala strategia, Clienti da affidare).
+
+## Aziende
 
 Da progettare.
