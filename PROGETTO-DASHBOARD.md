@@ -110,6 +110,19 @@ Si spende su Ristruttura con AncheCasa, sugli interventi pagati nell'app e sulle
 - Si parla sempre in **chat dentro AncheCasa**; nessun numero visibile a sconosciuti.
 - **Telefono verificato con WhatsApp** (niente SMS) solo per chi fa venire qualcuno a casa: Ho un guasto, Trova artigiano, Ristruttura. L'artigiano vede il numero solo dopo aver accettato.
 
+## Da fare alla fine (deciso da Nando il 12.10.2026)
+
+Quando tutte le dashboard sono finite, si scrivono i documenti per la rete (Sala demo), con la carta intestata delle regole. Per i primi quattro servono i dati di Nando:
+
+1. **AncheCasa in 10 minuti**: chi siamo, cosa facciamo, per chi, come guadagna AncheCasa. Serve la frase o il numero che Nando vuole sempre dentro.
+2. **Il listino**: da confermare artigiano 14,90 €, impresa 49 €, fornitore 99 € al mese; moduli 9 / 19 / 29 €; tutti i moduli 69 €; prova gratis 14 giorni; prezzi per agenzie immobiliari e luce e gas.
+3. **Come guadagna la rete**: provvigioni vere per ruolo (oggi nelle impostazioni ci sono cifre di esempio: 20% sulla vendita, 70% sub-agente, 30% agente) e su cosa si calcolano (abbonamenti, moduli, ristrutturazioni, 4,99 €).
+4. **Si parte: i primi 90 giorni**: quando arrivano le funzioni e gli obiettivi del primo trimestre.
+
+Poi anche: Il percorso del cliente, Regole della rete, Il primo giorno.
+
+Restano aperti anche: cifre del credito del passaparola, sistema di recensioni, avvisi della campanella per ogni profilo.
+
 ## Rete, Aziende
 
 Da progettare.
