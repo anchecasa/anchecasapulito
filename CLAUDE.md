@@ -20,6 +20,14 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 12.10.2026 07:40 · Claude — «Regole iscritti» e documento del Privato (NON pubblicato)
+- Su richiesta di Nando: nel menu admin nuova categoria Formazione con «Regole iscritti». Un documento per profilo, per far studiare le logiche agli agenti. Pronto il Privato; Rete, Impresa edile, Artigiano, Subappaltatore e impiantista, Studio tecnico, Fornitore, Luce e gas, Agenzia immobiliare, Committente «da scrivere».
+- `area-privata/dashboard/regole/privato.html`: carta intestata come i contratti (logo e dati società, filo arancio, etichetta, curva e piede blu, Manrope). Dodici sezioni con mappa della dashboard, catena degli artigiani, giro dei soldi, flussi, tabelle, «cosa c'è oggi e cosa arriva», frasi per il cliente, domande frequenti. Tasto «Scarica PDF» (stampa A4, 9 pagine).
+- Il file è una pagina statica: una volta pubblicato si apre con l'indirizzo anche senza accesso (noindex). Non contiene dati riservati.
+- Per aggiungere un profilo: un file in `regole/` e `pronto: true` in `js/regole-admin.js`.
+- Provato in locale: pagina admin, documento, PDF, nessuna immagine rotta.
+- File: `area-privata/dashboard/regole/privato.html`, `regole/regole.css`, `js/regole-admin.js` (nuovi), `js/app.js`, `css/admin-task.css`, `index.html` (app.js ?v=17, admin-task.css ?v=8), `CLAUDE.md`.
+
 ### 12.10.2026 07:25 · Claude — progetto delle dashboard e privato a categorie (NON pubblicato)
 - Nuovo `PROGETTO-DASHBOARD.md` nella cartella principale: le decisioni di Nando, profilo per profilo (regole di lavoro, admin, privato). Si costruisce da lì.
 - Privato a categorie, tutto gratis: La mia casa (Ho un guasto, Trova artigiano o impresa, Ristruttura con AncheCasa, Il mio cantiere), Bacheca (Bacheca annunci, Pubblica un annuncio), Le mie cose (Le mie richieste, I miei annunci), Risparmia (Check Bollette, Offerte luce e gas), Le mie app, Passaparola (Invita e guadagna credito). Chat dal fumetto in alto.

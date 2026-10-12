@@ -41,6 +41,7 @@
     adm_gare: "Gare e appalti",
     adm_tecnico: "Tecnico",
     adm_comunicazione: "Comunicazione",
+    adm_formazione: "Formazione",
     adm_lavoro: "Il mio lavoro",
     adm_piattaforma: "Impostazioni piattaforma",
     // Privato a categorie (12.10.2026, PROGETTO-DASHBOARD.md)
@@ -354,6 +355,8 @@
         c("anchebim", "AncheBIM", "building", "adm_tecnico"),
         // 09.10.2026, su richiesta: statistiche della rivista e iscritti agli avvisi (js/magazine-admin.js).
         c("magazine", "Magazine", "chart", "adm_comunicazione"),
+        // 12.10.2026, su richiesta: un documento di regole per ogni profilo, per la formazione della rete (js/regole-admin.js).
+        c("regole", "Regole iscritti", "doc", "adm_formazione"),
         // id «chat-team» (non «chat»): «chat» è la Chat demo di Privato/Azienda/Agente.
         c("chat-team", "Chat", "chat", "adm_lavoro", { soloTestata: true }),
         c("task", "Task", "calendar", "adm_lavoro"),
