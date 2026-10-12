@@ -293,4 +293,11 @@ Decisioni di Nando delle 14:28:
   - **Computo della pratica:** per ogni riga lavorazione, quantità, prezzo al cliente e costo stimato, più sicurezza e spese generali in %. «Chiedi le voci alle aziende della zona» crea il cantiere AncheCasa della pratica e pubblica una richiesta per ogni tipo.
   - **Profit Guard:** prezzo al cliente meno costi impegnati (imprese affidate e offerte scelte nel cantiere), e il margine stimato dal computo. Sotto la soglia decisa dall'admin la pratica diventa rossa, e prima di affidare a un'impresa la dashboard chiede conferma.
 
+Gare (decisioni di Nando delle 15:10, app-27):
+- **Admin:** tasto «Gare» sempre visibile, con Bandi, Terranova, Le mie gare, Predict, AncheBIM e Software.
+- **Impresa, subappaltatore, impiantista e studio tecnico:** «Cerca gare» (le gare di AncheBandi per provincia e parola) e «Le mie gare» (il Terranova dell'azienda: stato, scadenza, documenti, ribasso, note; dalla gara si apre il cantiere per chiedere subappalti e forniture). Impresa e studio tecnico hanno anche Predict e AncheBIM.
+- **Tutti moduli a pagamento**, prezzo da decidere alla fine. Si aprono quando l'admin li attiva per l'azienda («Aziende» → Moduli attivi). In vetrina si vedono con la scritta «a pagamento».
+- **Gare private:** non le fa nessuno, tolte dal menu. AncheCasa e i general contractor pubblicano una richiesta dal cantiere, anche con il prezzo a base, e si risponde con l'offerta.
+- **Ancora da costruire:** Predict (ribasso probabile e margine dagli esiti di AncheBandi) e AncheBIM (controllo dei disegni). Oggi sono pagine di presentazione.
+
 Da progettare: studio tecnico, agenzia, committente.

@@ -67,7 +67,7 @@
   /* ============================================================
      DATI DI ESEMPIO
      ============================================================ */
-  const DEMO_KEY = "ac-demo-cantieri-v1";
+  const DEMO_KEY = "ac-demo-cantieri-v2";
   function demo() {
     let d = null;
     try { d = JSON.parse(localStorage.getItem(DEMO_KEY) || "null"); } catch (e) { d = null; }
@@ -93,7 +93,7 @@
       domande: { q1: [{ id: "dm1", creato: ieri, testo: "C'è spazio per l'autogru davanti al cantiere?", sopralluogo: false, risposta: "", azienda: "Caserta Laterizi" }], q2: [] },
       perme: [
         { id: "p1", creato: ora, tipo: "lavori", titolo: "Cartongesso e controsoffitti uffici", voci: [{ id: "x1", servizio: "cartongesso", voce: "Pareti divisorie REI 60", qta: 200, um: "m²" }, { id: "x2", servizio: "cartongesso", voce: "Controsoffitto a quadrotte", qta: 350, um: "m²" }, { id: "x3", servizio: "imp_elettrico", voce: "Punti luce controsoffitto", qta: 60, um: "pz" }],
-          pagamenti: "SAL mensili", scadenza: piu(7), urgente: false, nota: "Lavori al secondo piano, montacarichi disponibile.", stato: "aperta", motivo_invito: "zona", cantiere: "Uffici Centro Direzionale", comune: "Caserta", provincia: "CE", committente: "pubblico", dal: piu(20), al: piu(60),
+          pagamenti: "SAL mensili", prezzo: 15500, scadenza: piu(7), urgente: false, nota: "Lavori al secondo piano, montacarichi disponibile.", stato: "aperta", motivo_invito: "zona", cantiere: "Uffici Centro Direzionale", comune: "Caserta", provincia: "CE", committente: "pubblico", dal: piu(20), al: piu(60),
           vicinanza: 0, richiedente: "Edil Volturno Srl", voto_richiedente: { media: 4.5, n: 6 }, offerte: 2, mia: null, indirizzo: "", mail: "", domande: [{ testo: "I materiali li fornite voi?", sopralluogo: false, risposta: "No, li fornisce l'impresa.", mia: false }] },
         { id: "p2", creato: tre, tipo: "lavori", titolo: "Tinteggiatura villetta", voci: [{ id: "y1", servizio: "tinteggiatura", voce: "Pareti interne", qta: 380, um: "m²" }], pagamenti: "A fine lavori", scadenza: piu(-1), urgente: false, nota: "", stato: "scelta", motivo_invito: "invito",
           cantiere: "Villetta Maddaloni", comune: "Maddaloni", provincia: "CE", committente: "privato", vicinanza: 1, richiedente: "AncheCasa", voto_richiedente: { media: 5, n: 3 }, offerte: 3,
@@ -210,6 +210,7 @@
       <div class="en-grid">
         <label>Pagamento (lo decidi tu)<select name="pag">${PAGAMENTI.map((x) => html`<option>${x}</option>`)}</select></label>
         <label>Offerte entro il<input type="date" name="scadenza" value="${piu(7)}"></label>
+        <label>Prezzo a base € (facoltativo)<input name="prezzo" inputmode="decimal" value="${pre.prezzo != null ? String(pre.prezzo).replace(".", ",") : ""}" placeholder="quanto vuoi spendere al massimo"></label>
         <label class="span2">Note per chi fa l'offerta<textarea name="nota" maxlength="1500" placeholder="accesso al cantiere, orari, materiali forniti o no…"></textarea></label>
         <label class="span2">Ditte di fiducia da invitare (mail, separate da virgola: anche se non sono iscritte)<input name="inviti" placeholder="ufficio@ditta.it, info@altra.it"></label>
         <label class="check span2"><input type="checkbox" name="urgente"> Urgente: le aziende ricevono la mail subito (le altre richieste vanno nel riepilogo del giorno)</label>
@@ -231,7 +232,7 @@
       const voci = [...tb().querySelectorAll("tr")].map((tr, i) => ({ id: "v" + (i + 1), servizio: tr.querySelector("[name=servizio]").value, voce: tr.querySelector("[name=voce]").value.trim(), qta: num(tr.querySelector("[name=qta]").value) || null, um: tr.querySelector("[name=um]").value.trim() })).filter((v) => v.voce.length >= 2);
       if (!voci.length) return toast("Scrivi almeno una voce.", "error");
       const inviti = f.inviti.value.split(/[,;\s]+/).map((x) => x.trim().toLowerCase()).filter((x) => /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(x)).slice(0, 10);
-      const p = { cantiere_id: c.id, tipo: f.tipo.value, titolo: f.titolo.value.trim(), voci, pagamenti: f.pag.value, scadenza: f.scadenza.value || null, urgente: f.urgente.checked, nota: f.nota.value.trim(), inviti, parent_id: (ripubblica && ripubblica.parent) || null };
+      const p = { cantiere_id: c.id, tipo: f.tipo.value, titolo: f.titolo.value.trim(), voci, pagamenti: f.pag.value, scadenza: f.scadenza.value || null, urgente: f.urgente.checked, nota: f.nota.value.trim(), inviti, parent_id: (ripubblica && ripubblica.parent) || null, prezzo: f.prezzo.value.trim() ? num(f.prezzo.value) : null };
       const btn = f.querySelector("button[type=submit]"); btn.disabled = true;
       D.pubblica(p).then((id) => { ripubblica = null; richScelta = id; toast(reale() ? "Pubblicata: arriva alle aziende della zona." : "Anteprima: pubblicata solo qui, nessuna mail."); dopo(); },
         (e2) => { btn.disabled = false; toast(spiega(e2), "error"); });
@@ -252,7 +253,7 @@
       return html`<td class="num">${eur(p)}<br><small>${eur(p * (Number(v.qta) || 1))}</small>${aperta && off.length && (!perGruppo || chiave) ? html`<br><label class="check"><input type="radio" name="${perGruppo ? "g-" + v.servizio : "v-" + v.id}" value="${o.id}"> scegli</label>` : scelto ? html`<br><span class="tag ok">scelta</span>` : ""}</td>`;
     };
     box.innerHTML = html`<section class="card"><h2>${r.titolo} ${tag(STATO_R, r.stato, "aperta")}</h2>
-        <p class="note">${TIPI[r.tipo]} · pagamento: ${r.pagamenti || "—"} · offerte entro il ${dataIt(r.scadenza) || "—"} · arrivata a ${dati.invitati || 0} aziende${r.urgente ? " · urgente" : ""}${r.nota ? " · " + r.nota : ""}</p>
+        <p class="note">${TIPI[r.tipo]}${r.prezzo ? " · prezzo a base " + eur(r.prezzo) : ""} · pagamento: ${r.pagamenti || "—"} · offerte entro il ${dataIt(r.scadenza) || "—"} · arrivata a ${dati.invitati || 0} aziende${r.urgente ? " · urgente" : ""}${r.nota ? " · " + r.nota : ""}</p>
         ${off.length ? html`<form id="kx-f"><div class="en-scroll"><table class="mini-table"><thead><tr><th>Voce</th><th>Quantità</th>${intestaOff}${perGruppo || !aperta ? "" : html`<th>Nessuno</th>`}</tr></thead><tbody>
             ${perGruppo ? gruppi.map((g) => {
               const vv = r.voci.filter((v) => v.servizio === g);
@@ -401,7 +402,7 @@
         const aperte = l.filter((r) => r.stato === "aperta" && !(r.scadenza && r.scadenza < new Date().toISOString().slice(0, 10)));
         const altre = l.filter((r) => aperte.indexOf(r) < 0);
         const riga = (r) => html`<div class="en-rrow"><div class="en-rinfo"><div>${r.urgente ? html`<span class="tag new">Urgente</span> ` : ""}<span class="tag wait">${VICINO[r.vicinanza] || "In zona"}</span> <b>${r.titolo}</b> <small>· ${r.comune} (${r.provincia}) · ${TIPI[r.tipo]} · ${giorniFa(r.creato)}</small></div>
-            <small>${r.richiedente} · pagamenti ${stelle(r.voto_richiedente)} · ${r.pagamenti || "pagamento da definire"}${r.scadenza ? " · offerte entro il " + dataIt(r.scadenza) : ""} · ${r.offerte} offerte arrivate</small></div>
+            <small>${r.richiedente} · pagamenti ${stelle(r.voto_richiedente)}${r.prezzo ? " · prezzo a base " + eur(r.prezzo) : ""} · ${r.pagamenti || "pagamento da definire"}${r.scadenza ? " · offerte entro il " + dataIt(r.scadenza) : ""} · ${r.offerte} offerte arrivate</small></div>
           <div class="en-ract">${r.mia ? tag(STATO_O, r.mia.stato, "inviata") : ""} <button class="btn-mini" type="button" data-a="${r.id}">${r.id === aperta ? "Chiudi" : "Apri"}</button></div></div>
           ${r.id === aperta ? scheda(r) : ""}`;
         el.innerHTML = html`<section class="card"><h2>Da fare <span class="ra-n">${aperte.filter((r) => !r.mia).length}</span></h2>${aperte.length ? aperte.map(riga) : html`<p class="note">Nessuna richiesta aperta. Arrivano per i servizi che hai in «Cosa offro», nella tua zona.</p>`}</section>

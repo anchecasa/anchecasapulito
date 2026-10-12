@@ -770,10 +770,13 @@
               <small>${r.descrizione}${r.budget ? " · budget " + r.budget : ""}</small>
               <small><a href="tel:${(r.telefono || "").replace(/\s/g, "")}">${r.telefono}</a>${r.mail ? html` · <a href="mailto:${r.mail}">${r.mail}</a>` : ""}${r.indirizzo ? html` · <a href="https://maps.google.com/?q=${encodeURIComponent(r.indirizzo + " " + r.comune)}" target="_blank" rel="noopener">${r.indirizzo}</a>` : ""}</small></div></div>
             <h3>Sopralluogo Flash</h3><div data-fl="${r.id}"></div>
+            <div data-inv="${r.id}"></div>
             <form class="prefs wide en-grid" data-so="${r.id}"><label class="span2">Com'è andato il sopralluogo<textarea name="nota" maxlength="1500" placeholder="misure, stato dei luoghi, cosa vuole il cliente">${r.nota_agente || ""}</textarea></label>
               <div class="row-actions span2"><button class="btn-ghost" type="submit">Salva la nota</button>${["nuova", "sopralluogo"].includes(r.stato) ? html`<button class="btn-in" type="button" data-fatto="${r.id}">Fatto: passa al preventivo</button>` : ""}</div></form></section>`)
             : html`<div class="card empty"><strong>Nessun sopralluogo assegnato</strong><span>Quando l'admin te ne affida uno ti arriva una mail e lo trovi qui, anche dal telefono.</span></div>`}`.s;
           (l || []).forEach((r) => flashBox(el.querySelector("[data-fl='" + r.id + "']"), r, () => V2.render(el)));
+          // 12.10.2026 app-27: dopo il sopralluogo, «Invia al cliente per mail» (js/sopralluogo-invio.js).
+          if (AC.sopralluogoInvio) (l || []).forEach((r) => AC.sopralluogoInvio(el.querySelector("[data-inv='" + r.id + "']"), r, () => V2.render(el)));
           const salva = (id, nota, fatto) => azione("ristrutturazione_agente", { p_id: id, p_nota: nota, p_fatto: fatto }, (d) => { const r = d.sopralluoghi.find((x) => x.id === id); if (r) Object.assign(r, { nota_agente: nota, stato: fatto ? "preventivo" : r.stato }); })
             .then(() => { toast(fatto ? "Fatto: AncheCasa prepara il preventivo." : "Nota salvata."); V2.render(el); }, (e2) => toast("Non salvato: " + err(e2), "error"));
           el.querySelectorAll("[data-so]").forEach((f) => f.addEventListener("submit", (e) => { e.preventDefault(); salva(f.getAttribute("data-so"), f.nota.value.trim(), false); }));

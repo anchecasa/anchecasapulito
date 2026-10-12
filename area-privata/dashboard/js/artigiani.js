@@ -429,7 +429,7 @@
     render(el) {
       el.innerHTML = html`<div class="card"><p class="note">Caricamento…</p></div>`.s;
       // 12.10.2026, app-25: sponsor e limite delle richieste dei cantieri.
-      const carica = reale() ? Promise.all([Q(db().rpc("aziende_per_admin")), Q(db().rpc("guasti_admin")), Q(db().from("aziende_stato").select("azienda_id, sponsor_fino, limite_richieste")).catch(() => [])]) : Promise.resolve([JSON.parse(JSON.stringify(ESEMPIO_AZ)), ESEMPIO_GU, []]);
+      const carica = reale() ? Promise.all([Q(db().rpc("aziende_per_admin")), Q(db().rpc("guasti_admin")), Q(db().from("aziende_stato").select("azienda_id, sponsor_fino, limite_richieste, moduli")).catch(() => Q(db().from("aziende_stato").select("azienda_id, sponsor_fino, limite_richieste"))).catch(() => [])]) : Promise.resolve([JSON.parse(JSON.stringify(ESEMPIO_AZ)), ESEMPIO_GU, []]);
       carica.then(([az, gu, sp]) => {
         const spDi = {}; (sp || []).forEach((x) => { spDi[x.azienda_id] = x; });
         const daVerificare = az.filter((a) => !a.documenti_ok && (a.documenti || []).some((d) => d.stato === "caricato"));
@@ -460,6 +460,7 @@
                 <label>Nota<input name="nota" maxlength="500" placeholder="es. bonifico del 12/10"></label>
                 <label>Sponsor fino al<input type="date" name="sponsor" value="${(spDi[a.id] || {}).sponsor_fino || ""}"></label>
                 <label>Richieste al mese<input type="number" name="limite" min="0" max="1000" value="${(spDi[a.id] || {}).limite_richieste || 20}" style="width:80px"></label>
+                <span class="az-mod">Moduli attivi: ${[["gare", "Gare"], ["predict", "Predict"], ["anchebim", "AncheBIM"]].map(([k, l]) => html`<label class="check"><input type="checkbox" name="mod" value="${k}"${((spDi[a.id] || {}).moduli || []).indexOf(k) >= 0 ? " checked" : ""}> ${l}</label>`)}</span>
                 <button class="btn-ghost" type="submit">Salva</button></form>
             </div>`; }) : html`<p class="note">Nessuna azienda iscritta.</p>`}
           </section>
@@ -476,6 +477,8 @@
           if (!reale()) { toast("Anteprima: salvato solo qui."); return; }
           Q(db().rpc("azienda_admin_stato", { p_azienda: id, p_documenti_ok: f.ok.checked, p_attiva_fino: f.fino.value || null, p_note: f.nota.value.trim() }))
             .then(() => Q(db().rpc("azienda_admin_sponsor", { p_azienda: id, p_sponsor_fino: f.sponsor.value || null, p_limite: Number(f.limite.value) || 20 })).catch(() => null))
+            // 12.10.2026, app-27: moduli a pagamento attivati per questa azienda (Gare, Predict, AncheBIM).
+            .then(() => Q(db().from("aziende_stato").update({ moduli: [...f.querySelectorAll("[name=mod]:checked")].map((x) => x.value) }).eq("azienda_id", id)).catch(() => null))
             .then(() => { toast("Salvato"); V["aziende-admin"].render(el); }, (e2) => toast("Non salvato: " + err(e2), "error"));
         }));
       }, (e) => nonPronto(el, e));

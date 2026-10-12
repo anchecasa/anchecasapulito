@@ -131,3 +131,11 @@
   .imp-flash .row-actions > * { flex: 1 1 100%; justify-content: center; }
   .imp-foto img, .imp-foto-x { width: 30vw; height: 22vw; }
 }
+
+/* Gare (12.10.2026, app-27, js/gare.js) */
+.ga-griglia { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; margin-bottom: 12px; }
+.ga-tile { display: grid; gap: 6px; text-decoration: none; color: inherit; border: 1px solid #d5deea; }
+.ga-tile b { font-size: 17px; color: #16304d; }
+.ga-tile:hover, .ga-tile:focus-visible { border-color: #E56B10; }
+.az-mod { display: inline-flex; flex-wrap: wrap; gap: 4px 10px; align-items: center; font-size: 13px; }
+.az-mod label.check { display: inline-flex; flex-direction: row; gap: 4px; align-items: center; }

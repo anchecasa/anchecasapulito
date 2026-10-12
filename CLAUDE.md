@@ -29,6 +29,22 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 12.10.2026 15:20 · Claude — Gare per le aziende, tasto Gare per l'admin, prezzo nelle richieste (NON pubblicato, SQL NON eseguito)
+- Decisioni di Nando delle 15:10 (scritte in `PROGETTO-DASHBOARD.md`).
+- `app-anchecasa/sql/app-27-gare-aziende.sql` (solo con l'ok di Nando):
+  - `aziende_stato.moduli` (gare, predict, anchebim);
+  - funzione `gare_cerca`: legge `public.anchebandi_feed_items`; per le aziende solo con il modulo «gare» attivo;
+  - tabella `gare_mie`;
+  - colonna `cantiere_richieste.prezzo`; `cantiere_pubblica` e `cantiere_richieste_per_me` rifatte con il prezzo.
+  Provato su Postgres 16 locale.
+- Nuovo `js/gare.js`: `gare_cerca`, `gare_mie` (anche per l'admin), `predict` (pagina di presentazione), `gare-admin`.
+- `js/app.js` v=31:
+  - le schede finte «Analizza gare», «Partecipa a gare» e «BIM 5D» sostituite da Cerca gare, Le mie gare, Predict e AncheBIM;
+  - tasto admin «Gare»; «Gare private» tolte dal menu;
+  - i moduli attivi per l'azienda si aprono; in vetrina si vedono con la scritta «a pagamento».
+- `js/pulsanti-profili.js` v=11: Gare, Predict e AncheBIM partono «A pagamento». `js/artigiani.js` v=3: «Moduli attivi» in «Aziende». `js/cantieri.js` v=3: «Prezzo a base» nelle richieste. `css/energia.css` v=10.
+- Provato in anteprima: impresa, subappaltatore, impiantista, studio tecnico e admin, nessun errore.
+
 ### 12.10.2026 15:04 · Cursor — barra del telefono e scritta Vetrina online
 - Ok di Nando del 12.10.2026 per il commit `2583b6c`. Niente SQL e nessuna funzione ripubblicata. Git push sul ramo main: `4b9f932..2583b6c`.
 - Area privata, progetto Vercel `area-privata-produzione`, deployment `dpl_DaCc9TD2RKk2zs5prUWMkiG9eGyp`, alias https://entra.anchecasa.it. La dashboard carica `js/app.js?v=30`, `js/pulsanti-profili.js?v=10` e `css/admin-task.css?v=15`. I tre file rispondono 200.

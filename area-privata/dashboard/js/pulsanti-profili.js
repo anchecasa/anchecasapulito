@@ -104,10 +104,12 @@
   }
 
   /** "gratis" | "pagamento" | "" (nascosto) per il pulsante id del profilo. */
+  // 12.10.2026 (Nando 15:10): i moduli gare e AncheBIM sono a pagamento finché l'admin non decide diversamente.
+  const A_PAGAMENTO = { gare_cerca: 1, gare_mie: 1, predict: 1, anchebim: 1 };
   function stato(profilo, id) {
-    if (VETRINA) return "gratis";
+    if (VETRINA) return A_PAGAMENTO[id] ? "pagamento" : "gratis";
     const p = config.profili[profilo];
-    if (!p) return letto && TUTTI_AL_PRIMO(profilo) ? "gratis" : "";
+    if (!p) return letto && TUTTI_AL_PRIMO(profilo) ? (A_PAGAMENTO[id] ? "pagamento" : "gratis") : "";
     return p.voci[id] || "";
   }
 
@@ -148,7 +150,7 @@
       const prof = profili.find((p) => p.k === scelto);
       const lista = AC.catalogoPulsanti(prof);
       const salvato = config.profili[scelto];
-      const iniziali = salvato ? salvato.voci : TUTTI_AL_PRIMO(scelto) ? Object.fromEntries(lista.map((it) => [it.id, "gratis"])) : {};
+      const iniziali = salvato ? salvato.voci : TUTTI_AL_PRIMO(scelto) ? Object.fromEntries(lista.map((it) => [it.id, A_PAGAMENTO[it.id] ? "pagamento" : "gratis"])) : {};
       if (!bozza) bozza = Object.assign({}, iniziali);
       const modificato = JSON.stringify(bozza) !== JSON.stringify(iniziali);
       const c = conta(bozza, lista);
