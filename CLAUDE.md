@@ -29,6 +29,22 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 12.10.2026 08:20 · Claude — admin: pulsanti «Rete» e «Inviti» in cima (NON pubblicato)
+- Su richiesta di Nando: sotto Home due pulsanti, Rete e Inviti (`js/inviti-admin.js`).
+- Inviti: un modulo per rete e aziende. Chi inviti (Rete: Responsabile Rete Italia, Sviluppo rete, Capo area, Agente, Sub-agente; poi le categorie delle aziende), nome, mail, telefono. «Invia invito» crea la riga in `inviti_admin` e manda subito la mail con `invia-invito-marketplace`, in un passaggio solo. Sotto, gli inviti mandati con lo stato (mail inviata, aperto, iscritto) e «Rimanda».
+- Il nome non ha ancora una colonna in `inviti_admin`: per ora non si salva. Il ruolo di rete finisce nel testo della categoria («Rete - Capo area»), famiglia agente. Da decidere nei dettagli, poi su Supabase alla fine.
+- Rete: una pagina con Segnalazioni e chi entra, Richieste agenti, Oggi, Lavori rete, Contratti, Sala strategia, e il rimando a Inviti. La cartella «Rete commerciale» non è più nel menu; Richieste agenti e Genera link escono dal menu ma restano pagine raggiungibili.
+- Anteprima (?demo=admin): niente sul database, nessuna mail; l'invito compare nell'elenco.
+- `views.js`: espone `AC.categorieInvito` (stesse categorie di Genera link).
+- Copia di prima: `_copie-rete-inviti-0820`.
+- File: `area-privata/dashboard/js/inviti-admin.js` (nuovo), `js/app.js`, `js/views.js`, `css/admin-task.css`, `index.html` (app.js ?v=20, views.js ?v=8, admin-task.css ?v=11), `CLAUDE.md`.
+
+### 12.10.2026 08:13 · Cursor — entra.anchecasa.it aperto sull'area privata
+- Il CNAME `entra` punta a `4b63e92ec2e89ae6.vercel-dns-017.com`, nuvola grigia. Vercel segna il dominio configurato e verificato sul progetto `area-privata-produzione`.
+- Emesso il certificato HTTPS. https://entra.anchecasa.it e https://entra.anchecasa.it/dashboard/ rispondono 200, la stessa pagina di https://areaprivata.anchecasa.it. In dashboard ci sono `app.js?v=18`, `testata.css?v=1` e `regole-admin.js?v=1`.
+- Sito, magazine, sicura, app e database non toccati.
+- File: `CLAUDE.md`.
+
 ### 12.10.2026 08:05 · Claude — Sala demo per la presentazione alla rete (NON pubblicato)
 - Su richiesta di Nando, per la demo ai commerciali del 13.10: in Formazione nuova voce «Sala demo» (`js/sala-demo.js`).
 - Le dashboard: un riquadro per profilo. Pronto il Privato: «Apri la dashboard» (vetrina) e «Regole». Gli altri «In preparazione»; la Rete ha già il tasto Contratti.

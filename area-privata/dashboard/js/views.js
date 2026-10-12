@@ -4280,6 +4280,8 @@
       CATEGORIE_LINK_MAP[v[0]] = { famiglia: g.famiglia, area: g.area, label: v[1] };
     });
   });
+  // 12.10.2026: le stesse categorie servono alla pagina admin «Inviti» (js/inviti-admin.js).
+  AC.categorieInvito = { opzioni: (soloFamiglie) => buildOpzioniCategorie({ selected: "", soloFamiglie: soloFamiglie }), mappa: CATEGORIE_LINK_MAP };
 
   V["genera-link"] = {
     title: "Genera link",

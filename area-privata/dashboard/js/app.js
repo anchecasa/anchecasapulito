@@ -4,7 +4,7 @@
   const S = AC.store;
   const D = AC.date;
 
-  /* CONGELATO 20.09.2026. Famiglie e pulsanti. Non cambiare FOLD_LAB, UFFICIO, PACKS, packFornitore, navItems, HEADER_OPP. Non aggiungere, togliere o rinominare pieghe o tasti. Eccezione 11.10.2026, su richiesta esplicita di Nando: tasto «Home» (grafici, js/home.js) primo per admin e agenti. Eccezione 11.10.2026 sera: tasti admin Terranova, Gare private e AncheBIM (js/funzioni-interne.js), funzioni interne, non siti a parte. Eccezione 12.10.2026: tasto admin «Software» (js/software-admin.js), secondo dopo Home, con tutti i software per categoria. Eccezione 12.10.2026: tasto admin «Pulsanti per profilo» (js/pulsanti-profili.js); i menu di privato, azienda e agente mostrano solo i pulsanti che l'admin ha scelto lì. Eccezione 12.10.2026: menu admin a categorie (pieghe adm_* in FOLD_LAB).
+  /* CONGELATO 20.09.2026. Famiglie e pulsanti. Non cambiare FOLD_LAB, UFFICIO, PACKS, packFornitore, navItems, HEADER_OPP. Non aggiungere, togliere o rinominare pieghe o tasti. Eccezione 11.10.2026, su richiesta esplicita di Nando: tasto «Home» (grafici, js/home.js) primo per admin e agenti. Eccezione 11.10.2026 sera: tasti admin Terranova, Gare private e AncheBIM (js/funzioni-interne.js), funzioni interne, non siti a parte. Eccezione 12.10.2026: tasto admin «Software» (js/software-admin.js), secondo dopo Home, con tutti i software per categoria. Eccezione 12.10.2026: tasto admin «Pulsanti per profilo» (js/pulsanti-profili.js); i menu di privato, azienda e agente mostrano solo i pulsanti che l'admin ha scelto lì. Eccezione 12.10.2026: menu admin a categorie (pieghe adm_* in FOLD_LAB). Eccezione 12.10.2026: tasti admin «Rete» e «Inviti» in cima (js/inviti-admin.js); le pagine della rete si aprono da Rete.
      ECCEZIONE 22.09.2026, su richiesta esplicita: aggiunta "admin" come quarta famiglia
      (prima era una pagina admin.html a sé, mai approvata graficamente). Non tocca le pieghe
      o i tasti delle tre famiglie originali: admin ha un suo ramo separato ovunque sotto.
@@ -337,17 +337,22 @@
       const voci = [
         // 11.10.2026, su richiesta: Home con grafici e andamenti di tutta la rete (js/home.js).
         { id: "home", label: "Home", icon: "home", gruppo: "fisso" },
-        c("oggi-rete", "Oggi", "chart", "adm_panoramica"),
+        // 12.10.2026, su richiesta: Rete e Inviti come pulsanti in cima (js/inviti-admin.js).
+        { id: "rete-admin", label: "Rete", icon: "team", gruppo: "fisso" },
+        { id: "inviti-admin", label: "Inviti", icon: "send", gruppo: "fisso" },
+        // Pagine della rete: si aprono dalla pagina Rete, non dal menu (soloTestata).
+        c("oggi-rete", "Oggi", "chart", "adm_rete", { soloTestata: true }),
         c("appunti", "Appunti", "doc", "adm_panoramica"),
         c("iscritti", "Iscritti registrati", "team", "adm_iscritti", { cuore: true }),
         c("iscrizioni", "Iscrizioni dal sito", "send", "adm_iscritti"),
-        c("richieste-agenti", "Richieste agenti", "star", "adm_iscritti"),
+        c("richieste-agenti", "Richieste agenti", "star", "adm_rete", { soloTestata: true }),
         c("affida", "Clienti da affidare", "team", "adm_iscritti"),
-        c("genera-link", "Genera link", "send", "adm_iscritti"),
-        c("proposte-rete", "Segnalazioni rete", "team", "adm_rete"),
-        c("lavori-rete", "Lavori rete", "doc", "adm_rete"),
-        c("contratti", "Contratti", "doc", "adm_rete"),
-        c("strategia", "Sala strategia", "chat", "adm_rete"),
+        // Genera link resta raggiungibile, ma gli inviti si fanno da «Inviti».
+        c("genera-link", "Genera link", "send", "adm_iscritti", { soloTestata: true }),
+        c("proposte-rete", "Segnalazioni rete", "team", "adm_rete", { soloTestata: true }),
+        c("lavori-rete", "Lavori rete", "doc", "adm_rete", { soloTestata: true }),
+        c("contratti", "Contratti", "doc", "adm_rete", { soloTestata: true }),
+        c("strategia", "Sala strategia", "chat", "adm_rete", { soloTestata: true }),
         // 11.10.2026, su richiesta: AncheBandi è un software della dashboard admin, non un sito a parte.
         c("bandi", "Bandi", "doc", "adm_gare"),
         c("terranova", "Terranova", "doc", "adm_gare"),
@@ -867,7 +872,7 @@
 
     // Telefono (01.10.2026): barra delle sezioni in basso, come un'app. Fino a 5 voci stanno tutte nella barra;
     // altrimenti le prime 4 e «Altro», che apre una scheda con il resto e con le cartelle (Ufficio, Cantiere...).
-    const BREVE = { home: "Home", software: "Software", pulsanti: "Pulsanti", "sala-demo": "Demo", regole: "Regole", bacheca: "Bacheca", iscritti: "Iscritti", appunti: "Appunti", bandi: "Bandi", terranova: "Terranova", "gare-private": "Gare", anchebim: "BIM", contratti: "Contratti", affida: "Affida", iscrizioni: "Iscrizioni", "richieste-agenti": "Agenti", "proposte-rete": "Segnala", "oggi-rete": "Oggi", strategia: "Strategia", "lavori-rete": "Lavori", "linee-decise": "Linee", "tuo-mese": "Mese", "genera-link": "Link", task: "Task", file: "File", "chat-team": "Chat", "mio-ruolo": "Ruolo", documenti: "Documenti" };
+    const BREVE = { home: "Home", software: "Software", pulsanti: "Pulsanti", "rete-admin": "Rete", "inviti-admin": "Inviti", "sala-demo": "Demo", regole: "Regole", bacheca: "Bacheca", iscritti: "Iscritti", appunti: "Appunti", bandi: "Bandi", terranova: "Terranova", "gare-private": "Gare", anchebim: "BIM", contratti: "Contratti", affida: "Affida", iscrizioni: "Iscrizioni", "richieste-agenti": "Agenti", "proposte-rete": "Segnala", "oggi-rete": "Oggi", strategia: "Strategia", "lavori-rete": "Lavori", "linee-decise": "Linee", "tuo-mese": "Mese", "genera-link": "Link", task: "Task", file: "File", "chat-team": "Chat", "mio-ruolo": "Ruolo", documenti: "Documenti" };
     const conAltro = folds.length > 0 || top.length > 5;
     const tabs = conAltro ? top.slice(0, 4) : top;
     const extra = conAltro ? top.slice(4) : [];
