@@ -29,6 +29,21 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 12.10.2026 10:32 · Cursor — ricontrollo app-20, ok delle 10:26, registro in commit
+- Ok di Nando del 12.10.2026, ore 10:26, per il commit `ec49033`. Lo SQL era già eseguito alle 10:28 e non è stato rilanciato. I due controlli tornano a posto: `servizi_richieste`, `servizi_offerte`, `servizi_proposte`; funzioni `servizi_accetta`, `servizi_categoria_di`, `servizi_contratto_attivato`, `servizi_le_mie_proposte`, `servizi_mia_categoria`, `servizi_nuova_richiesta`, `servizi_offerte_pubbliche`, `servizi_richiesta_aperta`, `servizi_richieste_per_me`.
+- `servizi-avvisa` è già online, verify_jwt spento, versione 1. Non è stata ripubblicata. `energia-avvisa` e le altre funzioni non sono state toccate.
+- GitHub era già su `ec49033`. Area privata già pubblicata, deployment `dpl_7FkRf18ZrGSA77vwvkXqPhwvFtWv`. Controllo online, su entra e su areaprivata: `js/servizi.js?v=1` e `js/app.js?v=24`. https://entra.anchecasa.it/servizi.html risponde 200, 11579 byte.
+- Sito, magazine, app e Sicura non toccati.
+- File: `CLAUDE.md`.
+
+### 12.10.2026 10:28 · Cursor — app-20 eseguito, servizi-avvisa e area privata pubblicati
+- Ok di Nando del 12.10.2026. Eseguito `app-anchecasa/sql/app-20-fornitori-telefonia-finanza.sql` sul progetto ANCHECASA. Controlli: ci sono `servizi_richieste`, `servizi_offerte`, `servizi_proposte`. Funzioni: `servizi_accetta`, `servizi_categoria_di`, `servizi_contratto_attivato`, `servizi_le_mie_proposte`, `servizi_mia_categoria`, `servizi_nuova_richiesta`, `servizi_offerte_pubbliche`, `servizi_richiesta_aperta`, `servizi_richieste_per_me`.
+- Pubblicata solo la funzione `servizi-avvisa` (verify_jwt spento, stato attivo, versione 1). Le altre funzioni non sono state toccate.
+- GitHub, ramo main: `3ee21f0..ec49033`.
+- Area privata, progetto Vercel `area-privata-produzione`, deployment `dpl_7FkRf18ZrGSA77vwvkXqPhwvFtWv`, alias https://entra.anchecasa.it e https://areaprivata.anchecasa.it. Online: `js/servizi.js?v=1`. https://entra.anchecasa.it/servizi.html risponde 200, 11579 byte. La voce delle 10:05 diceva non pubblicato e SQL non eseguito: ora lo SQL è eseguito e le pagine sono online.
+- Sito, magazine, app e Sicura non toccati.
+- File: `CLAUDE.md`.
+
 ### 12.10.2026 10:05 · Claude — Telefonia e internet, Finanza e assicurazioni (NON pubblicato, SQL NON eseguito)
 - Decisioni di Nando delle 09:44 in `PROGETTO-DASHBOARD.md` (Fornitori). Stesso giro di luce e gas, motore unico per le due categorie; luce e gas (`energia.js`, `offerte.html`, `energia-avvisa`) non toccato.
 - `app-anchecasa/sql/app-20-fornitori-telefonia-finanza.sql` (da eseguire solo con l'ok di Nando): tabelle `servizi_offerte`, `servizi_richieste`, `servizi_proposte`; funzioni `servizi_*`; colonna `energia_carta.iscrizione` (OAM/IVASS); `fornitori_per_admin` con le nuove categorie; `energia_contratto_attivato` e `servizi_contratto_attivato` registrano la vendita al commerciale (`app_vendite`, cosa «servizio») quando la richiesta l'ha fatta lui. Sintassi controllata con pglast.
