@@ -211,3 +211,15 @@ button.rp-apri:hover { text-decoration: underline; }
 @media (max-width: 700px) {
   .doc-due { grid-template-columns: 1fr; }
 }
+
+/* Software per categoria (12.10.2026, js/software-admin.js) */
+.sw-cat { margin: 0 0 22px; }
+.sw-cat h2 { margin: 0 0 2px; font-size: 18px; color: var(--navy); }
+.sw-cat > .note { margin: 0 0 10px; }
+.sw-tile { justify-content: flex-start; }
+.sw-stato { align-self: flex-start; margin-top: auto; padding: 2px 8px; border-radius: 99px; font-size: 12px; font-weight: 600; }
+.sw-ok { background: var(--ok-bg); color: var(--ok); }
+.sw-in { background: #e8eef6; color: var(--navy); }
+.sw-off { background: var(--orange-soft); color: var(--orange-ink); }
+.sw-muto { cursor: default; }
+.sw-muto:hover { border-color: var(--line); }

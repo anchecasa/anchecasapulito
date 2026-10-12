@@ -20,6 +20,13 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 12.10.2026 06:30 · Claude — pagina «Software» per categoria nell'admin (NON pubblicato)
+- Su richiesta di Nando: nel menu admin dell'area privata, secondo tasto dopo Home, c'è «Software». Mostra i 14 software dell'inventario in 6 categorie: Siti pubblici, Dashboard e app, Gare e appalti, Tecnico e progettazione, Rete e contratti, In preparazione. Ogni scheda dice se è online, se è un tasto di questa area o se non è pubblicata.
+- I tasti interni (Bandi, Terranova, Gare private, AncheBIM, Contratti, Genera link, Sala strategia) aprono la loro pagina; i siti aprono il loro indirizzo in una scheda nuova. Le voci del menu di prima restano tutte.
+- Per aggiungere un software basta una riga nell'elenco CATEGORIE di `software-admin.js`.
+- Provato in locale con `?demo=admin` a 1280 px e a 375 px: sul telefono «Software» è nella barra in basso. Copia di prima: `_copie-software-0630`.
+- File: `area-privata/dashboard/js/software-admin.js` (nuovo), `area-privata/dashboard/js/app.js` (tasto e nota nel blocco CONGELATO), `area-privata/dashboard/index.html` (script, app.js ?v=12, admin-task.css ?v=5), `area-privata/dashboard/css/admin-task.css`, `CLAUDE.md`.
+
 ### 12.10.2026 06:15 · Cursor — cartella inviata su GitHub
 - Il lavoro rimasto solo sul computer (chi entra, note vocali, appunti di Francesco) è sul ramo main di https://github.com/anchecasa/anchecasapulito. La cartella ufficiale resta sul Desktop: `C:\Users\palum\Desktop\ANCHECASA-PULITO`.
 - Fuori dall'invio: `supabase/.temp/linked-project.json`, file temporaneo della CLI.
