@@ -20,6 +20,12 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 12.10.2026 07:01 · Cursor — menu admin a categorie e testata pubblicati
+- Invio su GitHub, ramo main, commit `652920b`. Pubblicata solo la cartella `area-privata` sul progetto Vercel `area-privata-produzione`, deployment `dpl_CinAM6rWndaFSPsRfopKuZjnMC7h`, alias https://areaprivata.anchecasa.it. Sito, app, magazine, sicura e Supabase non toccati.
+- Controllo online: https://areaprivata.anchecasa.it/dashboard/index.html carica `js/app.js?v=15` e `css/testata.css?v=1`.
+- La voce delle 07:00 diceva non pubblicato. Ora è pubblicato.
+- File: `CLAUDE.md`.
+
 ### 12.10.2026 07:00 · Claude — admin: menu a categorie, testata con Messaggi e Avvisi (NON pubblicato)
 - Metodo deciso con Nando: si progetta ogni dashboard insieme, si prova in anteprima sul computer, e solo alla fine si aggiornano Supabase e la pubblicazione. Niente push finché non lo decide lui.
 - Menu admin a categorie (cartelle che si aprono): Home sola in cima; Panoramica (Oggi, Appunti), Iscritti (Iscritti registrati, Iscrizioni dal sito, Richieste agenti, Clienti da affidare, Genera link), Rete commerciale (Segnalazioni, Lavori rete, Contratti, Sala strategia), Gare e appalti (Bandi, Terranova, Gare private), Tecnico (AncheBIM), Comunicazione (Magazine), Il mio lavoro (Task, File), Impostazioni piattaforma (Software, Pulsanti per profilo). Per Francesco Appunti resta prima voce.
