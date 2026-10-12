@@ -608,6 +608,15 @@
           return luoghi.then((l) => {
             if (l.error) throw l.error;
             S.applicaProfilo(p.data, l.data, user.email || "");
+            // 12.10.2026: per la rete, ruolo e zona veri da app_rete (decidono menu e responsabile).
+            if (p.data.famiglia === "agente") {
+              window.acDb.from("app_rete").select("ruolo, regione, area").eq("utente", user.id).maybeSingle().then((r) => {
+                if (r && !r.error && r.data) {
+                  Object.assign(S.data.profilo, { ruoloRete: r.data.ruolo, regioneRete: r.data.regione || "", areaRete: r.data.area || "" });
+                  render(false);
+                }
+              }, () => {});
+            }
             // Primo ingresso con il profilo ancora da completare (01.10.2026, invito → pagina di
             // benvenuto): si atterra sul Profilo. Poi, finché non è completo, la Bacheca mostra il
             // pulsante «Completa il profilo». Una volta sola per browser e per utente.

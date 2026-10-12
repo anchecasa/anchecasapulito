@@ -53,6 +53,16 @@
     return { famiglia: info.famiglia, categoria: info.area ? info.area + " - " + info.label : info.label, categoria_id: info.famiglia === "azienda" ? valore : null, etichetta: info.label };
   }
 
+  // Gli agenti attivi, per scegliere sotto chi mettere un sub-agente (app_rete, la legge l'admin).
+  function agentiPer(select) {
+    const metti = (lista) => {
+      select.innerHTML = '<option value="">Lo decide la zona</option>' + lista.map((a) => '<option value="' + a.id + '">' + String(a.nome).replace(/</g, "&lt;") + (a.regione ? " · " + String(a.regione).replace(/</g, "&lt;") : "") + "</option>").join("");
+    };
+    if (DEMO || !window.acDb) { metti([{ id: "", nome: "Anna Russo", regione: "Campania" }, { id: "", nome: "Elena Gallo", regione: "Lazio" }].map((a, i) => Object.assign(a, { id: "esempio-" + i }))); return; }
+    window.acDb.from("app_rete").select("utente, nome, regione").eq("ruolo", "agente").eq("stato", "attivo").order("nome")
+      .then((r) => metti(r.error ? [] : (r.data || []).map((a) => ({ id: a.utente, nome: a.nome || "Agente", regione: a.regione }))), () => metti([]));
+  }
+
   function caricaInviti() {
     if (DEMO || !window.acDb) return Promise.resolve({ data: demoInviti.slice(), error: null });
     return conTempo(window.acDb.auth.getSession().then((s) => {
@@ -77,13 +87,22 @@
       demoInviti.unshift({ mail: dati.mail, telefono: dati.telefono, categoria: dati.chi.categoria, stato: "inviato", created_at: new Date().toISOString(), inviato_at: new Date().toISOString(), nome: dati.nome });
       return Promise.resolve("demo");
     }
-    // Il nome non ha ancora una colonna in inviti_admin: si aggiunge quando si aggiorna Supabase (vedi PROGETTO-DASHBOARD.md).
-    return conTempo(window.acDb.from("inviti_admin")
-      .insert({ famiglia: dati.chi.famiglia, categoria: dati.chi.categoria, categoria_id: dati.chi.categoria_id, mail: dati.mail, telefono: dati.telefono || null })
-      .select("token").single())
+    // 12.10.2026 (app-18): l'invito ricorda nome, ruolo di rete, zona e, per il sub-agente, il suo agente.
+    // Se app-18 non è ancora su Supabase, l'invito parte lo stesso senza quei campi (ruolo e zona restano nella categoria).
+    const base = { famiglia: dati.chi.famiglia, categoria: dati.chi.categoria, categoria_id: dati.chi.categoria_id, mail: dati.mail, telefono: dati.telefono || null };
+    const pieno = Object.assign({}, base, { nome: dati.nome || "" });
+    if (dati.chi.ruolo) {
+      pieno.ruolo_rete = dati.chi.ruolo;
+      if (dati.chi.ruolo === "sviluppo") pieno.area = dati.chi.zona || "";
+      else if (dati.chi.ruolo !== "reteitalia") pieno.regione = dati.chi.zona || "";
+      if (dati.superiore) pieno.superiore = dati.superiore;
+    }
+    const inserisci = (riga) => conTempo(window.acDb.from("inviti_admin").insert(riga).select("token").single());
+    return inserisci(pieno)
+      .then((res) => (res.error && /column|schema cache/i.test(res.error.message || "") ? inserisci(base).then((r) => { r.senzaApp18 = true; return r; }) : res))
       .then((res) => {
         if (res.error) throw new Error(res.error.message);
-        return inviaMail(res.data.token).then(() => "ok");
+        return inviaMail(res.data.token).then(() => (res.senzaApp18 ? "ok-senza-app18" : "ok"));
       });
   }
 
@@ -138,6 +157,7 @@
                 </select>
               </label>
               <label class="iv-zona" hidden>Zona<select name="zona"></select></label>
+              <label class="iv-sopra" hidden>Sotto quale agente<select name="superiore"></select></label>
               <label>Nome e cognome o ragione sociale<input name="nome" type="text" autocomplete="off" placeholder="es. Mario Rossi"></label>
               <label>Mail<input name="mail" type="email" required autocomplete="off" placeholder="nome@esempio.it"></label>
               <label>Telefono<input name="telefono" type="tel" autocomplete="off" placeholder="es. 333 1234567"></label>
@@ -152,9 +172,13 @@
       const f = el.querySelector("#iv-form");
       const mount = el.querySelector("#iv-elenco");
       const zonaBox = f.querySelector(".iv-zona");
+      const sopraBox = f.querySelector(".iv-sopra");
       f.chi.addEventListener("change", () => {
         const v = f.chi.value;
         const rete = v.indexOf("rete:") === 0;
+        const sub = v === "rete:subagente";
+        sopraBox.hidden = !sub;
+        if (sub) agentiPer(f.superiore);
         zonaBox.hidden = !rete;
         f.classList.toggle("con-zona", rete);
         f.zona.innerHTML = rete ? opzioniZona(v.slice(5)).map((z) => '<option>' + z.replace(/</g, "&lt;") + "</option>").join("") : "";
@@ -172,9 +196,12 @@
         const btn = f.querySelector('button[type="submit"]');
         btn.disabled = true;
         btn.textContent = "Invio…";
-        invia({ chi: c, mail, telefono, nome }).then((esito) => {
+        const superiore = f.chi.value === "rete:subagente" ? f.superiore.value || "" : "";
+        invia({ chi: c, mail, telefono, nome, superiore }).then((esito) => {
           btn.disabled = false; btn.textContent = "Invia invito";
-          toast(esito === "demo" ? "Anteprima: invito a " + mail + " aggiunto all'elenco, nessuna mail partita." : "Invito mandato a " + mail);
+          toast(esito === "demo" ? "Anteprima: invito a " + mail + " aggiunto all'elenco, nessuna mail partita."
+            : esito === "ok-senza-app18" ? "Invito mandato a " + mail + ". Nome, ruolo e zona non salvati: manca app-18 su Supabase."
+            : "Invito mandato a " + mail);
           f.reset();
           elenco(mount);
         }, (err) => {

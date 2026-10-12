@@ -4,11 +4,13 @@
    Obiettivi (li decidono admin e Responsabile Rete Italia e si pubblicano), Strumenti (le pagine della rete).
    Regole: classifica completa solo all'admin; la rete vede la sua posizione e i primi 3; il riconoscimento
    del mese lo vedono tutti. Fermo = nessuna vendita da 30 giorni. Chi resta nella rete lo decide l'admin caso per caso.
-   Oggi i numeri sono di esempio: quelli veri arrivano quando si collega Supabase. */
+   Numeri veri da Supabase (app_rete, app_vendite, app-18: app_rete_note, app_riconoscimenti, app_rete_obiettivi)
+   quando c'è qualcuno nella rete; altrimenti, e in anteprima, dati di esempio con la scritta in alto. */
 (function () {
   const AC = window.AC;
   const { html, icon, toast, raw } = AC.ui;
   const V = AC.views;
+  const DEMO = /[?&]demo=/.test(location.search);
 
   const RUOLO = { reteitalia: "Rete Italia", sviluppo: "Sviluppo rete", capoarea: "Capo area", agente: "Agente", subagente: "Sub-agente" };
   const REG = {
@@ -20,7 +22,7 @@
   const MESE = new Date().toLocaleString("it-IT", { month: "long" });
 
   // Persone di esempio: ruolo, regione, nuovi clienti (mese e mese prima), clienti attivi/totali, obiettivo del mese, giorni dall'ultima vendita.
-  const P = [
+  const ESEMPIO = [
     ["Laura Conti", "reteitalia", "lazio", 6, 5, 40, 46, 8, 3, "06 1234567"],
     ["Paolo Greco", "sviluppo", "campania", 5, 6, 31, 38, 6, 5, "081 2223344"],
     ["Marco Villa", "sviluppo", "lombardia", 7, 4, 35, 39, 6, 2, "02 5556677"],
@@ -36,6 +38,68 @@
     ["Giulia Romano", "subagente", "lazio", 1, 1, 2, 3, 2, 18, "366 1231234"],
     ["Antonio Marino", "subagente", "puglia", 0, 1, 1, 3, 2, 37, "380 3213214"]
   ].map(([nome, ruolo, reg, nuovi, prima, attivi, tot, ob, giorni, tel]) => ({ nome, ruolo, reg, nuovi, prima, attivi, tot, ob, giorni, tel }));
+  let P = ESEMPIO;
+  let reale = false;
+  let stato = DEMO ? "esempio" : "da_caricare";   // da_caricare | caricamento | reale | esempio
+  let avviso = "Dati di esempio: i numeri veri arrivano con il collegamento a Supabase";
+  const COSA = { aziende: "Nuove aziende clienti", clienti_attivi: "Clienti attivi", canoni: "Canoni attivati", lavori: "Lavori firmati" };
+  const slug = (r) => String(r || "").toLowerCase().replace(/'/g, "").replace(/\s+/g, "-");
+  const primoDelMese = (d) => new Date(d.getFullYear(), d.getMonth(), 1);
+  const isoMese = (d) => d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-01";
+
+  // Numeri veri: chi è nella rete, vendite, note, riconoscimento e obiettivi del mese.
+  function caricaReale() {
+    const db = window.acDb;
+    const ora = new Date();
+    const inizio = primoDelMese(ora), prima = new Date(ora.getFullYear(), ora.getMonth() - 1, 1);
+    const q = (x) => x.then((r) => r, (e) => ({ error: e }));
+    return Promise.all([
+      q(db.from("app_rete").select("utente, ruolo, superiore, nome, area, regione, stato, creato").eq("stato", "attivo")),
+      q(db.from("app_vendite").select("venditore, stato, creato, attivata")),
+      q(db.from("app_rete_note").select("persona, testo, creato").order("creato", { ascending: false })),
+      q(db.from("app_riconoscimenti").select("utente, titolo").eq("mese", isoMese(ora))),
+      q(db.from("app_rete_obiettivi").select("*").eq("mese", isoMese(ora)).order("creato"))
+    ]).then(([rete, vend, nt, ric, ob]) => {
+      if (rete.error) throw rete.error;
+      const persone = rete.data || [];
+      if (!persone.length) {
+        avviso = "Nella rete non c'è ancora nessuno: dati di esempio. Invita le prime persone da Inviti.";
+        stato = "esempio";
+        return;
+      }
+      const v = vend.error ? [] : vend.data || [];
+      const obb = ob.error ? [] : ob.data || [];
+      P = persone.map((r) => {
+        const mie = v.filter((x) => x.venditore === r.utente);
+        const att = (x) => x.stato === "attiva" && x.attivata;
+        const nuovi = mie.filter((x) => att(x) && new Date(x.attivata) >= inizio).length;
+        const pr = mie.filter((x) => att(x) && new Date(x.attivata) >= prima && new Date(x.attivata) < inizio).length;
+        const ultima = mie.reduce((m, x) => Math.max(m, new Date(x.creato).getTime()), new Date(r.creato).getTime());
+        const obp = obb.find((o) => o.per === "persona" && o.utente === r.utente && o.cosa === "aziende");
+        return {
+          id: r.utente, nome: r.nome || "Senza nome", ruolo: r.ruolo, reg: slug(r.regione), zona: r.regione || r.area || "Italia",
+          nuovi: nuovi, prima: pr, attivi: mie.filter((x) => x.stato === "attiva").length, tot: mie.filter((x) => x.stato !== "persa").length,
+          ob: obp ? Number(obp.quanti) : 0, giorni: Math.floor((Date.now() - ultima) / 86400000), tel: ""
+        };
+      });
+      Object.keys(note).forEach((k) => delete note[k]);
+      if (!nt.error) (nt.data || []).forEach((n) => { const p = P.find((x) => x.id === n.persona); if (p && !note[p.nome]) note[p.nome] = n.testo; });
+      riconosciuto = null;
+      if (!ric.error && ric.data && ric.data[0]) { const p = P.find((x) => x.id === ric.data[0].utente); riconosciuto = p ? p.nome : null; }
+      obiettivi.length = 0;
+      obb.forEach((o) => {
+        const p = o.utente && P.find((x) => x.id === o.utente);
+        obiettivi.push({ id: o.id, chi: o.per === "zona" ? o.zona : p ? p.nome : "?", tipo: o.per, cosa: COSA[o.cosa] || o.cosa, quanti: Number(o.quanti), pubblicato: o.pubblicato });
+      });
+      reale = true;
+      stato = "reale";
+      avviso = "";
+      if (vend.error || nt.error || ric.error || ob.error) avviso = "Alcuni dati non si leggono: manca app-18 su Supabase.";
+    }).catch((err) => {
+      avviso = "Non riesco a leggere la rete (" + (err.message || err) + "): dati di esempio.";
+      stato = "esempio";
+    });
+  }
 
   const pct = (a, b) => (b ? Math.round((a / b) * 100) : 0);
   const crescita = (p) => p.nuovi - p.prima;
@@ -64,12 +128,12 @@
     const classifica = P.slice().sort((a, b) => punteggio(b) - punteggio(a));
     const richiamare = fermi.concat(inCalo);
     const riga = (p) => html`<div class="ra-riga">
-        <div class="ra-chi"><b>${p.nome}</b><small>${RUOLO[p.ruolo]} · ${REG[p.reg]}</small></div>
+        <div class="ra-chi"><b>${p.nome}</b><small>${RUOLO[p.ruolo]} · ${REG[p.reg] || p.zona || ""}</small></div>
         <div class="ra-perche">${fermo(p) ? html`<span class="sw-stato sw-off">Fermo da ${p.giorni} giorni</span>` : html`<span class="sw-stato sw-in">In calo: ${p.nuovi} nuovi, ${p.prima} il mese prima</span>`}
           ${note[p.nome] ? html`<small class="ra-nota">Nota: ${note[p.nome]}</small>` : ""}</div>
         <div class="ra-azioni">
           <a class="btn-ghost ra-btn" href="#/admin/chat-team">Scrivi</a>
-          <a class="btn-ghost ra-btn" href="tel:${p.tel.replace(/\s/g, "")}">Chiama</a>
+          ${p.tel ? html`<a class="btn-ghost ra-btn" href="tel:${p.tel.replace(/\s/g, "")}">Chiama</a>` : ""}
           <button type="button" class="btn-ghost ra-btn" data-nota="${p.nome}">Nota</button>
         </div>
       </div>`;
@@ -92,7 +156,7 @@
           <p class="note">Il riconoscimento del mese lo vede tutta la rete, nella propria dashboard.</p>
           ${classifica.slice(0, 3).map((p, i) => html`<div class="ra-riga">
             <span class="ra-pos ra-pos-${i + 1}">${i + 1}</span>
-            <div class="ra-chi"><b>${p.nome}</b><small>${RUOLO[p.ruolo]} · ${REG[p.reg]} · ${p.nuovi} nuovi su ${p.ob}, ${pct(p.attivi, p.tot)}% attivi</small></div>
+            <div class="ra-chi"><b>${p.nome}</b><small>${RUOLO[p.ruolo]} · ${REG[p.reg] || p.zona || ""} · ${p.nuovi} nuovi${p.ob ? " su " + p.ob : ""}, ${pct(p.attivi, p.tot)}% attivi</small></div>
             <div class="ra-azioni">${riconosciuto === p.nome
               ? html`<span class="sw-stato sw-ok">Migliore di ${MESE}</span>`
               : html`<button type="button" class="btn-in ra-btn" data-premia="${p.nome}">Dai il riconoscimento</button>`}</div>
@@ -105,10 +169,10 @@
         <table class="mini-table">
           <thead><tr><th>#</th><th>Chi</th><th>Zona</th><th>Crescita</th><th>Clienti attivi</th><th>Obiettivo</th><th>Ultima vendita</th></tr></thead>
           <tbody>${classifica.map((p, i) => html`<tr class="${fermo(p) ? "ra-fermo" : ""}">
-            <td>${i + 1}</td><td><b>${p.nome}</b><br><small>${RUOLO[p.ruolo]}</small></td><td>${REG[p.reg]}</td>
+            <td>${i + 1}</td><td><b>${p.nome}</b><br><small>${RUOLO[p.ruolo]}</small></td><td>${REG[p.reg] || p.zona || ""}</td>
             <td>${crescita(p) > 0 ? "▲ +" + crescita(p) : crescita(p) < 0 ? "▼ " + crescita(p) : "="}</td>
             <td>${pct(p.attivi, p.tot)}%</td>
-            <td><span class="ra-barra"><i style="width:${Math.min(100, pct(p.nuovi, p.ob))}%"></i></span> ${p.nuovi}/${p.ob}</td>
+            <td>${p.ob ? html`<span class="ra-barra"><i style="width:${Math.min(100, pct(p.nuovi, p.ob))}%"></i></span> ${p.nuovi}/${p.ob}` : html`<small>nessun obiettivo</small>`}</td>
             <td>${p.giorni === 1 ? "ieri" : p.giorni + " giorni fa"}</td>
           </tr>`)}</tbody>
         </table>
@@ -127,6 +191,7 @@
     Object.keys(REG).forEach((k) => { out[k] = { persone: 0, nuovi: 0, ob: 0, attivi: 0, tot: 0, fermi: 0 }; });
     P.forEach((p) => {
       const r = out[p.reg];
+      if (!r) return; // sviluppo rete e Rete Italia hanno un'area, non una regione
       r.persone++; r.nuovi += p.nuovi; r.ob += p.ob; r.attivi += p.attivi; r.tot += p.tot; if (fermo(p)) r.fermi++;
     });
     const maxP = Math.max(...Object.values(out).map((r) => r.persone)) || 1;
@@ -197,9 +262,8 @@
         <h2>Nuovo obiettivo di ${MESE}</h2>
         <p class="note">Li decidete tu e il Responsabile Rete Italia. Quando li pubblicate, ognuno li vede nella sua Home.</p>
         <form id="ra-ob" class="iv-campi ra-obf">
-          <label>Per<select name="tipo"><option value="zona">Una zona</option><option value="persona">Una persona</option></select></label>
-          <label>Chi<select name="chi">${Object.values(REG).map((r) => html`<option>${r}</option>`)}${P.map((p) => html`<option>${p.nome}</option>`)}</select></label>
-          <label>Su cosa<select name="cosa"><option>Nuovi clienti</option><option>Clienti attivi</option><option>Canoni attivati</option><option>Lavori firmati</option></select></label>
+          <label>Chi<select name="chi"><optgroup label="Zone">${["Nord", "Centro", "Sud e isole"].concat(Object.values(REG)).map((r) => html`<option value="zona:${r}">${r}</option>`)}</optgroup><optgroup label="Persone">${P.map((p, i) => html`<option value="persona:${i}">${p.nome}</option>`)}</optgroup></select></label>
+          <label>Su cosa<select name="cosa">${Object.entries(COSA).map(([k, l]) => html`<option value="${k}">${l}</option>`)}</select></label>
           <label>Quanti<input name="quanti" type="number" min="1" value="5"></label>
         </form>
         <div class="iv-piede"><span class="note">Resta in bozza finché non premi Pubblica.</span><button type="button" class="btn-in" id="ra-ob-salva">Salva in bozza</button></div>
@@ -234,12 +298,19 @@
     title: "Rete",
     sub: "L'andamento della rete: chi richiamare, chi premiare, dove siamo in Italia.",
     render(el) {
+      if (stato === "da_caricare" && window.acDb) {
+        stato = "caricamento";
+        el.innerHTML = html`<div class="card"><p class="note">Caricamento della rete…</p></div>`.s;
+        caricaReale().then(() => { if (el.isConnected) V["rete-admin"].render(el); });
+        return;
+      }
+      if (stato === "caricamento") return;
       const SCHEDE = [["andamento", "Andamento"], ["cartina", "Cartina"], ["obiettivi", "Obiettivi"], ["strumenti", "Strumenti"]];
       const corpo = scheda === "cartina" ? cartina() : scheda === "obiettivi" ? obiettiviHtml() : scheda === "strumenti" ? strumenti() : andamento();
       el.innerHTML = html`
         <div class="ra-testa">
           <div class="pp-filtri" role="tablist">${SCHEDE.map(([k, l]) => html`<button type="button" role="tab" aria-selected="${scheda === k ? "true" : "false"}" class="pp-f${scheda === k ? " on" : ""}" data-scheda="${k}">${l}</button>`)}</div>
-          <span class="sw-stato sw-off">Dati di esempio: i numeri veri arrivano con il collegamento a Supabase</span>
+          ${avviso ? html`<span class="sw-stato sw-off">${avviso}</span>` : html`<span class="sw-stato sw-ok">Dati veri</span>`}
         </div>
         ${corpo}`.s;
       const ridisegna = () => V["rete-admin"].render(el);
@@ -260,23 +331,48 @@
         box.appendChild(f);
         const inp = f.querySelector("input");
         inp.focus();
-        f.querySelector("button").addEventListener("click", () => { note[chi] = inp.value.trim(); toast("Nota salvata. La vede anche il suo responsabile."); ridisegna(); });
+        f.querySelector("button").addEventListener("click", () => {
+          const testo = inp.value.trim();
+          if (!testo) return;
+          const p = P.find((x) => x.nome === chi);
+          const fatto = () => { note[chi] = testo; toast("Nota salvata. La vede anche il suo responsabile."); ridisegna(); };
+          if (!reale || !p || !p.id) { fatto(); return; }
+          window.acDb.from("app_rete_note").insert({ persona: p.id, testo: testo }).then((r) => {
+            if (r.error) toast("Nota non salvata: " + r.error.message, "error"); else fatto();
+          });
+        });
       }));
       el.querySelectorAll("[data-premia]").forEach((b) => b.addEventListener("click", () => {
-        riconosciuto = b.getAttribute("data-premia");
-        toast(riconosciuto + ": migliore di " + MESE + ". Lo vede tutta la rete.");
-        ridisegna();
+        const nome = b.getAttribute("data-premia");
+        const p = P.find((x) => x.nome === nome);
+        const fatto = () => { riconosciuto = nome; toast(nome + ": migliore di " + MESE + ". Lo vede tutta la rete."); ridisegna(); };
+        if (!reale || !p || !p.id) { fatto(); return; }
+        window.acDb.from("app_riconoscimenti").upsert({ mese: isoMese(new Date()), utente: p.id, titolo: "Migliore di " + MESE }, { onConflict: "mese,utente" }).then((r) => {
+          if (r.error) toast("Non salvato: " + r.error.message, "error"); else fatto();
+        });
       }));
       const salva = el.querySelector("#ra-ob-salva");
       if (salva) salva.addEventListener("click", () => {
         const f = el.querySelector("#ra-ob");
-        obiettivi.push({ chi: f.chi.value, tipo: f.tipo.value, cosa: f.cosa.value, quanti: Number(f.quanti.value) || 1, pubblicato: false });
-        ridisegna();
+        const [tipo, val] = f.chi.value.split(":");
+        const p = tipo === "persona" ? P[Number(val)] : null;
+        const quanti = Number(f.quanti.value) || 1;
+        const voce = { chi: p ? p.nome : val, tipo: tipo, cosa: COSA[f.cosa.value], quanti: quanti, pubblicato: false };
+        if (!reale) { obiettivi.push(voce); ridisegna(); return; }
+        if (tipo === "persona" && !(p && p.id)) return;
+        window.acDb.from("app_rete_obiettivi").insert({ mese: isoMese(new Date()), per: tipo, utente: p ? p.id : null, zona: p ? "" : val, cosa: f.cosa.value, quanti: quanti })
+          .select("id").single().then((r) => {
+            if (r.error) { toast("Non salvato: " + r.error.message, "error"); return; }
+            voce.id = r.data.id; obiettivi.push(voce); ridisegna();
+          });
       });
       el.querySelectorAll("[data-pubblica]").forEach((b) => b.addEventListener("click", () => {
-        obiettivi[Number(b.getAttribute("data-pubblica"))].pubblicato = true;
-        toast("Obiettivo pubblicato: lo vedono nella loro Home.");
-        ridisegna();
+        const o = obiettivi[Number(b.getAttribute("data-pubblica"))];
+        const fatto = () => { o.pubblicato = true; toast("Obiettivo pubblicato: lo vedono nella loro Home."); ridisegna(); };
+        if (!reale || !o.id) { fatto(); return; }
+        window.acDb.from("app_rete_obiettivi").update({ pubblicato: true }).eq("id", o.id).then((r) => {
+          if (r.error) toast("Non pubblicato: " + r.error.message, "error"); else fatto();
+        });
       }));
     }
   };

@@ -306,7 +306,7 @@ button.rp-apri:hover { text-decoration: underline; }
 @media (max-width: 980px) { .iv-campi { grid-template-columns: 1fr; } }
 
 /* Inviti: campo Zona per la rete (12.10.2026) */
-#iv-form.con-zona .iv-campi { grid-template-columns: 1.3fr 0.9fr 1fr 1fr 0.8fr; }
+#iv-form.con-zona .iv-campi { grid-template-columns: repeat(3, 1fr); }
 /* Rete dell'admin (12.10.2026, js/rete-admin.js) */
 .ra-testa { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
 .ra-kpi { margin-bottom: 6px; }

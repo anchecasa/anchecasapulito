@@ -29,6 +29,18 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 12.10.2026 09:15 · Claude — Rete collegata a Supabase: app-18 pronto (NON eseguito, NON pubblicato)
+- Nuovo `app-anchecasa/sql/app-18-rete-area-privata.sql`, solo aggiunte, rilanciabile:
+  1. `inviti_admin`: colonne nome, ruolo_rete, area, regione, superiore.
+  2. `app_area_di(regione)` e `app_superiore_per_zona(ruolo, area, regione)`: la zona decide chi sta sopra (sviluppo → Rete Italia; capo area → sviluppo dell'area; agente → capo area della regione, se manca sviluppo dell'area; sub-agente → l'agente scelto nell'invito).
+  3. `handle_new_user_marketplace`: stessa funzione dell'11.10 più un blocco: chi si iscrive con un invito di rete entra in `app_rete` con ruolo, zona e responsabile; il nome dell'invito diventa il nome del profilo se la persona non ne scrive uno.
+  4. Tabelle nuove con le regole: `app_rete_note` (le vedono admin, Rete Italia e i responsabili sopra, non la persona), `app_riconoscimenti` (li vede tutta la rete, li danno admin e Rete Italia), `app_rete_obiettivi` (bozza solo admin e Rete Italia, pubblicati tutta la rete).
+- Inviti: salvano nome, ruolo, zona; per il sub-agente «Sotto quale agente» (agenti attivi da `app_rete`). Senza app-18 l'invito parte lo stesso, con l'avviso.
+- Dashboard: per un commerciale vero il ruolo e la zona si leggono da `app_rete` e decidono il menu.
+- Pagina Rete: legge `app_rete` e `app_vendite` e calcola crescita, clienti attivi, ultima vendita; note, riconoscimento e obiettivi si salvano nelle tabelle nuove. Con la rete vuota, o in anteprima, dati di esempio con la scritta.
+- Provato in locale con ?demo=admin. Copia di prima: `_copie-rete-db-0915`.
+- File: `app-anchecasa/sql/app-18-rete-area-privata.sql` (nuovo), `area-privata/dashboard/js/rete-admin.js`, `js/inviti-admin.js`, `js/app.js`, `css/admin-task.css`, `index.html` (app.js ?v=22, inviti-admin ?v=3, rete-admin ?v=2, admin-task.css ?v=13), `CLAUDE.md`.
+
 ### 12.10.2026 09:00 · Claude — pagina Rete dell'admin con andamento e cartina; Zona negli inviti (NON pubblicato)
 - `js/rete-admin.js` (sostituisce la pagina Rete di inviti-admin.js): quattro schede, niente soldi (decisione di Nando).
   - Andamento: persone nella rete, crescita sul mese prima, clienti attivi, fermi da 30 giorni; «Da richiamare» con Scrivi, Chiama, Nota; «Da premiare» (primi 3) con «Dai il riconoscimento»; classifica completa (solo admin).
