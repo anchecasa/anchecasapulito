@@ -284,4 +284,13 @@ Cantieri e richieste tra aziende (app-25, decisioni di Nando 13:24-13:42):
 - Nessuna commissione. «Subappalti in zona» (app-24) tolto dal menu.
 - Da fare dopo: documento dell'accordo da firmare online, bacheca pubblica degli sponsor, accordo quadro su più cantieri, prezzi delle app (alla fine).
 
+Decisioni di Nando delle 14:28:
+- Le imprese chiedono materiali e noleggio solo dal cantiere: «Preventivo materiali» e «Noleggia mezzi» sono tolti dal menu.
+- «Subappalti» (cartella Gare) è collegato a «Cerca subappaltatori».
+- «Cantieri e richieste» è in cima al menu delle aziende. Per i fornitori a preventivo e per l'artigiano sta dopo il loro lavoro.
+- Ristrutturazioni con Sopralluogo Flash, computo e Profit Guard (app-26), gratis per rete e admin, anche dal telefono (l'area privata si installa come app):
+  - **Sopralluogo Flash:** l'agente assegnato, o l'admin, scatta le foto con la fotocamera e registra le note vocali nella pratica. La stima automatica arriva quando c'è la chiave dell'intelligenza artificiale.
+  - **Computo della pratica:** per ogni riga lavorazione, quantità, prezzo al cliente e costo stimato, più sicurezza e spese generali in %. «Chiedi le voci alle aziende della zona» crea il cantiere AncheCasa della pratica e pubblica una richiesta per ogni tipo.
+  - **Profit Guard:** prezzo al cliente meno costi impegnati (imprese affidate e offerte scelte nel cantiere), e il margine stimato dal computo. Sotto la soglia decisa dall'admin la pratica diventa rossa, e prima di affidare a un'impresa la dashboard chiede conferma.
+
 Da progettare: studio tecnico, agenzia, committente.

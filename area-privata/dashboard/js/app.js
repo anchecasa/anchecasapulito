@@ -376,19 +376,21 @@
   const SENZA_SERVIZI = { energia: 1, telefonia: 1, finanza: 1 };
   // 12.10.2026 (app-21): le aziende chiedono preventivi di materiali e noleggio (non i fornitori stessi).
   const SENZA_CANTIERE = { energia: 1, telefonia: 1, finanza: 1, materiali: 1, noleggio: 1, casa: 1 };
-  const vociServiziAzienda = (pack) => [
-    // 12.10.2026 (app-23): prova 14 giorni, visura e DURC per tutte le aziende.
-    { id: "az-documenti", label: "Documenti e abbonamento", icon: "shield", gruppo: "pack", fold: "az_account" }
-  ].concat(SENZA_SERVIZI[pack] ? [] : [
-    // 12.10.2026 (app-25, decisioni di Nando): ogni azienda può fare da general contractor e ricevere le richieste dei cantieri (js/cantieri.js).
+  // 12.10.2026 (app-25, decisioni di Nando; in alto dalle 14:28): ogni azienda può fare da general contractor e ricevere le richieste dei cantieri (js/cantieri.js).
+  // Per i fornitori a preventivo e per l'artigiano la piega sta dopo il loro lavoro, per gli altri in cima al menu.
+  const DOPO_IL_LAVORO = { materiali: 1, noleggio: 1, casa: 1, artigiano: 1 };
+  const vociCantieri = (pack) => (SENZA_SERVIZI[pack] ? [] : [
     { id: "cnt_cantieri", label: "I miei cantieri", icon: "building", gruppo: "pack", fold: "az_cantieri" },
     { id: "cnt_perme", label: "Richieste per te", icon: "send", gruppo: "pack", fold: "az_cantieri" },
     { id: "cnt_cerca", label: "Cerca subappaltatori", icon: "team", gruppo: "pack", fold: "az_cantieri" },
     { id: "cnt_offro", label: "Cosa offro", icon: "grid", gruppo: "pack", fold: "az_cantieri" }
-  ]).concat(SENZA_CANTIERE[pack] ? [] : [
-    { id: "az-materiali", label: "Preventivo materiali", icon: "folder", gruppo: "pack", fold: "az_cantiere" },
-    { id: "az-noleggio", label: "Noleggia mezzi", icon: "calendar", gruppo: "pack", fold: "az_cantiere" }
-  ]).concat(SENZA_SERVIZI[pack] ? [] : [
+  ]);
+  const conCantieri = (pack, voci) => (DOPO_IL_LAVORO[pack] ? voci.concat(vociCantieri(pack)) : vociCantieri(pack).concat(voci));
+  const vociServiziAzienda = (pack) => [
+    // 12.10.2026 (app-23): prova 14 giorni, visura e DURC per tutte le aziende.
+    { id: "az-documenti", label: "Documenti e abbonamento", icon: "shield", gruppo: "pack", fold: "az_account" }
+    // 12.10.2026 (Nando 14:28): «Preventivo materiali» e «Noleggia mezzi» tolti, si chiedono dal cantiere («I miei cantieri»).
+  ].concat(SENZA_SERVIZI[pack] ? [] : [
     { id: "az-telefonia", label: "Telefono e internet", icon: "pulse", gruppo: "pack", fold: "az_servizi" },
     { id: "az-finanza", label: "Polizze e finanziamenti", icon: "shield", gruppo: "pack", fold: "az_servizi" }
   ]);
@@ -467,11 +469,11 @@
         { id: "chat", label: "Chat", icon: "chat", gruppo: "fisso" },
         { id: "inviti", label: "Inviti", icon: "send", gruppo: "fisso" },
         { id: "tuo-mese", label: "Il tuo mese", icon: "chart", gruppo: "comune" }
-      ].concat(
+      ].concat(conCantieri(pack,
         pack === "fornitore"
           ? packFornitore(modo)
           : PACKS[pack] || []
-      ).concat(vociServiziAzienda(pack));
+      )).concat(vociServiziAzienda(pack));
     }
     if (famiglia === "agente") {
       return vociRete(AC.ruoloRete ? AC.ruoloRete() : "agente");
@@ -584,7 +586,7 @@
         { id: "chat", label: "Chat", icon: "chat", gruppo: "fisso" },
         { id: "inviti", label: "Inviti", icon: "send", gruppo: "fisso" },
         { id: "tuo-mese", label: "Il tuo mese", icon: "chart", gruppo: "comune" }
-      ].concat(prof.pack === "fornitore" ? packFornitore("entrambi") : PACKS[prof.pack] || []).concat(vociServiziAzienda(prof.pack));
+      ].concat(conCantieri(prof.pack, prof.pack === "fornitore" ? packFornitore("entrambi") : PACKS[prof.pack] || [])).concat(vociServiziAzienda(prof.pack));
     } else if (prof.famiglia === "agente") {
       voci = vociRete(prof.ruolo || "agente");
     } else {

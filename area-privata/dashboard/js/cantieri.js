@@ -522,9 +522,21 @@
     }
   };
   V["aziende-voti"] = V["re-recensioni"];
+  // 12.10.2026 (Nando 14:28): la scheda «Subappalti» della cartella Gare dell'impresa ora è vera: cerca e invita.
+  V.subappalti = {
+    title: "Subappalti",
+    sub: "Cerca i subappaltatori che lavorano in quel settore e in quella zona e invitali a una richiesta del tuo cantiere. Le richieste che ricevi tu sono in «Richieste per te».",
+    render(el) {
+      el.innerHTML = html`<div class="row-actions"><a class="btn-ghost" href="${base()}cnt_cantieri">I miei cantieri</a><a class="btn-ghost" href="${base()}cnt_perme">Richieste per te</a></div><section class="card"><div id="sa-box"></div></section>`.s;
+      cercaBox(el.querySelector("#sa-box"), {});
+    }
+  };
 
   AC.cantieri = {
-    SERV: SERV,
+    SERV: SERV, GRUPPI: GRUPPI, GRUPPO_DI: GRUPPO_DI,
+    // 12.10.2026, app-26: la pratica di ristrutturazione pubblica il suo computo alle aziende (js/imprese.js).
+    pubblica: (p) => D.pubblica(p), salvaCantiere: (p) => D.salvaCantiere(p),
+    apri: (id) => { cantScelto = id; richScelta = ""; nuovoCant = false; ripubblica = null; },
     daFare: () => D.perMe().then((l) => (l || []).filter((r) => r.stato === "aperta" && !r.mia).length)
   };
 })();

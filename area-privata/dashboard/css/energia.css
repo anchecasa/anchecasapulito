@@ -115,3 +115,19 @@
 #rv-f select { height: 36px; border: 1px solid #d5deea; border-radius: 10px; padding: 0 8px; background: #fff; font: inherit; }
 #co-f > label.check { display: flex; flex-direction: row; align-items: center; gap: 8px; margin: 4px 0 8px; }
 #co-f > label.check input { width: auto; margin: 0; }
+
+/* Profit Guard, computo, Sopralluogo Flash (12.10.2026, app-26, js/imprese.js) */
+.imp-pg { display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: baseline; margin: 10px 0 6px; padding: 10px 14px; border-radius: 12px; background: #eef2f7; font-size: 13px; }
+.imp-pg b:first-child { color: #16304d; }
+.imp-pg-ok { background: #e8f6ee; }
+.imp-pg-no { background: #fdecea; }
+.imp-pg-no span:last-child { color: #b3261e; font-weight: 700; }
+.imp-az { margin: 6px 0; }
+.imp-file { cursor: pointer; display: inline-flex; align-items: center; }
+.imp-flash audio { width: 100%; max-width: 360px; margin-top: 4px; }
+.imp-flash .row-actions { flex-wrap: wrap; gap: 8px; }
+@media (max-width: 640px) {
+  .imp-pg { font-size: 12px; }
+  .imp-flash .row-actions > * { flex: 1 1 100%; justify-content: center; }
+  .imp-foto img, .imp-foto-x { width: 30vw; height: 22vw; }
+}

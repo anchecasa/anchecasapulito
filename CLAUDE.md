@@ -29,6 +29,24 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 12.10.2026 14:40 · Claude — Ristrutturazioni con Flash, computo e Profit Guard; menu delle aziende (NON pubblicato, SQL NON eseguito)
+- Decisioni di Nando delle 14:28 (scritte in `PROGETTO-DASHBOARD.md`).
+- `app-anchecasa/sql/app-26-ristrutturazioni-flash-profit.sql` (solo con l'ok di Nando):
+  - colonne `ristrutturazioni.computo`, `sicurezza_perc`, `spese_perc`, `cantiere_id`;
+  - tabella `ristrutturazioni_media` e bucket privato `sopralluoghi` (cartella = id della pratica; lo usano l'agente assegnato e l'admin);
+  - funzioni `ristrutturazione_media_aggiungi`, `ristrutturazione_computo`, `ristrutturazione_cantiere`, `ristrutturazione_costi`, `miei_sopralluoghi`;
+  - `ristrutturazioni_admin` rifatta con costi, foto e soglia (`app_impostazioni.profit_guard`).
+  Provato su Postgres 16 locale con app-19…app-26.
+- `js/imprese.js` v=3:
+  - nelle pratiche: Profit Guard, computo con «Chiedi le voci alle aziende della zona», foto e note vocali;
+  - soglia del margine;
+  - conferma prima di affidare sotto la soglia;
+  - `re-sopralluoghi` e `re-flash` veri, con fotocamera e microfono dal telefono.
+- `js/cantieri.js` v=2: «Subappalti» dell'impresa collegato alla ricerca; `AC.cantieri` espone pubblica, salvaCantiere e apri.
+- `js/app.js` v=29: «Cantieri e richieste» in cima (dopo il lavoro per fornitori a preventivo e artigiano); tolti «Preventivo materiali» e «Noleggia mezzi». `css/energia.css` v=9.
+- Provato in anteprima su PC e telefono (390 px): nessun errore, niente scorrimento laterale.
+- Niente da ripubblicare tra le funzioni.
+
 ### 12.10.2026 14:31 · Cursor — Sala demo imprese e subappaltatore online
 - Ok di Nando del 12.10.2026 per i commit `4c41ac1` e `a4dd636`. Git push sul ramo main: `c2b45ac..a4dd636`.
 - Area privata, progetto Vercel `area-privata-produzione`, deployment `dpl_9su6NV4GoaEUC4f3FpGBM1RT62o9`, alias https://entra.anchecasa.it. La dashboard carica `js/sala-demo.js?v=8` (200, 8401 byte).

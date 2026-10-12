@@ -55,7 +55,7 @@
   /* ============================================================
      DATI DI ESEMPIO
      ============================================================ */
-  const DEMO_KEY = "ac-demo-imprese-v1";
+  const DEMO_KEY = "ac-demo-imprese-v2";
   function demo() {
     let d = null;
     try { d = JSON.parse(localStorage.getItem(DEMO_KEY) || "null"); } catch (e) { d = null; }
@@ -88,17 +88,19 @@
       ],
       // La rete
       segnalate: [{ id: "r9", creato: ieri, nome: "Giovanni Esposito", comune: "Aversa", provincia: "CE", descrizione: "Ristrutturazione completa appartamento 110 m²", stato: "nuova" }],
-      sopralluoghi: [{ id: "r2", creato: ieri, nome: "Lucia Bianco", telefono: "333 9988776", mail: "lucia@esempio.it", comune: "Maddaloni", provincia: "CE", indirizzo: "Via Roma 5", descrizione: "Rifare il bagno, circa 5 m², vasca da cambiare con doccia.", budget: "8-10 mila €", nota_agente: "", stato: "sopralluogo" }],
+      sopralluoghi: [{ media: [], id: "r2", creato: ieri, nome: "Lucia Bianco", telefono: "333 9988776", mail: "lucia@esempio.it", comune: "Maddaloni", provincia: "CE", indirizzo: "Via Roma 5", descrizione: "Rifare il bagno, circa 5 m², vasca da cambiare con doccia.", budget: "8-10 mila €", nota_agente: "", stato: "sopralluogo" }],
       // L'admin
       admin: {
         ristrutturazioni: [
           { id: "r9", creato: ieri, origine: "rete", nome: "Giovanni Esposito", telefono: "347 1234567", mail: "g.esposito@esempio.it", comune: "Aversa", provincia: "CE", indirizzo: "Via Roma 1", descrizione: "Ristrutturazione completa appartamento 110 m²", budget: "60 mila €", agente_id: null, agente: "", segnalata_da: "Mario Rossi (agente)", nota_agente: "", stato: "nuova", importo_cliente: null, note_admin: "" },
           { id: "r2", creato: ieri, origine: "privato", nome: "Lucia Bianco", telefono: "333 9988776", mail: "lucia@esempio.it", comune: "Maddaloni", provincia: "CE", indirizzo: "Via Roma 5", descrizione: "Rifare il bagno, circa 5 m², vasca da cambiare con doccia.", budget: "8-10 mila €", agente_id: "ag1", agente: "Mario Rossi", segnalata_da: "", nota_agente: "", stato: "sopralluogo", importo_cliente: null, note_admin: "" },
-          { id: "r1", creato: dieci, origine: "privato", nome: "Anna Ferri", telefono: "333 4455667", mail: "anna.ferri@esempio.it", comune: "Maddaloni", provincia: "CE", indirizzo: "Via Napoli 44", descrizione: "Cappotto termico della villetta", budget: "", agente_id: "ag1", agente: "Mario Rossi", segnalata_da: "", nota_agente: "Facciate in buono stato, 180 m².", stato: "in_cantiere", importo_cliente: 32800, note_admin: "Firmato il 02/10" }
+          { id: "r1", creato: dieci, origine: "privato", nome: "Anna Ferri", telefono: "333 4455667", mail: "anna.ferri@esempio.it", comune: "Maddaloni", provincia: "CE", indirizzo: "Via Napoli 44", descrizione: "Cappotto termico della villetta", budget: "", agente_id: "ag1", agente: "Mario Rossi", segnalata_da: "", nota_agente: "Facciate in buono stato, 180 m².", stato: "in_cantiere", importo_cliente: 32800, note_admin: "Firmato il 02/10", sicurezza_perc: 3, spese_perc: 8, media: [],
+            computo: [{ id: "c1", servizio: "ponteggi", voce: "Ponteggio facciate", qta: 260, um: "m²", prezzo: 14, costo: 9 }, { id: "c2", servizio: "cappotto", voce: "Cappotto EPS 10 cm con rasatura", qta: 180, um: "m²", prezzo: 120, costo: 85 }, { id: "c3", servizio: "materiali", voce: "Pittura ai silicati", qta: 30, um: "secchi", prezzo: 95, costo: 70 }] }
         ],
         commesse: [{ id: "c2", ristrutturazione_id: "r1", creato: dieci, titolo: "Cappotto termico villetta", comune: "Maddaloni", provincia: "CE", impresa: "Edil Volturno Srl (esempio)", importo_impresa: 24600, stato: "in_corso", avanzamento: 40, nota_impresa: "",
           sal: [{ id: "s0", per: "cliente", numero: 1, descrizione: "Acconto alla firma", importo: 9840, stato: "pagato", data: piu(-9) }, { id: "s1", per: "impresa", numero: 1, descrizione: "Ponteggio e preparazione", importo: 7380, stato: "pagato", data: piu(-5) }] }],
         lavori: [{ id: "l1", creato: ora, nome: "Paolo Riccio", telefono: "339 1112223", mail: "paolo@esempio.it", comune: "Caserta", provincia: "CE", nota: "Tinteggiatura di 4 stanze e corridoio", stato: "aperta", smistata: "", fonte: "dashboard", proposte: 1 }],
+        margine_minimo: 20,
         agenti: [{ id: "ag1", nome: "Mario Rossi", regione: "Campania", ruolo: "agente" }, { id: "ag2", nome: "Sara Conte", regione: "Campania", ruolo: "capoarea" }]
       }
     };
@@ -562,9 +564,26 @@
               <label>Note<input name="note" maxlength="1500" value="${r.note_admin || ""}"></label>
               <button class="btn-ghost" type="submit">Salva</button>
               ${["preventivo", "firmata", "in_cantiere"].includes(r.stato) ? html`<button class="btn-in" type="button" data-affida="${r.id}">Affida a un'impresa</button>` : ""}</form>
-            <div data-box-affida="${r.id}"></div></section>`;
+            ${profitGuard(r, C, A.margine_minimo)}
+            <div class="row-actions imp-az"><button class="btn-ghost" type="button" data-cmp="${r.id}">Computo (${(r.computo || []).length} voci)</button>
+              <button class="btn-ghost" type="button" data-fla="${r.id}">Foto e note vocali (${(r.media || []).length})</button>
+              ${r.cantiere_id ? html`<button class="btn-ghost" type="button" data-cnt="${r.cantiere_id}">Richieste alle aziende</button>` : ""}</div>
+            <div data-box-x="${r.id}"></div><div data-box-affida="${r.id}"></div></section>`;
         })}`.s : html`<div class="card empty"><strong>Nessuna richiesta di ristrutturazione</strong><span>Arrivano dai privati, dalla rete e dai piccoli lavori che passi ad AncheCasa.</span></div>`.s;
 
+        // 12.10.2026, app-26: soglia del Profit Guard, computo, Sopralluogo Flash, cantiere della pratica.
+        box.insertAdjacentHTML("afterbegin", html`<section class="card"><form class="nm-o" id="pg-f"><label>Margine minimo del Profit Guard %<input name="m" inputmode="decimal" value="${A.margine_minimo != null ? String(A.margine_minimo).replace(".", ",") : ""}" style="width:90px"></label>
+          <button class="btn-ghost" type="submit">Salva</button><small>Sotto questa soglia la pratica diventa rossa e, prima di affidare a un'impresa, ti chiedo conferma.</small></form></section>`.s);
+        box.querySelector("#pg-f").addEventListener("submit", (e) => {
+          e.preventDefault();
+          const v = e.target.m.value.trim() ? num(e.target.m.value) : null;
+          (reale() ? Q(db().from("app_impostazioni").upsert({ chiave: "profit_guard", valore: { margine_minimo: v }, aggiornato: new Date().toISOString() })) : Promise.resolve(demoCambia((d) => { d.admin.margine_minimo = v; })))
+            .then(() => { toast("Soglia salvata."); ricarica(); }, (e2) => toast("Non salvata: " + err(e2), "error"));
+        });
+        const apriX = (id, fn) => { const r = R.find((x) => x.id === id), bx = box.querySelector("[data-box-x='" + id + "']"); if (bx.dataset.aperto === fn.name) { bx.innerHTML = ""; bx.dataset.aperto = ""; return; } bx.dataset.aperto = fn.name; fn(bx, r, ricarica); };
+        box.querySelectorAll("[data-cmp]").forEach((b) => b.addEventListener("click", () => apriX(b.getAttribute("data-cmp"), computoBox)));
+        box.querySelectorAll("[data-fla]").forEach((b) => b.addEventListener("click", () => apriX(b.getAttribute("data-fla"), flashBox)));
+        box.querySelectorAll("[data-cnt]").forEach((b) => b.addEventListener("click", () => { if (AC.cantieri) AC.cantieri.apri(b.getAttribute("data-cnt")); location.hash = "#/admin/cnt_cantieri"; }));
         box.querySelectorAll("[data-pr]").forEach((f) => f.addEventListener("submit", (e) => {
           e.preventDefault();
           const id = f.getAttribute("data-pr"), r = R.find((x) => x.id === id);
@@ -594,7 +613,14 @@
               e.preventDefault();
               const riga = { ristrutturazione_id: id, impresa_id: f.imp.value, titolo: f.tit.value.trim(), descrizione: f.desc.value.trim(), comune: r.comune, provincia: r.provincia, indirizzo: r.indirizzo,
                 importo_impresa: num(f.imp_e.value), inizio: f.ini.value || null, fine: f.fine.value || null, referente: f.ref.value.trim() };
-              const btn = f.querySelector("button"); btn.disabled = true;
+              const btn = f.querySelector("button");
+              // Profit Guard: con questo importo il margine scende sotto la soglia? Chiedo conferma.
+              const k = costiDi(r, C), m = margine(Number(r.importo_cliente || 0), Number(k.imprese || 0) + Number(k.forniture || 0) + riga.importo_impresa);
+              if (A.margine_minimo != null && m != null && m < A.margine_minimo && btn.dataset.ok !== "1") {
+                btn.dataset.ok = "1"; btn.textContent = "Margine " + pct(m) + ", sotto la soglia " + pct(A.margine_minimo) + ": affido lo stesso"; return toast("Profit Guard: margine sotto la soglia.", "error");
+              }
+              if (!r.importo_cliente && btn.dataset.ok !== "1") { btn.dataset.ok = "1"; btn.textContent = "Manca il prezzo al cliente: affido lo stesso"; return toast("Scrivi il prezzo al cliente per il Profit Guard.", "error"); }
+              btn.disabled = true;
               (reale() ? Q(db().from("commesse").insert(riga)).then(() => (r.stato === "preventivo" ? aggiorna("ristrutturazioni", id, { stato: "firmata" }) : null))
                 : Promise.resolve(demoCambia((d) => { d.admin.commesse.unshift(Object.assign({ id: "c" + Date.now(), creato: new Date().toISOString(), impresa: ((imp || []).find((a) => a.id === riga.impresa_id) || {}).nome || "", stato: "proposta", avanzamento: 0, sal: [] }, riga)); })))
                 .then(() => { toast("Lavoro mandato: all'impresa arriva la mail."); ricarica(); }, (e2) => { btn.disabled = false; toast("Non mandato: " + err(e2), "error"); });
@@ -604,6 +630,161 @@
       }, (e) => nonPronto(el, e));
     }
   };
+
+  /* ============================================================
+     PROFIT GUARD, COMPUTO, SOPRALLUOGO FLASH (12.10.2026, decisioni di Nando 14:28, app-26)
+     Gratis per rete e admin. Funziona anche dal telefono (app installata): foto dalla fotocamera, note vocali registrate lì.
+     ============================================================ */
+  const GRP = () => (AC.cantieri && AC.cantieri.GRUPPI) || [];
+  const costiDi = (r, C) => r.costi || {
+    imprese: (C || []).filter((c) => c.ristrutturazione_id === r.id && c.stato !== "rifiutata").reduce((t, c) => t + Number(c.importo_impresa || 0), 0), forniture: 0,
+    stima: (r.computo || []).reduce((t, x) => t + num(x.costo) * (num(x.qta) || 1), 0), computo: (r.computo || []).reduce((t, x) => t + num(x.prezzo) * (num(x.qta) || 1), 0) };
+  const margine = (ricavo, costi) => (ricavo > 0 ? Math.round(((ricavo - costi) / ricavo) * 1000) / 10 : null);
+  const pct = (m) => (m == null ? "—" : String(m).replace(".", ",") + "%");
+  function profitGuard(r, C, soglia) {
+    const k = costiDi(r, C), impegnati = Number(k.imprese || 0) + Number(k.forniture || 0), ric = Number(r.importo_cliente || 0);
+    const m = margine(ric, impegnati);
+    const extra = 1 + (num(r.sicurezza_perc) + num(r.spese_perc)) / 100;
+    const ms = k.computo ? margine(Number(k.computo), Number(k.stima) * extra) : null;
+    const sotto = (x) => soglia != null && x != null && x < soglia;
+    return html`<div class="imp-pg ${sotto(m) || sotto(ms) ? "imp-pg-no" : m != null ? "imp-pg-ok" : ""}"><b>Profit Guard</b>
+      <span>Prezzo al cliente ${ric ? eur(ric) : "da scrivere"}</span><span>Costi impegnati ${eur(impegnati)} <small>(imprese ${eur(k.imprese)}, forniture ${eur(k.forniture)})</small></span>
+      <span>Margine <b>${ric ? eur(ric - impegnati) + " · " + pct(m) : "—"}</b></span>
+      ${k.computo ? html`<span>Dal computo: prezzo ${eur(k.computo)}, costo stimato ${eur(Number(k.stima) * extra)}, margine ${pct(ms)}</span>` : ""}
+      <span>Soglia ${soglia != null ? pct(soglia) : "da impostare"}${sotto(m) || sotto(ms) ? " · SOTTO LA SOGLIA" : ""}</span></div>`;
+  }
+
+  // Foto e note vocali della pratica: bucket «sopralluoghi», cartella = id della pratica.
+  function flashBox(box, r, dopo) {
+    const media = r.media || [];
+    const foto = media.filter((m) => m.tipo === "foto"), audio = media.filter((m) => m.tipo === "audio");
+    const urls = {};
+    const disegna = () => {
+      box.innerHTML = html`<div class="imp-flash">
+        <div class="row-actions">
+          <label class="btn-in imp-file">📷 Scatta o carica foto<input type="file" accept="image/*" capture="environment" multiple data-foto hidden></label>
+          <button class="btn-ghost" type="button" data-rec>🎙 Registra una nota vocale</button>
+          <label class="btn-ghost imp-file">Carica un audio<input type="file" accept="audio/*" data-audio hidden></label>
+        </div>
+        ${foto.length ? html`<div class="imp-foto">${foto.map((m) => urls[m.path] ? html`<a href="${urls[m.path]}" target="_blank" rel="noopener"><img src="${urls[m.path]}" alt="Foto del sopralluogo" loading="lazy"></a>` : html`<span class="imp-foto-x">Foto</span>`)}</div>` : html`<p class="note">Ancora nessuna foto.</p>`}
+        ${audio.length ? html`<div class="en-lista">${audio.map((m) => html`<div class="en-rrow"><div class="en-rinfo"><small>Nota vocale · ${dataIt(m.creato)}</small>${urls[m.path] ? html`<audio controls preload="none" src="${urls[m.path]}"></audio>` : html`<small>(si ascolta con i dati veri)</small>`}</div></div>`)}</div>` : ""}
+        <p class="note">La stima automatica da foto e voce arriva quando c'è la chiave dell'intelligenza artificiale: intanto foto e note restano qui per il preventivo.</p></div>`.s;
+      const carica = (files, tipo) => {
+        files = [...files].slice(0, 10);
+        if (!files.length) return;
+        if (files.some((f) => f.size > 25 * 1024 * 1024)) return toast("File troppo grande (massimo 25 MB).", "error");
+        if (!reale()) { demoCambia((d) => { const x = (d.sopralluoghi || []).concat(d.admin.ristrutturazioni).filter((y) => y.id === r.id); x.forEach((y) => { y.media = (y.media || []).concat(files.map((f) => ({ id: "m" + Date.now(), path: "esempio/" + f.name, tipo, creato: new Date().toISOString() }))); }); }); toast("Anteprima: registrato solo qui, i file non si caricano."); if (dopo) dopo(); return; }
+        toast("Carico…");
+        Promise.all(files.map((f, i) => {
+          const ext = (f.name && f.name.indexOf(".") > 0 ? f.name.split(".").pop() : (f.type.split("/")[1] || "bin")).toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 5);
+          const path = r.id + "/" + Date.now() + "-" + i + "." + ext;
+          return Q(db().storage.from("sopralluoghi").upload(path, f, { upsert: false, contentType: f.type || undefined })).then(() => Q(db().rpc("ristrutturazione_media_aggiungi", { p_id: r.id, p_path: path, p_tipo: tipo, p_nota: "" })));
+        })).then(() => { toast(tipo === "audio" ? "Nota vocale salvata." : "Foto salvate."); if (dopo) dopo(); }, (e) => toast("Non caricato: " + err(e), "error"));
+      };
+      box.querySelector("[data-foto]").addEventListener("change", (e) => carica(e.target.files, "foto"));
+      box.querySelector("[data-audio]").addEventListener("change", (e) => carica(e.target.files, "audio"));
+      const rec = box.querySelector("[data-rec]");
+      let mr = null, pezzi = [];
+      rec.addEventListener("click", () => {
+        if (mr) { mr.stop(); return; }
+        if (!navigator.mediaDevices || !window.MediaRecorder) return toast("Questo telefono non registra dal browser: usa «Carica un audio».", "error");
+        navigator.mediaDevices.getUserMedia({ audio: true }).then((st) => {
+          pezzi = []; mr = new MediaRecorder(st);
+          mr.ondataavailable = (ev) => { if (ev.data && ev.data.size) pezzi.push(ev.data); };
+          mr.onstop = () => {
+            st.getTracks().forEach((t) => t.stop());
+            const tipo = mr.mimeType || "audio/webm"; mr = null; rec.textContent = "🎙 Registra una nota vocale"; rec.classList.remove("btn-in");
+            const ext = tipo.indexOf("mp4") >= 0 ? "m4a" : tipo.indexOf("ogg") >= 0 ? "ogg" : "webm";
+            carica([new File([new Blob(pezzi, { type: tipo })], "nota." + ext, { type: tipo })], "audio");
+          };
+          mr.start(); rec.textContent = "⏹ Ferma e salva"; rec.classList.add("btn-in");
+        }, () => toast("Serve il permesso del microfono.", "error"));
+      });
+    };
+    disegna();
+    if (reale() && media.length) db().storage.from("sopralluoghi").createSignedUrls(media.map((m) => m.path), 3600).then((x) => { ((x && x.data) || []).forEach((y) => { if (y.signedUrl) urls[y.path] = y.signedUrl; }); disegna(); }, () => {});
+  }
+
+  // Computo della pratica (admin): righe per lavorazione, prezzo al cliente e costo stimato; poi richieste alle aziende.
+  function computoBox(box, r, ricarica) {
+    const rigaC = (x) => html`<tr><td><select name="s">${GRP().map((g) => html`<optgroup label="${g[1]}">${g[2].map((s) => html`<option value="${s[0]}"${x.servizio === s[0] ? " selected" : ""}>${s[1]}</option>`)}</optgroup>`)}</select></td>
+      <td><input name="v" maxlength="160" value="${x.voce || ""}"></td><td class="pr-n"><input name="q" inputmode="decimal" value="${x.qta != null ? String(x.qta).replace(".", ",") : ""}"></td>
+      <td class="pr-u"><input name="u" maxlength="12" value="${x.um || ""}"></td><td class="pr-n"><input name="p" inputmode="decimal" value="${x.prezzo != null ? String(x.prezzo).replace(".", ",") : ""}"></td>
+      <td class="pr-n"><input name="c" inputmode="decimal" value="${x.costo != null ? String(x.costo).replace(".", ",") : ""}"></td><td><button type="button" class="btn-mini" data-x>✕</button></td></tr>`;
+    box.innerHTML = html`<form class="prefs wide" data-computo-f>
+      <div class="en-scroll"><table class="mini-table pr-righe"><thead><tr><th>Lavorazione</th><th>Voce</th><th>Quantità</th><th>Unità</th><th>Prezzo cliente €</th><th>Costo stimato €</th><th></th></tr></thead>
+        <tbody>${((r.computo || []).length ? r.computo : [{ servizio: "murature" }]).map(rigaC)}</tbody></table></div>
+      <div class="row-actions"><button type="button" class="btn-ghost" data-piu>Aggiungi una riga</button></div>
+      <div class="en-grid"><label>Sicurezza % sul costo<input name="sic" inputmode="decimal" value="${String(r.sicurezza_perc || 0).replace(".", ",")}"></label>
+        <label>Spese generali % sul costo<input name="sg" inputmode="decimal" value="${String(r.spese_perc || 0).replace(".", ",")}"></label></div>
+      <p class="note" data-tot></p>
+      <div class="row-actions"><button class="btn-in" type="submit">Salva il computo</button>
+        <button class="btn-ghost" type="button" data-pubblica>Chiedi le voci alle aziende della zona</button></div>
+      <p class="note">«Chiedi alle aziende» crea il cantiere AncheCasa della pratica e pubblica una richiesta per ogni tipo (materiali, noleggio, lavori, impianti): arriva alle prime 10 aziende della zona. Le offerte scelte entrano nei costi del Profit Guard.</p></form>`.s;
+    const f = box.querySelector("[data-computo-f]"), tb = f.querySelector("tbody");
+    const leggi = () => [...tb.querySelectorAll("tr")].map((tr, i) => ({ id: "c" + (i + 1), servizio: tr.querySelector("[name=s]").value, voce: tr.querySelector("[name=v]").value.trim(),
+      qta: num(tr.querySelector("[name=q]").value) || null, um: tr.querySelector("[name=u]").value.trim(), prezzo: num(tr.querySelector("[name=p]").value) || null, costo: num(tr.querySelector("[name=c]").value) || null })).filter((x) => x.voce.length >= 2);
+    const conta = () => {
+      const c = leggi(), pr = c.reduce((t, x) => t + (x.prezzo || 0) * (x.qta || 1), 0), co = c.reduce((t, x) => t + (x.costo || 0) * (x.qta || 1), 0) * (1 + (num(f.sic.value) + num(f.sg.value)) / 100);
+      f.querySelector("[data-tot]").textContent = "Prezzo al cliente " + eur(pr) + " · costo stimato con sicurezza e spese " + eur(co) + " · margine " + pct(margine(pr, co));
+    };
+    f.addEventListener("input", conta); conta();
+    f.addEventListener("click", (e) => {
+      if (e.target.matches("[data-piu]")) { const t = document.createElement("tbody"); t.innerHTML = rigaC({ servizio: (tb.lastElementChild && tb.lastElementChild.querySelector("[name=s]").value) || "murature" }).s; tb.appendChild(t.firstElementChild); }
+      if (e.target.matches("[data-x]") && tb.children.length > 1) { e.target.closest("tr").remove(); conta(); }
+    });
+    const salva = () => {
+      const c = leggi();
+      return reale() ? Q(db().rpc("ristrutturazione_computo", { p_id: r.id, p_computo: c, p_sicurezza: num(f.sic.value), p_spese: num(f.sg.value) }))
+        : Promise.resolve(demoCambia((d) => { const x = d.admin.ristrutturazioni.find((y) => y.id === r.id); if (x) Object.assign(x, { computo: c, sicurezza_perc: num(f.sic.value), spese_perc: num(f.sg.value), costi: null }); }));
+    };
+    f.addEventListener("submit", (e) => { e.preventDefault(); salva().then(() => { toast("Computo salvato."); ricarica(); }, (e2) => toast("Non salvato: " + err(e2), "error")); });
+    f.querySelector("[data-pubblica]").addEventListener("click", (e) => {
+      const b = e.target, c = leggi();
+      if (!c.length) return toast("Scrivi almeno una voce.", "error");
+      if (!AC.cantieri) return toast("Manca js/cantieri.js.", "error");
+      b.disabled = true;
+      const reg = ((AC.preventivi && AC.preventivi.PROVINCE) || []).find((p) => p[0] === r.provincia);
+      const cantiere = r.cantiere_id ? Promise.resolve(r.cantiere_id) : reale() ? Q(db().rpc("ristrutturazione_cantiere", { p_id: r.id, p_regione: reg ? reg[2] : "" }))
+        : AC.cantieri.salvaCantiere({ nome: "Ristrutturazione " + r.nome + " · " + r.comune, comune: r.comune, provincia: r.provincia, regione: reg ? reg[2] : "", indirizzo: r.indirizzo, committente: "privato", importo: r.importo_cliente }).then((id) => { demoCambia((d) => { const x = d.admin.ristrutturazioni.find((y) => y.id === r.id); if (x) x.cantiere_id = id; }); return id; });
+      salva().then(() => cantiere).then((cid) => {
+        const perTipo = {};
+        c.forEach((x) => { const g = (AC.cantieri.GRUPPO_DI || {})[x.servizio] || "lavori"; (perTipo[g] = perTipo[g] || []).push({ id: x.id, servizio: x.servizio, voce: x.voce, qta: x.qta, um: x.um }); });
+        const NOMI = { materiali: "Materiali", noleggio: "Noleggio", lavori: "Lavori", impianti: "Impianti", personale: "Personale" };
+        return Object.keys(perTipo).reduce((p, g) => p.then(() => AC.cantieri.pubblica({ cantiere_id: cid, tipo: g, titolo: NOMI[g] + " · " + r.nome + " (" + r.comune + ")", voci: perTipo[g], pagamenti: "SAL mensili",
+          scadenza: new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10), urgente: false, nota: "", inviti: [] })), Promise.resolve()).then(() => cid);
+      }).then((cid) => { toast("Richieste pubblicate alle aziende della zona."); AC.cantieri.apri(cid); location.hash = "#/admin/cnt_cantieri"; },
+        (e2) => { b.disabled = false; toast("Non pubblicato: " + err(e2), "error"); });
+    });
+  }
+
+  // Rete: i sopralluoghi assegnati, con Sopralluogo Flash (foto e note vocali) dal telefono.
+  function paginaSopralluoghi(titolo, sub) {
+    const V2 = {
+      title: titolo, sub: sub,
+      render(el) {
+        caricamento(el);
+        (reale() ? Q(db().rpc("miei_sopralluoghi")) : Promise.resolve(demo().sopralluoghi)).then((l) => {
+          el.innerHTML = html`${(l || []).length ? l.map((r) => html`<section class="card"><div class="en-rrow"><div class="en-rinfo">
+              <div>${tag(STATO_R, r.stato, "nuova")} <b>${r.nome}</b> <small>· ${dove(r)} · ${giorniFa(r.creato)}</small></div>
+              <small>${r.descrizione}${r.budget ? " · budget " + r.budget : ""}</small>
+              <small><a href="tel:${(r.telefono || "").replace(/\s/g, "")}">${r.telefono}</a>${r.mail ? html` · <a href="mailto:${r.mail}">${r.mail}</a>` : ""}${r.indirizzo ? html` · <a href="https://maps.google.com/?q=${encodeURIComponent(r.indirizzo + " " + r.comune)}" target="_blank" rel="noopener">${r.indirizzo}</a>` : ""}</small></div></div>
+            <h3>Sopralluogo Flash</h3><div data-fl="${r.id}"></div>
+            <form class="prefs wide en-grid" data-so="${r.id}"><label class="span2">Com'è andato il sopralluogo<textarea name="nota" maxlength="1500" placeholder="misure, stato dei luoghi, cosa vuole il cliente">${r.nota_agente || ""}</textarea></label>
+              <div class="row-actions span2"><button class="btn-ghost" type="submit">Salva la nota</button>${["nuova", "sopralluogo"].includes(r.stato) ? html`<button class="btn-in" type="button" data-fatto="${r.id}">Fatto: passa al preventivo</button>` : ""}</div></form></section>`)
+            : html`<div class="card empty"><strong>Nessun sopralluogo assegnato</strong><span>Quando l'admin te ne affida uno ti arriva una mail e lo trovi qui, anche dal telefono.</span></div>`}`.s;
+          (l || []).forEach((r) => flashBox(el.querySelector("[data-fl='" + r.id + "']"), r, () => V2.render(el)));
+          const salva = (id, nota, fatto) => azione("ristrutturazione_agente", { p_id: id, p_nota: nota, p_fatto: fatto }, (d) => { const r = d.sopralluoghi.find((x) => x.id === id); if (r) Object.assign(r, { nota_agente: nota, stato: fatto ? "preventivo" : r.stato }); })
+            .then(() => { toast(fatto ? "Fatto: AncheCasa prepara il preventivo." : "Nota salvata."); V2.render(el); }, (e2) => toast("Non salvato: " + err(e2), "error"));
+          el.querySelectorAll("[data-so]").forEach((f) => f.addEventListener("submit", (e) => { e.preventDefault(); salva(f.getAttribute("data-so"), f.nota.value.trim(), false); }));
+          el.querySelectorAll("[data-fatto]").forEach((b) => b.addEventListener("click", () => { if (!conferma(b)) return; salva(b.getAttribute("data-fatto"), b.closest("form").nota.value.trim(), true); }));
+        }, (e) => nonPronto(el, e));
+      }
+    };
+    return V2;
+  }
+  V["re-sopralluoghi"] = paginaSopralluoghi("Sopralluoghi assegnati", "I sopralluoghi che AncheCasa ti ha affidato. Dal telefono scatti le foto e registri la nota vocale; poi premi «Fatto»: il preventivo lo prepara AncheCasa.");
+  V["re-flash"] = paginaSopralluoghi("Sopralluogo Flash", "Sul posto: foto dalla fotocamera e nota vocale, salvate nella pratica. Gratis per la rete e per l'admin.");
 
   AC.imprese = { STATO_R: STATO_R };
 })();
