@@ -61,3 +61,6 @@
 .en-ract { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
 .en-accordo .en-acc-v { font-size: 34px; font-weight: 800; color: var(--navy); margin: 6px 0; }
 .en-accordo .en-acc-v small { font-size: 15px; font-weight: 500; color: var(--muted); }
+
+/* 12.10.2026 · Offerte per i clienti della rete (servizi.js) */
+.sv-schede { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }

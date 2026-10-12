@@ -18,6 +18,9 @@
     { nome: "Studio tecnico", desc: "Pratiche, gare, presenze di cantiere.", ico: "doc" },
     { nome: "Fornitore", desc: "Materiali, noleggio, IT.", ico: "folder" },
     { nome: "Luce e gas", desc: "Richieste dai privati, proposte su carta AncheCasa, clienti, accordo.", ico: "pulse", demo: "azienda", tipo: "azienda_luce_gas", pagina: "energia_home", regole: "regole/energia.html", pronta: true },
+    // 12.10.2026, app-20: stesso giro di luce e gas.
+    { nome: "Telefono e internet", desc: "Richieste di privati e imprese, offerte visibili, proposte su carta AncheCasa, accordo.", ico: "pulse", demo: "azienda", tipo: "azienda_telefonia", pagina: "tel_home", pronta: true },
+    { nome: "Finanza e assicurazioni", desc: "Mutui, prestiti, polizze casa e cantiere, fideiussioni. Iscrizione OAM o IVASS sulle proposte.", ico: "shield", demo: "azienda", tipo: "azienda_finanza", pagina: "fin_home", pronta: true },
     { nome: "Agenzia immobiliare", desc: "Annunci in bacheca.", ico: "home" },
     { nome: "Committente", desc: "Condomini, amministratori, grandi aziende e fondi.", ico: "building" }
   ];

@@ -118,7 +118,13 @@
       ["azienda_fornitori_it", "Fornitori di servizi informatici, programmi e promozione"]
     ] },
     { famiglia: "azienda", area: "Aziende - Energia e utenze", voci: [
-      ["azienda_luce_gas", "Fornitori di luce, gas e servizi energetici"]
+      ["azienda_luce_gas", "Fornitori di luce, gas e servizi energetici"],
+      // 12.10.2026, app-20: fornitori di telefonia e internet.
+      ["azienda_telefonia", "Fornitori di telefonia e internet"]
+    ] },
+    // 12.10.2026, app-20: banche, mediatori creditizi e assicurazioni (iscritti OAM o IVASS).
+    { famiglia: "azienda", area: "Aziende - Finanza e assicurazioni", voci: [
+      ["azienda_finanza", "Banche, mediatori creditizi e assicurazioni"]
     ] },
     { famiglia: "azienda", area: "Committenti", voci: [
       ["committente_condominio", "Condominio: pubblica appalti"],

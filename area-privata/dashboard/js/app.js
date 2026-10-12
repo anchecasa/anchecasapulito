@@ -4,7 +4,7 @@
   const S = AC.store;
   const D = AC.date;
 
-  /* CONGELATO 20.09.2026. Famiglie e pulsanti. Non cambiare FOLD_LAB, UFFICIO, PACKS, packFornitore, navItems, HEADER_OPP. Non aggiungere, togliere o rinominare pieghe o tasti. Eccezione 11.10.2026, su richiesta esplicita di Nando: tasto «Home» (grafici, js/home.js) primo per admin e agenti. Eccezione 11.10.2026 sera: tasti admin Terranova, Gare private e AncheBIM (js/funzioni-interne.js), funzioni interne, non siti a parte. Eccezione 12.10.2026: tasto admin «Software» (js/software-admin.js), secondo dopo Home, con tutti i software per categoria. Eccezione 12.10.2026: tasto admin «Pulsanti per profilo» (js/pulsanti-profili.js); i menu di privato, azienda e agente mostrano solo i pulsanti che l'admin ha scelto lì. Eccezione 12.10.2026: menu admin a categorie (pieghe adm_* in FOLD_LAB). Eccezione 12.10.2026: tasti admin «Rete» e «Inviti» in cima (js/inviti-admin.js); le pagine della rete si aprono da Rete. Eccezione 12.10.2026: menu della rete a categorie per ruolo (vociRete, js/rete-progetto.js).
+  /* CONGELATO 20.09.2026. Famiglie e pulsanti. Non cambiare FOLD_LAB, UFFICIO, PACKS, packFornitore, navItems, HEADER_OPP. Non aggiungere, togliere o rinominare pieghe o tasti. Eccezione 11.10.2026, su richiesta esplicita di Nando: tasto «Home» (grafici, js/home.js) primo per admin e agenti. Eccezione 11.10.2026 sera: tasti admin Terranova, Gare private e AncheBIM (js/funzioni-interne.js), funzioni interne, non siti a parte. Eccezione 12.10.2026: tasto admin «Software» (js/software-admin.js), secondo dopo Home, con tutti i software per categoria. Eccezione 12.10.2026: tasto admin «Pulsanti per profilo» (js/pulsanti-profili.js); i menu di privato, azienda e agente mostrano solo i pulsanti che l'admin ha scelto lì. Eccezione 12.10.2026: menu admin a categorie (pieghe adm_* in FOLD_LAB). Eccezione 12.10.2026: tasti admin «Rete» e «Inviti» in cima (js/inviti-admin.js); le pagine della rete si aprono da Rete. Eccezione 12.10.2026: menu della rete a categorie per ruolo (vociRete, js/rete-progetto.js). Eccezione 12.10.2026 (app-20, decisioni di Nando): pack «telefonia» e «finanza» per i fornitori, voci «Telefono e internet» e «Mutui, prestiti e polizze» del privato, «Telefono e internet» e «Polizze e finanziamenti» delle imprese (piega az_servizi), «Offerte per i clienti» della rete (js/servizi.js).
      ECCEZIONE 22.09.2026, su richiesta esplicita: aggiunta "admin" come quarta famiglia
      (prima era una pagina admin.html a sé, mai approvata graficamente). Non tocca le pieghe
      o i tasti delle tre famiglie originali: admin ha un suo ramo separato ovunque sotto.
@@ -34,6 +34,10 @@
     mezzimag: "Mezzi e magazzino",
     // Energia e utenze (09.10.2026, su richiesta esplicita)
     utenze: "Luce e gas",
+    // Telefonia e Finanza (12.10.2026, app-20, decisioni di Nando)
+    tel_forn: "Telefono e internet",
+    fin_forn: "Finanza e assicurazioni",
+    az_servizi: "Risparmia",
     // Admin a categorie (12.10.2026, su richiesta di Nando)
     adm_panoramica: "Panoramica",
     adm_iscritti: "Iscritti",
@@ -76,7 +80,9 @@
     negozio: "commercio",
     artigiano: "commercio",
     fornitore: "commercio",
-    energia: "casa"
+    energia: "casa",
+    telefonia: "casa",
+    finanza: "casa"
   };
   // Categorie Genera link / profilo → pack menu (i 13 pack restano sotto).
   const TIPO_PACK = {
@@ -113,7 +119,10 @@
     azienda_fornitori_it: "fornitore",
     azienda_agenzie_immobiliari: "agenzia",
     agente_agenzie_immobiliari: "agenzia",
-    azienda_luce_gas: "energia"
+    azienda_luce_gas: "energia",
+    // 12.10.2026, app-20: fornitori di telefonia e di finanza (js/servizi.js).
+    azienda_telefonia: "telefonia",
+    azienda_finanza: "finanza"
   };
   const TIPO_FORN_MODO = {
     azienda_materiali_edili: "vendita",
@@ -256,6 +265,23 @@
       n("energia_clienti", "I miei clienti", "team", "utenze"),
       n("energia_accordo", "Il mio accordo", "wallet", "utenze")
     ],
+    /* 12.10.2026 (app-20, decisioni di Nando): fornitori di telefonia e di finanza, stesso giro di luce e gas (js/servizi.js). */
+    telefonia: [
+      n("tel_home", "Home", "home", "tel_forn"),
+      n("tel_richieste", "Richieste", "send", "tel_forn"),
+      n("tel_proposte", "Proposte", "doc", "tel_forn"),
+      n("tel_offerte", "Le mie offerte", "star", "tel_forn"),
+      n("tel_clienti", "I miei clienti", "team", "tel_forn"),
+      n("tel_accordo", "Il mio accordo", "wallet", "tel_forn")
+    ],
+    finanza: [
+      n("fin_home", "Home", "home", "fin_forn"),
+      n("fin_richieste", "Richieste", "send", "fin_forn"),
+      n("fin_proposte", "Proposte", "doc", "fin_forn"),
+      n("fin_offerte", "Le mie offerte", "star", "fin_forn"),
+      n("fin_clienti", "I miei clienti", "team", "fin_forn"),
+      n("fin_accordo", "Il mio accordo", "wallet", "fin_forn")
+    ],
     artigiano: withUfficio([
       n("vetrina", "Vetrina", "star", "bottega"),
       n("app", "App di campo", "pulse", "bottega"),
@@ -285,6 +311,12 @@
     return withUfficio(vendita.concat(noleggio));
   }
 
+  // 12.10.2026 (app-20, deciso da Nando): le imprese chiedono proposte di telefonia e di polizze/finanziamenti.
+  const SENZA_SERVIZI = { energia: 1, telefonia: 1, finanza: 1 };
+  const vociServiziAzienda = (pack) => SENZA_SERVIZI[pack] ? [] : [
+    { id: "az-telefonia", label: "Telefono e internet", icon: "pulse", gruppo: "pack", fold: "az_servizi" },
+    { id: "az-finanza", label: "Polizze e finanziamenti", icon: "shield", gruppo: "pack", fold: "az_servizi" }
+  ];
   const PACK_NASCOSTO = { hse: 1, sicurezza_armata: 1, apl: 1, condominio: 1, agenzia: 1, industria: 1, logistica: 1, albergo: 1, negozio: 1 };
 
   /* RETE a categorie (12.10.2026, deciso da Nando, PROGETTO-DASHBOARD.md). Ognuno vede sé stesso e chi ha sotto.
@@ -300,6 +332,8 @@
       c("inviti", "Invita un cliente", "send", "rt_clienti", 1),
       c("re-vendi", "Vendi", "wallet", "rt_vendi", 1, { cuore: true }),
       c("re-flash", "Sopralluogo Flash", "pulse", "rt_vendi", 1),
+      // 12.10.2026, app-20: proposte di luce e gas, telefono, mutui e polizze per i clienti (js/servizi.js).
+      c("re-offerte", "Offerte per i clienti", "wallet", "rt_vendi", 1),
       c("catena", "La mia squadra", "team", "rt_squadra", 2),
       c("re-fermi", "Chi è fermo", "clock", "rt_squadra", 2),
       c("re-cartina", "La cartina", "grid", "rt_squadra", 2),
@@ -335,6 +369,9 @@
         c("pv-miei-annunci", "I miei annunci", "doc", "pv_mie"),
         c("pv-check-bollette", "Check Bollette", "wallet", "pv_risparmio"),
         c("pv-offerte-luce", "Offerte luce e gas", "pulse", "pv_risparmio"),
+        // 12.10.2026, app-20: telefono e internet, mutui e polizze (js/servizi.js).
+        c("pv-offerte-tel", "Telefono e internet", "pulse", "pv_risparmio"),
+        c("pv-offerte-fin", "Mutui, prestiti e polizze", "shield", "pv_risparmio"),
         c("pv-mie-app", "Le mie app", "star", "pv_app"),
         c("inviti", "Invita e guadagna credito", "star", "pv_passaparola"),
         { id: "chat", label: "Chat", icon: "chat", gruppo: "fisso", soloTestata: true }
@@ -352,7 +389,7 @@
         pack === "fornitore"
           ? packFornitore(modo)
           : PACKS[pack] || []
-      );
+      ).concat(vociServiziAzienda(pack));
     }
     if (famiglia === "agente") {
       return vociRete(AC.ruoloRete ? AC.ruoloRete() : "agente");
@@ -436,6 +473,8 @@
     { k: "azienda:professionista", nome: "Studio tecnico", famiglia: "azienda", pack: "professionista" },
     { k: "azienda:fornitore", nome: "Fornitore (materiali, noleggio, IT)", famiglia: "azienda", pack: "fornitore" },
     { k: "azienda:energia", nome: "Luce e gas", famiglia: "azienda", pack: "energia" },
+    { k: "azienda:telefonia", nome: "Telefono e internet", famiglia: "azienda", pack: "telefonia" },
+    { k: "azienda:finanza", nome: "Finanza e assicurazioni", famiglia: "azienda", pack: "finanza" },
     { k: "azienda:committente", nome: "Committente (condominio, amministratore, fondi)", famiglia: "azienda", pack: "committente" },
     { k: "agente:subagente", nome: "Rete · Sub-agente", famiglia: "agente", ruolo: "subagente" },
     { k: "agente:agente", nome: "Rete · Agente", famiglia: "agente", ruolo: "agente" },
@@ -452,7 +491,7 @@
         { id: "chat", label: "Chat", icon: "chat", gruppo: "fisso" },
         { id: "inviti", label: "Inviti", icon: "send", gruppo: "fisso" },
         { id: "tuo-mese", label: "Il tuo mese", icon: "chart", gruppo: "comune" }
-      ].concat(prof.pack === "fornitore" ? packFornitore("entrambi") : PACKS[prof.pack] || []);
+      ].concat(prof.pack === "fornitore" ? packFornitore("entrambi") : PACKS[prof.pack] || []).concat(vociServiziAzienda(prof.pack));
     } else if (prof.famiglia === "agente") {
       voci = vociRete(prof.ruolo || "agente");
     } else {
@@ -532,6 +571,9 @@
     if (tipo === "agente") return "home";
     // 12.10.2026: il fornitore di energia arriva sulla sua Home.
     if (tipo === "azienda" && packKey(S.data.profilo && S.data.profilo.tipoAzienda) === "energia") return "energia_home";
+    // 12.10.2026, app-20: anche i fornitori di telefonia e di finanza.
+    if (tipo === "azienda" && packKey(S.data.profilo && S.data.profilo.tipoAzienda) === "telefonia") return "tel_home";
+    if (tipo === "azienda" && packKey(S.data.profilo && S.data.profilo.tipoAzienda) === "finanza") return "fin_home";
     return "bacheca";
   }
   // Anteprima locale (?demo=privato|azienda|agente|admin): niente login.
@@ -776,7 +818,7 @@
     if (!statoPulsante(famiglia, it.id)) return false;
     if (famiglia === "azienda") {
       const pack = packKey(S.data.profilo && S.data.profilo.tipoAzienda);
-      if (PACK_NASCOSTO[pack] && it.gruppo === "pack" && it.fold !== "ufficio") return false;
+      if (PACK_NASCOSTO[pack] && it.gruppo === "pack" && it.fold !== "ufficio" && it.fold !== "az_servizi") return false;
     }
     return true;
   }
@@ -918,7 +960,7 @@
 
     // Telefono (01.10.2026): barra delle sezioni in basso, come un'app. Fino a 5 voci stanno tutte nella barra;
     // altrimenti le prime 4 e «Altro», che apre una scheda con il resto e con le cartelle (Ufficio, Cantiere...).
-    const BREVE = { home: "Home", software: "Software", pulsanti: "Pulsanti", "rete-admin": "Rete", "inviti-admin": "Inviti", "fornitori-admin": "Fornitori", energia_home: "Home", energia_richieste: "Richieste", proposte_energia: "Proposte", offerte_energia: "Offerte", energia_clienti: "Clienti", energia_accordo: "Accordo", "re-clienti": "Clienti", "re-vendi": "Vendi", "re-formazione": "Formazione", "sala-demo": "Demo", regole: "Regole", bacheca: "Bacheca", iscritti: "Iscritti", appunti: "Appunti", bandi: "Bandi", terranova: "Terranova", "gare-private": "Gare", anchebim: "BIM", contratti: "Contratti", affida: "Affida", iscrizioni: "Iscrizioni", "richieste-agenti": "Agenti", "proposte-rete": "Segnala", "oggi-rete": "Oggi", strategia: "Strategia", "lavori-rete": "Lavori", "linee-decise": "Linee", "tuo-mese": "Mese", "genera-link": "Link", task: "Task", file: "File", "chat-team": "Chat", "mio-ruolo": "Ruolo", documenti: "Documenti" };
+    const BREVE = { home: "Home", software: "Software", pulsanti: "Pulsanti", "rete-admin": "Rete", "inviti-admin": "Inviti", "fornitori-admin": "Fornitori", energia_home: "Home", energia_richieste: "Richieste", proposte_energia: "Proposte", offerte_energia: "Offerte", energia_clienti: "Clienti", energia_accordo: "Accordo", tel_home: "Home", tel_richieste: "Richieste", tel_proposte: "Proposte", tel_offerte: "Offerte", tel_clienti: "Clienti", tel_accordo: "Accordo", fin_home: "Home", fin_richieste: "Richieste", fin_proposte: "Proposte", fin_offerte: "Offerte", fin_clienti: "Clienti", fin_accordo: "Accordo", "re-offerte": "Offerte", "re-clienti": "Clienti", "re-vendi": "Vendi", "re-formazione": "Formazione", "sala-demo": "Demo", regole: "Regole", bacheca: "Bacheca", iscritti: "Iscritti", appunti: "Appunti", bandi: "Bandi", terranova: "Terranova", "gare-private": "Gare", anchebim: "BIM", contratti: "Contratti", affida: "Affida", iscrizioni: "Iscrizioni", "richieste-agenti": "Agenti", "proposte-rete": "Segnala", "oggi-rete": "Oggi", strategia: "Strategia", "lavori-rete": "Lavori", "linee-decise": "Linee", "tuo-mese": "Mese", "genera-link": "Link", task: "Task", file: "File", "chat-team": "Chat", "mio-ruolo": "Ruolo", documenti: "Documenti" };
     const conAltro = folds.length > 0 || top.length > 5;
     const tabs = conAltro ? top.slice(0, 4) : top;
     const extra = conAltro ? top.slice(4) : [];

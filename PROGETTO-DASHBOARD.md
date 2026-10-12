@@ -214,6 +214,16 @@ Sei famiglie: **Energia** (luce e gas; fotovoltaico e pompe di calore come offer
 - Dashboard del fornitore: Home, Richieste, Proposte (PDF su carta AncheCasa con il suo logo), Le mie offerte (e carta intestata), I miei clienti (contratto attivato), Il mio accordo.
 - A pagamento, da decidere: in evidenza, la rete vende per te, report.
 
+### Telefonia e internet · Finanza e assicurazioni (decisioni di Nando, 12.10.2026 09:44)
+
+- **Stessa logica di luce e gas**: richiesta a tutti i fornitori della categoria, contatti solo dopo la scelta del cliente, provvigione decisa da Nando e confermata dal fornitore prima delle proposte. Un motore solo per le due categorie (`js/servizi.js`, app-20); luce e gas resta com'è.
+- **Da dove arrivano le richieste**: dashboard del privato, dashboard delle imprese, commerciali della rete. Se sul Magazine c'è un pulsante (oggi solo Check Bollette per luce e gas) si collega; se no il cliente vede le offerte pubblicate dai fornitori e chiede le proposte.
+- **Telefonia**: casa, cellulare, casa e cellulare, ufficio con più linee. Anche per le aziende (partita IVA, più linee).
+- **Finanza**: tutti i prodotti. Privato: mutuo casa, prestito per ristrutturare, assicurazione casa. Impresa: polizza cantiere (CAR), decennale postuma, fideiussioni per le gare, RC professionale, prestiti. Le imprese chiedono dalla loro dashboard (Polizze e finanziamenti).
+- **Finanza, regola**: il fornitore scrive la sua iscrizione OAM o IVASS nella carta intestata; senza, non manda proposte. AncheCasa segnala e non fa intermediazione né consulenza (scritto sulle proposte e sulla pagina del cliente). Le provvigioni su mutui e polizze vanno controllate con il commercialista o un legale prima di firmare gli accordi.
+- **Rete**: il commerciale chiede proposte per un suo cliente (luce e gas, telefono, finanza) da «Offerte per i clienti». Il cliente riceve le proposte per mail e sceglie. Quando il fornitore attiva il contratto, la vendita va al commerciale (app_vendite, anche per luce e gas).
+- Dashboard del fornitore: come luce e gas (Home, Richieste, Proposte, Le mie offerte, I miei clienti, Il mio accordo).
+
 ## Aziende
 
 Da progettare.

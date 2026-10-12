@@ -27,6 +27,8 @@
     if (document.body) nastro(); else document.addEventListener("DOMContentLoaded", nastro);
   }
   const LOCALE = "ac-demo-pulsanti-profili";
+  // 12.10.2026 (app-19, app-20): «Guarda come» anche per i fornitori di luce e gas, telefonia e finanza.
+  const GUARDA_FORN = { "azienda:energia": ["azienda_luce_gas", "energia_home"], "azienda:telefonia": ["azienda_telefonia", "tel_home"], "azienda:finanza": ["azienda_finanza", "fin_home"] };
 
   let config = { profili: {} };
   let caricato = false;
@@ -180,8 +182,8 @@
                 <p class="note">${salvato ? "Salvato il " + dataOra(salvato.salvato) + (salvato.da ? " da " + salvato.da : "") : TUTTI_AL_PRIMO(scelto) ? "Non ancora salvato: oggi questo profilo vede tutti i suoi pulsanti, gratis. Quando salvi, conta la tua scelta." : "Non ancora salvato: oggi questo profilo non vede nessun pulsante."}</p>
               </div>
               <div class="pp-conti">
-                ${prof.famiglia === "privato" || prof.famiglia === "agente" || prof.k === "azienda:impresa"
-                  ? html`<a class="pp-guarda" href="index.html?demo=${prof.famiglia}${prof.ruolo ? "&ruolo=" + prof.ruolo : ""}#/${prof.famiglia}/${prof.famiglia === "agente" ? "home" : "bacheca"}" target="_blank" rel="noopener" title="Si apre in una scheda nuova, senza password, con dati di esempio e i pulsanti salvati">Guarda come ${prof.nome}</a>`
+                ${prof.famiglia === "privato" || prof.famiglia === "agente" || prof.k === "azienda:impresa" || GUARDA_FORN[prof.k]
+                  ? html`<a class="pp-guarda" href="index.html?demo=${prof.famiglia}${prof.ruolo ? "&ruolo=" + prof.ruolo : ""}${GUARDA_FORN[prof.k] ? "&tipo=" + GUARDA_FORN[prof.k][0] : ""}#/${prof.famiglia}/${GUARDA_FORN[prof.k] ? GUARDA_FORN[prof.k][1] : prof.famiglia === "agente" ? "home" : "bacheca"}" target="_blank" rel="noopener" title="Si apre in una scheda nuova, senza password, con dati di esempio e i pulsanti salvati">Guarda come ${prof.nome}</a>`
                   : ""}
                 <span class="pp-c sw-ok">${c.g} gratis</span>
                 <span class="pp-c sw-off">${c.a} a pagamento</span>

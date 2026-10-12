@@ -9,7 +9,7 @@
   const DEMO = /[?&]demo=/.test(location.search);
   const reale = () => !DEMO && !!window.acDb;
 
-  const FAMIGLIA = { azienda_luce_gas: "Energia · luce e gas", azienda_materiali_edili: "Materiali edili", azienda_noleggio_attrezzature: "Noleggio", azienda_fornitori_it: "Informatica e promozione" };
+  const FAMIGLIA = { azienda_luce_gas: "Energia · luce e gas", azienda_telefonia: "Telefono e internet", azienda_finanza: "Finanza e assicurazioni", azienda_materiali_edili: "Materiali edili", azienda_noleggio_attrezzature: "Noleggio", azienda_fornitori_it: "Informatica e promozione" };
   const STATO_R = { aperta: ["sw-in", "Aperta"], scelta: ["sw-ok", "Scelta"], chiusa: ["sw-off", "Contratto attivato"] };
   const eur = (n) => (Number(n) || 0).toLocaleString("it-IT", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
   const dataIt = (iso) => { const d = new Date(iso); return isNaN(d) ? "" : d.toLocaleDateString("it-IT"); };
@@ -18,6 +18,8 @@
   const ESEMPIO = {
     fornitori: [
       { id: "f1", nome: "Energia Esempio Srl", mail: "offerte@energiaesempio.it", tipo_azienda: "azienda_luce_gas", verifica: "verificato", creato: "2026-10-12", accordo_tipo: "fisso", accordo_valore: 40, accordo_su: "per ogni contratto attivato", accordo_note: "", accordo_scritto: "2026-10-12", accordo_confermato: null, offerte: 2, proposte: 2, scelte: 1, attivati: 0 },
+      { id: "f3", nome: "Linea Sud Telecomunicazioni Srl", mail: "offerte@lineasud.it", tipo_azienda: "azienda_telefonia", verifica: "verificato", creato: "2026-10-12", accordo_tipo: "fisso", accordo_valore: 30, accordo_su: "per ogni contratto attivato", accordo_note: "", accordo_scritto: "2026-10-12", accordo_confermato: "2026-10-12", offerte: 2, proposte: 2, scelte: 1, attivati: 0 },
+      { id: "f4", nome: "Credito Casa Mediazioni Srl", mail: "info@creditocasa.it", tipo_azienda: "azienda_finanza", verifica: "verificato", creato: "2026-10-12", accordo_tipo: null, offerte: 2, proposte: 1, scelte: 1, attivati: 0 },
       { id: "f2", nome: "Luce Sud Spa", mail: "commerciale@lucesud.it", tipo_azienda: "azienda_luce_gas", verifica: "verificato", creato: "2026-10-12", accordo_tipo: null, offerte: 0, proposte: 0, scelte: 0, attivati: 0 }
     ],
     richieste: [
@@ -27,17 +29,20 @@
   };
 
   function carica() {
-    if (!reale()) return Promise.resolve(JSON.parse(JSON.stringify(ESEMPIO)));
+    if (!reale()) return (AC.servizi ? AC.servizi.richiesteAdmin() : Promise.resolve([])).then((sv) => Object.assign(JSON.parse(JSON.stringify(ESEMPIO)), { servizi: sv }));
     const db = window.acDb;
+    // 12.10.2026, app-20: anche le richieste di telefonia e finanza (se app-20 non c'è ancora, la sezione resta vuota).
+    const servizi = AC.servizi ? AC.servizi.richiesteAdmin().catch(() => []) : Promise.resolve([]);
     return Promise.all([
       db.rpc("fornitori_per_admin"),
       db.from("energia_richieste").select("id, creato, fonte, tipo, regione, comune, nome, stato").order("creato", { ascending: false }).limit(60),
-      db.from("energia_proposte").select("richiesta_id").not("richiesta_id", "is", null)
-    ]).then(([f, r, p]) => {
+      db.from("energia_proposte").select("richiesta_id").not("richiesta_id", "is", null),
+      servizi
+    ]).then(([f, r, p, sv]) => {
       if (f.error) throw f.error;
       const conta = {};
       (p.data || []).forEach((x) => { conta[x.richiesta_id] = (conta[x.richiesta_id] || 0) + 1; });
-      return { fornitori: f.data || [], richieste: (r.data || []).map((x) => Object.assign(x, { n: conta[x.id] || 0 })) };
+      return { fornitori: f.data || [], richieste: (r.data || []).map((x) => Object.assign(x, { n: conta[x.id] || 0 })), servizi: sv || [] };
     });
   }
 
@@ -50,17 +55,17 @@
   let aperto = "";
   V["fornitori-admin"] = {
     title: "Fornitori",
-    sub: "Chi sono, l'accordo con ognuno, e il giro delle offerte luce e gas.",
+    sub: "Chi sono, l'accordo con ognuno, e il giro delle offerte: luce e gas, telefono e internet, finanza.",
     render(el) {
       el.innerHTML = html`<div class="card"><p class="note">Caricamento…</p></div>`.s;
       carica().then((d) => {
         const en = d.fornitori.filter((f) => f.tipo_azienda === "azienda_luce_gas");
         const attivati = d.fornitori.reduce((n, f) => n + (f.attivati || 0), 0);
-        const aperte = d.richieste.filter((r) => r.stato === "aperta").length;
+        const aperte = d.richieste.filter((r) => r.stato === "aperta").length + (d.servizi || []).filter((r) => r.stato === "aperta").length;
         el.innerHTML = html`
           ${DEMO ? html`<p class="note">Anteprima: dati di esempio, niente va sul database e nessuna mail parte.</p>` : ""}
           <div class="kpis ra-kpi">
-            <div class="kpi"><span class="ico navy">${icon("building", 18)}</span><span><strong>${d.fornitori.length}</strong><small>fornitori iscritti (${en.length} luce e gas)</small></span></div>
+            <div class="kpi"><span class="ico navy">${icon("building", 18)}</span><span><strong>${d.fornitori.length}</strong><small>fornitori iscritti (${en.length} luce e gas, ${d.fornitori.filter((f) => f.tipo_azienda === "azienda_telefonia").length} telefonia, ${d.fornitori.filter((f) => f.tipo_azienda === "azienda_finanza").length} finanza)</small></span></div>
             <div class="kpi"><span class="ico orange">${icon("doc", 18)}</span><span><strong>${d.fornitori.filter((f) => f.accordo_tipo && !f.accordo_confermato).length}</strong><small>accordi da confermare</small></span></div>
             <div class="kpi"><span class="ico navy">${icon("send", 18)}</span><span><strong>${aperte}</strong><small>richieste aperte</small></span></div>
             <div class="kpi"><span class="ico orange">${icon("star", 18)}</span><span><strong>${attivati}</strong><small>contratti attivati</small></span></div>
@@ -82,13 +87,21 @@
                 <label class="fo-tutto">Note (le legge anche il fornitore)<input name="note" maxlength="500" value="${f.accordo_note || ""}" placeholder="Es. concordato al telefono il 12.10.2026"></label>
                 <div class="fo-tutto iv-piede"><span class="note">Con «Salva e invia» il fornitore riceve una mail e trova l'accordo nella sua dashboard.</span><button type="submit" class="btn-in">Salva e invia</button></div>
               </form>` : ""}
-            </div>`) : html`<p class="note">Nessun fornitore ancora. Lo inviti da Inviti, categoria «Fornitori di luce, gas e servizi energetici».</p>`}
+            </div>`) : html`<p class="note">Nessun fornitore ancora. Lo inviti da Inviti, categoria «Fornitori di luce, gas e servizi energetici», «Fornitori di telefonia e internet» o «Banche, mediatori creditizi e assicurazioni».</p>`}
           </section>
           <section class="card iv-card">
             <h2>Richieste luce e gas</h2>
             <p class="note">Arrivano a tutti i fornitori di energia, senza nome. Il cliente sceglie una proposta e solo quel fornitore riceve i contatti.</p>
             ${d.richieste.length ? html`<table class="mini-table"><thead><tr><th>Quando</th><th>Cliente</th><th>Dove</th><th>Cosa</th><th>Da</th><th>Proposte</th><th>Stato</th></tr></thead>
               <tbody>${d.richieste.map((r) => html`<tr><td>${dataIt(r.creato)}</td><td>${r.nome}</td><td>${r.comune || ""}${r.regione ? ", " + r.regione : ""}</td><td>${r.tipo}</td><td>${r.fonte === "magazine" ? "Check Bollette" : r.fonte === "rete" ? "Commerciale" : "Dashboard"}</td><td>${r.n}</td>
+                <td><span class="sw-stato ${(STATO_R[r.stato] || STATO_R.aperta)[0]}">${(STATO_R[r.stato] || STATO_R.aperta)[1]}</span></td></tr>`)}</tbody></table>`
+              : html`<p class="note">Ancora nessuna richiesta.</p>`}
+          </section>
+          <section class="card iv-card">
+            <h2>Richieste telefono, internet e finanza</h2>
+            <p class="note">Stesso giro: arrivano a tutti i fornitori della categoria, senza nome. Da «Commerciale», la vendita va a chi l'ha fatta quando il contratto si attiva.</p>
+            ${(d.servizi || []).length ? html`<table class="mini-table"><thead><tr><th>Quando</th><th>Cliente</th><th>Dove</th><th>Cosa</th><th>Da</th><th>Proposte</th><th>Stato</th></tr></thead>
+              <tbody>${d.servizi.map((r) => html`<tr><td>${dataIt(r.creato)}</td><td>${r.nome}${r.cliente_tipo === "impresa" ? " (impresa)" : ""}</td><td>${r.comune || ""}${r.regione ? ", " + r.regione : ""}</td><td>${r.categoria === "telefonia" ? "Telefono" : "Finanza"} · ${AC.servizi ? AC.servizi.nomeTipo(r.categoria, r.tipo) : r.tipo}</td><td>${r.fonte === "rete" ? "Commerciale" : r.fonte === "magazine" ? "Magazine" : "Dashboard"}</td><td>${r.n}</td>
                 <td><span class="sw-stato ${(STATO_R[r.stato] || STATO_R.aperta)[0]}">${(STATO_R[r.stato] || STATO_R.aperta)[1]}</span></td></tr>`)}</tbody></table>`
               : html`<p class="note">Ancora nessuna richiesta.</p>`}
           </section>`.s;
@@ -109,7 +122,10 @@
             return window.acDb.from("fornitori_accordi").upsert(riga, { onConflict: "azienda_id" });
           }).then((r) => {
             if (r.error) throw r.error;
-            return window.acDb.functions.invoke("energia-avvisa", { body: { evento: "accordo", azienda: id } });
+            // 12.10.2026, app-20: per telefonia e finanza la mail la manda servizi-avvisa (link alla pagina giusta).
+            const f0 = d.fornitori.find((x) => x.id === id) || {};
+            const fn = f0.tipo_azienda === "azienda_telefonia" || f0.tipo_azienda === "azienda_finanza" ? "servizi-avvisa" : "energia-avvisa";
+            return window.acDb.functions.invoke(fn, { body: { evento: "accordo", azienda: id } });
           }).then((r) => {
             const e2 = r && (r.error || (r.data && r.data.error));
             aperto = "";

@@ -29,6 +29,16 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 12.10.2026 10:05 · Claude — Telefonia e internet, Finanza e assicurazioni (NON pubblicato, SQL NON eseguito)
+- Decisioni di Nando delle 09:44 in `PROGETTO-DASHBOARD.md` (Fornitori). Stesso giro di luce e gas, motore unico per le due categorie; luce e gas (`energia.js`, `offerte.html`, `energia-avvisa`) non toccato.
+- `app-anchecasa/sql/app-20-fornitori-telefonia-finanza.sql` (da eseguire solo con l'ok di Nando): tabelle `servizi_offerte`, `servizi_richieste`, `servizi_proposte`; funzioni `servizi_*`; colonna `energia_carta.iscrizione` (OAM/IVASS); `fornitori_per_admin` con le nuove categorie; `energia_contratto_attivato` e `servizi_contratto_attivato` registrano la vendita al commerciale (`app_vendite`, cosa «servizio») quando la richiesta l'ha fatta lui. Sintassi controllata con pglast.
+- `app-anchecasa/supabase/functions/servizi-avvisa/index.ts` (nuova, verify_jwt spento): mail richiesta, proposta, scelta, accordo per telefonia e finanza.
+- `area-privata/servizi.html`: pagina del cliente dal link nella mail (come `offerte.html`).
+- `area-privata/dashboard/js/servizi.js` (nuovo): dashboard del fornitore (`tel_*`, `fin_*`), pagine `pv-offerte-tel`, `pv-offerte-fin` (privato), `az-telefonia`, `az-finanza` (imprese, piega «Risparmia»), `re-offerte` (rete: luce e gas, telefono, finanza per un cliente). Dati di esempio in anteprima.
+- `app.js` v=24: pack `telefonia` e `finanza`, tipi `azienda_telefonia` e `azienda_finanza`, profili in Pulsanti per profilo, prima pagina, voci nuove. `views.js` v=9: categorie d'invito «Fornitori di telefonia e internet» e «Banche, mediatori creditizi e assicurazioni». `fornitori-admin.js` v=2: nuove categorie, richieste telefono e finanza, mail dell'accordo da `servizi-avvisa`. `sala-demo.js` v=5: vetrine Telefono e internet, Finanza e assicurazioni. `pulsanti-profili.js` v=6: «Guarda come» anche per i fornitori. `energia.css` v=3.
+- Prova in anteprima (Playwright): fornitore telefonia e finanza (accordo, richiesta, proposta, offerte, clienti), privato, impresa, rete, admin Fornitori, `servizi.html` con dati finti. Nessun errore nuovo.
+- Sito, magazine, app, Sicura e database non toccati.
+
 ### 12.10.2026 09:42 · Cursor — area privata: profili mai salvati vedono i pulsanti
 - Ok di Nando del 12.10.2026, ore 09:38. Pubblicata solo la cartella `area-privata` sul progetto Vercel `area-privata-produzione`, deployment `dpl_2aWKwDE3wcJbszzzzMguG1WA3ccp`, alias https://entra.anchecasa.it e https://areaprivata.anchecasa.it. Sito, magazine, app, database e Sicura non toccati.
 - Privato, i cinque ruoli della Rete, Azienda e Fornitori, finché l’admin non salva i pulsanti, vedono tutti i loro pulsanti, gratis. Un profilo già salvato resta sulla scelta salvata. Se la lettura delle scelte non riesce, il menu resta vuoto.
