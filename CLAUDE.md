@@ -29,6 +29,22 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 12.10.2026 12:05 · Claude — Promemoria in preventivi-avvisa (limite 100 funzioni) e mail della password con il look dell'invito (NON pubblicato)
+- Il progetto Supabase ha 100 funzioni (voce Cursor 11:55): `fornitori-promemoria` non si può pubblicare. Il lavoro di ogni giorno (scadute, promemoria dopo 3 giorni, «Hai firmato?» dopo 30) è ora in `preventivi-avvisa`, `{ evento: "giornaliero" }`. `app-22b-promemoria-ogni-giorno.sql` chiama `preventivi-avvisa` con quel corpo. La cartella `fornitori-promemoria` resta solo come riferimento (scritto in cima al file).
+- `reset-password-marketplace/index.ts` (scaricata da Cursor): la mail del «Password dimenticata» dell'area privata è ora `MailInvito.avviso("password")` (stesso look dell'invito, `_shared/mail-invito.js`) e il link porta a https://entra.anchecasa.it/nuova-password.html. Token, limite di un invio al minuto e risposte non cambiano.
+- Controllati con esbuild e pglast.
+- Da fare con l'ok di Nando: ripubblicare `preventivi-avvisa` e `reset-password-marketplace` (verify_jwt spento, con `_shared`), poi eseguire `app-22b`.
+
+### 12.10.2026 11:55 · Cursor — app-22 eseguito, avvisi ripubblicati, area privata online; promemoria fermo al limite di 100 funzioni
+- Ok di Nando del 12.10.2026, ore 11:41, per il commit `5fda7c2`. Eseguito `app-anchecasa/sql/app-22-fornitori-regole-giro.sql` sul progetto ANCHECASA. Funzioni: `fornitore_numeri`, `fornitori_chiudi_scadute`, `fornitori_verifica`, `fornitori_verifica_info`, `fornitori_verifiche_admin`. Colonne `promemoria_il`, `verifica_il`, `cliente_firmato`, `cliente_risposta_il` su `energia_richieste` e `servizi_richieste`; su `prev_richieste` c'è `promemoria_il`.
+- Ripubblicate con `_shared/mail-marchio.ts`, verify_jwt spento: `energia-avvisa` versione 5, `servizi-avvisa` versione 3, `preventivi-avvisa` versione 2.
+- `fornitori-promemoria` non è online. Il progetto ha già 100 funzioni e Supabase risponde 402 «Max number of functions reached». La chiamata a mano risponde 404, corpo `Requested function was not found`: niente scadute, promemoria o verifiche. `app-22b-promemoria-ogni-giorno.sql` non è stato eseguito: lo script dice di lanciarlo dopo che la funzione è pubblicata. Nessun'altra funzione è stata spenta.
+- Git push sul ramo main: `c8b8c14..5fda7c2`.
+- Area privata, progetto Vercel `area-privata-produzione`, deployment `dpl_Angz3FsvzP8epkf1vh4NQeUGRqoV`, alias https://entra.anchecasa.it e https://areaprivata.anchecasa.it. https://entra.anchecasa.it/verifica.html e https://areaprivata.anchecasa.it/verifica.html rispondono 200, 7714 byte. La dashboard online carica `js/energia.js?v=3`, `js/servizi.js?v=3`, `js/preventivi.js?v=2`, `js/fornitori-admin.js?v=4`.
+- Scaricata, senza ripubblicarla, `reset-password-marketplace` (resta versione 15, verify_jwt spento) in `app-anchecasa/supabase/functions/reset-password-marketplace/index.ts`. Il file è nella cartella e non è nel commit `5fda7c2`.
+- Sito, magazine, app e Sicura non toccati.
+- File: `CLAUDE.md`, `app-anchecasa/supabase/functions/reset-password-marketplace/index.ts`.
+
 ### 12.10.2026 11:55 · Claude — Regole del giro fornitori: 5 proposte, scadenza, promemoria, verifica dei contratti, numeri del mese (NON pubblicato, SQL NON eseguito)
 - Decisioni di Nando delle 11:41 (punti 2, 3, 4 e verifica dopo 30 giorni). Vale per luce e gas, telefono, finanza, materiali, noleggio, casa.
 - `app-anchecasa/sql/app-22-fornitori-regole-giro.sql` (da eseguire solo con l'ok di Nando): massimo 5 proposte per richiesta; richieste aperte solo 15 giorni (stato «scaduta», proposte non scelte → «non scelta»); alla scelta le altre proposte diventano «non scelta»; colonne `promemoria_il`, `verifica_il`, `cliente_firmato`, `cliente_risposta_il`; funzioni `fornitori_chiudi_scadute`, `fornitori_verifica`, `fornitori_verifica_info`, `fornitori_verifiche_admin`, `fornitore_numeri`. Stesse firme delle funzioni già online. Sintassi controllata con pglast.

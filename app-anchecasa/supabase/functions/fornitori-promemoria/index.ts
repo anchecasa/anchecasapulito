@@ -1,3 +1,6 @@
+// NON PUBBLICATA (12.10.2026 12:05): il progetto Supabase ha raggiunto il limite di 100 funzioni.
+// La stessa logica è in preventivi-avvisa, { evento: "giornaliero" }, chiamata ogni giorno da pg_cron (app-22b).
+// Questo file resta come riferimento; si può cancellare.
 // fornitori-promemoria · una volta al giorno (12.10.2026, app-22, decisioni di Nando 11:41).
 //   1. Chiude le richieste aperte da più di 15 giorni (stato «scaduta», le proposte non scelte diventano «non scelta»).
 //   2. Promemoria al cliente dopo 3 giorni, se ha almeno una proposta o un preventivo da guardare (una volta sola).
