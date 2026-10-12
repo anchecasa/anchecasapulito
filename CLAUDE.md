@@ -29,6 +29,14 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 12.10.2026 15:04 · Cursor — barra del telefono e scritta Vetrina online
+- Ok di Nando del 12.10.2026 per il commit `2583b6c`. Niente SQL e nessuna funzione ripubblicata. Git push sul ramo main: `4b9f932..2583b6c`.
+- Area privata, progetto Vercel `area-privata-produzione`, deployment `dpl_DaCc9TD2RKk2zs5prUWMkiG9eGyp`, alias https://entra.anchecasa.it. La dashboard carica `js/app.js?v=30`, `js/pulsanti-profili.js?v=10` e `css/admin-task.css?v=15`. I tre file rispondono 200.
+- Aperta https://entra.anchecasa.it/dashboard/index.html?demo=privato&vetrina=1 con la finestra a 390 per 844. In basso ci sono Bacheca, Guasto, Ristruttura, Richieste e Altro. Compare anche la scritta Vetrina.
+- La voce delle 14:58 diceva non pubblicato: ora la barra è online.
+- Supabase, sito, magazine, app e Sicura non toccati.
+- File: `CLAUDE.md`.
+
 ### 12.10.2026 14:58 · Claude — Barra del telefono per ogni profilo, scritta «Vetrina» che non copre i bottoni (NON pubblicato)
 - Richiesta di Nando delle 14:51. La barra in basso del telefono (e del tablet in verticale) ora ha le 4 voci che ogni profilo usa di più, poi «Altro». Prima privato e rete avevano solo «Altro» o «Home + Altro», e le aziende «Pubblica, Chat, Inviti, Mese».
   - **privato:** Bacheca, Guasto, Ristruttura, Richieste;
