@@ -29,6 +29,12 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 12.10.2026 10:00 · Claude — «Regole del Fornitore di luce e gas» (NON pubblicato)
+- `area-privata/dashboard/regole/energia.html`: stessa carta intestata. Chi è, la dashboard, il giro in sei passi, la privacy del cliente, l'accordo (senza conferma niente proposte), offerte e proposta, frasi, domande. 4 pagine A4.
+- Pronto in Regole iscritti, in Sala demo (Luce e gas e documenti) e nella Formazione della rete.
+- Nando ha dato l'ok anche alla funzione energia-avvisa (09:26).
+- File: `regole/energia.html` (nuovo), `js/regole-admin.js` (?v=3), `js/sala-demo.js` (?v=4), `js/rete-progetto.js` (?v=2), `index.html`, `CLAUDE.md`.
+
 ### 12.10.2026 09:50 · Claude — Fornitori di luce e gas: giro completo (NON eseguito su Supabase, NON pubblicato)
 - `app-anchecasa/sql/app-19-fornitori-energia.sql` (solo aggiunte, rilanciabile): comprende le tabelle del 09.10 mai applicate (energia_carta, energia_offerte, energia_proposte) e aggiunge energia_richieste (contatti visibili solo all'admin e al privato), `energia_nuova_richiesta` (anche senza accesso, max 3 al giorno per mail), `energia_richieste_per_me` (al fornitore senza contatti, con i contatti solo se il cliente ha scelto lui), `energia_le_mie_proposte` e `energia_accetta` (pagina del cliente dal link), `energia_contratto_attivato`, fornitori_accordi con `fornitori_conferma_accordo` (se l'admin cambia la provvigione la conferma si azzera), `fornitori_accordo_ok` (senza accordo confermato niente proposte), `fornitori_per_admin`.
 - Nuova funzione `app-anchecasa/supabase/functions/energia-avvisa`: mail al cliente (richiesta ricevuta, nuova proposta), ai fornitori (nuova richiesta, scelta del cliente), al fornitore (accordo da confermare, solo dall'admin). Usa RESEND_API_KEY e RESEND_FROM già presenti.

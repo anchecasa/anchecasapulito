@@ -116,7 +116,8 @@
   // Formazione: i documenti da studiare e la Sala demo. Pagina vera, non scheda.
   const DOC = [
     { nome: "Regole del Privato", file: "regole/privato.html", ico: "home" },
-    { nome: "Regole della Rete", file: "regole/rete.html", ico: "team" }
+    { nome: "Regole della Rete", file: "regole/rete.html", ico: "team" },
+    { nome: "Regole del Fornitore di luce e gas", file: "regole/energia.html", ico: "pulse" }
   ];
   V["re-formazione"] = {
     title: "Formazione",

@@ -16,7 +16,7 @@
     { k: "subappaltatore", nome: "Subappaltatore e impiantista", desc: "Lavori per i general contractor, interventi, certificazioni.", ico: "gear" },
     { k: "studio", nome: "Studio tecnico", desc: "Pratiche, gare, presenze di cantiere.", ico: "doc" },
     { k: "fornitore", nome: "Fornitore", desc: "Materiali, noleggio, IT: listino, ordini, consegne.", ico: "folder" },
-    { k: "energia", nome: "Luce e gas", desc: "Offerte ai privati dentro AncheCasa.", ico: "pulse" },
+    { k: "energia", nome: "Luce e gas", desc: "Richieste, proposte su carta AncheCasa, privacy del cliente, accordo.", ico: "pulse", file: "regole/energia.html", pronto: true, versione: "12.10.2026" },
     { k: "agenzia", nome: "Agenzia immobiliare", desc: "Annunci in bacheca: piano gratuito, poi a pagamento.", ico: "home" },
     { k: "committente", nome: "Committente", desc: "Condomini, amministratori, grandi aziende e fondi che pubblicano appalti.", ico: "building" }
   ];

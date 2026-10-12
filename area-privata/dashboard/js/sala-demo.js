@@ -17,7 +17,7 @@
     { nome: "Subappaltatore e impiantista", desc: "Lavori per i general contractor, certificazioni.", ico: "gear" },
     { nome: "Studio tecnico", desc: "Pratiche, gare, presenze di cantiere.", ico: "doc" },
     { nome: "Fornitore", desc: "Materiali, noleggio, IT.", ico: "folder" },
-    { nome: "Luce e gas", desc: "Richieste dai privati, proposte su carta AncheCasa, clienti, accordo.", ico: "pulse", demo: "azienda", tipo: "azienda_luce_gas", pagina: "energia_home", pronta: true },
+    { nome: "Luce e gas", desc: "Richieste dai privati, proposte su carta AncheCasa, clienti, accordo.", ico: "pulse", demo: "azienda", tipo: "azienda_luce_gas", pagina: "energia_home", regole: "regole/energia.html", pronta: true },
     { nome: "Agenzia immobiliare", desc: "Annunci in bacheca.", ico: "home" },
     { nome: "Committente", desc: "Condomini, amministratori, grandi aziende e fondi.", ico: "building" }
   ];
@@ -32,7 +32,8 @@
     { nome: "Si parte: i primi 90 giorni", desc: "Cosa c'è oggi, cosa arriva e quando, obiettivi del trimestre.", ico: "calendar" },
     { nome: "Il primo giorno", desc: "La lista da fare: contratto, profilo, link di invito, i primi 20 contatti.", ico: "doc" },
     { nome: "Regole del Privato", desc: "Il primo profilo finito, da studiare.", ico: "home", file: "regole/privato.html", pronto: true },
-    { nome: "Regole della Rete", desc: "Ruoli, chi vede cosa, clienti, ristrutturazioni, zone.", ico: "team", file: "regole/rete.html", pronto: true }
+    { nome: "Regole della Rete", desc: "Ruoli, chi vede cosa, clienti, ristrutturazioni, zone.", ico: "team", file: "regole/rete.html", pronto: true },
+    { nome: "Regole del Fornitore di luce e gas", desc: "Il giro delle richieste, la privacy del cliente, l'accordo.", ico: "pulse", file: "regole/energia.html", pronto: true }
   ];
 
   const apri = (p, ruolo) => ruolo
