@@ -27,7 +27,107 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 5. Si progetta, si prova in anteprima e solo con l'ok di Nando si toccano Supabase e la pubblicazione.
 6. La dashboard del cliente Sicura (altro progetto) non si tocca.
 
+## Si lavora in tre sulla stessa cartella · 12.10.2026, 17:30 (decisione di Nando)
+
+Sulla cartella e sul GitHub `anchecasa/anchecasapulito` lavorano tre persone o strumenti: Nando con Claude, Cursor sul PC di Nando, e Francesco con Claude nel cloud. Per non sovrascrivere il lavoro degli altri e per non fare le stesse cose in modi diversi:
+
+1. **Prima di iniziare:** `git pull` sul ramo `main` e lettura di questo file, comprese le voci del Registro e la tabella «Lavori in corso».
+2. **Prima di toccare un file:** si scrive una riga nella tabella «Lavori in corso» (chi, cosa, quali file, da quando), con commit e push subito. Se un file è già nella tabella a nome di un altro, non si tocca: si chiede a Nando.
+3. **Francesco lavora su un ramo suo,** `francesco/<argomento>`, e non scrive direttamente su `main`. Nando e Claude controllano e uniscono.
+4. **Commit piccoli e push alla fine di ogni lavoro.** Non si lascia lavoro solo su un computer.
+5. **Si pubblica solo da `main` aggiornato** (`git pull` prima), mai da una copia vecchia e mai dal ramo di un altro. Se `index.html` cambia, le versioni `?v=` si alzano e non si abbassano mai.
+6. **Supabase e pubblicazione solo con l'ok di Nando** (regola 5 qui sopra). I numeri dei file SQL (`app-NN-…`) si prendono in ordine: si guarda l'ultimo in `app-anchecasa/sql` e su GitHub prima di crearne uno nuovo.
+7. **Quando un lavoro è finito,** si toglie la riga da «Lavori in corso» e si scrive la voce nel Registro.
+
+### Lavori in corso
+
+| Chi | Cosa | File | Da |
+|---|---|---|---|
+| Nando + Cursor | Sopralluogo, dossier e relazione: prova vera. Già online, da committare. | `area-privata/sopralluogo.html`, `area-privata/js/sopralluogo.js`, `relazione.js`, `area-privata/css/sopralluogo.css`, `relazione.css`, `dashboard/js/sopralluogo-invio.js`, `dossier-tecnico.js`, `imprese.js`, `contratto-firma.js`, `app.js`, `index.html`, `app-anchecasa/sql/app-27/28/29` (da rinominare 31/32/33), funzioni `dossier-ia` e `sopralluogo-invito` | 12.10 |
+| Nando + Claude | SuperMastro: video diagnosi. Non pubblicato. | `supermastro-sos/`, `sito/vercel.json` | 12.10 |
+| Nando + Claude | Listino, provvigioni e contratti della rete: fatto (commit fac50af…f00d6be), manca il push. app-30 da eseguire con l'ok. | `dashboard/regole/listino.html`, `contratto.html`, `docs/*.pdf`, `js/contratti-modelli.js`, `testi-rete.js`, `artigiani.js`, `app-anchecasa/sql/app-30-artigiano-prezzi.sql` | 12.10 |
+| Francesco | (da scrivere da Francesco) | | |
+
 ## Registro delle modifiche
+
+### 12.10.2026 17:25 · Claude — SuperMastro: migrazione eseguita, file di pubblicazione pronto
+- Ok di Nando per migrazione, app e sito.
+- Eseguita dal SQL Editor di Supabase, progetto `edsvmnxojsmknjuhobqa`, la migrazione `20261012160000_sos_rete_video.sql`: `artisan_leads_fonte_check` ora accetta osm, google, rete; bucket `sos-video` solo video/webm, video/mp4, video/quicktime. Annotata in `public._supermastro_migrations`. Controllo fatto dopo l'esecuzione.
+- Nuovo `PUBBLICA-SUPERMASTRO.bat`: copia `web/.env.local` da 04-SuperMastro se manca (non va su git, è in .gitignore), `npm ci`, build e pubblicazione del Worker con le chiavi (`scripts/redeploy-worker.mjs`), controlla che /supermastro/video risponda 200 e solo allora pubblica `sito` su Vercel. Scrive l'esito in `supermastro-sos/pubblica-esito.txt`.
+- Le foto dei sopralluoghi dell'area privata restano: non sono SuperMastro (decisione di Nando).
+- File: `PUBBLICA-SUPERMASTRO.bat`, `CLAUDE.md`.
+
+### 12.10.2026 17:16 · Cursor — formati del bucket, video, lettura IA e mail al cliente
+- Eseguito `app-anchecasa/sql/app-30-sopralluoghi-formati.sql` sul progetto `edsvmnxojsmknjuhobqa`. Il controllo: `file_size_limit` 52428800. Formati: audio/aac, audio/mp4, audio/mpeg, audio/ogg, audio/wav, audio/webm, audio/x-m4a, audio/x-wav, image/heic, image/heif, image/jpeg, image/png, image/webp, video/3gpp, video/mp4, video/quicktime, video/webm. Nessun formato tolto.
+- Video `giro.mp4` caricato sulla pratica `019f4fb3-1acc-4ac6-8f48-be20d3825396`, tipo video, nota «Giro della casa», 115813 byte, riga `f5a7a8ca-2aa7-4713-9c4f-2156890c6450`.
+- «Leggi tutto con l'IA» finita. Stato `fatto`, modello `gemini-3.8-flash`, 5 ambienti. La relazione resta nel dossier.
+- «Invia al cliente per mail» con Urgente. Destinatario palumbofernando12+cliente-prova@gmail.com. Risposta ok, urgente, cliente senza account (la mail gli fa scegliere la password). La funzione, com'è scritta, avvisa anche info@anchecasa.it perché manca `ADMIN_MAIL`. Dossier non aperto.
+- Da cancellare dopo la prova: agente `78eedd8f-63e6-4886-b346-f31f5f3b8756` e pratica `019f4fb3-1acc-4ac6-8f48-be20d3825396`.
+- Niente commit e niente push. Nel commit, quando Nando lo chiede, va anche `app-anchecasa/sql/app-30-sopralluoghi-formati.sql`.
+- File: `app-anchecasa/sql/app-30-sopralluoghi-formati.sql`, `CLAUDE.md`.
+
+### 12.10.2026 17:11 · Cursor — il contratto non blocca più, prova ferma sul video
+- Decisione di Nando del 12.10.2026, 17:01: chi è della rete e l'admin usano sempre l'app, anche senza contratto firmato. `stato()` resta com'era. Tolto il blocco dei pulsanti e la frase «Firma il contratto per usare questa funzione.». La striscia dice «Ricordati di firmare il tuo contratto» e sparisce se il contratto è firmato. `app_firme`, `app_documenti` e la firma non sono stati toccati. In `app.js` è cambiato solo il commento della riga che chiama `applica`.
+- Anteprima su http://127.0.0.1:5500 con `?demo=agente` e con l'agente di prova: niente «sola lettura», «Scatta o carica foto» risponde, la striscia c'è.
+- Confronto con il deployment `dpl_FrrBtWLkgybxXJXCowR2Q5S6Pbqg`: 133 file online, 130 uguali, nessuno manca in locale, nessuno online più nuovo. Più nuovi in locale: `dashboard/index.html`, `dashboard/js/app.js`, `dashboard/js/contratto-firma.js`.
+- Pubblicata l'area privata, progetto Vercel `area-privata-produzione`, deployment `dpl_2Syga92GewEiAntPGRK4cSquggML`, alias https://entra.anchecasa.it e https://areaprivata.anchecasa.it. Online `contratto-firma.js?v=2` contiene «Ricordati di firmare il tuo contratto».
+- Mail del cliente della pratica `019f4fb3-1acc-4ac6-8f48-be20d3825396` aggiornata a palumbofernando12+cliente-prova@gmail.com. La riga di rete dell'agente `78eedd8f-63e6-4886-b346-f31f5f3b8756` resta. Da cancellare dopo la prova.
+- Passo 5, punto 1, sulla pratica, con l'agente di prova su entra: quattro foto (soggiorno, cucina, giardino, facciata), planimetria, nota vocale in `audio/webm` (il wav ha risposto 415 «mime type audio/wav is not supported»). Il video `giro.mp4` ha risposto 400 `invalid_mime_type`: «mime type video/mp4 is not supported». Il bucket `sopralluoghi` accetta image/jpeg, audio/webm, audio/mp4, audio/ogg, audio/mpeg. Il limite del bucket non è stato cambiato.
+- Fermato prima di «Leggi tutto con l'IA» e prima della mail al cliente. Il dossier non è stato aperto. Nessuna mail partita.
+- Niente commit e niente push.
+- File: `area-privata/dashboard/js/contratto-firma.js`, `area-privata/dashboard/js/app.js`, `area-privata/dashboard/index.html`, `CLAUDE.md`.
+
+### 12.10.2026 17:10 · Claude — SuperMastro: video aperto a tutti, solo video dal vivo, trascrizione AI
+- Su richiesta di Nando. Lavoro fatto nella copia ufficiale `supermastro-sos`. Il lavoro fatto prima in `04-SuperMastro` (cartella non più ufficiale) è stato riportato qui. In 04-SuperMastro resta un file `METTI-ONLINE-SUPERMASTRO.bat` da NON usare.
+- Video diagnosi senza iscrizione: i pulsanti «Mostrami il guasto» e «Fai il video» non chiedono più il login. Pulsante «Video guasto» nell'header di tutti, voce nella barra dell'area privata, voce «Video diagnosi» nel menu admin. Il procione («ho un problema in casa») apre il video.
+- Nessuno allega foto o video: tolto il caricamento dalla galleria nella diagnosi; la vecchia richiesta SOS con la foto (`/supermastro/nuova`) ora porta al video; la risposta del privato all'artigiano si fa solo con un video di 5 secondi registrato dal vivo (nuovo `live-video-capture.tsx`, il server accetta solo video); tolte le foto dalla recensione del preventivo. `sos-wizard.tsx` spostato in `_to_delete/supermastro-sos-1012/`.
+- Artigiani della rete: «Mandagli il video» al posto della richiesta con foto. Il telefono resta in `contact_vault`, lo legge solo il server.
+- Diagnosi: «presa» (singolare) ora è riconosciuta vicino ad acqua; muffa, silicone e pentole annerite non danno più «Pericolo, chiama il 112»; le avvertenze nei passi non bloccano il fai da te; con il professionista compare «Intanto fai questo»; Gemini ha più token per non troncare il JSON.
+- Trascrizione AI: Gemini scrive in `parlato` quello che la persona dice nel video; l'esito mostra «Hai detto». Le parole contano anche per il pericolo («sento puzza di gas»).
+- Prove: 23 test su 23, controllo dei tipi pulito.
+- Da eseguire con l'ok di Nando, NON eseguito: migrazione `supermastro-sos/supabase/migrations/20261012160000_sos_rete_video.sql` (fonte «rete» in `artisan_leads`, bucket `sos-video` solo video). Senza, l'invio del video agli artigiani della rete risponde «Scheda non salvata».
+- Sito: in `sito/vercel.json` tre reindirizzamenti, `/supermastro`, `/supermastro.html` e `/supermastro/*` vanno a https://supermastro.anchecasa.it/supermastro. Non pubblicato: va online solo dopo l'app nuova, altrimenti si apre la versione di luglio.
+- Niente commit, niente push, niente pubblicazione. Supabase non toccato.
+- File: `supermastro-sos/web/src/` (app/admin/layout.tsx, app/m/mandagli/page.tsx, app/supermastro/{page,nuova/page,artigiani/page,mandagli/page,richiesta/[id]/page}.tsx, components/layout/site-header.tsx, components/supermastro/{app-shell,artisan-map-screen,cinematic-search,client-email-module,demo-richiesta-view,esito-view,live-video-capture,mandagli-video,modulo-preventivo,richiesta-video,supermastro-landing,video-diagnosis}.tsx, lib/procione/voice-parser.ts, lib/sos/{diagnosis-rules,diagnosis-rules.test,gemini-video,lead-token,network-artisans,parse-diagnosis,share,share-guard.test}.ts), `supermastro-sos/supabase/migrations/20261012160000_sos_rete_video.sql`, `sito/vercel.json`, `CLAUDE.md`.
+
+### 12.10.2026 16:58 · Cursor — agente di prova e pratica, fermo al contratto
+- Sul progetto `edsvmnxojsmknjuhobqa`, con la chiave di servizio già usata dalle funzioni. Utente `78eedd8f-63e6-4886-b346-f31f5f3b8756`, mail palumbofernando12+agente-prova@gmail.com, senza password, mail confermata, famiglia agente. Profilo «Agente di prova», verificato. Rete: agente, Campania, area Sud e isole. Da cancellare dopo la prova.
+- Pratica `019f4fb3-1acc-4ac6-8f48-be20d3825396`, «Cliente di prova», mail palumbofernando12@gmail.com, Teano (CE), Via di prova 1, origine admin, stato sopralluogo. Da cancellare dopo la prova. `avvisato_admin` e `avvisato_agente` già segnati, così il giro non manda mail.
+- Link usa e getta aperto nel browser di prova. «Sopralluoghi assegnati» mostra «Cliente di prova».
+- Passo 5 fermo al punto 1. Il pulsante «Scatta o carica foto» risponde «Firma il contratto per usare questa funzione.» L'area è in sola lettura. Nessuna foto caricata. Nessuna mail partita, nemmeno a direzione@gruppopalumbo.com.
+- Niente commit e niente push.
+- File: `CLAUDE.md`.
+
+### 12.10.2026 16:45 · Cursor — dossier-ia ripubblicata, prova vera ferma all'accesso
+- Ok di Nando per le due sistemazioni e il passo 5. `dossier-ia` ripubblicata sul progetto `edsvmnxojsmknjuhobqa` (verify_jwt spento). Sul disco `MAX_VIDEO = 6`. Prova senza token: 401 `serve_accesso`.
+- Limite del bucket `sopralluoghi`, sola lettura: 52.428.800 byte. `sopralluogo-invio.js` resta con `MAX_MB = 50`. Il limite del bucket non è stato cambiato. Nessuna nuova pubblicazione dell'area privata.
+- Passo 5 non partito: https://entra.anchecasa.it chiede mail e password, non c'è una sessione aperta. Foto, planimetria, nota vocale e video breve sono pronti sul computer. Nessuna mail partita.
+- Niente commit e niente push.
+- File: `CLAUDE.md`.
+
+### 12.10.2026 16:34 · Cursor — sopralluogo e relazione online (passo 4)
+- Ok di Nando per il passo 4. Nessun errore al passo 3: l'attesa era solo per l'ok. `dossier-ia` era già online (versione 1, verify_jwt spento). Prova senza token: 401 `serve_accesso`. Non ripubblicata.
+- Confronto dashboard: deployment precedente `dpl_AkLgMjurjLLGvJYN4EuuPtTRZB5L` (12.10.2026 16:20). 68 file, 67 uguali, nessuno manca in locale, nessuno online più nuovo. Solo `dashboard/js/sopralluogo-invio.js` è più nuovo in locale (limite video `MAX_MB = 50`). Sul disco non c'è il limite 15.000.000 byte.
+- Pubblicata l'area privata, progetto Vercel `area-privata-produzione`, deployment `dpl_FrrBtWLkgybxXJXCowR2Q5S6Pbqg`, alias https://entra.anchecasa.it e https://areaprivata.anchecasa.it.
+- Rispondono 200, su entra e su areaprivata: `/sopralluogo.html`, `/js/sopralluogo.js`, `/js/relazione.js`, `/css/sopralluogo.css`, `/css/relazione.css`, `/dashboard/js/sopralluogo-invio.js`, `/dashboard/js/dossier-tecnico.js`, `/img/sopralluogo-demo/facciata.jpg`. Online `sopralluogo-invio.js` ha `MAX_MB = 50`.
+- Prova: `sopralluogo.html?demo=1&relazione=1` mostra «Giovanni, ecco la tua casa», conto 3 giorni, tre cursori «Confronta prima e dopo», la parola «simulazione» sei volte, «Scarica la relazione (PDF)». Dossier r9 (Giovanni, Aversa) si apre da solo con «Pubblica la relazione al cliente», «Crea il dopo» e «Metti le 8 voci nel computo».
+- Niente commit e niente push. In attesa dell'ok per il passo 5.
+- Supabase, sito, magazine, app e Sicura non toccati.
+- File: `CLAUDE.md`.
+
+### 12.10.2026 16:26 · Cursor — video del sopralluogo fino a 50 MB
+- Su richiesta di Nando. Progetto ANCHECASA `edsvmnxojsmknjuhobqa`. `GEMINI_API_KEY` è tra i segreti (nome presente, valore non mostrato).
+- Bucket `sopralluoghi`: limite da 15.000.000 byte a 52.428.800 byte (50 MB). Gli altri bucket non sono stati toccati.
+- `sopralluogo-invio.js`: il controllo del video e della planimetria passa da 15 MB a 50 MB, come il bucket.
+- File: `area-privata/dashboard/js/sopralluogo-invio.js`, `CLAUDE.md`.
+
+### 12.10.2026 16:15 · Cursor — funzioni sopralluogo-invito e dossier-ia online
+- Ok di Nando per il passo 3. Progetto Supabase ANCHECASA, ref `edsvmnxojsmknjuhobqa` (lo stesso di app-27, app-28 e app-29). Pubblicazione dell'area privata e push non toccati.
+- Segreti presenti, solo i nomi: `RESEND_API_KEY`, `RESEND_FROM`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_URL`, `GEMINI_API_KEY`. Manca `ADMIN_MAIL`: la mail all'admin va a info@anchecasa.it. Mancano anche `GEMINI_MODEL` e `GEMINI_IMAGE_MODEL`: restano i predefiniti gemini-3.8-flash e gemini-3.1-flash-image. Le due prove non chiamano Gemini, quindi nessun modello da annotare ancora.
+- Limite del bucket `sopralluoghi`: 15.000.000 byte (circa 14,3 MB). Non è stato cambiato. La pagina Impostazioni di Storage chiede l'accesso, quindi il limite generale del progetto non è stato letto da lì.
+- Pubblicate `sopralluogo-invito` (versione 1, verify_jwt spento, con `_shared/mail-marchio.ts`) e `dossier-ia` (versione 1, verify_jwt spento). Le funzioni attive sono 102.
+- Prova `sopralluogo-invito` con il link finto: 404, `link_non_valido`. Prova `dossier-ia` senza token: 401, `serve_accesso`. Nessuna mail partita.
+- File: `CLAUDE.md`.
 
 ### 12.10.2026 16:25 · Claude — PDF dei contratti rifatti, versione 12.10.2026, index.html sistemato
 - I 5 contratti hanno la versione «12.10.2026», con le provvigioni al 35% dell'utile, la sezione A.3 e luce, gas e telefonia esclusi.
