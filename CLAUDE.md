@@ -20,6 +20,12 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 12.10.2026 06:52 · Cursor — Pulsanti per profilo pubblicati sull'area privata
+- Invio su GitHub, ramo main, commit `8a680dc`. Pubblicazione Vercel `area-privata-produzione`, deployment `dpl_1yPtsAm9cPekP7f5NQBkaV5rxsuo`, alias https://areaprivata.anchecasa.it.
+- Online il tasto admin «Pulsanti per profilo». Lo script `pulsanti-profili.js` e `app.js?v=13` rispondono. Indirizzo https://areaprivata.anchecasa.it/dashboard/#/admin/pulsanti.
+- La voce delle 06:50 diceva non pubblicato. Ora è pubblicato.
+- File: `CLAUDE.md`.
+
 ### 12.10.2026 06:50 · Claude — «Pulsanti per profilo»: ogni dashboard parte vuota, decide l'admin (NON pubblicato)
 - Decisione di Nando: si tolgono tutti i pulsanti da ogni dashboard. L'admin sceglie, profilo per profilo e pulsante per pulsante, cosa si vede: Nascosto, Gratis o A pagamento. Prima i gratuiti, poi quelli a pagamento.
 - Nuovo tasto admin «Pulsanti per profilo». Profili: Privato, Impresa edile, Subappaltatore, Impiantista, Artigiano, Studio tecnico, Fornitore, Luce e gas, Committente, Rete (agenti e ruoli). Per ognuno l'elenco dei suoi pulsanti, raggruppati come nel menu, con Salva per profilo.
