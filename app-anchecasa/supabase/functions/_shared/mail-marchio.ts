@@ -327,3 +327,86 @@ export function mailImprese(evento: "ristrutturazione" | "sopralluogo" | "commes
   const t = T[evento];
   return { oggetto: t.oggetto, html: mailMarchio(t) };
 }
+
+// Cantieri e richieste tra aziende (app-25). Funzione preventivi-avvisa: eventi «cantieri», «guasti» (ogni 5 minuti) e «giornaliero» (riepilogo).
+export function mailCantieri(evento: "invito" | "riepilogo" | "esterno" | "offerta" | "scelta" | "non_scelta" | "domanda" | "risposta" | "rete", d: {
+  link: string; chi?: string; titolo?: string; comune?: string; scadenza?: string; urgente?: boolean; elenco?: string[]; motivo?: string; nota?: string; testo?: string; servizi?: string;
+}): { oggetto: string; html: string } {
+  const dove = esc(d.comune || ""), tit = esc(d.titolo || ""), chi = esc(d.chi || "Un'azienda AncheCasa");
+  const T: Record<string, Avviso> = {
+    invito: {
+      oggetto: (d.urgente ? "URGENTE · " : "") + "AncheCasa · Richiesta per un cantiere" + (d.comune ? " a " + d.comune : ""), anteprima: (d.chi || "Un'azienda") + " cerca: " + (d.titolo || ""),
+      etichetta: d.urgente ? "Urgente" : "Cantiere", titolo: "Una richiesta per lei.",
+      intro: "<strong>" + chi + "</strong> cerca <strong>" + tit + "</strong>" + (dove ? " per un cantiere a " + dove : "") + (d.scadenza ? ". Offerte entro il " + esc(d.scadenza) : "") + ".",
+      punti: [["Prezzo voce per voce", "Le condizioni di pagamento le trova nella richiesta."], ["Domande e sopralluogo", "Li chiede dalla richiesta: risponde AncheCasa per l'azienda."]],
+      bottone: "Apra la richiesta", link: d.link, chiusura: "Indirizzo esatto e contatti arrivano se la sua offerta viene scelta.",
+      passiTitolo: "Come funziona", passi: ["Apra la richiesta", "Mandi l'offerta", "Chi chiede sceglie"],
+      perche: "Riceve questa mail perché ha indicato questo servizio in «Cosa offro» e lavora in questa zona.", tu: false, foto: "azienda" },
+    riepilogo: {
+      oggetto: "AncheCasa · " + (d.elenco || []).length + " richieste per lei dai cantieri", anteprima: "Le richieste di oggi nella sua zona.",
+      etichetta: "Riepilogo del giorno", titolo: "Le richieste di oggi.",
+      intro: "Nella sua zona ci sono nuove richieste per i suoi servizi:<br>" + (d.elenco || []).slice(0, 15).map((x) => "· " + esc(x)).join("<br>"),
+      punti: [["Prezzo voce per voce", "Per i materiali può togliere le voci che non ha."]],
+      bottone: "Apra le richieste", link: d.link, chiusura: "Le richieste urgenti le riceve subito, una per una.",
+      passiTitolo: "Come funziona", passi: ["Apra le richieste", "Mandi le offerte", "Chi chiede sceglie"],
+      perche: "Riceve questa mail perché ha indicato questi servizi in «Cosa offro».", tu: false, foto: "azienda" },
+    esterno: {
+      oggetto: "AncheCasa · " + (d.chi || "Un'azienda") + " le chiede un'offerta", anteprima: "Si iscriva e mandi l'offerta per " + (d.titolo || "il cantiere") + ".",
+      etichetta: "Invito", titolo: "Un'azienda le chiede un'offerta.",
+      intro: "<strong>" + chi + "</strong> la invita a fare un'offerta per <strong>" + tit + "</strong>" + (dove ? " (cantiere a " + dove + ")" : "") + ". Le richieste passano da AncheCasa: si iscriva, la prova è gratuita per 14 giorni.",
+      punti: [["Iscrizione in pochi minuti", "Poi trova la richiesta in «Richieste per te»."], ["Riceve altre richieste della sua zona", "Indicando cosa offre e dove lavora."]],
+      bottone: "Iscriviti ad AncheCasa", link: d.link, chiusura: "Se non le interessa, ignori questa mail.",
+      passiTitolo: "Come funziona", passi: ["Si iscriva", "Apra la richiesta", "Mandi l'offerta"],
+      perche: "Riceve questa mail perché " + chi + " ha indicato il suo indirizzo come ditta di fiducia.", tu: false, foto: "azienda" },
+    offerta: {
+      oggetto: "AncheCasa · Nuova offerta: " + (d.titolo || ""), anteprima: (d.chi || "Un'azienda") + " ha mandato un'offerta.",
+      etichetta: "Nuova offerta", titolo: "È arrivata un'offerta.",
+      intro: "<strong>" + chi + "</strong> ha mandato un'offerta per <strong>" + tit + "</strong>. Le confronta voce per voce nella pagina del cantiere.",
+      punti: [["Sceglie lei", "Anche più fornitori, voce per voce, per i materiali."]],
+      bottone: "Confronta le offerte", link: d.link, chiusura: "",
+      passiTitolo: "Da qui", passi: ["Confronti", "Scelga", "Lasci il voto a lavoro fatto"],
+      perche: "Riceve questa mail per una sua richiesta su AncheCasa.", tu: false, foto: "azienda" },
+    scelta: {
+      oggetto: "AncheCasa · La sua offerta è stata scelta", anteprima: "Trova indirizzo e contatti nella dashboard.",
+      etichetta: "Offerta scelta", titolo: "Hanno scelto lei.",
+      intro: "<strong>" + chi + "</strong> ha scelto la sua offerta per <strong>" + tit + "</strong>. Indirizzo del cantiere e contatti li trova nella richiesta.",
+      punti: [["Vi accordate direttamente", "Lavori, consegne e pagamenti come scritto nella richiesta."], ["A lavoro fatto", "Lasciate il voto l'uno all'altro."]],
+      bottone: "Apra la richiesta", link: d.link, chiusura: "AncheCasa non prende commissioni.",
+      passiTitolo: "Da qui", passi: ["Contatti l'azienda", "Fate il lavoro", "Lasci il voto"],
+      perche: "Riceve questa mail per una sua offerta su AncheCasa.", tu: false, foto: "azienda" },
+    non_scelta: {
+      oggetto: "AncheCasa · Offerta non scelta: " + (d.titolo || ""), anteprima: "Il motivo: " + (d.motivo || ""),
+      etichetta: "Non scelta", titolo: "Questa volta no.",
+      intro: "Per <strong>" + tit + "</strong> è stata scelta un'altra offerta. Motivo: <strong>" + esc(d.motivo || "") + "</strong>" + (d.nota ? " («" + esc(d.nota) + "»)" : "") + ".",
+      punti: [["Le prossime richieste", "Arrivano a chi offre quel servizio nella zona, prima gli sponsor e poi i più vicini."]],
+      bottone: "Le mie richieste", link: d.link, chiusura: "",
+      passiTitolo: "Da qui", passi: ["Guardi il motivo", "Aggiorni i prezzi", "Alla prossima"],
+      perche: "Riceve questa mail per una sua offerta su AncheCasa.", tu: false, foto: "azienda" },
+    domanda: {
+      oggetto: "AncheCasa · Una domanda su: " + (d.titolo || ""), anteprima: d.testo || "",
+      etichetta: "Domanda", titolo: "Un'azienda le fa una domanda.",
+      intro: "Su <strong>" + tit + "</strong>: «" + esc(d.testo || "") + "». La risposta la vedono tutte le aziende invitate.",
+      punti: [["Risponda dalla richiesta", "Nella pagina del cantiere."]],
+      bottone: "Rispondi", link: d.link, chiusura: "",
+      passiTitolo: "Da qui", passi: ["Apra la richiesta", "Risponda", "Arrivano offerte migliori"],
+      perche: "Riceve questa mail per una sua richiesta su AncheCasa.", tu: false, foto: "azienda" },
+    risposta: {
+      oggetto: "AncheCasa · Risposta alla sua domanda", anteprima: d.testo || "",
+      etichetta: "Risposta", titolo: "È arrivata la risposta.",
+      intro: "Su <strong>" + tit + "</strong>: «" + esc(d.testo || "") + "».",
+      punti: [["Ora può fare l'offerta", "O aggiornarla, finché la richiesta è aperta."]],
+      bottone: "Apra la richiesta", link: d.link, chiusura: "",
+      passiTitolo: "Da qui", passi: ["Legga la risposta", "Mandi l'offerta", "Chi chiede sceglie"],
+      perche: "Riceve questa mail per una sua domanda su AncheCasa.", tu: false, foto: "azienda" },
+    rete: {
+      oggetto: "AncheCasa · Nessuna azienda ha risposto" + (d.comune ? " a " + d.comune : ""), anteprima: "Servono aziende iscritte in questa zona.",
+      etichetta: "Zona scoperta", titolo: "Servono aziende in questa zona.",
+      intro: "Per <strong>" + tit + "</strong>" + (dove ? " a <strong>" + dove + "</strong>" : "") + " nessuna azienda ha risposto in 48 ore. Mancano aziende di: <strong>" + esc(d.servizi || "") + "</strong>.",
+      punti: [["Invita le aziende che conosci", "Da «Invita un cliente»: diventano tuoi clienti."]],
+      bottone: "Apri la dashboard", link: d.link, chiusura: "",
+      passiTitolo: "Da fare", passi: ["Pensa a chi conosci", "Invitali", "La zona si riempie"],
+      perche: "Ricevi questa mail perché sei nella rete AncheCasa di questa regione.", tu: true, foto: "agente" }
+  };
+  const t = T[evento];
+  return { oggetto: t.oggetto, html: mailMarchio(t) };
+}

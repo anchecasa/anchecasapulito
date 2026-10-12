@@ -29,6 +29,32 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 12.10.2026 14:05 · Claude — Cantieri e richieste tra aziende: ogni azienda general contractor (NON pubblicato, SQL NON eseguito)
+- Decisioni di Nando 13:24-13:42 (scritte in `PROGETTO-DASHBOARD.md`, sezione Aziende).
+- `app-anchecasa/sql/app-25-cantieri-richieste.sql` (solo con l'ok di Nando). Crea:
+  - tabelle `aziende_offro`, `aziende_voti`, `cantieri`, `cantiere_richieste`, `cantiere_invitati`, `cantiere_inviti_mail`, `cantiere_offerte`, `cantiere_domande`;
+  - colonne `aziende_stato.sponsor_fino` e `limite_richieste`; documenti `pos`, `patente`, `abilitazione`;
+  - funzioni `cantiere_salva`, `cantieri_miei`, `cantiere_pubblica`, `cantiere_annulla`, `subappaltatori_cerca`, `cantiere_invita`, `cantiere_offerte_di`, `cantiere_scegli`, `cantiere_rispondi`, `cantiere_richieste_per_me`, `cantiere_offri`, `cantiere_domanda`, `cantiere_voto`, `aziende_voti_scheda`, `azienda_admin_sponsor`, `cantieri_giro` (solo service_role).
+  Provato davvero su un Postgres 16 locale con app-19…app-25 e uno scenario completo (pubblica, offerte parziali, lavorazione intera, scelta su più fornitori, voti, allargamento dopo 48 ore); si può rilanciare.
+- `preventivi-avvisa`: evento `cantieri` (gira anche nel giro ogni 5 minuti; riepilogo del giorno in `giornaliero`). `_shared/mail-marchio.ts`: `mailCantieri`. Controllati con esbuild.
+- Dashboard: nuovo `js/cantieri.js` con:
+  - `cnt_cantieri`, `cnt_perme`, `cnt_cerca`, `cnt_offro` per tutte le aziende tranne luce e gas, telefonia e finanza (piega «Cantieri e richieste»);
+  - per l'admin: «Cantieri AncheCasa» e «Voti delle aziende»;
+  - `re-recensioni` vero per la rete.
+- `js/app.js` v=28: «Subappalti in zona» tolto; «I miei cantieri» dell'impresa per AncheCasa diventa «Cantieri AncheCasa». `js/imprese.js` v=2: Home con le richieste dei cantieri. `js/artigiani.js` v=2: nuovi documenti, e sponsor e limite in «Aziende». `css/energia.css` v=8.
+- Provato in anteprima: impresa, admin, rete, luce e gas (senza la piega), nessun errore.
+- Sicura, sito, magazine e app non toccati.
+
+### 12.10.2026 13:11 · Cursor — app-24 eseguito, preventivi-avvisa con le imprese, area privata online
+- Ok di Nando del 12.10.2026 per il commit `f189d8f`. Eseguito `app-anchecasa/sql/app-24-imprese-ristrutturazioni.sql` sul progetto ANCHECASA. Controlli: ci sono `ristrutturazioni`, `commesse`, `cantiere_giornale`, `commesse_sal`, `subappalti_richieste`. Funzioni: `aziende_cerca`, `commessa_rispondi`, `lavori_smista`, `mio_cantiere`, `ristrutturazione_nuova`, `ristrutturazioni_admin`, `subappalto_chiedi`. Il bucket `cantieri` c'è ed è privato.
+- Ripubblicata solo `preventivi-avvisa` (versione 5, verify_jwt spento) con `_shared/mail-marchio.ts`. Le altre funzioni non sono state toccate.
+- Chiamata con `{"evento":"imprese"}`. Risposta: mail 0, errori nessuno. Chiamata con `{"evento":"guasti"}`. Risposta: passati 0, confermati 0, mail 0, errori nessuno, e `imprese` con mail 0 e errori nessuno.
+- Git push sul ramo main: `fbcf12c..f189d8f`.
+- Area privata, progetto Vercel `area-privata-produzione`, deployment `dpl_Hc4GAugDHepZSDZKKs8XcXqXP9PR`, alias https://entra.anchecasa.it e https://areaprivata.anchecasa.it. La dashboard online carica `js/imprese.js?v=1`, `js/app.js?v=27`, `js/preventivi.js?v=4` e `css/energia.css?v=7`. I quattro file rispondono 200.
+- La voce delle 12:50 diceva non pubblicato e SQL non eseguito: ora lo SQL è eseguito e le pagine sono online.
+- Sito, magazine, app, Sicura e le altre funzioni non toccati.
+- File: `CLAUDE.md`.
+
 ### 12.10.2026 12:50 · Claude — Imprese: lavori AncheCasa, cantieri, «Il mio cantiere», subappalti, piccoli lavori (NON pubblicato, SQL NON eseguito)
 - Decisioni di Nando delle 12:11 e 12:20. AncheCasa è il general contractor e Nando sceglie l'impresa. L'impresa vede solo il suo importo. Il privato vede solo AncheCasa. I piccoli lavori vanno alle imprese della zona, massimo 5, con l'admin sempre avvisato. Subappaltatore e impiantista hanno la stessa vista dell'impresa.
 - `app-anchecasa/sql/app-24-imprese-ristrutturazioni.sql` (da eseguire solo con l'ok di Nando). Crea:

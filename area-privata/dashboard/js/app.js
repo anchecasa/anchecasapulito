@@ -4,7 +4,7 @@
   const S = AC.store;
   const D = AC.date;
 
-  /* CONGELATO 20.09.2026. Famiglie e pulsanti. Non cambiare FOLD_LAB, UFFICIO, PACKS, packFornitore, navItems, HEADER_OPP. Non aggiungere, togliere o rinominare pieghe o tasti. Eccezione 11.10.2026, su richiesta esplicita di Nando: tasto «Home» (grafici, js/home.js) primo per admin e agenti. Eccezione 11.10.2026 sera: tasti admin Terranova, Gare private e AncheBIM (js/funzioni-interne.js), funzioni interne, non siti a parte. Eccezione 12.10.2026: tasto admin «Software» (js/software-admin.js), secondo dopo Home, con tutti i software per categoria. Eccezione 12.10.2026: tasto admin «Pulsanti per profilo» (js/pulsanti-profili.js); i menu di privato, azienda e agente mostrano solo i pulsanti che l'admin ha scelto lì. Eccezione 12.10.2026: menu admin a categorie (pieghe adm_* in FOLD_LAB). Eccezione 12.10.2026: tasti admin «Rete» e «Inviti» in cima (js/inviti-admin.js); le pagine della rete si aprono da Rete. Eccezione 12.10.2026: menu della rete a categorie per ruolo (vociRete, js/rete-progetto.js). Eccezione 12.10.2026 (app-20, decisioni di Nando): pack «telefonia» e «finanza» per i fornitori, voci «Telefono e internet» e «Mutui, prestiti e polizze» del privato, «Telefono e internet» e «Polizze e finanziamenti» delle imprese (piega az_servizi), «Offerte per i clienti» della rete (js/servizi.js). Eccezione 12.10.2026 (app-21, decisioni di Nando 10:47): pack «materiali», «noleggio», «casa» per i fornitori a preventivo, voci «Preventivo materiali» e «Noleggia mezzi» delle imprese (piega az_cantiere), «Traslochi, pulizie e giardino» del privato (js/preventivi.js). Eccezione 12.10.2026 (app-23, decisioni di Nando 12:11 e 12:20): pack «artigiano» rifatto (art_*), «Documenti e abbonamento» per tutte le aziende (piega az_account), tasto admin «Aziende» (js/artigiani.js). Eccezione 12.10.2026 (app-24, decisioni di Nando): impresa, subappaltatore e impiantista con «Lavori AncheCasa» e «Lavori della zona» in cima (imp_*, lav_*), privato «Piccoli lavori con le imprese», rete «Segnala una ristrutturazione» e «Sopralluoghi assegnati», tasto admin «Ristrutturazioni» (js/imprese.js).
+  /* CONGELATO 20.09.2026. Famiglie e pulsanti. Non cambiare FOLD_LAB, UFFICIO, PACKS, packFornitore, navItems, HEADER_OPP. Non aggiungere, togliere o rinominare pieghe o tasti. Eccezione 11.10.2026, su richiesta esplicita di Nando: tasto «Home» (grafici, js/home.js) primo per admin e agenti. Eccezione 11.10.2026 sera: tasti admin Terranova, Gare private e AncheBIM (js/funzioni-interne.js), funzioni interne, non siti a parte. Eccezione 12.10.2026: tasto admin «Software» (js/software-admin.js), secondo dopo Home, con tutti i software per categoria. Eccezione 12.10.2026: tasto admin «Pulsanti per profilo» (js/pulsanti-profili.js); i menu di privato, azienda e agente mostrano solo i pulsanti che l'admin ha scelto lì. Eccezione 12.10.2026: menu admin a categorie (pieghe adm_* in FOLD_LAB). Eccezione 12.10.2026: tasti admin «Rete» e «Inviti» in cima (js/inviti-admin.js); le pagine della rete si aprono da Rete. Eccezione 12.10.2026: menu della rete a categorie per ruolo (vociRete, js/rete-progetto.js). Eccezione 12.10.2026 (app-20, decisioni di Nando): pack «telefonia» e «finanza» per i fornitori, voci «Telefono e internet» e «Mutui, prestiti e polizze» del privato, «Telefono e internet» e «Polizze e finanziamenti» delle imprese (piega az_servizi), «Offerte per i clienti» della rete (js/servizi.js). Eccezione 12.10.2026 (app-21, decisioni di Nando 10:47): pack «materiali», «noleggio», «casa» per i fornitori a preventivo, voci «Preventivo materiali» e «Noleggia mezzi» delle imprese (piega az_cantiere), «Traslochi, pulizie e giardino» del privato (js/preventivi.js). Eccezione 12.10.2026 (app-23, decisioni di Nando 12:11 e 12:20): pack «artigiano» rifatto (art_*), «Documenti e abbonamento» per tutte le aziende (piega az_account), tasto admin «Aziende» (js/artigiani.js). Eccezione 12.10.2026 (app-24, decisioni di Nando): impresa, subappaltatore e impiantista con «Lavori AncheCasa» e «Lavori della zona» in cima (imp_*, lav_*), privato «Piccoli lavori con le imprese», rete «Segnala una ristrutturazione» e «Sopralluoghi assegnati», tasto admin «Ristrutturazioni» (js/imprese.js). Eccezione 12.10.2026 (app-25, decisioni di Nando 13:24-13:42): piega «Cantieri e richieste» per tutte le aziende tranne luce e gas, telefonia e finanza (cnt_*), «Subappalti in zona» tolto, tasti admin «Cantieri AncheCasa» e «Voti delle aziende» (js/cantieri.js).
      ECCEZIONE 22.09.2026, su richiesta esplicita: aggiunta "admin" come quarta famiglia
      (prima era una pagina admin.html a sé, mai approvata graficamente). Non tocca le pieghe
      o i tasti delle tre famiglie originali: admin ha un suo ramo separato ovunque sotto.
@@ -50,6 +50,8 @@
     // Imprese (12.10.2026, app-24)
     imp_ac: "Lavori AncheCasa",
     imp_zona: "Lavori della zona",
+    // Cantieri e richieste tra aziende (12.10.2026, app-25)
+    az_cantieri: "Cantieri e richieste",
     // Admin a categorie (12.10.2026, su richiesta di Nando)
     adm_panoramica: "Panoramica",
     adm_iscritti: "Iscritti",
@@ -191,11 +193,10 @@
   const vociImpresaAC = () => [
     n("imp_home", "Home", "home", "imp_ac"),
     n("imp_lavori", "Lavori AncheCasa", "building", "imp_ac"),
-    n("imp_cantieri", "I miei cantieri", "calendar", "imp_ac"),
+    n("imp_cantieri", "Cantieri AncheCasa", "calendar", "imp_ac"),
     n("lav_richieste", "Piccoli lavori", "send", "imp_zona"),
     n("lav_preventivi", "I miei preventivi", "doc", "imp_zona"),
     n("lav_ordini", "Lavori presi", "folder", "imp_zona"),
-    n("imp_subappalti", "Subappalti in zona", "team", "imp_zona"),
     n("lav_zona", "La mia zona", "grid", "imp_zona")
   ];
   const PACKS = {
@@ -378,7 +379,13 @@
   const vociServiziAzienda = (pack) => [
     // 12.10.2026 (app-23): prova 14 giorni, visura e DURC per tutte le aziende.
     { id: "az-documenti", label: "Documenti e abbonamento", icon: "shield", gruppo: "pack", fold: "az_account" }
-  ].concat(SENZA_CANTIERE[pack] ? [] : [
+  ].concat(SENZA_SERVIZI[pack] ? [] : [
+    // 12.10.2026 (app-25, decisioni di Nando): ogni azienda può fare da general contractor e ricevere le richieste dei cantieri (js/cantieri.js).
+    { id: "cnt_cantieri", label: "I miei cantieri", icon: "building", gruppo: "pack", fold: "az_cantieri" },
+    { id: "cnt_perme", label: "Richieste per te", icon: "send", gruppo: "pack", fold: "az_cantieri" },
+    { id: "cnt_cerca", label: "Cerca subappaltatori", icon: "team", gruppo: "pack", fold: "az_cantieri" },
+    { id: "cnt_offro", label: "Cosa offro", icon: "grid", gruppo: "pack", fold: "az_cantieri" }
+  ]).concat(SENZA_CANTIERE[pack] ? [] : [
     { id: "az-materiali", label: "Preventivo materiali", icon: "folder", gruppo: "pack", fold: "az_cantiere" },
     { id: "az-noleggio", label: "Noleggia mezzi", icon: "calendar", gruppo: "pack", fold: "az_cantiere" }
   ]).concat(SENZA_SERVIZI[pack] ? [] : [
@@ -486,6 +493,10 @@
         { id: "aziende-admin", label: "Aziende", icon: "team", gruppo: "fisso" },
         // 12.10.2026, app-24: ristrutturazioni, lavori affidati alle imprese, SAL, piccoli lavori da smistare (js/imprese.js).
         { id: "ristrutturazioni-admin", label: "Ristrutturazioni", icon: "building", gruppo: "fisso" },
+        // 12.10.2026, app-25: i cantieri di AncheCasa con le richieste alle aziende, e i voti delle aziende (js/cantieri.js).
+        { id: "cnt_cantieri", label: "Cantieri AncheCasa", icon: "calendar", gruppo: "fisso" },
+        c("cnt_cerca", "Cerca subappaltatori", "team", "adm_iscritti"),
+        c("aziende-voti", "Voti delle aziende", "star", "adm_iscritti"),
         // Pagine della rete: si aprono dalla pagina Rete, non dal menu (soloTestata).
         c("oggi-rete", "Oggi", "chart", "adm_rete", { soloTestata: true }),
         c("appunti", "Appunti", "doc", "adm_panoramica"),
@@ -902,7 +913,7 @@
     if (!statoPulsante(famiglia, it.id)) return false;
     if (famiglia === "azienda") {
       const pack = packKey(S.data.profilo && S.data.profilo.tipoAzienda);
-      if (PACK_NASCOSTO[pack] && it.gruppo === "pack" && it.fold !== "ufficio" && it.fold !== "az_servizi" && it.fold !== "az_cantiere" && it.fold !== "az_account") return false;
+      if (PACK_NASCOSTO[pack] && it.gruppo === "pack" && it.fold !== "ufficio" && it.fold !== "az_servizi" && it.fold !== "az_cantiere" && it.fold !== "az_account" && it.fold !== "az_cantieri") return false;
     }
     return true;
   }
@@ -1044,7 +1055,7 @@
 
     // Telefono (01.10.2026): barra delle sezioni in basso, come un'app. Fino a 5 voci stanno tutte nella barra;
     // altrimenti le prime 4 e «Altro», che apre una scheda con il resto e con le cartelle (Ufficio, Cantiere...).
-    const BREVE = { home: "Home", software: "Software", pulsanti: "Pulsanti", "rete-admin": "Rete", "inviti-admin": "Inviti", "fornitori-admin": "Fornitori", energia_home: "Home", energia_richieste: "Richieste", proposte_energia: "Proposte", offerte_energia: "Offerte", energia_clienti: "Clienti", energia_accordo: "Accordo", tel_home: "Home", tel_richieste: "Richieste", tel_proposte: "Proposte", tel_offerte: "Offerte", tel_clienti: "Clienti", tel_accordo: "Accordo", fin_home: "Home", fin_richieste: "Richieste", fin_proposte: "Proposte", fin_offerte: "Offerte", fin_clienti: "Clienti", fin_accordo: "Accordo", "re-offerte": "Offerte", mat_home: "Home", mat_richieste: "Richieste", mat_preventivi: "Preventivi", mat_ordini: "Ordini", mat_zona: "Zona", nol_home: "Home", nol_richieste: "Richieste", nol_preventivi: "Preventivi", nol_ordini: "Noleggi", nol_mezzi: "Mezzi", nol_zona: "Zona", cas_home: "Home", cas_richieste: "Richieste", cas_preventivi: "Preventivi", cas_ordini: "Lavori", cas_zona: "Zona", "az-materiali": "Materiali", "az-noleggio": "Noleggio", "pv-casa": "Casa", "aziende-admin": "Aziende", art_home: "Home", art_richieste: "Richieste", art_interventi: "Interventi", art_recensioni: "Recensioni", art_garanzia: "Garanzia", art_disponibilita: "Disponibile", art_zona: "Zona", "az-documenti": "Documenti", "pv-guasto": "Guasto", "pv-trova": "Trova", imp_home: "Home", imp_lavori: "Lavori", imp_cantieri: "Cantieri", imp_subappalti: "Subappalti", lav_home: "Home", lav_richieste: "Zona", lav_preventivi: "Preventivi", lav_ordini: "Presi", lav_zona: "Zona", "pv-lavori": "Lavori", "pv-ristruttura": "Ristruttura", "pv-mio-cantiere": "Cantiere", "re-ristruttura": "Ristruttura", "re-sopralluoghi": "Sopralluoghi", "ristrutturazioni-admin": "Ristrutturazioni", "re-clienti": "Clienti", "re-vendi": "Vendi", "re-formazione": "Formazione", "sala-demo": "Demo", regole: "Regole", bacheca: "Bacheca", iscritti: "Iscritti", appunti: "Appunti", bandi: "Bandi", terranova: "Terranova", "gare-private": "Gare", anchebim: "BIM", contratti: "Contratti", affida: "Affida", iscrizioni: "Iscrizioni", "richieste-agenti": "Agenti", "proposte-rete": "Segnala", "oggi-rete": "Oggi", strategia: "Strategia", "lavori-rete": "Lavori", "linee-decise": "Linee", "tuo-mese": "Mese", "genera-link": "Link", task: "Task", file: "File", "chat-team": "Chat", "mio-ruolo": "Ruolo", documenti: "Documenti" };
+    const BREVE = { home: "Home", software: "Software", pulsanti: "Pulsanti", "rete-admin": "Rete", "inviti-admin": "Inviti", "fornitori-admin": "Fornitori", energia_home: "Home", energia_richieste: "Richieste", proposte_energia: "Proposte", offerte_energia: "Offerte", energia_clienti: "Clienti", energia_accordo: "Accordo", tel_home: "Home", tel_richieste: "Richieste", tel_proposte: "Proposte", tel_offerte: "Offerte", tel_clienti: "Clienti", tel_accordo: "Accordo", fin_home: "Home", fin_richieste: "Richieste", fin_proposte: "Proposte", fin_offerte: "Offerte", fin_clienti: "Clienti", fin_accordo: "Accordo", "re-offerte": "Offerte", mat_home: "Home", mat_richieste: "Richieste", mat_preventivi: "Preventivi", mat_ordini: "Ordini", mat_zona: "Zona", nol_home: "Home", nol_richieste: "Richieste", nol_preventivi: "Preventivi", nol_ordini: "Noleggi", nol_mezzi: "Mezzi", nol_zona: "Zona", cas_home: "Home", cas_richieste: "Richieste", cas_preventivi: "Preventivi", cas_ordini: "Lavori", cas_zona: "Zona", "az-materiali": "Materiali", "az-noleggio": "Noleggio", "pv-casa": "Casa", "aziende-admin": "Aziende", art_home: "Home", art_richieste: "Richieste", art_interventi: "Interventi", art_recensioni: "Recensioni", art_garanzia: "Garanzia", art_disponibilita: "Disponibile", art_zona: "Zona", "az-documenti": "Documenti", "pv-guasto": "Guasto", "pv-trova": "Trova", imp_home: "Home", imp_lavori: "Lavori", imp_cantieri: "Cantieri", imp_subappalti: "Subappalti", cnt_cantieri: "Cantieri", cnt_perme: "Richieste", cnt_cerca: "Cerca", cnt_offro: "Offro", "aziende-voti": "Voti", "re-recensioni": "Voti", lav_home: "Home", lav_richieste: "Zona", lav_preventivi: "Preventivi", lav_ordini: "Presi", lav_zona: "Zona", "pv-lavori": "Lavori", "pv-ristruttura": "Ristruttura", "pv-mio-cantiere": "Cantiere", "re-ristruttura": "Ristruttura", "re-sopralluoghi": "Sopralluoghi", "ristrutturazioni-admin": "Ristrutturazioni", "re-clienti": "Clienti", "re-vendi": "Vendi", "re-formazione": "Formazione", "sala-demo": "Demo", regole: "Regole", bacheca: "Bacheca", iscritti: "Iscritti", appunti: "Appunti", bandi: "Bandi", terranova: "Terranova", "gare-private": "Gare", anchebim: "BIM", contratti: "Contratti", affida: "Affida", iscrizioni: "Iscrizioni", "richieste-agenti": "Agenti", "proposte-rete": "Segnala", "oggi-rete": "Oggi", strategia: "Strategia", "lavori-rete": "Lavori", "linee-decise": "Linee", "tuo-mese": "Mese", "genera-link": "Link", task: "Task", file: "File", "chat-team": "Chat", "mio-ruolo": "Ruolo", documenti: "Documenti" };
     const conAltro = folds.length > 0 || top.length > 5;
     const tabs = conAltro ? top.slice(0, 4) : top;
     const extra = conAltro ? top.slice(4) : [];

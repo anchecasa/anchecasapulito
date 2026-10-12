@@ -101,3 +101,17 @@
 .imp-passi li.fatto { background: #16304d; color: #fff; }
 #ra-box .nm-o select, #sb-box .nm-o select { height: 38px; border: 1px solid #d5deea; border-radius: 10px; padding: 0 8px; background: #fff; font: inherit; color: inherit; }
 .en-grid input[type=file] { max-width: 100%; min-width: 0; }
+
+/* Cantieri e richieste (12.10.2026, app-25, js/cantieri.js) */
+.co-gr { border: 1px solid #d5deea; border-radius: 12px; padding: 10px 14px 12px; margin: 0 0 12px; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 6px 14px; }
+.co-gr legend { font-weight: 700; padding: 0 6px; }
+.en-rrow.on { background: #fff6ee; border-radius: 10px; }
+#kx-f .mini-table th small, #kx-f .mini-table td small { color: #66758a; }
+#kx-box select, #kx-f .nm-o select, [data-vc], [data-sel] { height: 36px; border: 1px solid #d5deea; border-radius: 10px; padding: 0 8px; background: #fff; font: inherit; color: inherit; }
+#kr-f td input[name=voce] { min-width: 220px; }
+#kr-f td select { max-width: 210px; }
+.co-gr label.check { display: flex; flex-direction: row; align-items: center; gap: 8px; margin: 0; font-weight: 500; }
+.co-gr label.check input { width: auto; margin: 0; }
+#rv-f select { height: 36px; border: 1px solid #d5deea; border-radius: 10px; padding: 0 8px; background: #fff; font: inherit; }
+#co-f > label.check { display: flex; flex-direction: row; align-items: center; gap: 8px; margin: 4px 0 8px; }
+#co-f > label.check input { width: auto; margin: 0; }

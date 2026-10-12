@@ -145,22 +145,21 @@
     sub: "I lavori che ti affida AncheCasa, i tuoi cantieri, i piccoli lavori della zona e le richieste di subappalto.",
     render(el) {
       caricamento(el);
-      Promise.all([D.commesse(), D.sub(), D.stato(), D.lavoriZona().catch(() => 0)]).then(([cs, sb, s, lz]) => {
+      Promise.all([D.commesse(), AC.cantieri ? AC.cantieri.daFare().catch(() => 0) : 0, D.stato(), D.lavoriZona().catch(() => 0)]).then(([cs, daFare, s, lz]) => {
         const nuove = (cs || []).filter((c) => c.stato === "proposta");
         const aperti = (cs || []).filter((c) => c.stato === "accettata" || c.stato === "in_corso");
-        const daRisp = (sb || []).filter((x) => x.verso === "ricevuta" && x.stato === "inviata");
         el.innerHTML = html`${AC.artigiani ? AC.artigiani.riquadroStato(s) : ""}
           <div class="en-kpis">
             <a class="kpi en-kpi" href="#/azienda/imp_lavori"><span><strong>${nuove.length}</strong><small>lavori AncheCasa da rispondere</small></span></a>
             <a class="kpi en-kpi" href="#/azienda/imp_cantieri"><span><strong>${aperti.length}</strong><small>cantieri aperti</small></span></a>
             <a class="kpi en-kpi" href="#/azienda/lav_richieste"><span><strong>${lz}</strong><small>piccoli lavori nella tua zona</small></span></a>
-            <a class="kpi en-kpi" href="#/azienda/imp_subappalti"><span><strong>${daRisp.length}</strong><small>richieste di subappalto</small></span></a>
+            <a class="kpi en-kpi" href="#/azienda/cnt_perme"><span><strong>${daFare}</strong><small>richieste dai cantieri per te</small></span></a>
           </div>
           <section class="card"><h2>Come lavori con AncheCasa</h2>
             <ul class="pv-lista">
               <li><b>Lavori AncheCasa.</b> AncheCasa è il general contractor: trova il cliente, fa sopralluogo, preventivo e contratto, poi sceglie l'impresa. Tu vedi il tuo importo e il cantiere.</li>
               <li><b>Piccoli lavori della zona.</b> Le richieste dei privati arrivano a massimo cinque imprese della zona, dalla più vicina. Mandi il preventivo, il cliente sceglie.</li>
-              <li><b>Subappalti.</b> Cerchi subappaltatori e impiantisti verificati della zona e chiedi se sono liberi.</li>
+              <li><b>I tuoi cantieri.</b> Anche tu puoi fare da general contractor: da «I miei cantieri» chiedi materiali, noleggi, subappalti, impianti e personale alle aziende della zona e scegli l'offerta migliore.</li>
               <li>Per ricevere lavori servono visura e DURC verificati, e la prova di 14 giorni o l'abbonamento attivo.</li>
             </ul></section>
           ${aperti.length ? html`<section class="card"><h2>Cantieri aperti</h2>${aperti.map((c) => html`<div class="en-rrow"><div class="en-rinfo"><b>${c.titolo}</b><small>${dove(c)} · fine prevista ${dataIt(c.fine) || "da decidere"}</small>${barra(c.avanzamento)}</div>

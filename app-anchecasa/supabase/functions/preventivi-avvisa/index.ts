@@ -7,12 +7,15 @@
 //   { evento: "guasti" }              → ogni 5 minuti (pg_cron, app-23b) e dopo ogni azione: «Ho un guasto» passa al prossimo artigiano
 //                                       chi non ha risposto, conferma i lavori fatti da 7 giorni, manda le mail (artigiano, cliente, admin).
 //                                       Nello stesso giro passano anche le mail delle imprese (evento «imprese», app-24).
+//   { evento: "cantieri" }            → dopo ogni azione sulle richieste dei cantieri (app-25): inviti urgenti o diretti, ditte di fiducia
+//                                       non iscritte, offerte, scelte, domande, risposte; allargamento dopo 48 ore e mail alla rete.
+//                                       Gira anche nel giro ogni 5 minuti; il riepilogo del giorno alle aziende parte con «giornaliero».
 //   { evento: "imprese" }             → dopo ogni azione su ristrutturazioni, lavori affidati e subappalti: mail all'admin, all'agente,
 //                                       all'impresa, ai subappaltatori. Ogni mail parte una volta sola (colonne avvisato_*).
 //                                       Sta qui e non in una funzione a parte perché il progetto ha raggiunto il limite di 100 funzioni (12.10.2026).
 // Look della mail d'invito approvata (../_shared/mail-marchio.ts). Deploy con verify_jwt spento.
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { mailPreventivi, mailPromemoria, mailVerifica, mailGuasti, mailImprese } from "../_shared/mail-marchio.ts";
+import { mailPreventivi, mailPromemoria, mailVerifica, mailGuasti, mailImprese, mailCantieri } from "../_shared/mail-marchio.ts";
 
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SERVICE = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -229,6 +232,132 @@ async function giroImprese(admin: any, db: any) {
   return esito;
 }
 
+// Cantieri e richieste tra aziende (app-25). Ogni mail parte una volta sola (avvisato_il, avvisato, avvisato_rete).
+const SERVIZI: Record<string, string> = {
+  materiali: "Materiali edili", noleggio: "Noleggio mezzi e attrezzature", personale: "Personale (agenzia per il lavoro)",
+  demolizioni: "Demolizioni e scavi", murature: "Opere murarie", strutture: "Strutture in cemento armato", cartongesso: "Cartongesso", intonaci: "Intonaci e rasature",
+  pavimenti: "Pavimenti e rivestimenti", tinteggiatura: "Tinteggiatura", cappotto: "Cappotto e isolamento", tetto: "Tetti e impermeabilizzazioni",
+  infissi: "Infissi e serramenti", carpenteria: "Carpenteria e ferro", ponteggi: "Ponteggi",
+  imp_elettrico: "Impianto elettrico", imp_idraulico: "Impianto idraulico", imp_termico: "Riscaldamento e climatizzazione", imp_fotovoltaico: "Fotovoltaico", imp_gas: "Impianto gas",
+};
+const MOTIVI: Record<string, string> = { prezzo: "prezzo", tempi: "tempi", voci_mancanti: "voci mancanti", fiducia: "scelta una ditta di fiducia", annullato: "lavoro rinviato o annullato" };
+// deno-lint-ignore no-explicit-any
+async function giroCantieri(admin: any, db: any, riepilogo: boolean) {
+  const esito = { mail: 0, allargate: 0, errori: [] as string[] };
+  const prova = async (fn: () => Promise<void>) => { try { await fn(); } catch (e) { esito.errori.push(String((e as Error).message || e)); } };
+  const mailDi = async (id: string) => { const { data: u } = await admin.auth.admin.getUserById(id); return u?.user?.email || ""; };
+  const nomi: Record<string, string> = {};
+  const nomeDi = async (id: string) => {
+    if (nomi[id] === undefined) {
+      const { data: a } = await db.from("admins").select("id").eq("id", id).maybeSingle();
+      const { data: p } = await db.from("profiles").select("nome").eq("id", id).maybeSingle();
+      nomi[id] = a ? "AncheCasa" : p?.nome || "Un'azienda AncheCasa";
+    }
+    return nomi[id];
+  };
+  const pagina = async (id: string) => { const { data: a } = await db.from("admins").select("id").eq("id", id).maybeSingle(); return `${SITO}/dashboard/#/${a ? "admin" : "azienda"}/cnt_cantieri`; };
+  const perMe = `${SITO}/dashboard/#/azienda/cnt_perme`;
+  const ric: Record<string, Record<string, unknown>> = {};
+  const richiesta = async (id: string) => {
+    if (!ric[id]) {
+      const { data: r } = await db.from("cantiere_richieste").select("*").eq("id", id).maybeSingle();
+      const { data: c } = r ? await db.from("cantieri").select("*").eq("id", r.cantiere_id).maybeSingle() : { data: null };
+      ric[id] = Object.assign({}, r || {}, { comune: c?.comune || "", regione: c?.regione || "" });
+    }
+    return ric[id] as Record<string, string & boolean & { servizio: string }[]>;
+  };
+  const dataIt = (d: string) => (d ? new Date(d).toLocaleDateString("it-IT") : "");
+
+  // 1. Dopo 48 ore senza offerte: la richiesta si allarga alla regione (nel database) e la rete della regione riceve la mail.
+  await prova(async () => {
+    const { data, error } = await db.rpc("cantieri_giro");
+    if (error) throw error;
+    esito.allargate = Number(data) || 0;
+    const { data: righe } = await db.from("cantiere_richieste").select("id").not("allargata_il", "is", null).is("avvisato_rete", null).limit(50);
+    for (const x of righe || []) {
+      const r = await richiesta(x.id);
+      const servizi = [...new Set(((r.voci as unknown as { servizio: string }[]) || []).map((v) => SERVIZI[v.servizio] || v.servizio))].join(", ");
+      const { data: rete } = await db.from("app_rete").select("utente").eq("regione", r.regione).eq("stato", "attivo").in("ruolo", ["agente", "subagente", "capoarea"]);
+      for (const p of rete || []) {
+        const a = await mailDi(p.utente);
+        if (a) { await manda(a, mailCantieri("rete", { link: `${SITO}/dashboard/#/agente/inviti`, titolo: r.titolo, comune: r.comune, servizi })); esito.mail++; }
+      }
+      await db.from("cantiere_richieste").update({ avvisato_rete: new Date().toISOString() }).eq("id", x.id);
+    }
+  });
+
+  // 2. Aziende invitate: subito se urgente, se invitata per nome o dalla ricerca; le altre nel riepilogo del giorno.
+  await prova(async () => {
+    const { data: inv, error } = await db.from("cantiere_invitati").select("*").is("avvisato_il", null).gt("creato", fa(15)).limit(500);
+    if (error) throw error;
+    const riep: Record<string, string[]> = {};
+    for (const i of inv || []) {
+      const r = await richiesta(i.richiesta_id);
+      if (r.stato !== "aperta") { await db.from("cantiere_invitati").update({ avvisato_il: new Date().toISOString() }).eq("richiesta_id", i.richiesta_id).eq("azienda_id", i.azienda_id); continue; }
+      const subito = r.urgente || i.motivo === "invito" || i.motivo === "cerca";
+      if (!subito && !riepilogo) continue;
+      if (subito) {
+        const a = await mailDi(i.azienda_id);
+        if (a) { await manda(a, mailCantieri("invito", { link: perMe, chi: await nomeDi(r.azienda_id), titolo: r.titolo, comune: r.comune, scadenza: dataIt(r.scadenza), urgente: !!r.urgente })); esito.mail++; }
+      } else {
+        (riep[i.azienda_id] = riep[i.azienda_id] || []).push(r.titolo + (r.comune ? " · " + r.comune : "") + " (" + (await nomeDi(r.azienda_id)) + ")");
+      }
+      await db.from("cantiere_invitati").update({ avvisato_il: new Date().toISOString() }).eq("richiesta_id", i.richiesta_id).eq("azienda_id", i.azienda_id);
+    }
+    for (const id of Object.keys(riep)) {
+      const a = await mailDi(id);
+      if (a) { await manda(a, mailCantieri("riepilogo", { link: perMe, elenco: riep[id] })); esito.mail++; }
+    }
+  });
+
+  // 3. Ditte di fiducia non iscritte: invito a iscriversi.
+  await prova(async () => {
+    const { data: righe } = await db.from("cantiere_inviti_mail").select("*").is("avvisato_il", null).limit(200);
+    for (const x of righe || []) {
+      const r = await richiesta(x.richiesta_id);
+      await manda(x.email, mailCantieri("esterno", { link: `${SITO}/iscriviti.html`, chi: await nomeDi(r.azienda_id), titolo: r.titolo, comune: r.comune }));
+      await db.from("cantiere_inviti_mail").update({ avvisato_il: new Date().toISOString() }).eq("id", x.id);
+      esito.mail++;
+    }
+  });
+
+  // 4. Offerte: nuova → a chi ha chiesto; scelta o non scelta → a chi ha offerto, con il motivo.
+  await prova(async () => {
+    const { data: righe } = await db.from("cantiere_offerte").select("*").gt("creato", fa(60)).limit(500);
+    for (const o of righe || []) {
+      const r = await richiesta(o.richiesta_id);
+      if (o.avvisato === "" && o.stato === "inviata") {
+        const a = await mailDi(r.azienda_id);
+        if (a) { await manda(a, mailCantieri("offerta", { link: await pagina(r.azienda_id), chi: await nomeDi(o.azienda_id), titolo: r.titolo })); esito.mail++; }
+        await db.from("cantiere_offerte").update({ avvisato: "inviata" }).eq("id", o.id);
+      } else if (o.stato !== "inviata" && o.avvisato !== o.stato) {
+        const a = await mailDi(o.azienda_id);
+        const scelta = o.stato === "scelta" || o.stato === "parziale";
+        if (a) { await manda(a, mailCantieri(scelta ? "scelta" : "non_scelta", { link: perMe, chi: await nomeDi(r.azienda_id), titolo: r.titolo, motivo: MOTIVI[o.motivo] || o.motivo, nota: o.motivo_nota })); esito.mail++; }
+        await db.from("cantiere_offerte").update({ avvisato: o.stato }).eq("id", o.id);
+      }
+    }
+  });
+
+  // 5. Domande → a chi ha chiesto; risposte → a chi ha fatto la domanda.
+  await prova(async () => {
+    const { data: righe } = await db.from("cantiere_domande").select("*").gt("creato", fa(60)).limit(500);
+    for (const q of righe || []) {
+      const r = await richiesta(q.richiesta_id);
+      if (q.avvisato === "") {
+        const a = await mailDi(r.azienda_id);
+        if (a) { await manda(a, mailCantieri("domanda", { link: await pagina(r.azienda_id), titolo: r.titolo, testo: (q.sopralluogo ? "Chiede un sopralluogo. " : "") + q.testo })); esito.mail++; }
+        await db.from("cantiere_domande").update({ avvisato: "domanda" }).eq("id", q.id);
+      } else if (q.risposta && q.avvisato !== "risposta") {
+        const a = await mailDi(q.azienda_id);
+        if (a) { await manda(a, mailCantieri("risposta", { link: perMe, titolo: r.titolo, testo: q.risposta })); esito.mail++; }
+        await db.from("cantiere_domande").update({ avvisato: "risposta" }).eq("id", q.id);
+      }
+    }
+  });
+  return esito;
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: cors });
   if (req.method !== "POST") return json({ error: "Solo POST." }, 405);
@@ -238,8 +367,9 @@ Deno.serve(async (req) => {
   const db = admin.schema("marketplace");
 
   try {
-    if (body.evento === "giornaliero") return json(await giornaliero(admin, db));
-    if (body.evento === "guasti") return json(Object.assign(await giroGuasti(admin, db), { imprese: await giroImprese(admin, db) }));
+    if (body.evento === "giornaliero") return json(Object.assign(await giornaliero(admin, db), { cantieri: await giroCantieri(admin, db, true) }));
+    if (body.evento === "guasti") return json(Object.assign(await giroGuasti(admin, db), { imprese: await giroImprese(admin, db), cantieri: await giroCantieri(admin, db, false) }));
+    if (body.evento === "cantieri") return json(await giroCantieri(admin, db, false));
     if (body.evento === "imprese") return json(await giroImprese(admin, db));
 
     if (body.evento === "richiesta") {

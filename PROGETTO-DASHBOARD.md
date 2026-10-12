@@ -268,4 +268,20 @@ Impresa, subappaltatore, impiantista (app-24):
   - piccoli lavori da smistare.
 - Mail (preventivi-avvisa, evento «imprese», anche nel giro ogni 5 minuti): nuova ristrutturazione all'admin, sopralluogo all'agente, lavoro all'impresa, risposta dell'impresa all'admin, subappalto all'azienda e risposta a chi l'ha chiesto, piccoli lavori all'admin.
 
+Cantieri e richieste tra aziende (app-25, decisioni di Nando 13:24-13:42):
+- Ogni azienda (e AncheCasa) può fare da general contractor: crea i suoi cantieri (nome, indirizzo, date, importo, committente pubblico o privato con CIG e CUP) e da lì pubblica le richieste: materiali, noleggio, lavori in subappalto, impianti, personale (solo agenzie per il lavoro).
+- Niente elenco di aziende da sfogliare, come i portali di annunci. La richiesta arriva alle prime 10 aziende della zona che offrono quel servizio in «Cosa offro», prima gli sponsor poi le più vicine. Chi pubblica invita anche le sue ditte di fiducia per mail (le non iscritte ricevono l'invito a iscriversi).
+- «Cerca subappaltatori»: solo chi ha detto di lavorare in subappalto in quel settore e in quella zona, senza contatti; si invita a una propria richiesta.
+- Offerta voce per voce. Materiali: chi offre può togliere voci; chi chiede sceglie più fornitori voce per voce e ripubblica le voci scoperte con un tasto. Lavori: si offre anche per una sola lavorazione, ma intera.
+- Le condizioni di pagamento le decide chi pubblica; chi offre mette prezzo e tempi.
+- «Non scelto» sempre con il motivo: prezzo, tempi, voci mancanti, ditta di fiducia, lavoro rinviato o annullato.
+- Chi chiede si vede con nome e voto sui pagamenti; indirizzo esatto e contatti solo dopo la scelta. Voti nei due sensi; admin e rete hanno la scheda «Voti delle aziende».
+- Bollino «documenti ok» (DURC, POS, patente a crediti; abilitazione DM 37/08 per gli impianti) accanto all'offerta: decide chi chiede.
+- «Fai una domanda» e richiesta di sopralluogo passano da AncheCasa; la risposta la vedono tutti gli invitati.
+- Nessuna offerta in 48 ore: la richiesta si allarga alla regione e la rete della regione (agenti e capo area) riceve la mail.
+- Mail alle aziende: riepilogo una volta al giorno; subito solo le urgenti, gli inviti per nome e quelli dalla ricerca.
+- Al massimo 20 richieste al mese (l'admin lo alza in «Aziende»). Sponsor «fino al» lo segna l'admin; più avanti anche la bacheca pubblica degli sponsor (come Subito.it).
+- Nessuna commissione. «Subappalti in zona» (app-24) tolto dal menu.
+- Da fare dopo: documento dell'accordo da firmare online, bacheca pubblica degli sponsor, accordo quadro su più cantieri, prezzi delle app (alla fine).
+
 Da progettare: studio tecnico, agenzia, committente.

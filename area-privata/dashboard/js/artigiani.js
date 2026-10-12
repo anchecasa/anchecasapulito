@@ -19,7 +19,8 @@
     cerca: ["wait", "Cerchiamo un artigiano"], assegnato: ["wait", "In attesa che l'artigiano accetti"], accettato: ["ok", "Accettato"],
     fatto: ["wait", "Lavoro fatto, da confermare"], confermato: ["ok", "Lavoro confermato"], admin: ["wait", "Ci pensa AncheCasa"], annullato: ["paused", "Annullata"]
   };
-  const DOC = { visura: "Visura camerale", durc: "DURC", assicurazione: "Assicurazione RC", altro: "Altro documento" };
+  // 12.10.2026, app-25: POS, patente a crediti e abilitazione impianti (DM 37/08) per il bollino delle offerte.
+  const DOC = { visura: "Visura camerale", durc: "DURC", pos: "POS (piano operativo di sicurezza)", patente: "Patente a crediti", abilitazione: "Abilitazione impianti (DM 37/08)", assicurazione: "Assicurazione RC", altro: "Altro documento" };
   const STATO_DOC = { caricato: ["wait", "Da controllare"], ok: ["ok", "Verificato"], rifiutato: ["paused", "Da rifare"] };
 
   const eur = (n) => (Number(n) || 0).toLocaleString("it-IT", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
@@ -427,8 +428,10 @@
     sub: "Documenti da verificare, prova e abbonamenti, commissioni del mese, guasti da gestire.",
     render(el) {
       el.innerHTML = html`<div class="card"><p class="note">Caricamento…</p></div>`.s;
-      const carica = reale() ? Promise.all([Q(db().rpc("aziende_per_admin")), Q(db().rpc("guasti_admin"))]) : Promise.resolve([JSON.parse(JSON.stringify(ESEMPIO_AZ)), ESEMPIO_GU]);
-      carica.then(([az, gu]) => {
+      // 12.10.2026, app-25: sponsor e limite delle richieste dei cantieri.
+      const carica = reale() ? Promise.all([Q(db().rpc("aziende_per_admin")), Q(db().rpc("guasti_admin")), Q(db().from("aziende_stato").select("azienda_id, sponsor_fino, limite_richieste")).catch(() => [])]) : Promise.resolve([JSON.parse(JSON.stringify(ESEMPIO_AZ)), ESEMPIO_GU, []]);
+      carica.then(([az, gu, sp]) => {
+        const spDi = {}; (sp || []).forEach((x) => { spDi[x.azienda_id] = x; });
         const daVerificare = az.filter((a) => !a.documenti_ok && (a.documenti || []).some((d) => d.stato === "caricato"));
         const guAdmin = gu.filter((g) => g.stato === "admin");
         const garanzie = gu.filter((g) => g.garanzia_il && g.stato === "confermato");
@@ -455,6 +458,8 @@
                 <label class="check"><input type="checkbox" name="ok"${a.documenti_ok ? " checked" : ""}> Documenti verificati</label>
                 <label>Attiva fino al<input type="date" name="fino" value="${a.attiva_fino || ""}"></label>
                 <label>Nota<input name="nota" maxlength="500" placeholder="es. bonifico del 12/10"></label>
+                <label>Sponsor fino al<input type="date" name="sponsor" value="${(spDi[a.id] || {}).sponsor_fino || ""}"></label>
+                <label>Richieste al mese<input type="number" name="limite" min="0" max="1000" value="${(spDi[a.id] || {}).limite_richieste || 20}" style="width:80px"></label>
                 <button class="btn-ghost" type="submit">Salva</button></form>
             </div>`; }) : html`<p class="note">Nessuna azienda iscritta.</p>`}
           </section>
@@ -470,6 +475,7 @@
           const id = f.getAttribute("data-az");
           if (!reale()) { toast("Anteprima: salvato solo qui."); return; }
           Q(db().rpc("azienda_admin_stato", { p_azienda: id, p_documenti_ok: f.ok.checked, p_attiva_fino: f.fino.value || null, p_note: f.nota.value.trim() }))
+            .then(() => Q(db().rpc("azienda_admin_sponsor", { p_azienda: id, p_sponsor_fino: f.sponsor.value || null, p_limite: Number(f.limite.value) || 20 })).catch(() => null))
             .then(() => { toast("Salvato"); V["aziende-admin"].render(el); }, (e2) => toast("Non salvato: " + err(e2), "error"));
         }));
       }, (e) => nonPronto(el, e));
