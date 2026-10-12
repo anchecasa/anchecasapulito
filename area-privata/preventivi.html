@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>I tuoi preventivi · AncheCasa</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="favicon.ico">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
+  <style>
+    :root { --navy: #16304d; --ink: #24384c; --muted: #66758a; --orange: #E56B10; --btn: #c45d0c; --soft: #fff1e4; --line: #e4ebf3; --paper: #f3f6fb; --ok: #1f6e40; --okbg: #e8f6ee; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: Manrope, "Segoe UI", Arial, sans-serif; font-size: 15px; line-height: 1.55; }
+    .foglio { max-width: 860px; margin: 24px auto 40px; background: #fff; border-radius: 10px; box-shadow: 0 14px 40px rgba(22, 48, 77, .10); overflow: hidden; }
+    .testa { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 28px 40px 20px; border-bottom: 2px solid var(--orange); }
+    .testa img { width: 180px; display: block; }
+    .testa small { color: var(--muted); text-align: right; }
+    .corpo { padding: 26px 40px 34px; }
+    .eti { display: inline-block; background: var(--soft); color: var(--btn); font-size: 11px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; border-radius: 12px; padding: 5px 12px; }
+    h1 { margin: 12px 0 6px; font-size: 28px; line-height: 1.15; color: var(--navy); }
+    .sotto { margin: 0 0 18px; color: var(--muted); }
+    .riassunto { display: flex; flex-wrap: wrap; gap: 8px 18px; background: var(--paper); border-radius: 12px; padding: 12px 16px; font-size: 14px; margin-bottom: 18px; }
+    .riassunto b { color: var(--navy); }
+    .prop { border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; margin: 12px 0; display: grid; grid-template-columns: 110px 1fr auto; gap: 16px; align-items: center; }
+    .prop.scelta { border-color: var(--ok); box-shadow: 0 0 0 2px var(--okbg); }
+    .prop .logo { width: 110px; height: 60px; border-radius: 10px; background: var(--paper); display: grid; place-items: center; overflow: hidden; font-weight: 800; color: var(--navy); font-size: 13px; text-align: center; padding: 4px; }
+    .prop .logo img { max-width: 100%; max-height: 100%; }
+    .prop h2 { margin: 0; font-size: 17px; color: var(--navy); }
+    .prop .off { color: var(--btn); font-weight: 700; font-size: 14px; }
+    .prop ul { margin: 6px 0 0; padding-left: 18px; font-size: 13px; color: var(--ink); }
+    .prop .nota { font-size: 13px; color: var(--muted); margin-top: 6px; font-style: italic; }
+    .prezzo { text-align: right; }
+    .prezzo b { display: block; font-size: 24px; color: var(--navy); }
+    .prezzo small { color: var(--muted); font-size: 11px; display: block; max-width: 150px; margin-left: auto; }
+    .btn { margin-top: 8px; font: inherit; font-weight: 800; color: #fff; background: var(--btn); border: 0; border-radius: 22px; padding: 10px 18px; cursor: pointer; }
+    .btn:disabled { opacity: .5; cursor: default; }
+    .ok { background: var(--okbg); color: var(--ok); border-radius: 12px; padding: 14px 16px; margin: 12px 0; }
+    .vuoto { background: var(--paper); border-radius: 12px; padding: 22px; text-align: center; color: var(--muted); }
+    .regola { font-size: 12.5px; color: var(--muted); margin-top: 20px; }
+    .piede { background: var(--navy); color: #d5deea; font-size: 12px; padding: 16px 40px; }
+    .conferma { display: none; margin-top: 8px; font-size: 13px; }
+    .conferma.on { display: block; }
+    @media (max-width: 640px) {
+      .testa, .corpo, .piede { padding-left: 18px; padding-right: 18px; }
+      .prop { grid-template-columns: 1fr; }
+      .prezzo { text-align: left; } .prezzo small { margin-left: 0; }
+    }
+      .righe { width: 100%; border-collapse: collapse; font-size: 13px; margin: 8px 0 4px; }
+    .righe td { padding: 4px 6px; border-bottom: 1px solid var(--line); }
+    .righe td:last-child { text-align: right; white-space: nowrap; font-weight: 700; }
+    .vic { display: inline-block; background: var(--okbg); color: var(--ok); font-size: 11px; font-weight: 800; border-radius: 10px; padding: 2px 8px; margin-left: 6px; vertical-align: middle; }
+  </style>
+</head>
+<body>
+  <!-- Pagina del cliente (12.10.2026, app-21): i preventivi di materiali edili, noleggio e servizi per la casa
+       dei fornitori AncheCasa della zona, dal link nella mail, dal più vicino. Stesso modello di offerte.html e servizi.html.
+       Il cliente sceglie un preventivo: solo quel fornitore riceve nome, contatti e indirizzo. Ordine e pagamento fuori da AncheCasa. -->
+  <article class="foglio">
+    <header class="testa">
+      <img src="assets/logo/anchecasa-orizzontale-trasparente.png?v=3" alt="AncheCasa">
+      <small id="cat-testa">I tuoi preventivi</small>
+    </header>
+    <div class="corpo" id="corpo"><p class="sotto">Caricamento…</p></div>
+    <footer class="piede">Palumbo Investment S.r.l. · Via Giusti 22, 81057 Teano (CE) · P.IVA 04724830619 · info@anchecasa.it</footer>
+  </article>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+  <script>
+  (function () {
+    var URL = "https://edsvmnxojsmknjuhobqa.supabase.co";
+    var KEY = "sb_publishable_QbYv61SkMkjA9_GGb1hhOA_6v6GEw87";
+    var corpo = document.getElementById("corpo");
+    var token = new URLSearchParams(location.search).get("t") || "";
+    var CAT = {
+      materiali: { nome: "Materiali edili", regola: "Prezzi come indicati dal fornitore. Scegliere un preventivo non è un ordine: l'ordine, la consegna e il pagamento li fai direttamente con il fornitore." },
+      noleggio: { nome: "Noleggio", regola: "Prezzi come indicati dal noleggiatore. Scegliere un preventivo non è un contratto: il contratto di noleggio lo firmi direttamente con il noleggiatore." },
+      casa: { nome: "Servizi per la casa", regola: "Prezzi come indicati dalla ditta. Scegliere un preventivo non è un contratto: i dettagli e il pagamento li concordi direttamente con la ditta." }
+    };
+    var TIPI = { trasloco: "Trasloco", facchinaggio: "Facchinaggio", sgombero: "Sgombero", pulizie: "Pulizie", sanificazione: "Sanificazione", giardinaggio: "Giardinaggio", manutenzione: "Piccola manutenzione" };
+    var VICINO = ["Stesso comune", "Stessa provincia", "In zona"];
+    var esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); };
+    var eur = function (n) { return (Number(n) || 0).toLocaleString("it-IT", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €"; };
+    var data = function (d) { if (!d) return ""; var x = new Date(d); return isNaN(x) ? "" : x.toLocaleDateString("it-IT"); };
+    var righeTxt = function (rr) { return (rr || []).map(function (x) { return (x.qta ? x.qta + " " + (x.um || "") + " " : "") + (x.voce || ""); }).join(" · "); };
+    if (!token || !window.supabase) { corpo.innerHTML = '<div class="vuoto">Link non valido. Apri il link che trovi nella mail di AncheCasa.</div>'; return; }
+    var db = window.supabase.createClient(URL, KEY, { db: { schema: "marketplace" } });
+
+    function carica() {
+      db.rpc("prev_i_miei_preventivi", { p_token: token }).then(function (res) {
+        if (res.error || !res.data) { corpo.innerHTML = '<div class="vuoto">Non troviamo questa richiesta. Controlla il link nella mail.</div>'; return; }
+        disegna(res.data);
+      }, function () { corpo.innerHTML = '<div class="vuoto">Il server non risponde. Riprova tra poco.</div>'; });
+    }
+
+    function disegna(d) {
+      var r = d.richiesta, ps = d.proposte || [];
+      var K = CAT[r.categoria] || CAT.materiali;
+      var tu = r.cliente_tipo === "privato";
+      document.getElementById("cat-testa").innerHTML = "I tuoi preventivi<br>" + esc(K.nome.toLowerCase());
+      var scelta = r.proposta_scelta;
+      var cosa = r.categoria === "casa" ? (TIPI[r.tipo] || r.tipo) : righeTxt(r.righe);
+      var quando = r.categoria === "noleggio" && r.dal ? "dal " + data(r.dal) + (r.al ? " al " + data(r.al) : "") : r.dal ? data(r.dal) : "";
+      var h = '<span class="eti">' + esc(K.nome) + '</span><h1>' + (tu ? "Ciao " : "Buongiorno ") + esc(r.nome) + ', ecco i preventivi</h1>' +
+        '<p class="sotto">' + (tu ? "Li hanno preparati le ditte AncheCasa della tua zona, dalla più vicina. Scegli quello che preferisci: solo quella ditta riceverà nome, contatti e indirizzo." : "Li hanno preparati i fornitori AncheCasa che coprono la zona del cantiere, dal più vicino. Scelga quello che preferisce: solo quel fornitore riceverà nome, contatti e indirizzo.") + '</p>' +
+        '<div class="riassunto"><span><b>Richiesta:</b> ' + esc(cosa) + '</span>' + (r.comune ? '<span><b>Dove:</b> ' + esc(r.comune) + (r.provincia ? " (" + esc(r.provincia) + ")" : "") + '</span>' : '') +
+        (quando ? '<span><b>Quando:</b> ' + esc(quando) + '</span>' : '') + '<span><b>Preventivi:</b> ' + ps.length + '</span></div>';
+      if (scelta) h += '<div class="ok"><b>' + (tu ? "Hai scelto il tuo preventivo." : "Ha scelto il preventivo.") + '</b> Il fornitore ' + (tu ? "ti" : "la") + ' contatterà a breve. Per domande: info@anchecasa.it.</div>';
+      if (!ps.length) h += '<div class="vuoto">I preventivi stanno arrivando. ' + (tu ? "Ti scriviamo" : "Le scriviamo") + ' per mail appena ce n\'è uno.</div>';
+      ps.forEach(function (p) {
+        var mia = scelta === p.id;
+        var righe = (p.righe || []).map(function (x) { var v = (Number(x.qta) || 1) * (Number(x.prezzo) || 0); return '<tr><td>' + esc((x.qta ? x.qta + " " + (x.um || "") + " " : "") + (x.voce || "")) + '</td><td>' + (v ? eur(v) : "") + '</td></tr>'; }).join("");
+        h += '<div class="prop' + (mia ? " scelta" : "") + '">' +
+          '<div class="logo">' + (p.logo ? '<img src="' + esc(p.logo) + '" alt="' + esc(p.azienda) + '">' : esc(p.azienda)) + '</div>' +
+          '<div><h2>' + esc(p.azienda) + '<span class="vic">' + esc(VICINO[p.vicinanza] || "In zona") + '</span></h2>' +
+          '<div class="off">' + esc(p.sede ? "Sede a " + p.sede : "Preventivo " + p.numero) + '</div>' +
+          (righe ? '<table class="righe">' + righe + '</table>' : '') +
+          '<ul>' + (p.consegna ? '<li>' + esc(p.consegna) + '</li>' : '') + '<li>Valido ' + esc(p.valida_giorni || 15) + ' giorni</li></ul>' +
+          (p.nota ? '<div class="nota">«' + esc(p.nota) + '»</div>' : '') + '</div>' +
+          '<div class="prezzo"><b>' + (p.totale != null ? eur(p.totale) : "Su misura") + '</b><small>totale ' + (p.iva_inclusa ? "IVA inclusa" : "IVA esclusa") + '</small>' +
+          (scelta ? (mia ? '<div class="btn" style="background:#1f6e40">Scelto</div>' : '') :
+            '<button class="btn" data-scegli="' + esc(p.id) + '">Scelgo questo</button><div class="conferma" data-conf="' + esc(p.id) + '">Confermi? Solo ' + esc(p.azienda) + ' riceverà nome, contatti e indirizzo. <button class="btn" data-ok="' + esc(p.id) + '">Sì, confermo</button></div>') +
+          '</div></div>';
+      });
+      h += '<p class="regola">' + esc(K.regola) + '</p>';
+      corpo.innerHTML = h;
+      corpo.querySelectorAll("[data-scegli]").forEach(function (b) {
+        b.addEventListener("click", function () {
+          corpo.querySelectorAll(".conferma").forEach(function (c) { c.classList.remove("on"); });
+          corpo.querySelector('[data-conf="' + b.getAttribute("data-scegli") + '"]').classList.add("on");
+        });
+      });
+      corpo.querySelectorAll("[data-ok]").forEach(function (b) {
+        b.addEventListener("click", function () {
+          b.disabled = true;
+          db.rpc("prev_accetta", { p_token: token, p_proposta: b.getAttribute("data-ok") }).then(function (res) {
+            if (res.error) { b.disabled = false; b.insertAdjacentHTML("afterend", "<div>Non riesco a registrare la scelta. Riprova.</div>"); return; }
+            db.functions.invoke("preventivi-avvisa", { body: { evento: "scelta", token: token } }).catch(function () {});
+            carica();
+          });
+        });
+      });
+    }
+    carica();
+  })();
+  </script>
+</body>
+</html>

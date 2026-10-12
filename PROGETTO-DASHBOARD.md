@@ -224,6 +224,19 @@ Sei famiglie: **Energia** (luce e gas; fotovoltaico e pompe di calore come offer
 - **Rete**: il commerciale chiede proposte per un suo cliente (luce e gas, telefono, finanza) da «Offerte per i clienti». Il cliente riceve le proposte per mail e sceglie. Quando il fornitore attiva il contratto, la vendita va al commerciale (app_vendite, anche per luce e gas).
 - Dashboard del fornitore: come luce e gas (Home, Richieste, Proposte, Le mie offerte, I miei clienti, Il mio accordo).
 
+### Materiali edili · Noleggio · Servizi per la casa (decisioni di Nando, 12.10.2026 10:47)
+
+- **Chi chiede**: materiali e noleggio solo le aziende (imprese, artigiani...), il privato no. Servizi per la casa (traslochi, facchinaggio, sgombero, pulizie, giardinaggio): anche il privato. Anche la rete per un suo cliente.
+- **Zona**: la richiesta arriva a chi copre la zona del cantiere, partendo dal più vicino (stesso comune, stessa provincia, poi le province coperte). Ogni fornitore scrive sede e province in «La mia zona».
+- **Prezzi solo nel preventivo**: il listino del fornitore non è pubblico. Il preventivo è riga per riga, con totale, consegna e validità.
+- **Ordine e pagamento fuori** da AncheCasa. Il fornitore segna «consegnato», «noleggio finito» o «lavoro fatto».
+- **Contatti dopo la scelta**: nome, contatti e indirizzo del cliente solo al fornitore scelto.
+- **Niente provvigione**: questi fornitori pagheranno per stare su AncheCasa (quanto e come: da decidere). Nessun accordo da confermare.
+- **Noleggio**: il noleggiatore tiene i suoi mezzi e il calendario; l'impresa vede subito cosa è libero nella zona e nelle date (senza prezzi) e chiede il preventivo.
+- **Servizi per la casa sono fornitori** (non aziende con profilo da artigiano): traslochi, facchinaggio, pulizie, manutenzione e giardinaggio.
+- **Rete**: il commerciale chiede per un cliente; a lavoro chiuso la vendita va a lui.
+- Informatica e promozione: da progettare.
+
 ## Aziende
 
 Da progettare.

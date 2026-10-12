@@ -9,7 +9,7 @@
   const DEMO = /[?&]demo=/.test(location.search);
   const reale = () => !DEMO && !!window.acDb;
 
-  const FAMIGLIA = { azienda_luce_gas: "Energia · luce e gas", azienda_telefonia: "Telefono e internet", azienda_finanza: "Finanza e assicurazioni", azienda_materiali_edili: "Materiali edili", azienda_noleggio_attrezzature: "Noleggio", azienda_fornitori_it: "Informatica e promozione" };
+  const FAMIGLIA = { azienda_luce_gas: "Energia · luce e gas", azienda_telefonia: "Telefono e internet", azienda_finanza: "Finanza e assicurazioni", azienda_traslochi: "Traslochi", azienda_facchinaggio: "Facchinaggio", azienda_pulizie: "Pulizie", azienda_manutenzione_stabili: "Giardinaggio e manutenzione", azienda_materiali_edili: "Materiali edili", azienda_noleggio_attrezzature: "Noleggio", azienda_fornitori_it: "Informatica e promozione" };
   const STATO_R = { aperta: ["sw-in", "Aperta"], scelta: ["sw-ok", "Scelta"], chiusa: ["sw-off", "Contratto attivato"] };
   const eur = (n) => (Number(n) || 0).toLocaleString("it-IT", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
   const dataIt = (iso) => { const d = new Date(iso); return isNaN(d) ? "" : d.toLocaleDateString("it-IT"); };
@@ -29,20 +29,23 @@
   };
 
   function carica() {
-    if (!reale()) return (AC.servizi ? AC.servizi.richiesteAdmin() : Promise.resolve([])).then((sv) => Object.assign(JSON.parse(JSON.stringify(ESEMPIO)), { servizi: sv }));
+    if (!reale()) return Promise.all([AC.servizi ? AC.servizi.richiesteAdmin() : [], AC.preventivi ? AC.preventivi.richiesteAdmin() : []]).then(([sv, pr]) => Object.assign(JSON.parse(JSON.stringify(ESEMPIO)), { servizi: sv, prev: pr }));
     const db = window.acDb;
     // 12.10.2026, app-20: anche le richieste di telefonia e finanza (se app-20 non c'è ancora, la sezione resta vuota).
     const servizi = AC.servizi ? AC.servizi.richiesteAdmin().catch(() => []) : Promise.resolve([]);
+    // 12.10.2026, app-21: richieste di preventivo (materiali, noleggio, casa).
+    const prev = AC.preventivi ? AC.preventivi.richiesteAdmin().catch(() => []) : Promise.resolve([]);
     return Promise.all([
       db.rpc("fornitori_per_admin"),
       db.from("energia_richieste").select("id, creato, fonte, tipo, regione, comune, nome, stato").order("creato", { ascending: false }).limit(60),
       db.from("energia_proposte").select("richiesta_id").not("richiesta_id", "is", null),
-      servizi
-    ]).then(([f, r, p, sv]) => {
+      servizi,
+      prev
+    ]).then(([f, r, p, sv, pr]) => {
       if (f.error) throw f.error;
       const conta = {};
       (p.data || []).forEach((x) => { conta[x.richiesta_id] = (conta[x.richiesta_id] || 0) + 1; });
-      return { fornitori: f.data || [], richieste: (r.data || []).map((x) => Object.assign(x, { n: conta[x.id] || 0 })), servizi: sv || [] };
+      return { fornitori: f.data || [], richieste: (r.data || []).map((x) => Object.assign(x, { n: conta[x.id] || 0 })), servizi: sv || [], prev: pr || [] };
     });
   }
 
@@ -61,7 +64,7 @@
       carica().then((d) => {
         const en = d.fornitori.filter((f) => f.tipo_azienda === "azienda_luce_gas");
         const attivati = d.fornitori.reduce((n, f) => n + (f.attivati || 0), 0);
-        const aperte = d.richieste.filter((r) => r.stato === "aperta").length + (d.servizi || []).filter((r) => r.stato === "aperta").length;
+        const aperte = d.richieste.filter((r) => r.stato === "aperta").length + (d.servizi || []).filter((r) => r.stato === "aperta").length + (d.prev || []).filter((r) => r.stato === "aperta").length;
         el.innerHTML = html`
           ${DEMO ? html`<p class="note">Anteprima: dati di esempio, niente va sul database e nessuna mail parte.</p>` : ""}
           <div class="kpis ra-kpi">
@@ -102,6 +105,14 @@
             <p class="note">Stesso giro: arrivano a tutti i fornitori della categoria, senza nome. Da «Commerciale», la vendita va a chi l'ha fatta quando il contratto si attiva.</p>
             ${(d.servizi || []).length ? html`<table class="mini-table"><thead><tr><th>Quando</th><th>Cliente</th><th>Dove</th><th>Cosa</th><th>Da</th><th>Proposte</th><th>Stato</th></tr></thead>
               <tbody>${d.servizi.map((r) => html`<tr><td>${dataIt(r.creato)}</td><td>${r.nome}${r.cliente_tipo === "impresa" ? " (impresa)" : ""}</td><td>${r.comune || ""}${r.regione ? ", " + r.regione : ""}</td><td>${r.categoria === "telefonia" ? "Telefono" : "Finanza"} · ${AC.servizi ? AC.servizi.nomeTipo(r.categoria, r.tipo) : r.tipo}</td><td>${r.fonte === "rete" ? "Commerciale" : r.fonte === "magazine" ? "Magazine" : "Dashboard"}</td><td>${r.n}</td>
+                <td><span class="sw-stato ${(STATO_R[r.stato] || STATO_R.aperta)[0]}">${(STATO_R[r.stato] || STATO_R.aperta)[1]}</span></td></tr>`)}</tbody></table>`
+              : html`<p class="note">Ancora nessuna richiesta.</p>`}
+          </section>
+          <section class="card iv-card">
+            <h2>Richieste di preventivo: materiali, noleggio, casa</h2>
+            <p class="note">Arrivano ai fornitori che coprono la zona, dal più vicino. Niente provvigione: il lavoro si chiude tra cliente e fornitore.</p>
+            ${(d.prev || []).length ? html`<table class="mini-table"><thead><tr><th>Quando</th><th>Cliente</th><th>Dove</th><th>Cosa</th><th>Da</th><th>Preventivi</th><th>Stato</th></tr></thead>
+              <tbody>${d.prev.map((r) => html`<tr><td>${dataIt(r.creato)}</td><td>${r.nome}${r.cliente_tipo === "impresa" ? " (impresa)" : ""}</td><td>${AC.preventivi.dove(r)}</td><td>${{ materiali: "Materiali", noleggio: "Noleggio", casa: "Casa" }[r.categoria] || r.categoria} · ${AC.preventivi.cosa(r)}</td><td>${r.fonte === "rete" ? "Commerciale" : "Dashboard"}</td><td>${r.n}</td>
                 <td><span class="sw-stato ${(STATO_R[r.stato] || STATO_R.aperta)[0]}">${(STATO_R[r.stato] || STATO_R.aperta)[1]}</span></td></tr>`)}</tbody></table>`
               : html`<p class="note">Ancora nessuna richiesta.</p>`}
           </section>`.s;

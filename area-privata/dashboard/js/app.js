@@ -4,7 +4,7 @@
   const S = AC.store;
   const D = AC.date;
 
-  /* CONGELATO 20.09.2026. Famiglie e pulsanti. Non cambiare FOLD_LAB, UFFICIO, PACKS, packFornitore, navItems, HEADER_OPP. Non aggiungere, togliere o rinominare pieghe o tasti. Eccezione 11.10.2026, su richiesta esplicita di Nando: tasto «Home» (grafici, js/home.js) primo per admin e agenti. Eccezione 11.10.2026 sera: tasti admin Terranova, Gare private e AncheBIM (js/funzioni-interne.js), funzioni interne, non siti a parte. Eccezione 12.10.2026: tasto admin «Software» (js/software-admin.js), secondo dopo Home, con tutti i software per categoria. Eccezione 12.10.2026: tasto admin «Pulsanti per profilo» (js/pulsanti-profili.js); i menu di privato, azienda e agente mostrano solo i pulsanti che l'admin ha scelto lì. Eccezione 12.10.2026: menu admin a categorie (pieghe adm_* in FOLD_LAB). Eccezione 12.10.2026: tasti admin «Rete» e «Inviti» in cima (js/inviti-admin.js); le pagine della rete si aprono da Rete. Eccezione 12.10.2026: menu della rete a categorie per ruolo (vociRete, js/rete-progetto.js). Eccezione 12.10.2026 (app-20, decisioni di Nando): pack «telefonia» e «finanza» per i fornitori, voci «Telefono e internet» e «Mutui, prestiti e polizze» del privato, «Telefono e internet» e «Polizze e finanziamenti» delle imprese (piega az_servizi), «Offerte per i clienti» della rete (js/servizi.js).
+  /* CONGELATO 20.09.2026. Famiglie e pulsanti. Non cambiare FOLD_LAB, UFFICIO, PACKS, packFornitore, navItems, HEADER_OPP. Non aggiungere, togliere o rinominare pieghe o tasti. Eccezione 11.10.2026, su richiesta esplicita di Nando: tasto «Home» (grafici, js/home.js) primo per admin e agenti. Eccezione 11.10.2026 sera: tasti admin Terranova, Gare private e AncheBIM (js/funzioni-interne.js), funzioni interne, non siti a parte. Eccezione 12.10.2026: tasto admin «Software» (js/software-admin.js), secondo dopo Home, con tutti i software per categoria. Eccezione 12.10.2026: tasto admin «Pulsanti per profilo» (js/pulsanti-profili.js); i menu di privato, azienda e agente mostrano solo i pulsanti che l'admin ha scelto lì. Eccezione 12.10.2026: menu admin a categorie (pieghe adm_* in FOLD_LAB). Eccezione 12.10.2026: tasti admin «Rete» e «Inviti» in cima (js/inviti-admin.js); le pagine della rete si aprono da Rete. Eccezione 12.10.2026: menu della rete a categorie per ruolo (vociRete, js/rete-progetto.js). Eccezione 12.10.2026 (app-20, decisioni di Nando): pack «telefonia» e «finanza» per i fornitori, voci «Telefono e internet» e «Mutui, prestiti e polizze» del privato, «Telefono e internet» e «Polizze e finanziamenti» delle imprese (piega az_servizi), «Offerte per i clienti» della rete (js/servizi.js). Eccezione 12.10.2026 (app-21, decisioni di Nando 10:47): pack «materiali», «noleggio», «casa» per i fornitori a preventivo, voci «Preventivo materiali» e «Noleggia mezzi» delle imprese (piega az_cantiere), «Traslochi, pulizie e giardino» del privato (js/preventivi.js).
      ECCEZIONE 22.09.2026, su richiesta esplicita: aggiunta "admin" come quarta famiglia
      (prima era una pagina admin.html a sé, mai approvata graficamente). Non tocca le pieghe
      o i tasti delle tre famiglie originali: admin ha un suo ramo separato ovunque sotto.
@@ -38,6 +38,11 @@
     tel_forn: "Telefono e internet",
     fin_forn: "Finanza e assicurazioni",
     az_servizi: "Risparmia",
+    // Materiali, noleggio, servizi per la casa (12.10.2026, app-21)
+    mat_forn: "Materiali edili",
+    nol_forn: "Noleggio",
+    cas_forn: "Servizi per la casa",
+    az_cantiere: "Per il cantiere",
     // Admin a categorie (12.10.2026, su richiesta di Nando)
     adm_panoramica: "Panoramica",
     adm_iscritti: "Iscritti",
@@ -82,7 +87,10 @@
     fornitore: "commercio",
     energia: "casa",
     telefonia: "casa",
-    finanza: "casa"
+    finanza: "casa",
+    materiali: "commercio",
+    noleggio: "commercio",
+    casa: "casa"
   };
   // Categorie Genera link / profilo → pack menu (i 13 pack restano sotto).
   const TIPO_PACK = {
@@ -102,12 +110,13 @@
     azienda_imprese_edili: "impresa",
     azienda_subappaltatori: "subappaltatore",
     azienda_impiantisti: "impiantista",
-    azienda_materiali_edili: "fornitore",
-    azienda_noleggio_attrezzature: "fornitore",
-    azienda_traslochi: "logistica",
-    azienda_facchinaggio: "logistica",
-    azienda_pulizie: "logistica",
-    azienda_manutenzione_stabili: "condominio",
+    // 12.10.2026, app-21 (decisioni di Nando 10:47): materiali, noleggio e servizi per la casa sono fornitori a preventivo (js/preventivi.js).
+    azienda_materiali_edili: "materiali",
+    azienda_noleggio_attrezzature: "noleggio",
+    azienda_traslochi: "casa",
+    azienda_facchinaggio: "casa",
+    azienda_pulizie: "casa",
+    azienda_manutenzione_stabili: "casa",
     azienda_hotel: "albergo",
     azienda_ristoranti: "albergo",
     azienda_negozi: "negozio",
@@ -282,6 +291,29 @@
       n("fin_clienti", "I miei clienti", "team", "fin_forn"),
       n("fin_accordo", "Il mio accordo", "wallet", "fin_forn")
     ],
+    /* 12.10.2026 (app-21, decisioni di Nando 10:47): fornitori a preventivo con la zona (js/preventivi.js). */
+    materiali: [
+      n("mat_home", "Home", "home", "mat_forn"),
+      n("mat_richieste", "Richieste", "send", "mat_forn"),
+      n("mat_preventivi", "Preventivi", "doc", "mat_forn"),
+      n("mat_ordini", "Ordini", "folder", "mat_forn"),
+      n("mat_zona", "La mia zona", "grid", "mat_forn")
+    ],
+    noleggio: [
+      n("nol_home", "Home", "home", "nol_forn"),
+      n("nol_richieste", "Richieste", "send", "nol_forn"),
+      n("nol_preventivi", "Preventivi", "doc", "nol_forn"),
+      n("nol_ordini", "Noleggi", "calendar", "nol_forn"),
+      n("nol_mezzi", "I miei mezzi", "pulse", "nol_forn"),
+      n("nol_zona", "La mia zona", "grid", "nol_forn")
+    ],
+    casa: [
+      n("cas_home", "Home", "home", "cas_forn"),
+      n("cas_richieste", "Richieste", "send", "cas_forn"),
+      n("cas_preventivi", "Preventivi", "doc", "cas_forn"),
+      n("cas_ordini", "Lavori", "calendar", "cas_forn"),
+      n("cas_zona", "La mia zona", "grid", "cas_forn")
+    ],
     artigiano: withUfficio([
       n("vetrina", "Vetrina", "star", "bottega"),
       n("app", "App di campo", "pulse", "bottega"),
@@ -313,10 +345,15 @@
 
   // 12.10.2026 (app-20, deciso da Nando): le imprese chiedono proposte di telefonia e di polizze/finanziamenti.
   const SENZA_SERVIZI = { energia: 1, telefonia: 1, finanza: 1 };
-  const vociServiziAzienda = (pack) => SENZA_SERVIZI[pack] ? [] : [
+  // 12.10.2026 (app-21): le aziende chiedono preventivi di materiali e noleggio (non i fornitori stessi).
+  const SENZA_CANTIERE = { energia: 1, telefonia: 1, finanza: 1, materiali: 1, noleggio: 1, casa: 1 };
+  const vociServiziAzienda = (pack) => (SENZA_CANTIERE[pack] ? [] : [
+    { id: "az-materiali", label: "Preventivo materiali", icon: "folder", gruppo: "pack", fold: "az_cantiere" },
+    { id: "az-noleggio", label: "Noleggia mezzi", icon: "calendar", gruppo: "pack", fold: "az_cantiere" }
+  ]).concat(SENZA_SERVIZI[pack] ? [] : [
     { id: "az-telefonia", label: "Telefono e internet", icon: "pulse", gruppo: "pack", fold: "az_servizi" },
     { id: "az-finanza", label: "Polizze e finanziamenti", icon: "shield", gruppo: "pack", fold: "az_servizi" }
-  ];
+  ]);
   const PACK_NASCOSTO = { hse: 1, sicurezza_armata: 1, apl: 1, condominio: 1, agenzia: 1, industria: 1, logistica: 1, albergo: 1, negozio: 1 };
 
   /* RETE a categorie (12.10.2026, deciso da Nando, PROGETTO-DASHBOARD.md). Ognuno vede sé stesso e chi ha sotto.
@@ -362,6 +399,8 @@
         c("pv-guasto", "Ho un guasto", "gear", "pv_casa", { cuore: true }),
         c("pv-trova", "Trova artigiano o impresa", "team", "pv_casa"),
         c("pv-ristruttura", "Ristruttura con AncheCasa", "building", "pv_casa"),
+        // 12.10.2026, app-21: traslochi, pulizie e giardino dalle ditte della zona (js/preventivi.js).
+        c("pv-casa", "Traslochi, pulizie e giardino", "home", "pv_casa"),
         c("pv-mio-cantiere", "Il mio cantiere", "home", "pv_casa", { nota: "Solo con un cantiere aperto" }),
         c("pv-annunci", "Bacheca annunci", "grid", "pv_bacheca"),
         c("pubblica", "Pubblica un annuncio", "send", "pv_bacheca"),
@@ -471,7 +510,10 @@
     { k: "azienda:impiantista", nome: "Impiantista", famiglia: "azienda", pack: "impiantista" },
     { k: "azienda:artigiano", nome: "Artigiano", famiglia: "azienda", pack: "artigiano" },
     { k: "azienda:professionista", nome: "Studio tecnico", famiglia: "azienda", pack: "professionista" },
-    { k: "azienda:fornitore", nome: "Fornitore (materiali, noleggio, IT)", famiglia: "azienda", pack: "fornitore" },
+    { k: "azienda:fornitore", nome: "Fornitore informatica e promozione", famiglia: "azienda", pack: "fornitore" },
+    { k: "azienda:materiali", nome: "Materiali edili", famiglia: "azienda", pack: "materiali" },
+    { k: "azienda:noleggio", nome: "Noleggio", famiglia: "azienda", pack: "noleggio" },
+    { k: "azienda:casa", nome: "Servizi per la casa (traslochi, pulizie, giardino)", famiglia: "azienda", pack: "casa" },
     { k: "azienda:energia", nome: "Luce e gas", famiglia: "azienda", pack: "energia" },
     { k: "azienda:telefonia", nome: "Telefono e internet", famiglia: "azienda", pack: "telefonia" },
     { k: "azienda:finanza", nome: "Finanza e assicurazioni", famiglia: "azienda", pack: "finanza" },
@@ -574,6 +616,8 @@
     // 12.10.2026, app-20: anche i fornitori di telefonia e di finanza.
     if (tipo === "azienda" && packKey(S.data.profilo && S.data.profilo.tipoAzienda) === "telefonia") return "tel_home";
     if (tipo === "azienda" && packKey(S.data.profilo && S.data.profilo.tipoAzienda) === "finanza") return "fin_home";
+    // 12.10.2026, app-21: materiali, noleggio, servizi per la casa.
+    { const pk = packKey(S.data.profilo && S.data.profilo.tipoAzienda); const casa = { materiali: "mat_home", noleggio: "nol_home", casa: "cas_home" }; if (tipo === "azienda" && casa[pk]) return casa[pk]; }
     return "bacheca";
   }
   // Anteprima locale (?demo=privato|azienda|agente|admin): niente login.
@@ -818,7 +862,7 @@
     if (!statoPulsante(famiglia, it.id)) return false;
     if (famiglia === "azienda") {
       const pack = packKey(S.data.profilo && S.data.profilo.tipoAzienda);
-      if (PACK_NASCOSTO[pack] && it.gruppo === "pack" && it.fold !== "ufficio" && it.fold !== "az_servizi") return false;
+      if (PACK_NASCOSTO[pack] && it.gruppo === "pack" && it.fold !== "ufficio" && it.fold !== "az_servizi" && it.fold !== "az_cantiere") return false;
     }
     return true;
   }
@@ -960,7 +1004,7 @@
 
     // Telefono (01.10.2026): barra delle sezioni in basso, come un'app. Fino a 5 voci stanno tutte nella barra;
     // altrimenti le prime 4 e «Altro», che apre una scheda con il resto e con le cartelle (Ufficio, Cantiere...).
-    const BREVE = { home: "Home", software: "Software", pulsanti: "Pulsanti", "rete-admin": "Rete", "inviti-admin": "Inviti", "fornitori-admin": "Fornitori", energia_home: "Home", energia_richieste: "Richieste", proposte_energia: "Proposte", offerte_energia: "Offerte", energia_clienti: "Clienti", energia_accordo: "Accordo", tel_home: "Home", tel_richieste: "Richieste", tel_proposte: "Proposte", tel_offerte: "Offerte", tel_clienti: "Clienti", tel_accordo: "Accordo", fin_home: "Home", fin_richieste: "Richieste", fin_proposte: "Proposte", fin_offerte: "Offerte", fin_clienti: "Clienti", fin_accordo: "Accordo", "re-offerte": "Offerte", "re-clienti": "Clienti", "re-vendi": "Vendi", "re-formazione": "Formazione", "sala-demo": "Demo", regole: "Regole", bacheca: "Bacheca", iscritti: "Iscritti", appunti: "Appunti", bandi: "Bandi", terranova: "Terranova", "gare-private": "Gare", anchebim: "BIM", contratti: "Contratti", affida: "Affida", iscrizioni: "Iscrizioni", "richieste-agenti": "Agenti", "proposte-rete": "Segnala", "oggi-rete": "Oggi", strategia: "Strategia", "lavori-rete": "Lavori", "linee-decise": "Linee", "tuo-mese": "Mese", "genera-link": "Link", task: "Task", file: "File", "chat-team": "Chat", "mio-ruolo": "Ruolo", documenti: "Documenti" };
+    const BREVE = { home: "Home", software: "Software", pulsanti: "Pulsanti", "rete-admin": "Rete", "inviti-admin": "Inviti", "fornitori-admin": "Fornitori", energia_home: "Home", energia_richieste: "Richieste", proposte_energia: "Proposte", offerte_energia: "Offerte", energia_clienti: "Clienti", energia_accordo: "Accordo", tel_home: "Home", tel_richieste: "Richieste", tel_proposte: "Proposte", tel_offerte: "Offerte", tel_clienti: "Clienti", tel_accordo: "Accordo", fin_home: "Home", fin_richieste: "Richieste", fin_proposte: "Proposte", fin_offerte: "Offerte", fin_clienti: "Clienti", fin_accordo: "Accordo", "re-offerte": "Offerte", mat_home: "Home", mat_richieste: "Richieste", mat_preventivi: "Preventivi", mat_ordini: "Ordini", mat_zona: "Zona", nol_home: "Home", nol_richieste: "Richieste", nol_preventivi: "Preventivi", nol_ordini: "Noleggi", nol_mezzi: "Mezzi", nol_zona: "Zona", cas_home: "Home", cas_richieste: "Richieste", cas_preventivi: "Preventivi", cas_ordini: "Lavori", cas_zona: "Zona", "az-materiali": "Materiali", "az-noleggio": "Noleggio", "pv-casa": "Casa", "re-clienti": "Clienti", "re-vendi": "Vendi", "re-formazione": "Formazione", "sala-demo": "Demo", regole: "Regole", bacheca: "Bacheca", iscritti: "Iscritti", appunti: "Appunti", bandi: "Bandi", terranova: "Terranova", "gare-private": "Gare", anchebim: "BIM", contratti: "Contratti", affida: "Affida", iscrizioni: "Iscrizioni", "richieste-agenti": "Agenti", "proposte-rete": "Segnala", "oggi-rete": "Oggi", strategia: "Strategia", "lavori-rete": "Lavori", "linee-decise": "Linee", "tuo-mese": "Mese", "genera-link": "Link", task: "Task", file: "File", "chat-team": "Chat", "mio-ruolo": "Ruolo", documenti: "Documenti" };
     const conAltro = folds.length > 0 || top.length > 5;
     const tabs = conAltro ? top.slice(0, 4) : top;
     const extra = conAltro ? top.slice(4) : [];

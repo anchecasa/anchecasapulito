@@ -16,7 +16,11 @@
     { nome: "Artigiano", desc: "Interventi, SuperMastro, lavoro fatto.", ico: "gear" },
     { nome: "Subappaltatore e impiantista", desc: "Lavori per i general contractor, certificazioni.", ico: "gear" },
     { nome: "Studio tecnico", desc: "Pratiche, gare, presenze di cantiere.", ico: "doc" },
-    { nome: "Fornitore", desc: "Materiali, noleggio, IT.", ico: "folder" },
+    { nome: "Fornitore", desc: "Informatica e promozione.", ico: "folder" },
+    // 12.10.2026, app-21: fornitori a preventivo con la zona.
+    { nome: "Materiali edili", desc: "Richieste della zona, preventivo riga per riga, ordini, la mia zona.", ico: "folder", demo: "azienda", tipo: "azienda_materiali_edili", pagina: "mat_home", pronta: true },
+    { nome: "Noleggio", desc: "Mezzi e calendario, richieste della zona, preventivi, noleggi.", ico: "calendar", demo: "azienda", tipo: "azienda_noleggio_attrezzature", pagina: "nol_home", pronta: true },
+    { nome: "Servizi per la casa", desc: "Traslochi, facchinaggio, pulizie, giardino: richieste dei privati della zona.", ico: "home", demo: "azienda", tipo: "azienda_traslochi", pagina: "cas_home", pronta: true },
     { nome: "Luce e gas", desc: "Richieste dai privati, proposte su carta AncheCasa, clienti, accordo.", ico: "pulse", demo: "azienda", tipo: "azienda_luce_gas", pagina: "energia_home", regole: "regole/energia.html", pronta: true },
     // 12.10.2026, app-20: stesso giro di luce e gas.
     { nome: "Telefono e internet", desc: "Richieste di privati e imprese, offerte visibili, proposte su carta AncheCasa, accordo.", ico: "pulse", demo: "azienda", tipo: "azienda_telefonia", pagina: "tel_home", pronta: true },

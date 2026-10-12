@@ -706,12 +706,24 @@
   const RE_KEY = "ac-re-offerte-scheda";
   V["re-offerte"] = {
     title: "Offerte per i clienti",
-    sub: "Luce e gas, telefono e internet, mutui e polizze: chiedi le proposte per un tuo cliente. Se firma, la vendita è tua.",
+    sub: "Luce e gas, telefono, mutui e polizze, materiali, noleggio, traslochi: chiedi le proposte per un tuo cliente. Se firma, la vendita è tua.",
     render(el) {
       let scheda = "energia";
       try { scheda = localStorage.getItem(RE_KEY) || "energia"; } catch (e) {}
-      const SCHEDE = [["energia", "Luce e gas"], ["telefonia", "Telefono e internet"], ["finanza", "Mutui e polizze"]];
+      // 12.10.2026, app-21: anche materiali, noleggio e servizi per la casa (js/preventivi.js).
+      const SCHEDE = [["energia", "Luce e gas"], ["telefonia", "Telefono e internet"], ["finanza", "Mutui e polizze"]]
+        .concat(AC.preventivi ? [["materiali", "Materiali edili"], ["noleggio", "Noleggio"], ["casa", "Traslochi e pulizie"]] : []);
       const disegna = () => {
+        if (AC.preventivi && AC.preventivi.CAT[scheda]) {
+          el.innerHTML = html`<div class="sv-schede">${SCHEDE.map((s) => html`<button type="button" class="${scheda === s[0] ? "btn-in" : "btn-ghost"}" data-scheda="${s[0]}">${s[1]}</button>`)}</div><div id="re-prev"></div>`.s;
+          el.querySelectorAll("[data-scheda]").forEach((b) => b.addEventListener("click", () => {
+            scheda = b.getAttribute("data-scheda");
+            try { localStorage.setItem(RE_KEY, scheda); } catch (e) {}
+            disegna();
+          }));
+          AC.preventivi.schedaRete(el.querySelector("#re-prev"), scheda);
+          return;
+        }
         el.innerHTML = html`
           <div class="sv-schede">${SCHEDE.map((s) => html`<button type="button" class="${scheda === s[0] ? "btn-in" : "btn-ghost"}" data-scheda="${s[0]}">${s[1]}</button>`)}</div>
           <div class="pv-due">

@@ -126,3 +126,48 @@ export function mailGiro(evento: "richiesta-cliente" | "richiesta-fornitore" | "
   const t = T[evento];
   return { oggetto: t.oggetto, html: mailMarchio(t) };
 }
+
+// Le mail dei preventivi con la zona (materiali, noleggio, servizi per la casa, app-21). tu = cliente privato, altrimenti Lei.
+export function mailPreventivi(evento: "richiesta-cliente" | "richiesta-fornitore" | "proposta" | "scelta", d: {
+  categoria: string; link: string; tu?: boolean; nome?: string; dove?: string; cosa?: string; chi?: string; numero?: string; vicino?: string; daRete?: boolean;
+}): { oggetto: string; html: string } {
+  const cat = esc(d.categoria), catMin = esc(d.categoria.toLowerCase());
+  const nome = esc(String(d.nome || "").split(" ")[0]);
+  const tu = !!d.tu;
+  const T: Record<string, Avviso> = {
+    "richiesta-cliente": {
+      oggetto: "AncheCasa · Richiesta di preventivo: " + d.categoria.toLowerCase(), anteprima: "I fornitori della zona stanno preparando i preventivi.",
+      etichetta: cat, titolo: tu ? "Abbiamo ricevuto la tua richiesta." : "Abbiamo ricevuto la sua richiesta.",
+      intro: (nome ? (tu ? "Ciao " : "Buongiorno ") + nome + ", " : "") + (d.daRete ? (tu ? "il tuo consulente AncheCasa ha chiesto per te" : "il suo consulente AncheCasa ha chiesto per lei") + " i preventivi dei fornitori della zona." : "i fornitori AncheCasa che coprono la zona" + (d.dove ? " di " + esc(d.dove) : "") + " stanno preparando i preventivi, partendo dal più vicino."),
+      punti: [[tu ? "Li confronti nella stessa pagina" : "Li confronta nella stessa pagina", "Prezzo riga per riga, consegna, validità e distanza del fornitore."], [tu ? "I tuoi dati restano tuoi" : "I suoi dati restano suoi", "Nome, contatti e indirizzo li riceve solo il fornitore " + (tu ? "che scegli." : "che sceglie.")]],
+      bottone: "Vedi i preventivi", link: d.link, chiusura: tu ? "Ti scriviamo di nuovo appena arriva un preventivo." : "Le scriviamo di nuovo appena arriva un preventivo.",
+      passiTitolo: "Come funziona", passi: ["Arrivano i preventivi", tu ? "Li confronti" : "Li confronta", tu ? "Scegli tu" : "Sceglie lei"],
+      perche: (tu ? "Ricevi" : "Riceve") + " questa mail per una richiesta di preventivo su AncheCasa (" + catMin + ").", tu, foto: tu ? "privato" : "azienda" },
+    "richiesta-fornitore": {
+      oggetto: "AncheCasa · Richiesta di preventivo nella sua zona", anteprima: "Un cliente della sua zona chiede un preventivo.",
+      etichetta: d.vicino ? esc(d.vicino) : "Nella sua zona", titolo: "Un cliente chiede un preventivo.",
+      intro: "Richiesta" + (d.dove ? " a <strong>" + esc(d.dove) + "</strong>" : "") + (d.cosa ? ": " + esc(d.cosa) : "") + ". Nella sua dashboard trova tutte le righe.",
+      punti: [["Il cliente resta anonimo", "Nome, contatti e indirizzo li riceve solo se sceglie il suo preventivo."], ["Arriva ai fornitori che coprono la zona", "Il cliente vede anche quanto è vicino ogni fornitore."]],
+      bottone: "Apra la richiesta", link: d.link, chiusura: "Ordine e pagamento li fate direttamente, fuori da AncheCasa.",
+      passiTitolo: "Come funziona", passi: ["Apra la richiesta", "Mandi il preventivo", "Il cliente sceglie"],
+      perche: "Riceve questa mail perché è un fornitore AncheCasa di " + catMin + " e copre questa zona.", tu: false, foto: "azienda" },
+    proposta: {
+      oggetto: "AncheCasa · Nuovo preventivo: " + d.categoria.toLowerCase(), anteprima: "È arrivato un nuovo preventivo da confrontare.",
+      etichetta: cat, titolo: tu ? "Hai un nuovo preventivo." : "Ha un nuovo preventivo.",
+      intro: (nome ? (tu ? "Ciao " : "Buongiorno ") + nome + ", " : "") + "<strong>" + esc(d.chi || "un fornitore AncheCasa") + "</strong> " + (tu ? "ti" : "le") + " ha mandato il suo preventivo.",
+      punti: [[tu ? "Confrontalo con gli altri" : "Lo confronti con gli altri", "Li trova tutti nella stessa pagina, dal fornitore più vicino."]],
+      bottone: "Confronta i preventivi", link: d.link, chiusura: "Scegliere un preventivo non è un ordine: l'ordine si fa direttamente con il fornitore.",
+      passiTitolo: "Come funziona", passi: [tu ? "Apri i preventivi" : "Apra i preventivi", tu ? "Scegli" : "Scelga", "Il fornitore " + (tu ? "ti" : "la") + " contatta"],
+      perche: (tu ? "Ricevi" : "Riceve") + " questa mail per una richiesta di preventivo su AncheCasa (" + catMin + ").", tu, foto: tu ? "privato" : "azienda" },
+    scelta: {
+      oggetto: "AncheCasa · Il cliente ha scelto il suo preventivo", anteprima: "Nella sua dashboard trova nome, contatti e indirizzo.",
+      etichetta: "Preventivo scelto", titolo: "Il cliente ha scelto lei.",
+      intro: "Il cliente ha accettato il preventivo <strong>" + esc(d.numero || "") + "</strong>. Nella sua dashboard trova nome, contatti e indirizzo.",
+      punti: [["Lo contatti presto", "Confermate l'ordine e la consegna direttamente. A lavoro fatto lo segni chiuso."]],
+      bottone: "Apra la dashboard", link: d.link, chiusura: "Ordine e pagamento sono tra lei e il cliente.",
+      passiTitolo: "Da qui", passi: ["Contatti il cliente", "Confermate l'ordine", "Lo segni chiuso"],
+      perche: "Riceve questa mail perché un cliente AncheCasa ha scelto il suo preventivo.", tu: false, foto: "azienda" }
+  };
+  const t = T[evento];
+  return { oggetto: t.oggetto, html: mailMarchio(t) };
+}

@@ -29,10 +29,28 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 12.10.2026 11:05 · Claude — Materiali edili, Noleggio, Servizi per la casa: preventivi con la zona (NON pubblicato, SQL NON eseguito)
+- Decisioni di Nando delle 10:47 in `PROGETTO-DASHBOARD.md`. Tabelle e pagine nuove; luce e gas, telefonia e finanza non cambiano (solo la pagina «Offerte per i clienti» della rete ha tre schede in più).
+- `app-anchecasa/sql/app-21-fornitori-preventivi-zona.sql` (da eseguire solo con l'ok di Nando): `fornitori_zona`, `prev_richieste`, `prev_proposte`, `noleggio_mezzi`, `noleggio_occupato`; funzioni `prev_*` e `noleggio_liberi`; `fornitori_per_admin` con le nuove categorie. Sintassi controllata con pglast.
+- `app-anchecasa/supabase/functions/preventivi-avvisa/index.ts` (nuova, verify_jwt spento) e `_shared/mail-marchio.ts` (`mailPreventivi`, stesso look della mail d'invito, tu per il privato, Lei per le aziende).
+- `area-privata/preventivi.html`: pagina del cliente dal link nella mail, preventivi dal più vicino.
+- `area-privata/dashboard/js/preventivi.js` (nuovo): fornitore `mat_*`, `nol_*` (con «I miei mezzi»), `cas_*`; impresa `az-materiali`, `az-noleggio` (piega «Per il cantiere»); privato `pv-casa`; rete: schede in `re-offerte` (`servizi.js` v=2).
+- `app.js` v=25: tipi `azienda_materiali_edili` → materiali, `azienda_noleggio_attrezzature` → noleggio, `azienda_traslochi`, `_facchinaggio`, `_pulizie`, `_manutenzione_stabili` → casa; profili in Pulsanti per profilo; prima pagina. `fornitori-admin.js` v=3, `sala-demo.js` v=6, `pulsanti-profili.js` v=7, `energia.css` v=4.
+- Prova in anteprima (Playwright): i tre fornitori (richiesta, preventivo, ordini, zona, mezzi), impresa (materiali, noleggio con «cosa è libero»), privato, rete, admin. Nessun errore nuovo.
+- Sito, magazine, app, Sicura e database non toccati.
+
+### 12.10.2026 10:50 · Cursor — energia-avvisa e servizi-avvisa ripubblicate; controllo mail di accesso e invito
+- Ok di Nando del 12.10.2026. Ripubblicate `energia-avvisa` (versione 4) e `servizi-avvisa` (versione 2), verify_jwt spento, con `_shared/mail-marchio.ts`. Le altre funzioni non sono state ripubblicate. Il database non è stato toccato.
+- Git push sul ramo main: `b98bb7f..d06a837`.
+- Solo lettura, niente modifiche. Modelli in Authentication → Email Templates: «Confirm signup» ha oggetto «Conferma il tuo accesso — SuperMastro». «Reset password» ha oggetto «Reset your password» (l'inglese di base). Il corpo di questi due modelli, e quindi il logo dentro il modello, non esce dal config che la CLI sa leggere. Il gancio «Send email» è acceso e punta a `auth-email-hook`: le mail che partono sono quelle della funzione, AncheCasa. Conferma: oggetto «Conferma il tuo Profilo AncheCasa», logo `logo-anchecasa-email.png`. Reset: oggetto «Reimposta la password AncheCasa», stesso logo. Il nome del mittente è «AncheCasa Registrazioni».
+- `invia-invito-marketplace` online (versione 21, verify_jwt acceso) non è il file `mail/invito/funzione-caricata-invia-invito-marketplace.ts`. Online è la copia del 06.10.2026: AncheCasa, «Sei invitato su AncheCasa», logo `anchecasa.it/assets/logo/anchecasa-orizzontale-trasparente.png`. Il file in cartella è la mail del 10.10.2026, con logo, curva e dati Palumbo Investment. Nessuna delle due è SuperMastro. La funzione online non è stata ripubblicata.
+- Sito, magazine, area privata, app e Sicura non toccati.
+- File: `CLAUDE.md`.
+
 ### 12.10.2026 10:45 · Claude — Mail di luce e gas, telefono e finanza con il look della mail d'invito (NON pubblicato)
 - Nando: tutte le mail e i moduli di accesso con lo stesso look. Le mail di `energia-avvisa` e `servizi-avvisa` avevano un look semplificato (logo, filo, pulsante, piede blu): ora usano la stessa impaginazione della mail d'invito approvata (`mail/invito/mail-invito.js`, `impagina`): logo e anchecasa.it, filo arancio, foto, etichetta, spunte, pulsante, riquadro blu con 3 passi, curva del marchio, piede blu con logo bianco.
 - NUOVO `app-anchecasa/supabase/functions/_shared/mail-marchio.ts` (`mailMarchio`, `mailGiro`): le cinque mail del giro fornitori (richiesta al cliente, richiesta al fornitore, proposta, scelta, accordo). `energia-avvisa/index.ts` e `servizi-avvisa/index.ts` riscritti per usarlo; la logica e i link non cambiano. Controllati con esbuild; mail di prova disegnata (immagini da https://anchecasa.it/assets/mail/).
-- Da fare con l'ok di Nando: ripubblicare `energia-avvisa` e `servizi-avvisa` (verify_jwt spento), insieme alla cartella `_shared`.
+- Fatto alle 10:50, con l'ok di Nando: `energia-avvisa` e `servizi-avvisa` sono online con `_shared`, verify_jwt spento.
 - Sito, magazine, app, Sicura e database non toccati.
 
 ### 12.10.2026 10:32 · Cursor — ricontrollo app-20, ok delle 10:26, registro in commit
