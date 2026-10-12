@@ -29,6 +29,12 @@ Ogni modifica a questo progetto, fatta da Claude, da Cursor o da una persona, va
 
 ## Registro delle modifiche
 
+### 12.10.2026 11:40 · Claude — Mail di iscrizione e di password con il look dell'invito (NON pubblicato)
+- Nando: tutte le mail con lo stesso look. Le mail di Supabase Auth le manda `auth-email-hook` (scaricata da Cursor alle 11:20): avevano il layout vecchio (blu chiaro e giallo, logo al centro).
+- `app-anchecasa/supabase/functions/auth-email-hook/index.ts`: «signup» e «recovery» usano ora le mail approvate di `mail/invito/mail-invito.js` (copiata in `_shared/mail-invito.js`): `MailInvito.iscrizione(famiglia, {link, nome})` per privato, azienda, agente (richiesta di collaborazione), fornitore; `MailInvito.avviso("password")` per la password. Agente invitato (metadato `invito`): mail «Benvenuto nella rete» con `_shared/mail-marchio.ts`. Gli altri tipi (invite, magiclink, email_change, reauthentication) restano come prima. Firma del webhook, mittente e link non cambiano.
+- Controllato con esbuild; mail disegnate e guardate (iscrizione privato e azienda, password).
+- Da fare con l'ok di Nando: ripubblicare `auth-email-hook` (verify_jwt spento, come ora), con la cartella `_shared`.
+
 ### 12.10.2026 11:30 · Cursor — invito ripubblicato con il link di entra; copia di auth-email-hook nel commit
 - Ok di Nando del 12.10.2026, ore 11:26, per il commit `53e5933`. Ripubblicata `invia-invito-marketplace` dal file `mail/invito/funzione-caricata-invia-invito-marketplace.ts` (versione 23). verify_jwt resta acceso. La funzione online ha `https://entra.anchecasa.it/benvenuto.html`. `auth-email-hook` non è stata ripubblicata: resta versione 169.
 - Prova del pulsante, senza scrivere sul database e senza mandare una mail: l'indirizzo del pulsante è `https://entra.anchecasa.it/benvenuto.html?invito=…`. Aperto `https://entra.anchecasa.it/benvenuto.html?invito=prova-entra-1210`: titolo «Benvenuto · AncheCasa», la pagina resta su entra. Con un token che non esiste compare «Link non valido».

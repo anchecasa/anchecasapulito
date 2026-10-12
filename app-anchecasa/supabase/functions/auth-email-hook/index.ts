@@ -7,6 +7,18 @@ import { MagicLinkEmail } from '../_shared/email-templates/magic-link.tsx'
 import { RecoveryEmail } from '../_shared/email-templates/recovery.tsx'
 import { EmailChangeEmail } from '../_shared/email-templates/email-change.tsx'
 import { ReauthenticationEmail } from '../_shared/email-templates/reauthentication.tsx'
+// 12.10.2026: iscrizione e password con il look della mail d'invito approvata da Nando (mail/invito/mail-invito.js,
+// copiata in ../_shared/mail-invito.js). La copia definisce globalThis.MailInvito.
+import '../_shared/mail-invito.js'
+import { mailMarchio } from '../_shared/mail-marchio.ts'
+
+type Mail = { oggetto: string; html: string }
+// deno-lint-ignore no-explicit-any
+const MailInvito = (globalThis as any).MailInvito as {
+  iscrizione: (famiglia: string, d: { link: string; nome?: string }) => Mail
+  avviso: (tipo: string, d: { link: string; famiglia?: string; nome?: string }) => Mail
+}
+const FAMIGLIE = ['privato', 'azienda', 'agente', 'fornitore']
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -45,6 +57,40 @@ function getActionLink(payload: AuthEmailPayload, supabaseUrl: string): string {
   url.searchParams.set('type', String(type))
   url.searchParams.set('redirect_to', String(redirectTo))
   return url.toString()
+}
+
+// Iscrizione e password: le mail del marchio (stesso look dell'invito). Torna null per gli altri tipi.
+function mailDelMarchio(payload: AuthEmailPayload, actionLink: string): { subject: string; html: string; text: string } | null {
+  const emailData = payload.email_data || {}
+  const actionType = String(emailData.email_action_type || payload.type || 'signup')
+  const meta = payload.user?.user_metadata || {}
+  const famiglia = FAMIGLIE.includes(String(meta.famiglia)) ? String(meta.famiglia) : 'privato'
+  const nome = String(meta.nome || '').trim().split(' ')[0]
+  let m: Mail | null = null
+  if (actionType === 'signup') {
+    if (famiglia === 'agente' && meta.invito) {
+      // Agente invitato da Nando: non è una richiesta da valutare, entra subito nella rete.
+      m = {
+        oggetto: nome ? nome + ', benvenuto nella rete AncheCasa' : 'Benvenuto nella rete AncheCasa',
+        html: mailMarchio({
+          oggetto: 'Benvenuto nella rete AncheCasa', anteprima: 'Conferma la mail ed entri nel tuo pannello da agente.',
+          etichetta: 'Rete AncheCasa', titolo: nome ? 'Benvenuto nella rete, ' + nome + '.' : 'Benvenuto nella rete AncheCasa.',
+          intro: 'Il tuo profilo da agente è pronto. Conferma la mail con il pulsante qui sotto ed <strong>entri subito</strong> nel tuo pannello.',
+          punti: [['La tua squadra e i tuoi clienti', 'Nel pannello trovi i clienti, la squadra e i tuoi numeri.'], ['La formazione', 'Le regole e i documenti per partire bene.']] as [string, string][],
+          bottone: 'Conferma ed entra', link: actionLink, chiusura: 'Il link è personale e vale poco tempo.',
+          passiTitolo: 'Come si parte', passi: ['Conferma la mail', 'Entra nel pannello', 'Leggi la formazione'] as [string, string, string],
+          perche: 'Ricevi questa mail perché sei stato invitato nella rete AncheCasa.', tu: true, foto: 'agente' as const,
+        }),
+      }
+    } else {
+      m = MailInvito.iscrizione(famiglia, { link: actionLink, nome })
+    }
+  } else if (actionType === 'recovery') {
+    m = MailInvito.avviso('password', { link: actionLink, famiglia })
+  }
+  if (!m) return null
+  const text = m.oggetto + '\n\nApri questo link: ' + actionLink + '\n\nIl team AncheCasa · info@anchecasa.it'
+  return { subject: m.oggetto, html: m.html, text }
 }
 
 function resolveTemplate(payload: AuthEmailPayload, actionLink: string, recipient: string) {
@@ -165,9 +211,16 @@ Deno.serve(async (req) => {
   }
 
   const actionLink = getActionLink(payload, supabaseUrl)
-  const { subject, element } = resolveTemplate(payload, actionLink, recipient)
-  const html = await renderAsync(element)
-  const text = await renderAsync(element, { plainText: true })
+  let subject: string, html: string, text: string
+  const marchio = mailDelMarchio(payload, actionLink)
+  if (marchio) {
+    ({ subject, html, text } = marchio)
+  } else {
+    const t = resolveTemplate(payload, actionLink, recipient)
+    subject = t.subject
+    html = await renderAsync(t.element)
+    text = await renderAsync(t.element, { plainText: true })
+  }
 
   const res = await fetch('https://api.resend.com/emails', {
     method: 'POST',
