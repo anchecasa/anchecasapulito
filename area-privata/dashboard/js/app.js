@@ -4,7 +4,7 @@
   const S = AC.store;
   const D = AC.date;
 
-  /* CONGELATO 20.09.2026. Famiglie e pulsanti. Non cambiare FOLD_LAB, UFFICIO, PACKS, packFornitore, navItems, HEADER_OPP. Non aggiungere, togliere o rinominare pieghe o tasti. Eccezione 11.10.2026, su richiesta esplicita di Nando: tasto «Home» (grafici, js/home.js) primo per admin e agenti. Eccezione 11.10.2026 sera: tasti admin Terranova, Gare private e AncheBIM (js/funzioni-interne.js), funzioni interne, non siti a parte. Eccezione 12.10.2026: tasto admin «Software» (js/software-admin.js), secondo dopo Home, con tutti i software per categoria. Eccezione 12.10.2026: tasto admin «Pulsanti per profilo» (js/pulsanti-profili.js); i menu di privato, azienda e agente mostrano solo i pulsanti che l'admin ha scelto lì. Eccezione 12.10.2026: menu admin a categorie (pieghe adm_* in FOLD_LAB). Eccezione 12.10.2026: tasti admin «Rete» e «Inviti» in cima (js/inviti-admin.js); le pagine della rete si aprono da Rete. Eccezione 12.10.2026: menu della rete a categorie per ruolo (vociRete, js/rete-progetto.js). Eccezione 12.10.2026 (app-20, decisioni di Nando): pack «telefonia» e «finanza» per i fornitori, voci «Telefono e internet» e «Mutui, prestiti e polizze» del privato, «Telefono e internet» e «Polizze e finanziamenti» delle imprese (piega az_servizi), «Offerte per i clienti» della rete (js/servizi.js). Eccezione 12.10.2026 (app-21, decisioni di Nando 10:47): pack «materiali», «noleggio», «casa» per i fornitori a preventivo, voci «Preventivo materiali» e «Noleggia mezzi» delle imprese (piega az_cantiere), «Traslochi, pulizie e giardino» del privato (js/preventivi.js). Eccezione 12.10.2026 (app-23, decisioni di Nando 12:11 e 12:20): pack «artigiano» rifatto (art_*), «Documenti e abbonamento» per tutte le aziende (piega az_account), tasto admin «Aziende» (js/artigiani.js). Eccezione 12.10.2026 (app-24, decisioni di Nando): impresa, subappaltatore e impiantista con «Lavori AncheCasa» e «Lavori della zona» in cima (imp_*, lav_*), privato «Piccoli lavori con le imprese», rete «Segnala una ristrutturazione» e «Sopralluoghi assegnati», tasto admin «Ristrutturazioni» (js/imprese.js). Eccezione 12.10.2026 (app-25, decisioni di Nando 13:24-13:42): piega «Cantieri e richieste» per tutte le aziende tranne luce e gas, telefonia e finanza (cnt_*), «Subappalti in zona» tolto, tasti admin «Cantieri AncheCasa» e «Voti delle aziende» (js/cantieri.js). Eccezione 12.10.2026 (app-27, Nando 15:10): Cerca gare, Le mie gare, Predict e AncheBIM per impresa, subappaltatore, impiantista e studio tecnico; tasto admin «Gare»; Gare private tolte dal menu (js/gare.js).
+  /* CONGELATO 20.09.2026. Famiglie e pulsanti. Non cambiare FOLD_LAB, UFFICIO, PACKS, packFornitore, navItems, HEADER_OPP. Non aggiungere, togliere o rinominare pieghe o tasti. Eccezione 11.10.2026, su richiesta esplicita di Nando: tasto «Home» (grafici, js/home.js) primo per admin e agenti. Eccezione 11.10.2026 sera: tasti admin Terranova, Gare private e AncheBIM (js/funzioni-interne.js), funzioni interne, non siti a parte. Eccezione 12.10.2026: tasto admin «Software» (js/software-admin.js), secondo dopo Home, con tutti i software per categoria. Eccezione 12.10.2026: tasto admin «Pulsanti per profilo» (js/pulsanti-profili.js); i menu di privato, azienda e agente mostrano solo i pulsanti che l'admin ha scelto lì. Eccezione 12.10.2026: menu admin a categorie (pieghe adm_* in FOLD_LAB). Eccezione 12.10.2026: tasti admin «Rete» e «Inviti» in cima (js/inviti-admin.js); le pagine della rete si aprono da Rete. Eccezione 12.10.2026: menu della rete a categorie per ruolo (vociRete, js/rete-progetto.js). Eccezione 12.10.2026 (app-20, decisioni di Nando): pack «telefonia» e «finanza» per i fornitori, voci «Telefono e internet» e «Mutui, prestiti e polizze» del privato, «Telefono e internet» e «Polizze e finanziamenti» delle imprese (piega az_servizi), «Offerte per i clienti» della rete (js/servizi.js). Eccezione 12.10.2026 (app-21, decisioni di Nando 10:47): pack «materiali», «noleggio», «casa» per i fornitori a preventivo, voci «Preventivo materiali» e «Noleggia mezzi» delle imprese (piega az_cantiere), «Traslochi, pulizie e giardino» del privato (js/preventivi.js). Eccezione 12.10.2026 (app-23, decisioni di Nando 12:11 e 12:20): pack «artigiano» rifatto (art_*), «Documenti e abbonamento» per tutte le aziende (piega az_account), tasto admin «Aziende» (js/artigiani.js). Eccezione 12.10.2026 (app-24, decisioni di Nando): impresa, subappaltatore e impiantista con «Lavori AncheCasa» e «Lavori della zona» in cima (imp_*, lav_*), privato «Piccoli lavori con le imprese», rete «Segnala una ristrutturazione» e «Sopralluoghi assegnati», tasto admin «Ristrutturazioni» (js/imprese.js). Eccezione 12.10.2026 (app-25, decisioni di Nando 13:24-13:42): piega «Cantieri e richieste» per tutte le aziende tranne luce e gas, telefonia e finanza (cnt_*), «Subappalti in zona» tolto, tasti admin «Cantieri AncheCasa» e «Voti delle aziende» (js/cantieri.js). Eccezione 12.10.2026 (app-27, Nando 15:10): Cerca gare, Le mie gare, Predict e AncheBIM per impresa, subappaltatore, impiantista e studio tecnico; tasto admin «Gare»; Gare private tolte dal menu (js/gare.js). Eccezione 13.10.2026 (Nando, modello affiliati): privato «Trova artigiano o impresa» diventa «Pronto intervento · artigiano» e «Piccoli lavori con le imprese» esce dal menu; imprese «Lavori AncheCasa (subappalto)» e «Piccoli lavori» fuori da «Lavori della zona». Agli artigiani solo i pronti interventi, le ristrutturazioni solo AncheCasa con le imprese affiliate.
      ECCEZIONE 22.09.2026, su richiesta esplicita: aggiunta "admin" come quarta famiglia
      (prima era una pagina admin.html a sé, mai approvata graficamente). Non tocca le pieghe
      o i tasti delle tre famiglie originali: admin ha un suo ramo separato ovunque sotto.
@@ -192,9 +192,9 @@
      e i piccoli lavori dei privati della zona; i subappalti tra aziende verificate (js/imprese.js, js/preventivi.js). */
   const vociImpresaAC = () => [
     n("imp_home", "Home", "home", "imp_ac"),
-    n("imp_lavori", "Lavori AncheCasa", "building", "imp_ac"),
+    n("imp_lavori", "Lavori AncheCasa (subappalto)", "building", "imp_ac"),
     n("imp_cantieri", "Cantieri AncheCasa", "calendar", "imp_ac"),
-    n("lav_richieste", "Piccoli lavori", "send", "imp_zona"),
+    // 13.10.2026: «Piccoli lavori» dei privati tolto (modello affiliati).
     n("lav_preventivi", "I miei preventivi", "doc", "imp_zona"),
     n("lav_ordini", "Lavori presi", "folder", "imp_zona"),
     n("lav_zona", "La mia zona", "grid", "imp_zona")
@@ -446,9 +446,9 @@
       const c = (id, label, iconName, fold, extra) => Object.assign({ id: id, label: label, icon: iconName, gruppo: "pack", fold: fold }, extra || {});
       return [
         c("pv-guasto", "Ho un guasto", "gear", "pv_casa", { cuore: true }),
-        c("pv-trova", "Trova artigiano o impresa", "team", "pv_casa"),
+        c("pv-trova", "Pronto intervento · artigiano", "team", "pv_casa"),
         // 12.10.2026, app-24: piccoli lavori alle imprese della zona (js/preventivi.js).
-        c("pv-lavori", "Piccoli lavori con le imprese", "building", "pv_casa"),
+        // 13.10.2026: tolto «Piccoli lavori con le imprese» (modello affiliati: i lavori vanno a «Ristruttura con AncheCasa»).
         c("pv-ristruttura", "Ristruttura con AncheCasa", "building", "pv_casa"),
         // 12.10.2026, app-21: traslochi, pulizie e giardino dalle ditte della zona (js/preventivi.js).
         c("pv-casa", "Traslochi, pulizie e giardino", "home", "pv_casa"),
@@ -1000,7 +1000,7 @@
   function barraTelefono(famiglia) {
     if (famiglia === "privato") return ["bacheca", "pv-guasto", "pv-ristruttura", "pv-mie-richieste"];
     if (famiglia === "agente") return ["home", "re-clienti", "re-vendi", "guadagno"];
-    if (famiglia === "admin") return ["home", "aziende-admin", "ristrutturazioni-admin|Pratiche", "rete-admin"];
+    if (famiglia === "admin") return ["sala-demo|Presentazione", "home", "aziende-admin", "rete-admin"];
     if (famiglia !== "azienda") return [];
     const pk = packKey(S.data.profilo && S.data.profilo.tipoAzienda);
     const B = {

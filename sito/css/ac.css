@@ -46,7 +46,7 @@ p { margin: 0; }
 .testata .accedi { font-weight: 700; color: var(--blu); padding: 10px 12px; }
 .testata .btn { min-height: 42px; padding: 0 18px; font-size: 15px; }
 .hamburger { display: none; width: 46px; height: 46px; border: 0; border-radius: 12px; background: var(--carta); color: var(--blu); cursor: pointer; align-items: center; justify-content: center; }
-@media (max-width: 1180px) {
+@media (max-width: 1240px) {
   .menu { display: none; }
   .hamburger { display: inline-flex; }
   .testata .wrap { justify-content: space-between; }
@@ -296,7 +296,7 @@ details p { margin-top: 10px; color: var(--grigio); max-width: 780px; }
 .menu .tendina a:hover { background: var(--arancio-chiaro); }
 .menu .tendina a:hover b { color: var(--arancio); }
 .menu a.voce { padding: 9px 12px; }
-@media (max-width: 1180px) {
+@media (max-width: 1240px) {
   .menu.aperto { gap: 0; align-items: stretch; max-height: calc(100vh - 110px); overflow-y: auto; }
   .menu.aperto .gruppo { width: 100%; }
   .menu.aperto .apri { text-align: left; }
@@ -307,6 +307,7 @@ details p { margin-top: 10px; color: var(--grigio); max-width: 780px; }
   .menu.aperto .gruppo.aperto .tendina { display: flex; }
   .menu.aperto .tendina a { padding: 10px 14px; }
   .menu.aperto a.voce { padding: 16px 12px; font-size: 17px; border-bottom: 1px solid var(--linea); }
+  .menu .voce-pc { display: none; }
 }
 .sez.blu .griglia.tre > div > h3 { margin-bottom: 8px; }
 .porte .grande h3 { font-size: clamp(22px, 2.2vw, 30px); }
@@ -351,6 +352,6 @@ details p { margin-top: 10px; color: var(--grigio); max-width: 780px; }
 .sm-riga .btns { flex: none; }
 @media (max-width: 560px) { .sm-riga { flex-direction: column; align-items: stretch; } .sm-riga .btn { width: 100%; } }
 
-/* 09.10.2026: il logo AncheCasa non si schiaccia mai; il menu passa alle tre righe sotto i 1180 px */
+/* 13.10.2026: con Presentazione il menu intero sta da 1240 px in su. Sotto, tre righe. */
 .testata .marchio { flex: 0 0 auto; display: block; line-height: 0; }
 .testata .marchio img { max-width: none; }

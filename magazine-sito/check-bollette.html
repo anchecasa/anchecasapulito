@@ -21,7 +21,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500;0,6..96,700;1,6..96,500;1,6..96,600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/stile.css?v=5">
+<link rel="stylesheet" href="/css/stile.css?v=4">
 
 </head>
 <body>
@@ -52,19 +52,7 @@
   </div>
   <div id="cb-res" class="cb-carta" hidden>
     <div id="cb-out" aria-live="polite"></div>
-    <div class="cb-azioni"><button type="button" class="tasto" id="cb-pdf">Scarica il report PDF</button><button type="button" class="tasto tasto-vuoto" id="cb-off-apri">Ricevi offerte migliori</button></div>
-    <form class="cb-off" id="cb-off" hidden novalidate>
-      <p class="cb-off-t"><b>Le offerte dei fornitori AncheCasa, sui tuoi consumi.</b> Le ricevi per mail, le confronti e scegli tu: nome e contatti li riceve solo il fornitore che scegli.</p>
-      <div class="cb-off-campi">
-        <label><span>Nome e cognome</span><input name="nome" autocomplete="name" required></label>
-        <label><span>Mail</span><input name="mail" type="email" autocomplete="email" required></label>
-        <label><span>Telefono</span><input name="tel" type="tel" autocomplete="tel"></label>
-        <label><span>Comune</span><input name="comune" autocomplete="address-level2"></label>
-      </div>
-      <label class="cb-off-ok"><input type="checkbox" name="consenso"> <span>Voglio ricevere le proposte dei fornitori di luce e gas iscritti ad AncheCasa. Ho letto l’<a href="https://anchecasa.it/privacy">informativa privacy</a>.</span></label>
-      <button type="submit" class="tasto">Chiedi le offerte</button>
-      <p class="cb-off-msg" role="status" aria-live="polite"></p>
-    </form>
+    <div class="cb-azioni"><button type="button" class="tasto" id="cb-pdf">Scarica il report PDF</button><a class="tasto tasto-vuoto" href="https://www.ilportaleofferte.it/" rel="noopener">Confronta le offerte</a></div>
     <button type="button" class="cb-edit" id="cb-edit">Cambia i dati</button>
   </div>
   <p class="cb-fonte">Prezzi di riferimento: luce, ARERA, tutela vulnerabili dal 1° ottobre 2026, tasse incluse; gas, stima Unione Nazionale Consumatori su dati ARERA, ottobre 2026. Stima indicativa, non è una consulenza. Per capire ogni voce leggi <a href="/articoli/la-bolletta-smontata">La bolletta, smontata</a>.</p>
@@ -100,6 +88,6 @@
 </footer>
 <script src="/js/sito.js?v=3" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
-<script src="/js/check-bollette.js?v=2" defer></script>
+<script src="/js/check-bollette.js?v=1" defer></script>
 </body>
 </html>

@@ -8,6 +8,8 @@ import { ClientEmailModule } from "@/components/supermastro/client-email-module"
 
 import { HomeEntry } from "@/components/supermastro/home-entry";
 
+import { OpenVideoButton } from "@/components/supermastro/open-video-button";
+
 import { Badge } from "@/components/ui/badge";
 
 import { Button } from "@/components/ui/button";
@@ -91,7 +93,7 @@ export function SuperMastroLanding({
 
         <div className="rounded-[28px] bg-[var(--sm-paper)] px-4 py-6">
           {/* Il video è aperto a tutti: nessun login prima della diagnosi. */}
-          <HomeEntry videoHref={VIDEO_HREF} />
+          <HomeEntry />
         </div>
 
 
@@ -188,7 +190,7 @@ export function SuperMastroLanding({
 
                 <Button asChild variant="client" size="lg">
 
-                  <HardLink href={VIDEO_HREF}>Mostrami il guasto</HardLink>
+                  <OpenVideoButton>Mostrami il guasto</OpenVideoButton>
 
                 </Button>
 
@@ -240,7 +242,7 @@ export function SuperMastroLanding({
 
             <Button asChild variant="client" size="lg">
 
-              <HardLink href={VIDEO_HREF}>Fai il video</HardLink>
+              <OpenVideoButton>Fai il video</OpenVideoButton>
 
             </Button>
 

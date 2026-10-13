@@ -43,6 +43,7 @@ const RESPONSE_SCHEMA = {
     prima_cosa: { type: "string" },
     motivo_professionista: { type: "string" },
     parlato: { type: "string" },
+    tipo_lavoro: { type: "string", enum: ["pronto_intervento", "ristrutturazione"] },
     fai_da_te: {
       type: "object",
       properties: {
@@ -68,6 +69,7 @@ const RESPONSE_SCHEMA = {
     "prima_cosa",
     "motivo_professionista",
     "parlato",
+    "tipo_lavoro",
     "fai_da_te",
   ],
 };
@@ -125,7 +127,8 @@ Ambito unico: interno di un'abitazione, oppure esterno della stessa casa, compre
 Se la scena è un'auto, una persona come soggetto, un negozio, un cantiere, un ufficio, una strada o qualunque luogo che non sia casa o giardino, imposta in_scope false e skill_slug ${OUT_OF_SCOPE_SLUG}.
 Non identificare persone. Non leggere nomi, targhe o indirizzi. Descrivi solo il guasto visibile e i rumori che senti.${hint}${learned}
 Se nel video qualcuno parla, trascrivi in parlato le sue parole esatte, in italiano, massimo 300 caratteri. Se nessuno parla, parlato è vuoto. Usa quello che dice per capire il guasto: spesso spiega cosa non va o da quando.
-Compila esito, titolo, visto_sentito, parlato, prima_cosa, motivo_professionista e fai_da_te.
+Compila esito, titolo, visto_sentito, parlato, tipo_lavoro, prima_cosa, motivo_professionista e fai_da_te.
+tipo_lavoro è pronto_intervento se c'è un guasto da riparare o un pezzo da sostituire; è ristrutturazione se la persona vuole rifare o rinnovare un ambiente (bagno, cucina, pavimenti, una stanza, la facciata) o se servono più mestieri insieme. Nel dubbio pronto_intervento.
 esito è la tua ipotesi: fai_da_te, professionista, pericolo, da_verificare o fuori_tema.
 Se non è sicuro, metti da_verificare e passi vuoti. Se è pericoloso, passi e attrezzi vuoti e prima_cosa è l'azione di sicurezza.
 Pericolo: odore o sibilo di gas, fiamma, fumo, odore di bruciato, scintille, cavi bruciati, acqua vicino a prese, quadro o cavi, crollo.

@@ -16,6 +16,7 @@ export type RawDiagnosis = {
   prima_cosa?: unknown;
   motivo_professionista?: unknown;
   parlato?: unknown;
+  tipo_lavoro?: unknown;
   fai_da_te?: {
     possibile?: unknown;
     tempo_minuti?: unknown;
@@ -88,6 +89,8 @@ export function parseDiagnosis(raw: RawDiagnosis, model: string): ModelDraft {
         : "",
     // Quello che la persona dice nel video, trascritto dal modello.
     parlato: typeof raw.parlato === "string" ? raw.parlato.replace(/\s+/g, " ").trim().slice(0, 300) : "",
+    // 13.10.2026: i lavori di ristrutturazione non vanno agli artigiani ma al sopralluogo AncheCasa.
+    ristrutturazione: raw.tipo_lavoro === "ristrutturazione",
     tempoMinuti: tempo,
     difficolta,
     attrezzi: textList(diy?.attrezzi, 8),

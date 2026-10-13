@@ -225,4 +225,13 @@ body.ha-vedi.con-dash #dash{height:calc(100vh - 196px - var(--safe-b));height:ca
 .chip.on{background:#fff0e1;border-color:#E56B10;color:#a04a07}
 .render-big{width:100%;border-radius:14px;margin-top:10px;display:block}
 .prova-out .rz-pd{margin:10px 0;background:#e3e8ef}
+[data-fine-out]{display:flex;flex-direction:column;gap:14px;margin-top:14px}
+[data-fine-out]:empty{display:none;margin:0}
 .prova-out .rz-pd .linea::after{color:#16304d}
+.stanze{display:flex;flex-direction:column;gap:8px;margin:0 0 10px}
+.stanza{border:1px solid #e3e8ef;border-radius:14px;padding:10px 12px;background:#fff}
+.stanza b{display:block;font-size:15px;color:#16304d}
+.stanza .mut{margin:2px 0 0}
+.stanza-ora{border-color:#E56B10;background:#fffaf6;margin-bottom:10px}
+.stanza-ora .chips{margin:8px 0}
+.stanza-ora .gal{margin:8px 0}

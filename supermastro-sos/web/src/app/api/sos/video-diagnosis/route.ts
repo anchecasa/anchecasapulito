@@ -97,7 +97,8 @@ export async function POST(request: Request) {
     const draft = await diagnoseHomeVideo(bytes, mime, note);
     const ruled = applyRules(draft, { lat, lng });
     const id = await saveDiagnosis(ruled);
-    return NextResponse.json({ ok: true, id });
+    // La diagnosi torna anche intera: la home la mostra subito, senza cambiare pagina.
+    return NextResponse.json({ ok: true, id, diagnosis: { id, ...ruled } });
   } catch (err) {
     if (err instanceof VideoDiagnosisError) {
       return NextResponse.json({ ok: false, error: err.message }, { status: err.status });

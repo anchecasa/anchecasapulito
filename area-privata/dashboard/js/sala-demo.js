@@ -34,39 +34,33 @@
 
   // Documenti per la presentazione alla rete. pronto: true quando il file esiste.
   const DOCUMENTI = [
-    { nome: "AncheCasa in 10 minuti", desc: "Chi siamo, cosa facciamo, per chi, come guadagniamo. Il quadro intero.", ico: "star" },
     { nome: "Il listino", desc: "Prezzi di tutti i profili, moduli, sponsor, e le provvigioni della rete sull'utile con tre esempi.", ico: "wallet", file: "regole/listino.html", pronto: true },
-    { nome: "Come guadagna la rete", desc: "Provvigioni per ruolo, la catena, esempi con i numeri.", ico: "chart" },
-    { nome: "Il percorso del cliente", desc: "Dal primo contatto alla firma: visita, Sopralluogo Flash, preventivo, obiezioni.", ico: "send" },
-    { nome: "Regole della rete", desc: "Chi entra, a chi è il cliente, segnalazioni, contratto da firmare.", ico: "shield" },
-    { nome: "Si parte: i primi 90 giorni", desc: "Cosa c'è oggi, cosa arriva e quando, obiettivi del trimestre.", ico: "calendar" },
-    { nome: "Il primo giorno", desc: "La lista da fare: contratto, profilo, link di invito, i primi 20 contatti.", ico: "doc" },
     { nome: "Regole del Privato", desc: "Il primo profilo finito, da studiare.", ico: "home", file: "regole/privato.html", pronto: true },
     { nome: "Regole della Rete", desc: "Ruoli, chi vede cosa, clienti, ristrutturazioni, zone.", ico: "team", file: "regole/rete.html", pronto: true },
     { nome: "Regole del Fornitore di luce e gas", desc: "Il giro delle richieste, la privacy del cliente, l'accordo.", ico: "pulse", file: "regole/energia.html", pronto: true },
     // 12.10.2026: per la presentazione alla rete del 13.10.
     { nome: "Regole delle Aziende", desc: "Imprese, subappaltatori, impiantisti, artigiani: cantieri e richieste, lavori AncheCasa, gare.", ico: "building", file: "regole/aziende.html", pronto: true },
     { nome: "Regolamento della rete", desc: "Il regolamento in PDF da dare ai commerciali.", ico: "shield", file: "docs/AncheCasa-Regolamento-della-rete.pdf", pronto: true },
-    { nome: "Circolare 1/2026", desc: "Le nuove regole, in PDF.", ico: "doc", file: "docs/AncheCasa-Circolare-1-2026-Nuove-regole.pdf", pronto: true }
+    { nome: "Circolare 1/2026", desc: "Le nuove regole, in PDF.", ico: "doc", file: "docs/AncheCasa-Circolare-1-2026-Nuove-regole.pdf", pronto: true },
+    // 13.10.2026: affiliati e contratto del cliente (bozze per il legale).
+    { nome: "Accordo con l'impresa affiliata", desc: "69 € al mese, nessuna esclusiva, subappalto pagato a SAL. Bozza per il legale.", ico: "building", file: "regole/accordo-affiliato.html", pronto: true },
+    { nome: "Contratto con il cliente", desc: "Ristrutturazione con AncheCasa: preventivo voce per voce, pagamenti a SAL, garanzie. Bozza per il legale.", ico: "doc", file: "regole/contratto-cliente.html", pronto: true }
   ];
   // I contratti della rete in PDF (cartella dashboard/docs).
   const CONTRATTI_PDF = [
     ["Agente", "docs/AncheCasa-3Contratto-Agente.pdf"], ["Sub-agente", "docs/AncheCasa-4Contratto-Subagente.pdf"], ["Capo area", "docs/AncheCasa-2Contratto-Capo-Area.pdf"],
     ["Assistente sviluppo rete", "docs/AncheCasa-1Contratto-Assistente-Sviluppo-Rete.pdf"], ["Responsabile Rete Italia", "docs/AncheCasa-5Contratto-Responsabile-Rete-Italia.pdf"]
   ];
-  // La scaletta della presentazione del 13.10: l'ordine in cui mostrare AncheCasa, con il tasto per aprire ogni pagina.
-  const v = (fam, pag, extra) => `index.html?demo=${fam}${extra || ""}&vetrina=1#/${fam}/${pag}`;
-  const SCALETTA = [
-    ["AncheCasa in un colpo d'occhio", "I numeri della rete e degli iscritti, come li vede AncheCasa.", v("admin", "home")],
-    ["Il privato", "«Ho un guasto», «Ristruttura con AncheCasa», «Il mio cantiere»: tutto gratis per chi ha una casa.", v("privato", "pv-guasto")],
-    ["La rete", "La dashboard del commerciale: clienti, Vendi, guadagni, Sopralluogo Flash dal telefono.", v("agente", "home", "&ruolo=agente")],
-    ["Le imprese fanno da general contractor", "«I miei cantieri»: pubblicano cosa serve e confrontano le offerte voce per voce.", v("azienda", "cnt_cantieri", "&tipo=azienda_imprese_edili")],
-    ["Chi riceve le richieste", "Subappaltatori, impiantisti e fornitori: «Richieste per te», offerta, bollino documenti, voti.", v("azienda", "cnt_perme", "&tipo=azienda_subappaltatori")],
-    ["L'artigiano", "«Ho un guasto» visto dall'artigiano: una richiesta alla volta, 15 minuti o 2 ore.", v("azienda", "art_richieste", "&tipo=azienda_artigiani")],
-    ["AncheCasa general contractor", "Ristrutturazioni: sopralluogo, computo, Profit Guard, impresa scelta da AncheCasa.", v("admin", "ristrutturazioni-admin")],
-    ["Le gare", "«Cerca gare» e «Le mie gare» per le imprese, moduli a pagamento.", v("azienda", "gare_cerca", "&tipo=azienda_imprese_edili")],
-    ["I fornitori", "Luce e gas, telefono, finanza, materiali, noleggio: il cliente sceglie, il fornitore conquista.", v("azienda", "energia_home", "&tipo=azienda_luce_gas")],
-    ["Regole, documenti e contratti", "Cosa dare ai commerciali prima di partire: in fondo a questa pagina.", "#sd-documenti"]
+  // 13.10.2026: le presentazioni per la rete (stile Sopralluogo Flash), in dashboard/docs/presentazioni.
+  // Ogni presentazione: HTML con le frecce avanti e indietro (si apre nel browser), PDF e PowerPoint con le note.
+  const PP = "docs/presentazioni/";
+  const PRESENTAZIONI = [
+    ["1-AncheCasa-perche-adesso", "Perché adesso: una storia che parte da voi", "Otto persone, sei storie: Anna, Rosa, Luca, Giuseppe. Le regole, i software di AncheCasa Studio srl e il Magazine n. 2.", "9 min"],
+    ["2-AncheCasa-SuperMastro", "SuperMastro: il rubinetto di Rosa", "Domenica, ore 21: il guasto in 5 secondi, Giuseppe alla porta, e il bagno che diventa un sopralluogo. Poi la prova dal vivo.", "7 min"],
+    ["3-Sopralluogo-Flash-come-funziona", "Sopralluogo Flash: il bagno di Anna", "Mario, Anna e Antonio: dalla porta del cliente al preventivo firmato, con l'impresa affiliata.", "11 min"],
+    ["4-AncheCasa-come-guadagni", "Come guadagni: il primo anno di Giulia", "Mese per mese, con i numeri del listino: artigiani, imprese affiliate, fornitori, una ristrutturazione.", "9 min"],
+    ["5-AncheCasa-gare-cantieri-computi", "Gare e cantieri: l'impresa di Luca", "Luca si affilia, lavora in subappalto a SAL, usa cantieri e gare. AncheBIM e Terranova in arrivo.", "7 min"],
+    ["6-AncheCasa-si-parte-domani", "Si parte domani: il primo giorno di Marco", "Ora per ora: la firma, i primi 20 nomi, le tre frasi, le regole, i quattro numeri.", "7 min"]
   ];
 
   const apri = (p, ruolo) => ruolo
@@ -75,18 +69,25 @@
 
   V["sala-demo"] = {
     title: "Sala demo",
-    sub: "Le dashboard di ogni profilo con dati di esempio, le regole e i contratti, per presentare AncheCasa alla rete.",
+    sub: "Le sei presentazioni per la rete e i contratti. Sotto, chiuso, il resto del materiale.",
     render(el) {
       const pronte = PROFILI.filter((p) => p.pronta).length;
       el.innerHTML = html`
-        <section class="card sd-scaletta"><h2>La presentazione del 13 ottobre</h2>
-          <p class="note">L'ordine in cui mostrare AncheCasa alla rete. Ogni tasto apre la pagina in vetrina, con dati di esempio, in una scheda nuova.</p>
-          <ol class="sd-passi">${SCALETTA.map((x) => html`<li><div><b>${x[0]}</b><small>${x[1]}</small></div>${x[2].charAt(0) === "#" ? html`<a class="sd-btn sd-chiaro" href="${x[2]}" data-ancora>Vai</a>` : html`<a class="sd-btn" href="${x[2]}" target="_blank" rel="noopener">Apri</a>`}</li>`)}</ol>
+        <section class="card sd-scaletta"><h2>Le presentazioni per la rete</h2>
+          <p class="note">Sei presentazioni, un'ora in tutto con le domande. «Apri» le mostra a schermo intero con le frecce avanti e indietro (tasto F per lo schermo intero, N per le note). Poi PDF e PowerPoint da scaricare.</p>
+          <ol class="sd-passi">${PRESENTAZIONI.map((x) => html`<li><div><b>${x[1]} · ${x[3]}</b><small>${x[2]}</small></div><span class="sd-tasti"><a class="sd-btn" href="${PP + x[0] + ".html"}" target="_blank" rel="noopener">Apri</a><a class="sd-btn sd-chiaro" href="${PP + x[0] + ".pdf"}" target="_blank" rel="noopener">PDF</a><a class="sd-btn sd-chiaro" href="${PP + x[0] + ".pptx"}" download>PowerPoint</a></span></li>`)}</ol>
         </section>
+        <h2 class="sd-tit">I contratti</h2>
+        <div class="card sd-contratti">
+          <p>Agente, sub-agente, capo area, Responsabile Rete Italia, collaboratore occasionale: i modelli con la carta intestata, firmabili online.</p>
+          <div class="sd-tasti">${CONTRATTI_PDF.map((c) => html`<a class="sd-btn sd-chiaro" href="${c[1]}" target="_blank" rel="noopener">${c[0]} (PDF)</a>`)}</div>
+          <a class="sd-btn" href="#/admin/contratti">Apri i contratti da firmare online</a>
+        </div>        <details class="card sd-altro" style="margin-top:18px">
+          <summary style="cursor:pointer;font-weight:700;padding:4px 0">Altro materiale: dashboard di esempio, regole e documenti</summary>
         <p class="note">Le dashboard in vetrina hanno dati di esempio e non sono collegate a nessuno: si naviga liberamente, niente va sul database. ${pronte} su ${PROFILI.length} profili pronti, gli altri arrivano man mano che li finiamo.</p>
         <h2 class="sd-tit">Le dashboard</h2>
         <div class="doc-griglia">
-          ${PROFILI.map((p) => html`<div class="doc-tile sw-tile sd-tile${p.pronta ? "" : " sw-muto"}">
+          ${PROFILI.filter((p) => p.pronta).map((p) => html`<div class="doc-tile sw-tile sd-tile${p.pronta ? "" : " sw-muto"}">
             <span class="rg-ico${p.pronta ? "" : " rg-ico-off"}">${icon(p.ico, 22)}</span>
             <b>${p.nome}</b><small>${p.desc}</small>
             ${p.pronta
@@ -114,12 +115,8 @@
                 <span class="rg-ico rg-ico-off">${icon(d.ico, 22)}</span><b>${d.nome}</b><small>${d.desc}</small>
                 <span class="sw-stato sw-off">Da scrivere</span></div>`)}
         </div>
-        <h2 class="sd-tit">I contratti</h2>
-        <div class="card sd-contratti">
-          <p>Agente, sub-agente, capo area, Responsabile Rete Italia, collaboratore occasionale: i modelli con la carta intestata, firmabili online.</p>
-          <div class="sd-tasti">${CONTRATTI_PDF.map((c) => html`<a class="sd-btn sd-chiaro" href="${c[1]}" target="_blank" rel="noopener">${c[0]} (PDF)</a>`)}</div>
-          <a class="sd-btn" href="#/admin/contratti">Apri i contratti da firmare online</a>
-        </div>`.s;
+        </details>
+      `.s;
       el.querySelectorAll("[data-ancora]").forEach((a) => a.addEventListener("click", (e) => { e.preventDefault(); const t = el.querySelector("#sd-documenti"); if (t) t.scrollIntoView({ behavior: "smooth", block: "start" }); }));
     }
   };

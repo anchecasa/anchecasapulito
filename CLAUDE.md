@@ -49,11 +49,152 @@ Sulla cartella e sul GitHub `anchecasa/anchecasapulito` lavorano tre persone o s
 
 ## Registro delle modifiche
 
+### 13.10.2026 23:58 · Cursor — Sito dimostrativo Assoarma online
+- Sito dimostrativo Assoarma in `assoarma/` (128 pagine, Supabase schema assoarma_demo, Cloudflare Pages progetto assoarma-demo), realizzato da Claude.
+- Zip `assoarma-demo.zip` estratto e cartella rinominata in `assoarma`. Su Windows il generatore cercava i dati in un percorso doppio (`C:\C:\Users\...`): in `scripts/base.mjs` la radice ora usa `fileURLToPath`. `node scripts/build.mjs` ha scritto «Sito generato in dist/: 128 pagine».
+- Le 7 foto Canva in `static/img/nuove/` non c'erano. Il sito usa le foto vere di riserva.
+- Pubblicato su Cloudflare Pages, progetto `assoarma-demo`, account Palumbofernando12@gmail.com's Account. Deployment `d30d7283`. https://assoarma-demo.pages.dev/ risponde 200, titolo del Consiglio Nazionale. https://assoarma-demo.pages.dev/chi-siamo/ risponde 200. https://assoarma.anchecasa.it non risponde ancora: il dominio va collegato in Cloudflare, Workers and Pages, assoarma-demo, Custom domains.
+- Lo schema `assoarma_demo` non è stato eseguito su Supabase. I moduli del sito partono dopo `ATTIVA-SUPABASE.bat`.
+- Il repository GitHub `anchecasa/anchecasapulito` è ancora pubblico. Su richiesta il resto del lavoro del 13.10 è su `main`. La cartella `assoarma/` non è nel commit: resta in `.gitignore`.
+- File: `assoarma/` (solo sul computer), `.gitignore`, `CLAUDE.md`.
+
+### 13.10.2026 22:47 · Cursor — Archivio immagini assoarma.it
+- Scaricate le 16 immagini della libreria media di https://www.assoarma.it (API `wp/v2/media`, 19 voci in tutto: 16 immagini e 3 PDF). Salvati gli originali, senza i suffissi `-300x200` e senza `-scaled`, in `assoarma-media/` con le cartelle anno/mese.
+- Le pagine di partenza e i link interni (attività 2025, presentazione, autrice, introduzione) sono in `media.csv` come provenienza. Quattro immagini compaiono solo nella libreria. Il sito non ha testo alternativo; l'unica didascalia è sulla foto del Gen. Sepe.
+- I tre PDF del consuntivo 2025 non sono immagini e non sono stati scaricati. Niente commit e niente push. Supabase non toccato.
+- File: `assoarma-media/`, `assoarma-media/media.csv`, `CLAUDE.md`.
+
+### 13.10.2026 09:43 · Cursor — Pulsante Presentazione nella barra del sito, da computer
+- Su anchecasa.it, nella barra da computer, dopo Magazine c'è Presentazione. Sotto i 1240 px resta il menu a tre righe e quel tasto non compare.
+- La pagina chiede la password 242424 e poi elenca le sei presentazioni. Apri apre la presentazione a schermo intero già online sull'area privata.
+- Pubblicato il sito, progetto Vercel `anchecasa-pulito`, deployment `dpl_ELoraMWhsdFBuxHW3SjmKYPKip6U`, alias https://anchecasa.it. Online `css/ac.css?v=6` e https://anchecasa.it/presentazione risponde 200.
+- Provato in locale a 1600 px: il tasto è nella barra, la password apre le sei voci, la prima porta a `1-AncheCasa-perche-adesso.html` che online risponde 200.
+- Niente commit e niente push. Supabase non toccato.
+- File: `sito/presentazione.html`, `sito/css/ac.css` (?v=6), le pagine HTML del menu in `sito/`, `CLAUDE.md`.
+
+### 13.10.2026 06:56 · Cursor — Presentazione visibile sul telefono dell'admin
+- Sul telefono la barra dell'admin era Home, Aziende, Pratiche, Rete. Presentazione stava solo dentro Altro.
+- Ora la barra è Presentazione, Home, +, Aziende, Rete. Pratiche resta in Altro (il tasto ≡ in alto).
+- Pubblicata l'area privata, progetto Vercel `area-privata-produzione`, deployment `dpl_9raPtsxrGVXL1udDUXr45LsThQep`, alias https://entra.anchecasa.it.
+- Online `dashboard/js/app.js?v=34` e `app/app.js?v=11`.
+- Provato su https://entra.anchecasa.it/app/?demo=admin a 390 px: il tasto Presentazione è largo 87 px, primo a sinistra. Apre la Sala demo con le sei presentazioni (Perché adesso, SuperMastro, Sopralluogo Flash). Larghezza 390.
+- Niente commit e niente push. Supabase non toccato.
+- File: `area-privata/dashboard/js/app.js` (?v=34), `area-privata/dashboard/index.html`, `area-privata/app/app.js` (?v=11), `area-privata/app/index.html`, `CLAUDE.md`.
+
+### 13.10.2026 06:40 · Cursor — storie delle presentazioni e SuperMastro online
+- Pubblicata l'area privata, progetto Vercel `area-privata-produzione`, deployment `dpl_9YRTPLzVPk1ntc2Wmywc9zNFuyJ6`, alias https://entra.anchecasa.it e https://areaprivata.anchecasa.it. La dashboard carica `sala-demo.js?v=15`. Online ci sono «il rubinetto di Rosa», «il primo anno di Giulia», «l'impresa di Luca» e «il primo giorno di Marco». La presentazione 2 contiene «cucina di Rosa».
+- Pubblicato il Worker `supermastro-sos`, versione `575b0d25-eefe-487b-9196-34e940be7ee9`. Nel file online c'è «Richiedi un sopralluogo gratuito». Compare quando la diagnosi è una ristrutturazione. Un video vero dal telefono non è stato fatto da qui.
+- Niente commit e niente push. Supabase non toccato.
+- File: `area-privata/dashboard/js/sala-demo.js`, `area-privata/dashboard/index.html`, `area-privata/dashboard/docs/presentazioni/`, `supermastro-sos/web/src/components/supermastro/esito-view.tsx`, `supermastro-sos/web/src/lib/sos/gemini-video.ts`, `parse-diagnosis.ts`, `diagnosis-rules.ts`, `CLAUDE.md`.
+
+### 13.10.2026 ore 06:30 · Claude · Presentazioni come storie, fornitori 99 €, codice affiliati
+- **Presentazioni rifatte come storie** (stesso stile del Sopralluogo Flash), stessi nomi file in `area-privata/dashboard/docs/presentazioni/` (html, pdf, pptx): 1 Perché adesso (otto protagonisti, 11 slide), 2 SuperMastro · il rubinetto di Rosa (10), 3 Sopralluogo Flash (19), 4 Come guadagni · il primo anno di Giulia (9), 5 Gare e cantieri · l'impresa di Luca (10), 6 Si parte domani · il primo giorno di Marco (10). Titoli nuovi in `dashboard/js/sala-demo.js` (`?v=15` in `dashboard/index.html`).
+- **Fornitori**: tutti 99 € al mese, il primo mese gratis: `area-privata/dashboard/regole/listino.html`, `sito/prezzi.html`.
+- **Codice SuperMastro** (autorizzato da Nando): `supermastro-sos/web/src/lib/sos/gemini-video.ts`, `parse-diagnosis.ts`, `diagnosis-rules.ts`, `components/supermastro/esito-view.tsx`: davanti a una ristrutturazione propone «Richiedi un sopralluogo gratuito» invece dell'artigiano. `tsc --noEmit` OK, test non ancora lanciati. Copie in `_to_delete/copie-supermastro-1310/`.
+- **Dashboard** (eccezione al file congelato `dashboard/js/app.js`, scritta da Nando il 13.10: «procedi sei autorizzato»): menu privato «Pronto intervento · artigiano», tolto «Piccoli lavori con le imprese»; impresa «Lavori AncheCasa (subappalto)», tolto «Piccoli lavori dei privati»; `privato-progetto.js` stesso titolo; `index.html` `app.js?v=33`, `privato-progetto.js?v=3`. Provato in locale: nessun errore.
+- Da fare (Cursor): test e build di SuperMastro, poi pubblicazione con l'OK di Nando. Comando aggiornato: `COMANDO-CURSOR-affiliati.md`.
+
+### 13.10.2026 06:15 · Claude — modello affiliati: pronti interventi agli artigiani, ristrutturazioni solo AncheCasa
+
+- Decisione di Nando: agli artigiani solo i pronti interventi, per ogni tipo di lavoro; tutto il resto lo fa solo AncheCasa (sopralluogo, preventivo, contratto con il cliente) e lo affida a un'impresa affiliata in subappalto; l'artigiano non passa lavori e se vuole farli si affilia; affiliato 69 €/mese, sponsorizzate, nessuna esclusiva, documenti in regola, pagato a SAL, risponde del suo lavoro.
+- Testi aggiornati: `sito/partner.html` (Diventa affiliato), `sito/ristruttura.html`, `sito/trova.html`, `sito/prezzi.html` (Imprese affiliate 69 €), `sito/index.html`, menu «Diventa affiliato» in 31 pagine di `sito/`; `area-privata/dashboard/regole/aziende.html` (sezione 5 e tabella dell'affiliato), `listino.html`, `privato.html`, `rete.html` (versione 13.10.2026).
+- Nuove bozze, da far verificare a un legale: `area-privata/dashboard/regole/accordo-affiliato.html` e `contratto-cliente.html`.
+- Sala demo (`dashboard/js/sala-demo.js?v=14`): in vista solo le 6 presentazioni e i contratti; dashboard, regole e documenti in «Altro materiale», chiuso; tolte le card «In preparazione»; aggiunti i due documenti nuovi.
+- Presentazioni rifatte in `dashboard/docs/presentazioni/`: 1 (artigiani solo pronti interventi, imprese affiliate), 2 (slide «SuperMastro è per i pronti interventi»), 3 (slide «Chi fa il lavoro: un'impresa affiliata»), 5 (slide dell'affiliato, «Come lo vendi» con Affiliato 69 €), 6 (frasi per artigiano e impresa).
+- Copie dei file di prima in `_to_delete/copie-affiliati-1310/`.
+- Il codice (SuperMastro, menu del privato e dell'impresa in `dashboard/js/app.js`, CONGELATO) non è toccato: comando in `COMANDO-CURSOR-affiliati.md`. Niente pubblicato.
+
+### 13.10.2026 06:00 · Claude — Magazine numero 2 (speciale ristrutturazioni) e presentazioni aggiornate
+
+- Su richiesta di Nando. La società giusta è **AncheCasa Studio srl**: corretto «AncheStudio» nel sito del Magazine (`magazine-sito/contenuti.py`, `genera.py`, `LEGGIMI.md` e pagine rigenerate).
+- **Rivista sfogliabile numero 2** (stessa testata del numero 1, cambiano foto e contenuti): `sito/js/magazine-2.js` (10 pagine: copertina, editoriale, app della raccolta in arrivo, 5 pagine «Rifare casa» — sopralluogo, bagno nell’ordine giusto, casa vista prima e dopo, preventivo che si capisce — glossario del cantiere, retro). Pulsante «Richiedi un sopralluogo gratuito» in copertina, nelle pagine e sul retro, verso `https://anchecasa.it/ristruttura.html#sopralluogo`. Foto in `sito/magazine/numero-2/`.
+- `sito/magazine.html` ora apre il numero 2 (`js/magazine-2.js?v=1`); il numero 1 resta su `sito/magazine-1.html` (`js/magazine.js`, invariato).
+- **magazine.anchecasa.it**: in `contenuti.py` il numero 2 (13.10.2026, «Speciale ristrutturazioni», sfoglia `anchecasa.it/magazine`), il numero 1 sfoglia `anchecasa.it/magazine-1`, 5 articoli nuovi del numero 2 con il pulsante del sopralluogo, `AGGIORNATO` 13.10. In `genera.py` la home mostra l’ultimo numero con articoli. Rigenerato con Python 3.13 (sul PC c’è 3.10, che non basta): 51 file cambiati, foto nuove in `sorgenti-img/` e `img/`.
+- **Presentazioni**: nella 1 la slide del Magazine numero 2; nella 3 (Sopralluogo Flash) due slide nuove: «Perché il cliente ci chiama» (vuole spendere poco e un consiglio: noi diamo consigli, viste prima e dopo, tre finiture, preventivo dettagliato, tempi certi) e «Terranova» (oggi: zona sismica e climatica, prezzario regionale, OMI, vincoli; in arrivo: materiali al miglior prezzo dal fornitore più vicino, con valutazione del prezzo del fornitore e del mercato). File rifatti in `area-privata/dashboard/docs/presentazioni/` (1-… e 3-…).
+- Provato in locale: la rivista sfoglia le 10 pagine, la home del Magazine mostra il numero 2. Non pubblicato: lo pubblica Cursor (`COMANDO-CURSOR-pubblica-magazine-2.md`).
+
+### 13.10.2026 05:40 · Claude — sei presentazioni per la rete e pulsante Presentazione rifatto
+
+- Su richiesta di Nando, per la riunione della rete di stamattina (un'ora). Sei presentazioni nello stile del Sopralluogo Flash, carta e marchio AncheCasa, foto con auto, polo e cartellina col logo ufficiale (logo «Costruiamo fiducia» applicato sopra le immagini generate), schermate vere delle dashboard in vetrina:
+  1 AncheCasa: perché adesso (software di AncheCasa Studio srl, Magazine e numero sulle ristrutturazioni) · 2 SuperMastro · 3 Sopralluogo Flash (accorciata, allineata a «Foto e audio», niente video) · 4 Come guadagni (numeri del listino) · 5 Gare, cantieri e computi · 6 Si parte domani.
+- File: `area-privata/dashboard/docs/presentazioni/` (18 file: .html con frecce, .pdf, .pptx con le note), `area-privata/dashboard/js/sala-demo.js` (scaletta sostituita dalle sei presentazioni, tolti i documenti «Da scrivere»), `area-privata/dashboard/index.html` (`sala-demo.js?v=12`), `COMANDO-CURSOR-pubblica-presentazioni.md`.
+- Spostati in `_to_delete/docs-presentazioni-1310/` i file vecchi `docs/Sopralluogo-Flash-come-funziona.*` e `AncheCasa-Sopralluogo-Flash-Guida-agenti.*`.
+- Provato in locale: la Sala demo mostra le 6 righe con Apri, PDF, PowerPoint; il visore va avanti e indietro. Non pubblicato: lo pubblica Cursor con il comando.
+- Da decidere: il Magazine dice «sviluppate da AncheStudio» (nelle slide c'è AncheCasa Studio srl); in `magazine-sito/contenuti.py` il numero 2 parla dell'app della raccolta, Nando dice ristrutturazioni.
+
+### 13.10.2026 05:07 · Cursor — SuperMastro pubblicato dalla cartella ufficiale
+- Cartella dove Claude salva SuperMastro: `supermastro-sos` (app in `supermastro-sos/web`). La cartella `04-SuperMastro` sul Desktop non si usa.
+- Il lavoro delle 04:48 era già in quella cartella. Pubblicato il Worker `supermastro-sos`, versione `302b4ec7-274c-4a0e-9cba-0db18a9aa601`, account Cloudflare Palumbofernando12@gmail.com's Account, accesso OAuth (la chiave vecchia resta commentata).
+- Online: https://supermastro.anchecasa.it/supermastro risponde 200, «Ciao! Che si è rotto?» e «Mostrami il guasto». A 390 px il tasto resta sulla stessa pagina (`/supermastro#video`), con «Registra il problema», «5 secondi, con audio» e «Apri la fotocamera». `/supermastro/video` risponde 200. `/supermastro/nuova` va al video.
+- Poi pubblicato il sito, progetto Vercel `anchecasa-pulito`, deployment `dpl_DepPWaxx7CUyjkGXvbnQD1cp83WH`, alias https://anchecasa.it. https://anchecasa.it/supermastro risponde 307 verso https://supermastro.anchecasa.it/supermastro. https://anchecasa.it/supermastro.html va prima a `/supermastro` e da lì alla stessa app. `/supermastro/video` del sito va a https://supermastro.anchecasa.it/supermastro/video.
+- La diagnosi vera dal telefono non è stata fatta da qui. Supabase non toccato. Niente commit e niente push.
+- File: `supermastro-sos/web/src/components/supermastro/home-entry.tsx`, `open-video-button.tsx`, `video-diagnosis.tsx`, `esito-view.tsx`, `supermastro-landing.tsx`, `components/phone/home-screen.tsx`, `app/api/sos/video-diagnosis/route.ts`, `sito/vercel.json` (già pronto), `CLAUDE.md`.
+
+### 13.10.2026 05:05 · Claude — presentazione Sopralluogo Flash rifatta e salvata in PDF
+
+- Presentazione per gli agenti rifatta come storia (Mario agente, Anna cliente, Antonio tecnico in ufficio), 21 slide.
+- Immagini nuove: Mario arriva in auto AncheCasa con il tablet (niente furgone né scale), misura con il telefono (niente laser), stretta di mano. Su auto e polo è applicato il logo ufficiale AncheCasa · Costruiamo fiducia.
+- Nei testi: niente Gemini; l'app e l'IA sono di AncheCasa Studio srl.
+- PDF salvato in `area-privata/dashboard/docs/AncheCasa-Sopralluogo-Flash-Guida-agenti.pdf`. Nessun codice toccato.
+
+### 13.10.2026 04:50 · Cursor — Tre foto bastano, cinque è il massimo, pubblicato
+- Ok di Nando. Nel passo «Foto e audio» la frase dice che cinque è il massimo, non l'obbligo: dalla porta tutta la stanza, la parete che non si vede, e il primo piano di ciò che non va. Se con tre si capisce, si registra l'audio e si chiude. Le misure si dicono nell'audio. La stessa frase è nella dashboard, al posto del video.
+- Pubblicata l'area privata, progetto Vercel `area-privata-produzione`, deployment `dpl_D2aYKyLYpmdyJtDwDbdbE3Z2HmA3`, alias https://entra.anchecasa.it e https://areaprivata.anchecasa.it.
+- Online `app.js?v=10` (125509 byte) e `app.css?v=8`. La dashboard carica `sopralluogo-invio.js?v=6` e `js/app.js?v=32`.
+- Provato su https://entra.anchecasa.it/app/?demo=agente a 390 px: il passo dice «Tre foto bastano, cinque è il massimo» e la frase intera è visibile. Larghezza 390. Lo script è `app.js?v=10`.
+- `dossier-ia` non è stata ripubblicata.
+- File: `area-privata/app/app.js` (?v=10), `area-privata/app/index.html`, `area-privata/dashboard/js/sopralluogo-invio.js` (?v=6), `area-privata/dashboard/index.html`, `CLAUDE.md`.
+
+### 13.10.2026 04:48 · Claude — SuperMastro: video e risposta nella home, senza cambiare pagina
+- Su richiesta di Nando. Nella home di SuperMastro (`/supermastro` e `/m/home`) «Mostrami il guasto», i quattro mestieri, «Fai il video» e il pulsante del PC non portano più a `/supermastro/video`: la fotocamera si apre sopra la home, si preme il tasto arancio, 5 secondi, analisi, e la risposta (le due strade: «Puoi provarci tu» con «Segui la guida», oppure «Trova un artigiano vicino»; pericolo, non vedo bene e fuori tema come prima) compare nella stessa pagina. «Rifai il video» riapre la fotocamera lì. Il tasto Indietro del telefono chiude la fotocamera o torna alla home.
+- La prima volta resta l'avviso privacy con «Apri la fotocamera» (audio registrato).
+- `/api/sos/video-diagnosis` ora restituisce anche la diagnosi intera, oltre all'id. La pagina `/supermastro/video` e `/supermastro/esito` restano uguali per i link da fuori.
+- Controllo: TypeScript e ESLint senza errori. Non provato dal vivo sul telefono. Non pubblicato.
+- File: `supermastro-sos/web/src/components/supermastro/home-entry.tsx`, `open-video-button.tsx` (nuovo), `video-diagnosis.tsx`, `esito-view.tsx`, `supermastro-landing.tsx`, `components/phone/home-screen.tsx`, `app/api/sos/video-diagnosis/route.ts`, `CLAUDE.md`.
+
+### 13.10.2026 04:40 · Cursor — Sopralluogo ambiente per ambiente pubblicato
+- Ok di Nando. Pubblicata l'area privata, progetto Vercel `area-privata-produzione`, deployment `dpl_7Qn3Bv33J7FqJtmcivj66z4XTu5d`, alias https://entra.anchecasa.it e https://areaprivata.anchecasa.it.
+- Online `app.js?v=9` (125386 byte, c'è «Finito sopralluogo») e `app.css?v=8`. La dashboard carica `sopralluogo-invio.js?v=5` e ancora `js/app.js?v=32`. Nel file delle misure non c'è più il tasto video.
+- Provato su https://entra.anchecasa.it/app/?demo=agente a 390 px, pratica di Anna: 6 foto diventano 5, il Bagno si chiude con l'audio, «Finito sopralluogo» registra l'ultimo audio e il pulsante diventa «Sopralluogo chiuso». Lo script è `app.js?v=9`. Larghezza 390.
+- `dossier-ia` non è stata ripubblicata. Una lettura vera usa ancora la funzione già online: al massimo 6 audio, e un video già presente in pratica viene ancora mandato a Gemini.
+- La voce delle 04:39 diceva non pubblicato: ora il giro ambiente per ambiente è online.
+- File: `CLAUDE.md`.
+
+### 13.10.2026 04:39 · Cursor — Sopralluogo Flash: foto e audio, ambiente per ambiente
+- Sul telefono, nel passo «Foto e audio», l'agente lavora un ambiente alla volta. Nome (Bagno, Cucina, Soggiorno e gli altri, oppure scritto), massimo 5 foto, poi «Registra audio e chiudi»: nell'audio le misure e cosa va fatto. La stanza compare tra quelle chiuse e si passa alla prossima.
+- «Finito sopralluogo» si accende dopo il primo ambiente chiuso. L'ultimo audio è su tutta la casa: gusti, stili del cliente, problemi visti. Dopo, il giro è chiuso e si può aggiungere un ambiente dimenticato.
+- La planimetria resta, se c'è. Il tasto Video è tolto dal giro nuovo. I file vecchi restano in «File già in pratica».
+- Nella dashboard il video è tolto dalle misure: la frase rimanda al telefono. In `dossier-ia`, sul computer, le note si distinguono (audio dell'ambiente e audio di chiusura) e se ne leggono fino a 20. La funzione non è ripubblicata: online la lettura vera è ancora quella di prima.
+- Provato in locale a 390 px, pratica di Anna: 6 foto diventano 5, Bagno si chiude con l'audio, «Finito sopralluogo» registra l'ultimo audio e il pulsante diventa «Sopralluogo chiuso». Senza nome, l'audio non parte. Larghezza 390.
+- Non pubblicato.
+- File: `area-privata/app/app.js` (?v=9), `area-privata/app/app.css` (?v=8), `area-privata/app/index.html`, `area-privata/dashboard/js/sopralluogo-invio.js` (?v=5), `area-privata/dashboard/index.html`, `app-anchecasa/supabase/functions/dossier-ia/index.ts`, `CLAUDE.md`.
+
+### 13.10.2026 04:25 · Cursor — Sopralluogo Flash pubblicato: Come funziona, scelte e render
+- Ok di Nando. Pubblicata l'area privata, progetto Vercel `area-privata-produzione`, deployment `dpl_GHKcbc8pdyCdMRANb9VzKGJUL9LQ`, alias https://entra.anchecasa.it e https://areaprivata.anchecasa.it.
+- Online `app.js?v=8` (116846 byte, c'è «Come funziona») e `app.css?v=7`. La dashboard carica ancora `js/app.js?v=32`, più `sopralluogo-invio.js?v=4` e `dossier-tecnico.js?v=3`.
+- Con questo invio vanno online anche le scelte e il render dettagliato, e le scritte che il video non lo legge l'IA. Le funzioni `dossier-ia` e `sopralluogo-invito` restano quelle già online: la lettura vera continua a mandare il video all'IA.
+- Provato su https://entra.anchecasa.it/app/?demo=agente a 390 px: tre foto, Teano, Via Giusti 22, poi «Come funziona». Escono «Preventivo per il cliente» e «Documentazione per il tecnico», 7 voci, totale 9390 €, «Note tecniche». Larghezza 390. Lo script è `app.js?v=8`.
+- La voce delle 04:23 diceva non pubblicato: ora il tasto è online.
+- File: `CLAUDE.md`.
+
+### 13.10.2026 04:23 · Cursor — Sopralluogo Flash: tasto Come funziona
+- In fondo al giro, il tasto «Come funziona» prepara due fogli con lo stile già nel codice (logo, filo arancio, curva, piede blu, e la relazione del dossier). Il primo è il preventivo per il cliente, con le scelte e il totale simulato 9.390 €, IVA esclusa. Il secondo è la documentazione completa per il tecnico AncheCasa: dati Terranova, foto, render se c'è, video allegato e non letto dall'IA, relazione con ambienti, impianti, voci, dubbi e documenti.
+- Lo stesso tasto sta in fondo alla pratica del Sopralluogo Flash. In anteprima, sulla pratica di Giovanni, il video allegato è 1.
+- Provato in locale a 390 px: dopo le tre foto e le scelte (Bagno, Di pregio, Walk-in) escono i due titoli, la zona 2, il prezzario Campania 2026, «Note tecniche» e «Da chiedere all'agente». Larghezza 390.
+- Non pubblicato.
+- File: `area-privata/app/app.js` (?v=8), `area-privata/app/app.css` (?v=7), `area-privata/app/index.html`, `CLAUDE.md`.
+
 ### 13.10.2026 04:40 · Claude — presentazione Sopralluogo Flash per gli agenti e allineamento con GitHub
 - Su richiesta di Nando. Presentazione «Sopralluogo Flash · Guida per gli agenti» (23 pagine, carta AncheCasa: logo, curva arancio e blu, Manrope) su claude.ai, privata finché Nando non la condivide. Schermate vere dell'app in anteprima (`app/?demo=1`, `sopralluogo.html?demo=1`, dossier del tecnico `dashboard/?demo=admin&dossier=r9`), dati di esempio. Il preventivo accettato dal cliente è mostrato con dati di esempio aggiunti solo nella copia usata per le foto, non nei file del progetto.
 - Le foto dell'app sono prese dalla copia locale delle 04:00 (prima delle scelte e del render dettagliato di Cursor delle 04:12).
 - Nuovo `ALLINEA-GITHUB.bat`: salva tutto il lavoro del PC in un commit, `git pull --rebase` da GitHub, push su `main`, esito in `allinea-esito.txt`. In `.gitignore` aggiunti i file di esito e di log.
 - File: `ALLINEA-GITHUB.bat`, `.gitignore`, `CLAUDE.md`.
+
+### 13.10.2026 04:16 · Cursor — Sopralluogo Flash: l'IA legge solo le foto, il video va al tecnico
+- L'IA del sopralluogo non riceve più il video. Legge le foto, la planimetria e le note vocali. Senza almeno una foto non parte. Il video del giro della casa resta nel dossier, con la scritta che è allegato per il preventivo, e nella mail al tecnico AncheCasa con il link per aprirlo (7 giorni).
+- Provato in locale, agente: pratica senza foto, il tasto dice «Prima carica le foto» ed è spento; pratica con 4 foto e 1 video, il video è contato e la frase dice che l'IA non lo legge.
+- Le funzioni `dossier-ia` e `sopralluogo-invito` sono cambiate sul computer e non sono state ripubblicate. Finché non vanno online, la lettura vera continua a mandare il video all'IA.
+- File: `app-anchecasa/supabase/functions/dossier-ia/index.ts`, `sopralluogo-invito/index.ts`, `area-privata/app/app.js` (?v=7), `area-privata/app/index.html`, `area-privata/dashboard/js/sopralluogo-invio.js` (?v=4), `dossier-tecnico.js` (?v=3), `dashboard/index.html`, `area-privata/js/relazione.js` (?v=2), `sopralluogo.html`, `CLAUDE.md`.
 
 ### 13.10.2026 04:12 · Cursor — Vedi cosa so fare: scelte e render dettagliato
 - Dopo l'analisi delle tre foto, sotto i due fogli, si scelgono tipologia di lavoro, stile, rifiniture, piastrelle, porte, box doccia, rubinetteria e sanitari. «Crea il render dettagliato» disegna il render sulla foto scelta, con la proposta di finitura dello stile e l'elenco di quello che è stato selezionato. Il cursore confronta oggi e render.

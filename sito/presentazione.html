@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Presentazione · AncheCasa</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#16304D">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32x32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=DM+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="css/ac.css?v=6">
+<style>
+  .porta { max-width: 720px; margin: 48px auto 80px; }
+  .porta h1 { font-size: clamp(32px, 4vw, 48px); margin-bottom: 10px; }
+  .porta .lead { color: var(--grigio); margin-bottom: 22px; }
+  .porta .modulo { display: flex; gap: 10px; align-items: end; flex-wrap: wrap; }
+  .porta label { display: block; font-weight: 700; color: var(--blu); margin-bottom: 6px; }
+  .porta .err { color: #9a3412; font-weight: 700; margin-top: 12px; }
+  .lista { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+  .lista li { display: flex; align-items: center; gap: 14px; background: #fff; border: 1px solid var(--linea); border-radius: 16px; padding: 14px 16px; }
+  .lista b { display: block; color: var(--blu); }
+  .lista small { color: var(--grigio); }
+  .lista .btn { margin-left: auto; min-height: 42px; padding: 0 18px; }
+</style>
+</head>
+<body>
+<a class="skip" href="#contenuto">Vai al contenuto</a>
+<header class="testata"><div class="wrap">
+  <a class="marchio" href="index.html" aria-label="AncheCasa, home"><img src="assets/logo-colore.png" alt="AncheCasa · Costruiamo fiducia"></a>
+  <nav class="menu" id="menu" aria-label="Menu principale"><div class="gruppo"><button type="button" class="apri" aria-expanded="false" aria-controls="g-casa">Per la casa<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="tendina" id="g-casa"><a href="trova.html"><b>Trova artigiano</b><small>Video di 5 secondi, artigiani in zona</small></a><a href="supermastro.html"><b>SuperMastro</b><small>Il pronto intervento per i guasti</small></a><a href="ristruttura.html"><b>Ristruttura casa</b><small>AncheCasa general contractor, con garanzie</small></a><a href="bacheca.html"><b>Bacheca annunci</b><small>Case, affitti, alloggi studenti, lavoro</small></a></div></div><div class="gruppo"><button type="button" class="apri" aria-expanded="false" aria-controls="g-aziende">Per le aziende<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="tendina" id="g-aziende"><a href="app.html"><b>App per la tua attività</b><small>Un'app per ogni mestiere, con l'Ufficio</small></a><a href="appalti.html"><b>Appalti e subappalti</b><small>General contractor, imprese e fornitori</small></a><a href="https://sicura.anchecasa.it"><b>AncheSicura</b><small>La sicurezza di AncheCasa</small></a></div></div><div class="gruppo"><button type="button" class="apri" aria-expanded="false" aria-controls="g-lavora">Lavora con noi<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="tendina" id="g-lavora"><a href="agenti.html"><b>Diventa agente</b><small>Porti persone e aziende nella rete</small></a><a href="partner.html"><b>Diventa affiliato</b><small>Ristrutturazioni AncheCasa in subappalto</small></a><a href="citta.html"><b>AncheCasa nella tua città</b><small>Le città d'Italia</small></a></div></div><a class="voce" href="come-funziona.html">Come funziona</a><a class="voce" href="prezzi.html">Prezzi</a><a class="voce" href="https://magazine.anchecasa.it/">Magazine</a><a class="voce voce-pc on" href="presentazione.html">Presentazione</a></nav>
+  <div class="azioni">
+    <a class="accedi" href="https://areaprivata.anchecasa.it/">Accedi</a>
+    <a class="btn" href="iscriviti.html">Iscriviti</a>
+    <button class="hamburger" id="hamburger" type="button" aria-label="Apri il menu" aria-expanded="false" aria-controls="menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  </div>
+</div></header>
+<main id="contenuto">
+  <section class="wrap porta">
+    <p class="kicker">AncheCasa</p>
+    <h1>Presentazione</h1>
+    <div id="chiusa">
+      <p class="lead">Scrivi la password per aprire le sei presentazioni.</p>
+      <form class="modulo" id="porta">
+        <div><label for="pw">Password</label><input id="pw" type="password" autocomplete="current-password" inputmode="numeric" required></div>
+        <button class="btn" type="submit">Entra</button>
+      </form>
+      <p class="err" id="err" hidden>Password non corretta.</p>
+    </div>
+    <div id="aperta" hidden>
+      <p class="lead">Sei presentazioni. Apri ne mostra una a schermo intero, con le frecce avanti e indietro.</p>
+      <ol class="lista" id="lista"></ol>
+    </div>
+  </section>
+</main>
+<footer class="piede"><div class="wrap">
+  <div class="basso"><span>AncheCasa è un marchio di Palumbo Investments Srl. Tutti i diritti riservati.</span>
+    <nav aria-label="Informazioni legali"><a href="privacy.html">Privacy</a><a href="cookie.html">Cookie</a><a href="note-legali.html">Note legali</a></nav></div>
+</div></footer>
+<script src="js/ac.js?v=8"></script>
+<script>
+(function () {
+  var CHIAVE = "ac-pres";
+  var ATTESA = "242424";
+  var BASE = "https://entra.anchecasa.it/dashboard/docs/presentazioni/";
+  var VOCI = [
+    ["1-AncheCasa-perche-adesso", "Perché adesso", "9 min"],
+    ["2-AncheCasa-SuperMastro", "SuperMastro, il rubinetto di Rosa", "7 min"],
+    ["3-Sopralluogo-Flash-come-funziona", "Sopralluogo Flash, il bagno di Anna", "11 min"],
+    ["4-AncheCasa-come-guadagni", "Come guadagni, il primo anno di Giulia", "9 min"],
+    ["5-AncheCasa-gare-cantieri-computi", "Gare e cantieri, l'impresa di Luca", "7 min"],
+    ["6-AncheCasa-si-parte-domani", "Si parte domani, il primo giorno di Marco", "7 min"]
+  ];
+  var chiusa = document.getElementById("chiusa");
+  var aperta = document.getElementById("aperta");
+  var lista = document.getElementById("lista");
+  var err = document.getElementById("err");
+  function mostra() {
+    lista.innerHTML = VOCI.map(function (v, i) {
+      return '<li><span><b>' + (i + 1) + '. ' + v[1] + '</b><small>' + v[2] + '</small></span><a class="btn" href="' + BASE + v[0] + '.html">Apri</a></li>';
+    }).join("");
+    chiusa.hidden = true;
+    aperta.hidden = false;
+  }
+  try { if (sessionStorage.getItem(CHIAVE) === "1") mostra(); } catch (e) {}
+  document.getElementById("porta").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var ok = document.getElementById("pw").value.trim() === ATTESA;
+    err.hidden = ok;
+    if (!ok) return;
+    try { sessionStorage.setItem(CHIAVE, "1"); } catch (e2) {}
+    mostra();
+  });
+})();
+</script>
+</body>
+</html>

@@ -3,18 +3,18 @@
 # Per un nuovo numero: aggiungi il numero in NUMERI e i suoi articoli in ARTICOLI (campo "numero"), poi lancia genera.py.
 # Regola della redazione: nessuna impresa citata o sponsorizzata; per chi lo fa, sempre anchecasa.it.
 
-AGGIORNATO = "2026-10-10"          # data di controllo dei contenuti (formato AAAA-MM-GG)
+AGGIORNATO = "2026-10-13"          # data di controllo dei contenuti (formato AAAA-MM-GG)
 SCADENZA_BONUS = "2026-12-31"      # per il conto alla rovescia in home
 
 NUMERI = [
     {"n": 1, "data": "Ottobre 2026", "uscita": "2026-10-09", "copertina": "copertina-n1.jpg",
      "titolo": "Il primo numero",
      "strillo": "Gli ultimi giorni del bonus casa al 50%, la bolletta letta in due minuti, il preventivo blindato.",
+     "sfoglia": "https://anchecasa.it/magazine-1"},
+    {"n": 2, "data": "Ottobre 2026", "uscita": "2026-10-13", "copertina": "copertina-n2.jpg",
+     "titolo": "Speciale ristrutturazioni",
+     "strillo": "Rifare casa senza sorprese in 5 pagine: il sopralluogo, il bagno nell’ordine giusto, la casa vista prima e dopo, il preventivo che si capisce. E arriva l’app della raccolta.",
      "sfoglia": "https://anchecasa.it/magazine"},
-    {"n": 2, "data": "1° novembre 2026", "uscita": "2026-11-01", "copertina": None,
-     "titolo": "In arrivo",
-     "strillo": "Esce l’app gratuita della raccolta differenziata: cosa portare fuori stasera, nel tuo Comune.",
-     "sfoglia": None},
 ]
 
 RUBRICHE = [
@@ -44,6 +44,103 @@ APP = [
 # ---------------------------------------------------------------- articoli
 # corpo: HTML semplice (p, h2, ul, ol, blockquote, figure). Niente nomi di imprese.
 ARTICOLI = [
+
+{
+ "slug": "rifare-casa-senza-sorprese", "numero": 2, "rubrica": "editoriale", "ordine": 0,
+ "titolo": "Rifare casa, senza sorprese",
+ "sommario": "Chi chiama per un lavoro vuole spendere il giusto e un consiglio onesto. In questo numero: come si fa bene, in cinque pagine.",
+ "img": "n2-sopralluogo.jpg", "alt": "Un tecnico fotografa la cucina mentre la proprietaria spiega cosa vuole cambiare", "lettura": 2,
+ "corpo": """
+<p>Chi chiama per un lavoro in casa di solito vuole due cose: spendere il giusto e ricevere un consiglio onesto. Spesso riceve un giro veloce, due foto e un prezzo a voce.</p>
+<p>In questo numero vi spieghiamo come si fa bene, in cinque pagine: cosa deve lasciarvi un sopralluogo, l’ordine giusto dei lavori nel bagno, come vedere la casa finita prima di decidere e come leggere un preventivo. E arriva l’app gratuita della raccolta differenziata.</p>
+<p class="cta-sopr"><a class="tasto" href="https://anchecasa.it/ristruttura.html#sopralluogo">Richiedi un sopralluogo gratuito</a></p>
+<p><em>La redazione di AncheCasa</em></p>
+""",
+ "fonti": []
+},
+{
+ "slug": "il-sopralluogo-cosa-ti-deve-lasciare", "numero": 2, "rubrica": "lavori", "ordine": 1, "copertina": True,
+ "titolo": "Il sopralluogo: cosa ti deve lasciare",
+ "sommario": "Misure, foto, lo stato della casa e una relazione scritta. Se dopo il sopralluogo non hai niente in mano, non è stato un sopralluogo.",
+ "img": "n2-sopralluogo.jpg", "alt": "Il tecnico fotografa la parete della cucina durante il sopralluogo", "lettura": 3,
+ "corpo": """
+<p>Il sopralluogo è il momento in cui si decide quasi tutto: cosa si fa, quanto costa, quanto dura. Un buon sopralluogo non è una visita di cortesia: è un lavoro, e deve lasciarti qualcosa in mano.</p>
+<h2>Le cinque cose da pretendere</h2>
+<ol>
+<li><strong>Le misure</strong> di ogni stanza: pavimento, pareti, porte e finestre.</li>
+<li><strong>Le foto</strong> di ogni ambiente, anche fuori: facciata, balconi, giardino.</li>
+<li><strong>Lo stato della casa:</strong> impianti, umidità, crepe, le cose da controllare.</li>
+<li><strong>Le tue parole:</strong> cosa vuoi, cosa non ti piace, il budget.</li>
+<li><strong>Una relazione scritta</strong> e una data per il preventivo.</li>
+</ol>
+<blockquote>Se dopo il sopralluogo non hai niente in mano, non è stato un sopralluogo.</blockquote>
+<p class="cta-sopr"><a class="tasto" href="https://anchecasa.it/ristruttura.html#sopralluogo">Richiedi un sopralluogo gratuito</a></p>
+""",
+ "fonti": []
+},
+{
+ "slug": "il-bagno-nell-ordine-giusto", "numero": 2, "rubrica": "lavori", "ordine": 2, "copertina": True,
+ "titolo": "Il bagno, nell’ordine giusto",
+ "sommario": "Prima si decide, poi gli impianti, poi l’impermeabilizzazione. Rivestimenti, sanitari e mobili vengono dopo. Mai il contrario.",
+ "img": "n2-cantiere.jpg", "alt": "Un piastrellista posa il nuovo pavimento in un bagno in ristrutturazione", "lettura": 4,
+ "corpo": """
+<p>Rifare il bagno è il lavoro più chiesto in casa. È anche quello dove un errore di ordine costa di più: una parete da riaprire, una doccia che perde, un mobile che non entra.</p>
+<h2>I passi</h2>
+<ol>
+<li><strong>Progetto e scelte.</strong> Misure, sanitari, doccia o vasca, rivestimenti: si decide tutto prima di demolire.</li>
+<li><strong>Impianti nuovi.</strong> Idraulico ed elettrico si rifanno prima di chiudere le pareti, non dopo.</li>
+<li><strong>Impermeabilizzazione.</strong> Sotto la doccia, soprattutto se a filo pavimento: è la parte che non si vede e che conta di più.</li>
+<li><strong>Massetto e rivestimenti.</strong> Pavimento e pareti, con le pendenze giuste verso lo scarico.</li>
+<li><strong>Sanitari, mobili e collaudo.</strong> Si montano alla fine e si prova tutto prima dell’ultimo pagamento.</li>
+</ol>
+<h2>Da sapere</h2>
+<ul>
+<li>Se sposti tramezzi o impianti, di solito serve la CILA: la presenta il tecnico. Le regole possono cambiare per Comune.</li>
+<li>Tieni da parte il 10–15% del budget per gli imprevisti.</li>
+<li>Paga a stati di avanzamento verificati, non tutto prima.</li>
+</ul>
+<p class="cta-sopr"><a class="tasto" href="https://anchecasa.it/ristruttura.html#sopralluogo">Richiedi un sopralluogo gratuito</a></p>
+""",
+ "fonti": []
+},
+{
+ "slug": "vedi-la-casa-finita-prima-di-decidere", "numero": 2, "rubrica": "abitare", "ordine": 3, "copertina": True,
+ "titolo": "Vedi la casa finita, prima di decidere",
+ "sommario": "Dalle foto del sopralluogo si può simulare il risultato: la facciata rifatta, il bagno in tre livelli di finitura. Scegli con gli occhi, non a parole.",
+ "img": "n2-bagno-coppia.jpg", "alt": "Una coppia nel bagno appena ristrutturato", "lettura": 3,
+ "corpo": """
+<p>La parte più difficile di un lavoro in casa è immaginarlo finito. Per questo tante decisioni si prendono a parole e si scoprono a cantiere chiuso.</p>
+<p>Oggi, partendo dalle foto del sopralluogo, si può simulare il risultato: come diventa la facciata, come cambia il bagno con tre livelli di finitura diversi, dall’essenziale al più ricercato.</p>
+<h2>Tre livelli, tre prezzi</h2>
+<ul>
+<li><strong>Essenziale:</strong> materiali semplici e durevoli, il prezzo più basso.</li>
+<li><strong>Comfort:</strong> qualche scelta in più, dove si vede e si usa ogni giorno.</li>
+<li><strong>Prestige:</strong> materiali e dettagli di pregio.</li>
+</ul>
+<blockquote>Lo stesso bagno, tre prezzi diversi: scegli tu dove fermarti.</blockquote>
+<p>Ricorda: la simulazione è indicativa. Serve a scegliere, non è il progetto.</p>
+<p class="cta-sopr"><a class="tasto" href="https://anchecasa.it/ristruttura.html#sopralluogo">Richiedi un sopralluogo gratuito</a></p>
+""",
+ "fonti": []
+},
+{
+ "slug": "un-preventivo-che-si-capisce", "numero": 2, "rubrica": "lavori", "ordine": 4, "copertina": True,
+ "titolo": "Un preventivo che si capisce",
+ "sommario": "Voce per voce, confrontato con il prezzario della tua regione, con tempi, pagamenti e garanzie scritte. Niente «a corpo».",
+ "img": "n2-retro.jpg", "alt": "Cucina e soggiorno ristrutturati, la sera", "lettura": 3,
+ "corpo": """
+<p>Un preventivo serve a due cose: sapere cosa si fa e poterlo confrontare. Se non si capisce, non serve a nessuna delle due.</p>
+<h2>Come deve essere</h2>
+<ol>
+<li><strong>Voce per voce,</strong> con quantità e prezzo: niente «a corpo».</li>
+<li><strong>Confrontato con il prezzario</strong> della tua regione, il riferimento pubblico dei prezzi.</li>
+<li><strong>Con i tempi,</strong> i pagamenti a stati di avanzamento e le garanzie scritte.</li>
+</ol>
+<p>Con AncheCasa il sopralluogo è gratuito: misure, foto, relazione e la tua casa vista prima e dopo arrivano per mail. Il preventivo arriva entro 5 giorni, 48 ore se è urgente.</p>
+<p class="cta-sopr"><a class="tasto" href="https://anchecasa.it/ristruttura.html#sopralluogo">Richiedi un sopralluogo gratuito</a></p>
+""",
+ "fonti": []
+},
 {
  "slug": "la-casa-finalmente-spiegata-bene", "numero": 1, "rubrica": "editoriale", "ordine": 0,
  "titolo": "La casa, finalmente spiegata bene",
@@ -59,7 +156,7 @@ ARTICOLI = [
 <li><strong>Strumenti gratuiti, per sempre.</strong> Dentro la rivista ci sono app che puoi usare subito: per controllare la bolletta, per capire un guasto, presto per la raccolta differenziata. Si usano e si scaricano gratis, sempre.</li>
 </ol>
 <h2>Chi lo fa</h2>
-<p>Il magazine è di AncheCasa, la piazza che mette in contatto chi ha bisogno di un lavoro in casa con chi lo fa. Le app che trovi qui le ha sviluppate AncheStudio, la società di software di AncheCasa, la stessa che ha costruito tutta la piattaforma.</p>
+<p>Il magazine è di AncheCasa, la piazza che mette in contatto chi ha bisogno di un lavoro in casa con chi lo fa. Le app che trovi qui le ha sviluppate AncheCasa Studio srl, la società di software di AncheCasa, la stessa che ha costruito tutta la piattaforma.</p>
 <p>Lo diciamo chiaro perché la fiducia comincia da qui: sai sempre chi ti sta parlando.</p>
 <blockquote>Una cosa alla volta, spiegata bene. Se non è chiara, è colpa nostra.</blockquote>
 <p>Buona lettura. E se c’è un argomento che vorresti capire meglio, scrivici: il prossimo numero lo facciamo anche con le tue domande.</p>

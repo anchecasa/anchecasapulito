@@ -1,0 +1,1064 @@
+/* AncheCasa Magazine · sfogliabile.
+   Le pagine sono disegnate a misura fissa e il libro viene scalato per lo schermo.
+   Doppia pagina da 900 px in su, pagina singola sul telefono.
+   Per un nuovo numero: cambia NUMERO e l'array PAGINE.
+   Numero 2 (13.10.2026): questo file. Il numero 1 resta in js/magazine.js, pagina magazine-1.html. */
+(function () {
+  "use strict";
+
+  var NUMERO = { n: 2, data: "Ottobre 2026", prossimo: "1° novembre 2026", cartella: "magazine/numero-2/" };
+
+  /* ---------------- statistiche anonime (09.10.2026) ----------------
+     Conta aperture, pagine viste, Check Bollette, PDF, offerte, condivisioni e iscrizioni.
+     Niente cookie e niente dati personali: "sessione" è un codice casuale che vive finché la scheda è aperta.
+     Città e regione le aggiunge la funzione Vercel /api/mag (sito/api/mag.js). Conta solo su anchecasa.it
+     (per provare altrove: ?stat=prova). Riepilogo nella dashboard admin, pagina "Magazine". */
+  var STAT = (function () {
+    var attivo = /(^|\.)anchecasa\.it$/.test(location.hostname) || /[?&]stat=prova/.test(location.search);
+    var coda = [], visti = {}, timer = null, ses = "";
+    try { ses = sessionStorage.getItem("ac-mag-s") || ""; } catch (e) { /* storage non disponibile */ }
+    if (!ses) {
+      ses = Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+      try { sessionStorage.setItem("ac-mag-s", ses); } catch (e2) { /* storage non disponibile */ }
+    }
+    var ua = navigator.userAgent || "";
+    var disp = /iPad|Tablet/i.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1) ? "tablet" : /Mobi|Android|iPhone/i.test(ua) ? "telefono" : "pc";
+    var da = (function () {
+      var m = location.search.match(/[?&](?:da|utm_source)=([^&]+)/);
+      if (m) { try { return decodeURIComponent(m[1]).slice(0, 60); } catch (e) { return m[1].slice(0, 60); } }
+      if (!document.referrer) return "diretto";
+      try {
+        var h = new URL(document.referrer).hostname.replace(/^www\./, "");
+        return /(^|\.)anchecasa\.it$/.test(h) ? "sito anchecasa" : h;
+      } catch (e2) { return "altro"; }
+    })();
+    function invia(beacon) {
+      clearTimeout(timer); timer = null;
+      if (!coda.length) return;
+      if (!attivo) { coda = []; return; }
+      var corpo = JSON.stringify({ s: ses, n: NUMERO.n, d: disp, da: da, ev: coda.splice(0, 40) });
+      try {
+        if (beacon && navigator.sendBeacon && navigator.sendBeacon("/api/mag", new Blob([corpo], { type: "text/plain" }))) return;
+        fetch("/api/mag", { method: "POST", headers: { "Content-Type": "application/json" }, body: corpo, keepalive: true }).catch(function () {});
+      } catch (e) { /* le statistiche non devono mai bloccare la rivista */ }
+    }
+    function traccia(evento, pagina, dettaglio) {
+      var k = evento + "|" + (pagina == null ? "" : pagina) + "|" + (dettaglio || "");
+      if (visti[k]) return;
+      visti[k] = 1;
+      coda.push({ e: evento, p: pagina == null ? null : pagina, x: dettaglio || "" });
+      if (!timer) timer = setTimeout(function () { invia(false); }, 2500);
+    }
+    window.addEventListener("pagehide", function () { invia(true); });
+    document.addEventListener("visibilitychange", function () { if (document.visibilityState === "hidden") invia(true); });
+    var kA = "ac-mag-ap-" + NUMERO.n, gia = false;
+    try { gia = sessionStorage.getItem(kA) === "1"; sessionStorage.setItem(kA, "1"); } catch (e3) { /* storage non disponibile */ }
+    if (!gia) traccia("apertura");
+    traccia("pagina", 0);
+    return { traccia: traccia };
+  })();
+  window.ACMagStat = STAT;
+  /* Azienda luce e gas della rete AncheCasa per il pulsante dello strumento: nome e link alla sua pagina.
+     Vuoto = «Confronta offerte» (Portale Offerte ARERA). */
+  var PARTNER_ENERGIA = { nome: "", url: "" };
+  var SPREAD = { w: 500, h: 700 };
+  var SINGLE = { w: 400, h: 740 };
+  var TURN_MS = 950;
+  var NO_FLIP = "input,select,textarea,button,a,label,[data-noflip]";
+
+  /* ---------------- riferimenti per lo strumento bolletta ---------------- */
+  // Prezzo luce di riferimento: tutela vulnerabili dal 1° ottobre 2026, tasse incluse (ARERA).
+  // Prezzo gas di riferimento: stima Unione Nazionale Consumatori, ottobre 2026 (1.581 € per 1.100 m³).
+  var RIF = {
+    luce: { prezzo: 0.4343, unita: "kWh", fonte: "ARERA, tutela vulnerabili dal 1° ottobre 2026, tasse incluse" },
+    gas: { prezzo: 1.44, unita: "Smc", fonte: "stima Unione Nazionale Consumatori su dati ARERA, ottobre 2026" },
+    // consumi annui di riferimento per numero di persone (luce: elaborazioni su dati ARERA)
+    consumoLuce: { 1: 1400, 2: 2350, 3: 2700, 4: 3450, 5: 5200 },
+    // gas: famiglia tipo ARERA con riscaldamento autonomo
+    consumoGas: { 1: 900, 2: 1200, 3: 1400, 4: 1550, 5: 1700 }
+  };
+
+  /* ---------------- helper di impaginazione ---------------- */
+  function img(nome, alt) {
+    return '<img src="' + NUMERO.cartella + nome + '.jpg" alt="' + alt + '" draggable="false" decoding="async">';
+  }
+  function folio(i, onPhoto) {
+    return '<div class="mg-folio' + (onPhoto ? " on-photo" : "") + '"><span><b>' + i + "</b></span><span>AncheCasa Magazine · N." + NUMERO.n + " · " + NUMERO.data + "</span></div>";
+  }
+  function kicker(t) { return '<div class="mg-kicker">' + t + "</div>"; }
+  var ICO = {
+    leaf: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19c0-8 5-14 15-14 0 10-6 15-14 15"/><path d="M5 19 14 10"/></svg>',
+    snow: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9"/><path d="M9.5 4.5 12 7l2.5-2.5M9.5 19.5 12 17l2.5 2.5"/></svg>',
+    flower: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="2.6"/><circle cx="12" cy="6" r="3"/><circle cx="12" cy="18" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="12" r="3"/></svg>',
+    sun: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.2 5.2l1.8 1.8M17 17l1.8 1.8M5.2 18.8 7 17M17 7l1.8-1.8"/></svg>',
+    shield: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M3 11 12 4l9 7"/><path d="M5.5 9.5V20h13V9.5"/><path d="M9 20v-5h6v5"/></svg>',
+    flame: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3c1 4 5 5.5 5 10a5 5 0 0 1-10 0c0-2.5 1.5-4 2.5-5 .3 2 1.3 3 2.5 3.5C12 9 11 6 12 3Z"/></svg>',
+    panel: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M3 15 6 6h15l-3 9Z"/><path d="M4.5 10.5h15M12.5 6l-2 9"/><path d="M10 15v5M7 20h6"/></svg>',
+    check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>',
+    arrow: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>'
+  };
+  function ico(n, cls) { return '<span class="mg-ico ' + (cls || "") + '" aria-hidden="true">' + ICO[n] + "</span>"; }
+
+  /* ---------------- le pagine del numero 2 (13.10.2026): app della raccolta e 5 pagine su come ristrutturare casa ---------------- */
+  var CTA_SOPR = "https://anchecasa.it/ristruttura.html#sopralluogo";
+  var PAGINE = [
+    /* 0 · COPERTINA (stessa testata del numero 1, cambia la foto) */
+    { cover: true, html: function () {
+      return '<div class="mg-page mg-cover">' +
+        '<div class="mg-bleed mg-photo">' + img("copertina", "Una coppia nel bagno appena ristrutturato, con doccia a filo pavimento e mobile in legno") + "</div>" +
+        '<div class="mg-shade-t"></div><div class="mg-shade-b"></div>' +
+        '<div class="mg-masthead"><div class="name">Anche<span>Casa</span></div><div class="sub">Magazine</div></div>' +
+        '<div class="mg-issue"><span>N. 2</span><span>' + NUMERO.data + '</span><span>Speciale ristrutturazioni · gratuito</span></div>' +
+        '<div class="mg-coverlines">' +
+          '<div class="mg-cl-big"><div class="n">5</div><div class="t">pagine per rifare casa senza sorprese.</div></div>' +
+          "<div>" +
+            '<div class="mg-cl"><b>Bagno</b><span>Passo per passo, dalla demolizione alla doccia</span></div>' +
+            '<div class="mg-cl"><b>Sopralluogo</b><span>Cosa ti deve lasciare in mano</span></div>' +
+            '<div class="mg-cl"><b>App gratis</b><span>Cosa porto fuori stasera? Arriva la raccolta</span></div>' +
+          "</div>" +
+        "</div>" +
+        '<button type="button" class="mg-sticker" data-goto="7" aria-label="Richiedi un sopralluogo gratuito, a pagina 7">' +
+          '<span class="k">Gratis</span>' +
+          '<span class="h"><em>Richiedi</em><br>un sopralluogo</span>' +
+          '<span class="d">Misure, foto e la tua casa vista prima e dopo</span>' +
+          '<span class="p">pag. 7</span>' +
+        '</button>' +
+        '<div class="mg-slogan">Costruiamo fiducia</div>' +
+      "</div>";
+    } },
+
+    /* 1 · EDITORIALE */
+    { html: function (i) {
+      return '<div class="mg-page">' +
+        '<div class="mg-photo mg-ph-ed" style="height:52%">' + img("sopralluogo", "Un tecnico fotografa la cucina mentre la proprietaria spiega cosa vuole cambiare") +
+          '<div class="mg-shade-b"></div>' +
+          '<div class="mg-opener" style="bottom:22px">' + kicker("Editoriale") +
+          '<h1 class="mg-h1" style="font-size:42px">Rifare casa, <em>senza</em> sorprese.</h1></div>' +
+        "</div>" +
+        '<div class="mg-pad" style="padding-top:22px;flex:1;display:flex;flex-direction:column;min-height:0">' +
+        '<div class="mg-body"><div class="mg-cols" style="font-size:calc(var(--mg-body) + .8px)">' +
+        '<p class="mg-p mg-dropcap">Chi chiama per un lavoro in casa di solito vuole due cose: spendere il giusto e ricevere un consiglio onesto. Spesso riceve un giro veloce, due foto e un prezzo a voce.</p>' +
+        '<p class="mg-p">In questo numero vi spieghiamo come si fa bene: cosa deve lasciarvi un sopralluogo, l’ordine giusto dei lavori nel bagno, come vedere la casa finita prima di decidere e come leggere un preventivo. E arriva l’app gratuita della raccolta.</p>' +
+        '<p class="mg-sign">La redazione di AncheCasa</p>' +
+        "</div></div>" +
+        '<div class="mg-inside" aria-label="In questo numero"><div class="t">In questo numero</div>' +
+          [[7, "Richiedi un sopralluogo gratuito", "Gratis"], [3, "Rifare casa in 5 pagine", ""], [2, "L’app della raccolta, in arrivo", ""]].map(function (x) {
+            return '<button type="button" data-goto="' + x[0] + '" data-noflip><span>' + x[1] + (x[2] ? ' <em>' + x[2] + "</em>" : "") + "</span><b>" + x[0] + "</b></button>";
+          }).join("") +
+        "</div>" +
+        '<p class="mg-small" style="border-top:1px solid var(--mg-rule);padding-top:6px;margin:0">N. ' + NUMERO.n + " · " + NUMERO.data + " · Gratuito su anchecasa.it · Esce ogni 15 giorni. Contenuti divulgativi: non sostituiscono il parere di un tecnico.</p>" +
+        "</div>" + folio(i) + "</div>";
+    } },
+    /* 2 · IN ARRIVO: APP RACCOLTA RIFIUTI (09.10.2026). Testo sulla fascia blu, volto libero, modulo a scomparsa. */
+    { cover: true, html: function (i) {
+      return '<div class="mg-page mg-p2app">' +
+        '<div class="mg-bleed mg-photo mg-p2-bg">' + img("rifiuti-casa", "Una donna nella sua cucina moderna, accanto ai contenitori di design per la differenziata, mostra sul telefono l’app AncheCasa con cosa portare fuori stasera") + '</div>' +
+        '<div class="mg-p2-app" aria-hidden="true">' +
+          '<div class="hd"><span class="dot"></span>Comune di Bergamo</div>' +
+          '<div class="it"><i style="background:#2f74d0"></i><span><small>Stasera</small><b>Carta e cartone</b><small>Dalle 20:00 alle 24:00</small></span></div>' +
+          '<div class="it"><i style="background:#f2c230"></i><span><small>Domani</small><b>Plastica e metalli</b></span></div>' +
+        '</div>' +
+        '<div class="mg-p2-head">' +
+          '<div class="mg-kicker">L’app gratuita · in arrivo</div>' +
+          '<h2 class="mg-h1">Cosa porto fuori <em>stasera?</em></h2>' +
+        '</div>' +
+        '<div class="mg-p2-glass" data-noflip>' +
+          '<button type="button" class="mg-p2-open" aria-expanded="false"><span class="bell" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9a6 6 0 0 1 12 0c0 6 2.5 7.5 2.5 7.5h-17S6 15 6 9Z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg></span><span class="tx"><b>Avvisami gratis quando esce</b><small>Cosa esporre e a che ora, nel tuo Comune</small></span><span class="go" aria-hidden="true">›</span></button>' +
+          '<form class="mg-avvisi" novalidate hidden>' +
+            '<div class="r"><input type="email" name="mail" placeholder="La tua mail" autocomplete="email" required aria-label="La tua mail"><input type="text" name="comune" placeholder="Comune" autocomplete="address-level2" aria-label="Il tuo Comune"><button type="submit" class="mg-p2-send" aria-label="Invia">›</button></div>' +
+            '<label class="ok"><input type="checkbox" name="privacy" required><span>Ho letto l’<a href="privacy.html" target="_blank" rel="noopener">informativa privacy</a></span></label>' +
+            '<p class="esito" role="status" hidden></p>' +
+          "</form>" +
+        "</div>" +
+        folio(i, true) + "</div>";
+    } },
+
+
+    /* 3 · RISTRUTTURARE 1/5 · APERTURA */
+    { cover: true, html: function (i) {
+      return '<div class="mg-page">' +
+        '<div class="mg-bleed mg-photo">' + img("bagno-cantiere", "Un piastrellista posa il nuovo pavimento in un bagno in ristrutturazione") + '</div><div class="mg-shade-b"></div>' +
+        '<div class="mg-opener">' + kicker("Speciale · Rifare casa · 1 di 5") +
+        '<h1 class="mg-h1">Rifare casa <em>senza sorprese</em></h1>' +
+        '<p class="mg-dek">Bagno, cucina, casa intera: le regole per spendere il giusto, sapere cosa si fa e vedere il risultato prima di firmare.</p>' +
+        '<a class="mg-cta" href="' + CTA_SOPR + '" target="_blank" rel="noopener">Richiedi un sopralluogo gratuito</a></div>' +
+        folio(i, true) + "</div>";
+    } },
+
+    /* 4 · RISTRUTTURARE 2/5 · IL SOPRALLUOGO */
+    { html: function (i) {
+      return '<div class="mg-page">' +
+        '<div class="mg-photo mg-ph-grow2" style="height:270px">' + img("sopralluogo", "Il tecnico fotografa la parete della cucina durante il sopralluogo") + "</div>" +
+        '<div class="mg-pad" style="padding-top:18px;flex:1;display:flex;flex-direction:column;min-height:0">' + kicker("Rifare casa · 2 di 5") +
+        '<h2 class="mg-h2">Il sopralluogo: cosa ti deve lasciare</h2>' +
+        '<div class="mg-body"><div class="mg-cols"><ul class="mg-list">' +
+        "<li><b>Le misure</b> di ogni stanza: pavimento, pareti, porte e finestre.</li>" +
+        "<li><b>Le foto</b> di ogni ambiente, anche fuori: facciata, balconi, giardino.</li>" +
+        "<li><b>Lo stato della casa:</b> impianti, umidità, crepe, cose da controllare.</li>" +
+        "<li><b>Le tue parole:</b> cosa vuoi, cosa non ti piace, il budget.</li>" +
+        "<li><b>Una relazione scritta</b> e una data per il preventivo.</li>" +
+        "</ul>" + '<div class="mg-quote">Se dopo il sopralluogo non hai niente in mano, non è stato un sopralluogo.</div>' +
+        "</div></div></div>" + folio(i) + "</div>";
+    } },
+
+    /* 5 · RISTRUTTURARE 3/5 · IL BAGNO */
+    { html: function (i) {
+      var step = function (n, ic, t, d) {
+        return '<div class="mg-stepv"><div class="num">' + n + "</div>" + ico(ic, "big") + "<div><b>" + t + "</b>" + d + "</div></div>";
+      };
+      return '<div class="mg-page mg-pad">' + kicker("Rifare casa · 3 di 5") +
+        '<h2 class="mg-h2" style="font-size:31px">Il bagno,<br><em style="color:var(--mg-orange-ink)">nell’ordine giusto</em></h2>' +
+        '<div class="mg-body">' +
+        '<div class="mg-stepsv">' +
+          step("1", "shield", "Progetto e scelte", "Misure, sanitari, doccia o vasca, rivestimenti: si decide tutto prima di demolire.") +
+          step("2", "flame", "Impianti nuovi", "Idraulico ed elettrico si rifanno prima di chiudere le pareti, non dopo.") +
+          step("3", "panel", "Impermeabilizzazione", "Sotto la doccia, soprattutto se a filo pavimento: è la parte che non si vede e che conta di più.") +
+        "</div>" +
+        '<div class="mg-quote" style="font-size:20px">Massetto, rivestimenti, sanitari e mobili vengono dopo. Mai il contrario.</div>' +
+        '<div class="mg-checks dark">' +
+          "<div>" + ico("check") + "Se sposti tramezzi o impianti, di solito serve la CILA</div>" +
+          "<div>" + ico("check") + "Tieni da parte il 10–15% del budget per gli imprevisti</div>" +
+          "<div>" + ico("check") + "Paga a stati di avanzamento, non tutto prima</div>" +
+        "</div>" +
+        "</div>" + folio(i) + "</div>";
+    } },
+
+    /* 6 · RISTRUTTURARE 4/5 · VEDI LA CASA FINITA */
+    { html: function (i) {
+      var f = function (n, t, hot) { return '<figure style="margin:0;display:flex;flex-direction:column;gap:4px"><div class="mg-photo" style="height:118px;border-radius:6px;overflow:hidden' + (hot ? ";outline:3px solid var(--mg-orange)" : "") + '">' + img(n, t) + '</div><figcaption class="mg-small" style="margin:0;font-weight:700">' + t + "</figcaption></figure>"; };
+      return '<div class="mg-page mg-pad">' + kicker("Rifare casa · 4 di 5") +
+        '<h2 class="mg-h2">Vedi la casa finita, prima di decidere</h2>' +
+        '<div class="mg-body">' +
+        '<p class="mg-p">Dalle foto del sopralluogo si può simulare il risultato: la facciata rifatta, il bagno in tre livelli di finitura. È una simulazione indicativa, ma ti fa scegliere con gli occhi, non a parole.</p>' +
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0">' + f("facciata-prima", "Oggi") + f("facciata-dopo", "Simulazione", true) + "</div>" +
+        '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">' +
+          [["bagno-prima", "Oggi"], ["bagno-essenziale", "Essenziale"], ["bagno-comfort", "Comfort"], ["bagno-prestige", "Prestige"]].map(function (x, k) {
+            return '<figure style="margin:0"><div class="mg-photo" style="height:70px;border-radius:5px;overflow:hidden' + (k === 3 ? ";outline:3px solid var(--mg-orange)" : "") + '">' + img(x[0], "Bagno · " + x[1]) + '</div><figcaption class="mg-small" style="margin:3px 0 0;font-weight:700">' + x[1] + "</figcaption></figure>";
+          }).join("") + "</div>" +
+        '<div class="mg-quote" style="font-size:19px">Lo stesso bagno, tre prezzi diversi: scegli tu dove fermarti.</div>' +
+        "</div>" + folio(i) + "</div>";
+    } },
+
+    /* 7 · RISTRUTTURARE 5/5 · IL PREVENTIVO E LA RICHIESTA */
+    { cover: true, html: function (i) {
+      return '<div class="mg-page">' +
+        '<div class="mg-bleed mg-photo">' + img("bagno-coppia", "Coppia soddisfatta nel bagno nuovo") + '</div><div class="mg-shade-b" style="background:linear-gradient(180deg,rgba(8,12,22,.15) 0%,rgba(8,12,22,.7) 38%,rgba(8,12,22,.95) 100%)"></div>' +
+        '<div class="mg-opener" style="bottom:46px">' + kicker("Rifare casa · 5 di 5") +
+        '<h1 class="mg-h1" style="font-size:38px">Un preventivo <em>che si capisce</em></h1>' +
+        '<div class="mg-3steps"><div><i>1</i>Voce per voce, con quantità e prezzo: niente «a corpo»</div><div><i>2</i>Prezzi confrontati con il prezzario della tua regione</div><div><i>3</i>Tempi, pagamenti a stati di avanzamento e garanzie scritte</div></div>' +
+        '<p class="mg-small" style="color:rgba(255,255,255,.88);font-size:12.5px;line-height:1.45;margin:10px 0">Con AncheCasa il sopralluogo è gratuito: misure, foto, relazione e la tua casa vista prima e dopo arrivano per mail. Il preventivo entro 5 giorni, 48 ore se è urgente.</p>' +
+        '<div style="display:flex;gap:10px;flex-wrap:wrap"><a class="mg-cta" href="' + CTA_SOPR + '" target="_blank" rel="noopener">Richiedi un sopralluogo gratuito</a></div>' +
+        "</div>" + folio(i, true) + "</div>";
+    } },
+
+    /* 8 · GLOSSARIO DEL CANTIERE */
+    { cover: true, html: function (i) {
+      var g = [
+        ["Capitolato", "Cosa si fa e con quali materiali, marca e modello."],
+        ["Computo", "Ogni voce con quantità e prezzo."],
+        ["Prezzario", "I prezzi di riferimento della tua regione."],
+        ["SAL", "Stato avanzamento lavori: ciò che è finito e si paga."],
+        ["CILA", "Comunicazione al Comune per i lavori senza strutture."],
+        ["Massetto", "Lo strato su cui si posa il pavimento."],
+        ["Guaina", "Impermeabilizza doccia e bagno sotto le piastrelle."],
+        ["Filo pavimento", "Doccia senza gradino, a livello del pavimento."],
+        ["Variante", "Un cambio al lavoro: si scrive e si prezza prima."],
+        ["Collaudo", "Il controllo finale prima dell’ultimo pagamento."]
+      ];
+      return '<div class="mg-page mg-pad mg-gloss">' +
+        '<div class="az" aria-hidden="true">A–Z</div>' +
+        kicker("Glossario") +
+        '<h2 class="mg-h1" style="color:#fff;font-size:42px;margin-bottom:14px">Le parole<br>del <em>cantiere</em></h2>' +
+        '<div class="mg-body"><div class="mg-tiles">' + g.map(function (x, k) {
+          return '<div class="' + (k === 0 || k === 7 ? "hot" : "") + '"><b>' + x[0] + "</b><span>" + x[1] + "</span></div>";
+        }).join("") + "</div></div>" + folio(i, true) + "</div>";
+    } },
+
+    /* 9 · RETRO */
+    { cover: true, html: function () {
+      return '<div class="mg-page mg-back-photo">' +
+        '<div class="mg-bleed mg-photo">' + img("retro", "Cucina e soggiorno ristrutturati, la sera") + '</div><div class="mg-shade-b"></div>' +
+        '<div style="position:absolute;top:34px;left:0;right:0;text-align:center;z-index:3"><img src="assets/logo/anchecasa-payoff-bianco.png" alt="AncheCasa, costruiamo fiducia" style="width:58%;max-width:260px"></div>' +
+        '<div class="mg-opener" style="bottom:40px">' + kicker("Sopralluogo gratuito") +
+        '<h2 class="mg-h1" style="font-size:36px">La tua casa,<br><em>spiegata e disegnata</em></h2>' +
+        '<div class="mg-3steps"><div><i>›</i>Misure e foto di ogni ambiente</div><div><i>›</i>La casa vista prima e dopo, in tre finiture</div><div><i>›</i>Il preventivo voce per voce, entro 5 giorni</div></div>' +
+        '<div class="mg-back-cta"><a class="mg-share-cta is-orange" href="' + CTA_SOPR + '" target="_blank" rel="noopener" data-noflip>Richiedi un sopralluogo gratuito</a>' +
+        '<button type="button" class="mg-share-cta" data-share data-noflip><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg>Condividi la rivista</button></div>' +
+        '<p class="mg-small" style="color:rgba(255,255,255,.62);margin-top:10px">AncheCasa Magazine · gratuito su anchecasa.it, ogni 15 giorni · Numero 1 su anchecasa.it/magazine-1</p></div>' +
+      "</div>";
+    } }
+  ];
+
+  /* ---------------- strumento: lettura bolletta ---------------- */
+  var IB = {
+    gauge: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 17a8 8 0 1 1 16 0"/><path d="m12 17 4-5"/><circle cx="12" cy="17" r="1.4" fill="currentColor"/></svg>',
+    home: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 12 4l9 7"/><path d="M5 10v10h14V10"/><circle cx="12" cy="13.5" r="2"/><path d="M8.5 20c.4-2 1.8-3 3.5-3s3.1 1 3.5 3"/></svg>',
+    euro: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17.5 6.5A7 7 0 1 0 17.5 17.5"/><path d="M4 10h9M4 14h9"/></svg>',
+    doc: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6v18h12V7Z"/><path d="M14 3v4h4M9 12h6M9 16h6"/></svg>'
+  };
+  var bolletta = { tipo: "luce", esempio: false };
+  function leggiNumero(v) { var n = parseFloat(String(v == null ? "" : v).replace(/\s/g, "").replace(/\.(?=\d{3}(\D|$))/g, "").replace(",", ".")); return isFinite(n) ? n : NaN; }
+
+  function euro(n, dec) { return n.toLocaleString("it-IT", { minimumFractionDigits: dec, maximumFractionDigits: dec }) + " €"; }
+  function num(n) { return Math.round(n).toLocaleString("it-IT"); }
+
+  var ESEMPIO_B = { luce: { importo: 210, consumo: 420 }, gas: { importo: 345, consumo: 210 } };
+  function calcolaBolletta() {
+    var q = function (id) { return document.getElementById(id); };
+    var importo = leggiNumero(q("mg-b-importo").value);
+    var consumo = leggiNumero(q("mg-b-consumo").value);
+    var mesi = parseInt(q("mg-b-mesi").value, 10) || 2;
+    var persone = parseInt(q("mg-b-persone").value, 10) || 3;
+    var r = RIF[bolletta.tipo];
+    var esempio = !bolletta.analizzato || !(importo > 0) || !(consumo > 0);
+    var manca = !(importo > 0) && !(consumo > 0) ? "" : !(importo > 0) ? "il totale" : !(consumo > 0) ? "il consumo" : "";
+    if (esempio) { importo = ESEMPIO_B[bolletta.tipo].importo; consumo = ESEMPIO_B[bolletta.tipo].consumo; mesi = 2; persone = 3; }
+    var prezzo = importo / consumo;
+    var annuo = consumo * 12 / mesi;
+    var spesaAnnua = importo * 12 / mesi;
+    var rifConsumo = (bolletta.tipo === "luce" ? RIF.consumoLuce : RIF.consumoGas)[persone];
+    var rP = prezzo / r.prezzo;
+    var rC = annuo / rifConsumo;
+    var vPrezzo = rP > 1.1 ? "bad" : rP < 0.95 ? "ok" : "warn";
+    var vCons = rC > 1.25 ? "bad" : rC < 0.8 ? "ok" : "warn";
+    var risparmio = rP > 1 ? (prezzo - r.prezzo) * annuo : 0;
+    return { esempio: esempio, manca: manca, importo: importo, consumo: consumo, mesi: mesi, persone: persone, prezzo: prezzo, annuo: annuo, spesaAnnua: spesaAnnua, rifConsumo: rifConsumo, rP: rP, rC: rC, vPrezzo: vPrezzo, vCons: vCons, risparmio: risparmio, rif: r };
+  }
+
+  // «l’11%», «l’8%», «l’80%», ma «il 25%»
+  function art(n) { var t = String(n); return (/^(8|11|18)/.test(t) && !/^(1[02-79]|8\d\d\d)/.test(t) ? "l’" : "il ") + t; }
+  function testiVerdetto(c) {
+    var u = c.rif.unita;
+    var tPrezzo = {
+      ok: "Il tuo costo medio è sotto il riferimento di " + euro(c.rif.prezzo, 2) + "/" + u + ". Stai pagando bene.",
+      warn: "Il tuo costo medio è in linea con il riferimento di " + euro(c.rif.prezzo, 2) + "/" + u + ".",
+      bad: "Paghi " + art(Math.round((c.rP - 1) * 100)) + "% in più del riferimento di " + euro(c.rif.prezzo, 2) + "/" + u + ". Allineandoti risparmieresti circa " + euro(c.risparmio, 0) + " all’anno: confronta le offerte."
+    }[c.vPrezzo];
+    var tCons = {
+      ok: "Consumi meno di una famiglia simile alla tua (circa " + num(c.rifConsumo) + " " + u + " all’anno).",
+      warn: "Consumi come una famiglia simile alla tua (circa " + num(c.rifConsumo) + " " + u + " all’anno).",
+      bad: "Consumi " + art(Math.round((c.rC - 1) * 100)) + "% in più di una famiglia simile (circa " + num(c.rifConsumo) + " " + u + " all’anno). Un check di impianti e isolamento può valere più di un cambio di tariffa."
+    }[c.vCons];
+    var etichetta = { ok: "Bene", warn: "In linea", bad: "Attenzione" };
+    return { tPrezzo: tPrezzo, tCons: tCons, ePrezzo: etichetta[c.vPrezzo], eCons: etichetta[c.vCons] };
+  }
+
+  // Risultato (solo dopo "Analizza"): una frase grande, il risparmio, la lancetta e una riga sui consumi.
+  function aggiornaBolletta() {
+    var out = document.getElementById("mg-b-out");
+    if (!out || !bolletta.analizzato) return;
+    var c = calcolaBolletta();
+    if (c.esempio) return;
+    var r = c.rif, u = r.unita;
+    var pct = Math.round((c.rP - 1) * 100);
+    var titolo = { bad: "Paghi " + art(pct) + "% in più del giusto", warn: "Il tuo prezzo è nella media", ok: "Il tuo prezzo è buono" }[c.vPrezzo];
+    var ratio = Math.max(0.6, Math.min(1.4, c.rP));
+    var ang = (ratio - 1) / 0.4 * 90;
+    var arc = function (a0, a1, cls) {
+      var p = function (a) { var rad = (a - 90) * Math.PI / 180; return [100 + 80 * Math.cos(rad), 100 + 80 * Math.sin(rad)]; };
+      var A = p(a0), B = p(a1);
+      return '<path class="' + cls + '" d="M' + A[0].toFixed(1) + " " + A[1].toFixed(1) + " A80 80 0 0 1 " + B[0].toFixed(1) + " " + B[1].toFixed(1) + '"/>';
+    };
+    var gauge = '<svg class="mg-gauge" viewBox="0 0 200 112" role="img" aria-label="Il tuo prezzo rispetto al giusto">' +
+      arc(-90, -11.25, "g-ok") + arc(-11.25, 22.5, "g-warn") + arc(22.5, 90, "g-bad") +
+      '<g transform="rotate(' + ang.toFixed(1) + ' 100 100)"><line x1="100" y1="100" x2="100" y2="34" class="g-needle"/></g><circle cx="100" cy="100" r="6" class="g-hub"/></svg>';
+    var cons = { ok: "meno di", warn: "come", bad: "più di" }[c.vCons];
+    var p = c.persone;
+    out.innerHTML =
+      '<p class="mg-r-cosa">La tua bolletta ' + (bolletta.tipo === "luce" ? "della luce" : "del gas") + "</p>" +
+      '<div class="mg-r-big ' + c.vPrezzo + '">' + titolo + "</div>" +
+      (c.risparmio > 0
+        ? '<div class="mg-r-save"><span>Puoi risparmiare circa</span><b>' + euro(c.risparmio, 0) + "</b><span>all’anno</span></div>"
+        : '<div class="mg-r-save ok"><span>Non stai pagando più del necessario.</span></div>') +
+      '<div class="mg-r-gauge">' + gauge +
+        '<div class="mg-r-prezzi"><div><small>Paghi</small><b>' + euro(c.prezzo, 2) + "</b><small>al " + u + '</small></div><div class="giusto"><small>Prezzo giusto</small><b>' + euro(r.prezzo, 2) + "</b><small>al " + u + "</small></div></div>" +
+      "</div>" +
+      '<div class="mg-r-cons"><p>Consumi <b>' + cons + "</b> una famiglia di " + (p >= 5 ? "5 o più persone" : p + (p === 1 ? " persona" : " persone")) + " <small>(" + num(c.annuo) + " " + u + " l’anno)</small></p>" +
+        '<div class="mg-r-pers" role="group" aria-label="Quante persone siete?"><span>Quante persone siete?</span>' +
+        [1, 2, 3, 4, 5].map(function (n) { return '<button type="button" data-pers="' + n + '" aria-pressed="' + (n === p) + '">' + (n === 5 ? "5+" : n) + "</button>"; }).join("") +
+        "</div></div>";
+  }
+
+  /* Report PDF Check Bollette (10.10.2026, rifatto): stesso stile delle mail d'invito AncheCasa.
+     Testata con logo a sinistra e anchecasa.it a destra, filo arancio; etichetta, titolo; riquadro blu «Cosa fare adesso»
+     con i numeri arancio; in fondo la STESSA curva della mail (assets/logo/footer-curva.png: fascia chiara, arancio, blu)
+     e il piede blu con il logo bianco e arancio (assets/logo/anchecasa-payoff-negativo.png). Solo contatti AncheCasa, niente dati societari. */
+  function caricaImg(src, cb) {
+    var im = new Image();
+    im.onload = function () {
+      try { var cv = document.createElement("canvas"); cv.width = im.naturalWidth; cv.height = im.naturalHeight; cv.getContext("2d").drawImage(im, 0, 0); cb({ data: cv.toDataURL("image/png"), r: im.naturalWidth / im.naturalHeight }); }
+      catch (e) { cb(null); }
+    };
+    im.onerror = function () { cb(null); };
+    im.src = src;
+  }
+  function caricaLoghi(cb) {
+    caricaImg("assets/logo-colore.png", function (colore) {
+      caricaImg("assets/logo/anchecasa-payoff-negativo.png", function (bianco) { cb({ colore: colore, bianco: bianco }); });
+    });
+  }
+
+  function scaricaPdf() {
+    var c = calcolaBolletta();
+    if (c.esempio) return;
+    STAT.traccia("bollette_pdf", null, bolletta.tipo);
+    if (!window.jspdf || !window.jspdf.jsPDF) {
+      var out = document.getElementById("mg-b-out");
+      if (out) out.insertAdjacentHTML("beforeend", '<p class="mg-error">Il PDF non si è caricato. Controlla la connessione e riprova.</p>');
+      return;
+    }
+    caricaLoghi(function (loghi) { creaPdf(c, loghi); });
+  }
+
+  function creaPdf(c, loghi) {
+    var t = testiVerdetto(c);
+    var u = c.rif.unita;
+    var luce = bolletta.tipo === "luce";
+    var doc = new window.jspdf.jsPDF({ unit: "mm", format: "a4" });
+    // colori delle mail AncheCasa
+    var NAVY = [22, 48, 77], NAVY2 = [44, 74, 110], ARANCIO = [229, 107, 16], BOTTONE = [196, 93, 12], CHIARO = [255, 241, 228], PESCA = [255, 210, 173],
+      ARANCIO_CHIARO = [244, 155, 80], TESTO = [36, 56, 76], MUTO = [102, 117, 138], LINEA = [228, 235, 243], TENUE = [243, 246, 250], PIEDE = [213, 222, 234];
+    var COL = { ok: [47, 125, 77], warn: [196, 132, 18], bad: [194, 65, 43] };
+    var fill = function (k) { doc.setFillColor(k[0], k[1], k[2]); };
+    var draw = function (k) { doc.setDrawColor(k[0], k[1], k[2]); };
+    var ink = function (k) { doc.setTextColor(k[0], k[1], k[2]); };
+    var font = function (stile, size) { doc.setFont("helvetica", stile); doc.setFontSize(size); };
+    var oggi = new Date();
+    var codice = "AC-CB-" + oggi.getFullYear() + String(oggi.getMonth() + 1).padStart(2, "0") + String(oggi.getDate()).padStart(2, "0") + "-" + String(oggi.getHours()).padStart(2, "0") + String(oggi.getMinutes()).padStart(2, "0");
+    var L = 20, R = 190, W = R - L;
+    var sezione = function (testo, y) { font("bold", 8); ink(ARANCIO); doc.text(testo.toUpperCase(), L, y, { charSpace: 0.6 }); draw(LINEA); doc.setLineWidth(0.25); doc.line(L, y + 2.2, R, y + 2.2); };
+
+    // ---- testata come la mail: logo a sinistra, anchecasa.it a destra, filo arancio
+    var lg = loghi && loghi.colore;
+    if (lg) { var lh = 11; doc.addImage(lg.data, "PNG", L, 13, lh * lg.r, lh); }
+    else { font("bold", 18); ink(NAVY); doc.text("AncheCasa", L, 22); }
+    font("bold", 9.5); ink(NAVY); doc.text("anchecasa.it", R, 20.5, { align: "right" });
+    fill(ARANCIO); doc.rect(L, 28.5, W, 0.7, "F");
+
+    // ---- etichetta e titolo
+    var et = "REPORT CHECK BOLLETTE · " + (luce ? "LUCE" : "GAS");
+    font("bold", 7.5); var ew = doc.getTextWidth(et) + et.length * 0.35 + 8;
+    fill(CHIARO); doc.roundedRect(L, 35, ew, 6, 3, 3, "F");
+    ink(BOTTONE); doc.text(et, L + 4, 39.1, { charSpace: 0.35 });
+    font("bold", 18); ink(NAVY); doc.text("La tua bolletta " + (luce ? "della luce" : "del gas") + ", letta.", L, 51);
+    font("normal", 9); ink(MUTO); doc.text("Analisi del " + oggi.toLocaleDateString("it-IT") + "  ·  report n. " + codice, L, 57);
+
+    // ---- il risultato
+    var y = 66;
+    sezione("Il risultato", y);
+    var pct = Math.round((c.rP - 1) * 100);
+    var frase = { bad: "Paghi " + art(pct) + "% in più del giusto", warn: "Il tuo prezzo è nella media", ok: "Il tuo prezzo è buono" }[c.vPrezzo];
+    font("bold", 19); ink(COL[c.vPrezzo]); doc.text(frase, L, y + 12);
+    if (c.risparmio > 0) {
+      font("normal", 10); ink(TESTO); doc.text("Allineandoti al prezzo giusto puoi risparmiare circa", L, y + 19.5);
+      font("bold", 24); ink(ARANCIO); doc.text(euro(c.risparmio, 0), L, y + 30);
+      var wv = doc.getTextWidth(euro(c.risparmio, 0));
+      font("normal", 11); ink(MUTO); doc.text("all’anno", L + wv + 3, y + 30);
+    } else {
+      font("normal", 10); ink(TESTO); doc.text("Non stai pagando più del necessario: tieni d’occhio le prossime bollette.", L, y + 19.5);
+    }
+
+    // ---- lancetta e prezzi
+    y = 107;
+    sezione("Il prezzo che paghi", y);
+    var cx = L + 30, cy = y + 31, rr = 21;
+    var pt = function (a, r) { var rad = (a - 90) * Math.PI / 180; return [cx + r * Math.cos(rad), cy + r * Math.sin(rad)]; };
+    doc.setLineWidth(4); if (doc.setLineCap) doc.setLineCap("butt");
+    for (var a = -90; a < 90; a += 1.5) {
+      var kk = a < -11.25 ? COL.ok : a < 22.5 ? COL.warn : COL.bad;
+      draw(kk); var p1 = pt(a, rr), p2 = pt(Math.min(90, a + 1.7), rr); doc.line(p1[0], p1[1], p2[0], p2[1]);
+    }
+    var ratioP = Math.max(0.6, Math.min(1.4, c.rP));
+    var tip = pt((ratioP - 1) / 0.4 * 90, rr - 5);
+    draw(NAVY); doc.setLineWidth(0.9); doc.line(cx, cy, tip[0], tip[1]);
+    fill(NAVY); doc.circle(cx, cy, 1.8, "F");
+    font("normal", 7); ink(MUTO); doc.text("paghi meno", cx - rr - 2, cy + 5); doc.text("paghi di più", cx + rr + 2, cy + 5, { align: "right" });
+    var px = L + 70;
+    fill(COL[c.vPrezzo]); doc.rect(px, y + 10, 1.2, 13, "F");
+    font("normal", 8.5); ink(MUTO); doc.text("Tu paghi, tutto compreso", px + 5, y + 14);
+    font("bold", 16); ink(NAVY); doc.text(euro(c.prezzo, 3) + " / " + u, px + 5, y + 21);
+    fill(COL.ok); doc.rect(px, y + 28, 1.2, 13, "F");
+    font("normal", 8.5); ink(MUTO); doc.text("Prezzo giusto di riferimento", px + 5, y + 32);
+    font("bold", 16); ink(NAVY); doc.text(euro(c.rif.prezzo, 3) + " / " + u, px + 5, y + 39);
+    font("normal", 8.2); ink(MUTO);
+    doc.text(doc.splitTextToSize("Il prezzo giusto è il riferimento ARERA per una famiglia come la tua, con tasse e quote fisse comprese.", R - (px + 62)), px + 62, y + 14);
+
+    // ---- consumi
+    y = 152;
+    sezione("I tuoi consumi", y);
+    font("normal", 9.5); ink(TESTO);
+    doc.text(doc.splitTextToSize(t.tCons, W), L, y + 8.5);
+    var max = Math.max(c.annuo, c.rifConsumo) * 1.1, bw = W - 70;
+    [["Tu", c.annuo, c.vCons === "bad" ? COL.bad : ARANCIO], ["Famiglia come la tua", c.rifConsumo, [176, 187, 201]]].forEach(function (r, i) {
+      var by = y + 13.5 + i * 7.5;
+      font("normal", 8.5); ink(MUTO); doc.text(r[0], L, by + 3.2);
+      fill(TENUE); doc.roundedRect(L + 40, by, bw, 4, 2, 2, "F");
+      fill(r[2]); doc.roundedRect(L + 40, by, Math.max(4, bw * r[1] / max), 4, 2, 2, "F");
+      font("bold", 9); ink(NAVY); doc.text(num(r[1]) + " " + u, R, by + 3.3, { align: "right" });
+    });
+
+    // ---- i dati inseriti
+    y = 186;
+    sezione("I dati che hai inserito", y);
+    var dati = [
+      ["Totale della bolletta", euro(c.importo, 2)], ["Consumo nel periodo", num(c.consumo) + " " + u],
+      ["Periodo", c.mesi + (c.mesi === 1 ? " mese" : " mesi")], ["Persone in casa", c.persone === 5 ? "5 o più" : String(c.persone)],
+      ["Spesa annua stimata", euro(c.spesaAnnua, 0)], ["Consumo annuo stimato", num(c.annuo) + " " + u]
+    ];
+    var colw = (W - 12) / 2;
+    dati.forEach(function (d, i) {
+      var x = L + (i % 2) * (colw + 12), yy = y + 8.5 + Math.floor(i / 2) * 6.6;
+      font("normal", 9); ink(MUTO); doc.text(d[0], x, yy);
+      font("bold", 9); ink(NAVY); doc.text(d[1], x + colw, yy, { align: "right" });
+      draw(LINEA); doc.setLineWidth(0.2); doc.line(x, yy + 2.3, x + colw, yy + 2.3);
+    });
+
+    // ---- cosa fare adesso: riquadro blu come «Come funziona» della mail
+    y = 213;
+    fill(NAVY2); doc.roundedRect(L, y, W, 36, 3.5, 3.5, "F");
+    font("bold", 8); ink(PESCA); doc.text("COSA FARE ADESSO", 105, y + 7, { align: "center", charSpace: 0.5 });
+    var passi = [
+      "Confronta le offerte con il codice POD o PDR alla mano, anche su ilportaleofferte.it (ARERA).",
+      "Controlla che la lettura sia reale e non stimata; se serve, comunica l’autolettura.",
+      "Consumi alti? Un controllo di impianti e isolamento vale più di un cambio di tariffa: su anchecasa.it trovi i tecnici della tua zona."
+    ];
+    var cw = W / 3;
+    passi.forEach(function (p, i) {
+      var xc = L + cw * i + cw / 2;
+      fill(ARANCIO); doc.circle(xc, y + 14, 3.3, "F");
+      font("bold", 9); ink([255, 255, 255]); doc.text(String(i + 1), xc, y + 15.3, { align: "center" });
+      font("normal", 7.6); doc.text(doc.splitTextToSize(p, cw - 9), xc, y + 22, { align: "center", lineHeightFactor: 1.3 });
+    });
+
+    // ---- nota sulle fonti
+    font("normal", 6.4); ink(MUTO);
+    doc.text(doc.splitTextToSize("Prezzo di riferimento: " + c.rif.fonte + ". Consumi di riferimento: stime AncheCasa su dati ARERA. Il prezzo medio include quote fisse e potenza impegnata: con consumi bassi risulta più alto. Stima indicativa a scopo informativo, non è una consulenza.", W), L, 252.5);
+
+    // ---- piede: la curva del marchio AncheCasa, identica a quella delle mail (assets/logo/footer-curva.png).
+    // Misurata sulla mail approvata: tre bordi (arancio chiaro, arancio, blu) quasi piatti a sinistra che salgono a destra.
+    // y = ((a·t + b)·t + c)·t + d in pixel su 600 di larghezza; t = 0 a sinistra, 1 a destra. 600 px = 210 mm.
+    var CURVA = { chiaro: [3.1335, -42.8382, 10.2674, 33.5524], arancio: [-1.3827, -26.5596, 1.7325, 40.8033], blu: [0.6414, -21.6553, 2.0786, 47.9497] };
+    var CY = 255, K = 210 / 600;
+    function curva(cf, colore) {
+      var n = 80, pts = [];
+      for (var i = 0; i <= n; i++) { var tt = i / n; pts.push([210 * tt, CY + (((cf[0] * tt + cf[1]) * tt + cf[2]) * tt + cf[3]) * K]); }
+      pts.push([210, 297], [0, 297]);
+      var seg = [];
+      for (var j = 1; j < pts.length; j++) seg.push([pts[j][0] - pts[j - 1][0], pts[j][1] - pts[j - 1][1]]);
+      fill(colore); doc.lines(seg, pts[0][0], pts[0][1], [1, 1], "F", true);
+    }
+    curva(CURVA.chiaro, ARANCIO_CHIARO);
+    curva(CURVA.arancio, ARANCIO);
+    curva(CURVA.blu, NAVY);
+    var lb = loghi && loghi.bianco;
+    if (lb) { var bh = 7; doc.addImage(lb.data, "PNG", L, 275.5, bh * lb.r, bh); }
+    else { font("bold", 12); ink([255, 255, 255]); doc.text("AncheCasa", L, 281); }
+    font("bold", 8.5); ink([255, 255, 255]); doc.text("AncheCasa · Costruiamo fiducia · anchecasa.it", L, 287.5);
+    font("normal", 7.6); ink(PIEDE);
+    doc.text("Domande? Scrivi a info@anchecasa.it  ·  © " + oggi.getFullYear() + " AncheCasa  ·  Report Check Bollette, AncheCasa Magazine N." + NUMERO.n, L, 292.5);
+    doc.text("Pagina 1 di 1", R, 292.5, { align: "right" });
+    doc.save("AncheCasa-report-bolletta-" + (luce ? "luce" : "gas") + ".pdf");
+  }
+
+  function initBolletta() {
+    var box = document.getElementById("mg-bolletta");
+    if (!box) return;
+    var $ = function (id) { return document.getElementById(id); };
+    var campi = { importo: $("mg-b-importo"), consumo: $("mg-b-consumo"), mesi: $("mg-b-mesi"), persone: $("mg-b-persone") };
+    function aggiornaTipo() {
+      var luce = bolletta.tipo === "luce";
+      box.querySelectorAll("[data-tipo]").forEach(function (x) { x.setAttribute("aria-pressed", x.getAttribute("data-tipo") === bolletta.tipo ? "true" : "false"); });
+      $("mg-b-unit").textContent = luce ? "kWh" : "Smc";
+    }
+    function salva() { bolletta.campi = { importo: campi.importo.value, consumo: campi.consumo.value, mesi: campi.mesi.value, persone: campi.persone.value }; }
+    function vista(res) { $("mg-b-dati").hidden = res; $("mg-b-res").hidden = !res; }
+    function msg(t) { $("mg-b-msg").textContent = t || ""; }
+    function analizza() {
+      var mI = !(leggiNumero(campi.importo.value) > 0), mC = !(leggiNumero(campi.consumo.value) > 0);
+      ["importo", "consumo"].forEach(function (k) { campi[k].closest(".mg-q").classList.remove("manca"); });
+      if (mI || mC) {
+        var k = mI ? "importo" : "consumo";
+        msg(mI && mC ? "Scrivi quanto hai pagato e quanto hai consumato." : mI ? "Scrivi quanto hai pagato." : "Scrivi quanto hai consumato.");
+        var q = campi[k].closest(".mg-q");
+        q.classList.add("manca"); void q.offsetWidth;
+        campi[k].focus({ preventScroll: true });
+        return;
+      }
+      msg("");
+      bolletta.analizzato = true;
+      aggiornaBolletta();
+      vista(true);
+      STAT.traccia("bollette_uso", null, bolletta.tipo);
+      salva();
+    }
+    box.querySelectorAll("[data-tipo]").forEach(function (b) {
+      b.addEventListener("click", function () { bolletta.tipo = b.getAttribute("data-tipo"); aggiornaTipo(); });
+    });
+    ["importo", "consumo"].forEach(function (k) {
+      campi[k].addEventListener("input", function () { campi[k].closest(".mg-q").classList.remove("manca"); msg(""); salva(); });
+      campi[k].addEventListener("keydown", function (e) {
+        if (e.key !== "Enter") return;
+        e.preventDefault();
+        if (k === "importo") campi.consumo.focus(); else analizza();
+      });
+    });
+    campi.mesi.addEventListener("change", salva);
+    $("mg-b-go").addEventListener("click", analizza);
+    $("mg-b-edit").addEventListener("click", function () { bolletta.analizzato = false; vista(false); campi.importo.focus({ preventScroll: true }); });
+    $("mg-b-out").addEventListener("click", function (e) {
+      var b = e.target.closest("[data-pers]");
+      if (!b) return;
+      campi.persone.value = b.getAttribute("data-pers");
+      salva();
+      aggiornaBolletta();
+    });
+    $("mg-b-pdf").addEventListener("click", scaricaPdf);
+    box.querySelectorAll(".mg-tool-actions a").forEach(function (a) {
+      a.addEventListener("click", function () { STAT.traccia("offerte", null, PARTNER_ENERGIA.nome || "portale ARERA"); });
+    });
+    if (bolletta.campi) {
+      campi.importo.value = bolletta.campi.importo; campi.consumo.value = bolletta.campi.consumo;
+      campi.mesi.value = bolletta.campi.mesi || "2"; campi.persone.value = bolletta.campi.persone || "3";
+    }
+    aggiornaTipo();
+    if (bolletta.analizzato && !calcolaBolletta().esempio) { aggiornaBolletta(); vista(true); } else { bolletta.analizzato = false; vista(false); }
+  }
+
+  /* ---------------- iscrizione agli avvisi (app raccolta + nuovi numeri) ---------------- */
+  function initAvvisi() {
+    document.querySelectorAll(".mg-p2-open").forEach(function (b) {
+      if (b.dataset.pronto) return;
+      b.dataset.pronto = "1";
+      b.addEventListener("click", function () {
+        var box = b.parentNode, f = box.querySelector(".mg-avvisi");
+        var aperto = f.hidden;
+        f.hidden = !aperto;
+        box.classList.toggle("is-open", aperto);
+        b.setAttribute("aria-expanded", aperto ? "true" : "false");
+        if (aperto) f.elements.mail.focus();
+      });
+    });
+    document.querySelectorAll(".mg-avvisi").forEach(function (f) {
+      if (f.dataset.pronto) return;
+      f.dataset.pronto = "1";
+      f.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var esito = f.querySelector(".esito");
+        var mail = f.elements.mail.value.trim();
+        var scrivi = function (t, ok) { esito.hidden = false; esito.textContent = t; esito.className = "esito" + (ok ? " si" : " no"); };
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(mail)) { scrivi("Scrivi una mail valida.", false); f.elements.mail.focus(); return; }
+        if (!f.elements.privacy.checked) { scrivi("Spunta l’informativa privacy per continuare.", false); return; }
+        var btn = f.querySelector("button[type=submit]");
+        btn.disabled = true;
+        var fatto = function () {
+          f.querySelectorAll("input,button").forEach(function (x) { x.disabled = true; });
+          scrivi("Fatto! Ti scriviamo appena l’app è pronta e a ogni nuovo numero.", true);
+          try { localStorage.setItem("anchecasa-avvisi", "1"); } catch (er) {}
+        };
+        var errore = function () { btn.disabled = false; scrivi("Non è partito. Riprova tra poco o scrivi a info@anchecasa.it.", false); };
+        if (!/(^|\.)anchecasa\.it$/.test(location.hostname)) { fatto(); return; } // anteprima: non scrive nel database
+        // Va alla funzione Vercel /api/mag: salva in magazine_iscritti (o, se la tabella non c'è ancora, in richieste_iscrizione).
+        fetch("/api/mag", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ iscrizione: { mail: mail, comune: f.elements.comune.value.trim(), interesse: "App raccolta rifiuti e nuovi numeri della rivista", numero: NUMERO.n, privacy: true } })
+        }).then(function (r) { if (r.ok) { STAT.traccia("avvisi"); fatto(); } else errore(); }).catch(errore);
+      });
+    });
+  }
+
+  /* ---------------- sfogliabile ---------------- */
+  var root = document.getElementById("mg-root");
+  if (!root) return;
+  var stage = root.querySelector(".mg-stage");
+  var scaler = root.querySelector(".mg-scaler");
+  var book = root.querySelector(".mg-book");
+  var counter = root.querySelector(".mg-counter") || { textContent: "" };
+  var btnPrev = root.querySelector("[data-act=prev]");
+  var btnNext = root.querySelector("[data-act=next]");
+  var btnFs = root.querySelector("[data-act=fs]") || document.createElement("button");
+  var hint = root.querySelector(".mg-hint") || document.createElement("p");
+
+  var total = PAGINE.length;
+  var mode = null, leaves = [], leafCount = 0, maxFlipped = 0, flipped = 0, pageIndex = 0, turnTimer = null;
+
+  try { localStorage.removeItem("anchecasa-mag-1"); } catch (e) { /* storage non disponibile */ }
+  if (location.hash) {
+    try { history.replaceState(null, "", location.pathname + location.search); } catch (e2) { /* indirizzo non modificabile */ }
+  }
+
+  function currentMode() { return window.innerWidth >= 900 && window.innerHeight >= 520 ? "spread" : "single"; }
+  function size() { return mode === "spread" ? SPREAD : SINGLE; }
+
+  function face(index, side) {
+    var div = document.createElement("div");
+    div.className = "mg-face " + side;
+    if (index == null || index >= total) { div.setAttribute("aria-hidden", "true"); return div; }
+    var p = PAGINE[index];
+    if (p.cover) div.classList.add("is-cover");
+    div.innerHTML = p.html(index);
+    var curl = document.createElement("div"); curl.className = "mg-curl"; div.appendChild(curl);
+    return div;
+  }
+
+  // Telefono (09.10.2026, 2ª versione): la pagina prende l'altezza giusta per riempire lo schermo sotto la testata,
+  // da 640 a 760 unità di disegno (sotto 640 i testi non ci stanno). Larghezza di disegno sempre 400.
+  var SINGLE_MIN = 640, SINGLE_MAX = 760;
+  function altezzaSingola() {
+    var w = Math.max(1, stage.clientWidth - 4), h = stage.clientHeight;
+    if (window.__mgH) return window.__mgH;
+    if (h < 100) return 740;
+    return Math.round(Math.max(SINGLE_MIN, Math.min(SINGLE_MAX, 400 * h / w)));
+  }
+  // Pagina più corta di 740 (telefono): la foto in alto si accorcia della stessa misura, così il testo resta intero.
+  // Si misurano le foto con la pagina alta 740 e poi si tolgono i pixel mancanti (minimo 120).
+  function adattaFoto() {
+    root.classList.toggle("mg-corto", mode === "single" && SINGLE.h < 700);
+    if (mode !== "single" || SINGLE.h >= 740) return;
+    var taglio = 740 - SINGLE.h;
+    book.style.height = "740px";
+    var foto = [];
+    book.querySelectorAll(".mg-face > .mg-page > .mg-photo:first-child").forEach(function (f) {
+      if (f.classList.contains("mg-bleed")) return;
+      var h = f.offsetHeight;
+      if (h > 0 && h < 600) foto.push([f, h]);
+    });
+    foto.forEach(function (x) { x[0].style.setProperty("height", Math.max(120, x[1] - taglio) + "px", "important"); });
+    book.style.height = SINGLE.h + "px";
+  }
+  function build() {
+    mode = currentMode();
+    // Telefono (09.10.2026): niente testata del sito, rivista a tutta altezza, capsula di pulsanti sopra la pagina.
+    document.body.classList.toggle("mg-phone", window.matchMedia("(max-width: 699px), (max-height: 519px)").matches);
+    if (mode === "single") SINGLE.h = altezzaSingola();
+    root.classList.toggle("is-single", mode === "single");
+    root.classList.toggle("is-spread", mode === "spread");
+    var sz = size();
+    leafCount = mode === "spread" ? Math.ceil(total / 2) : total;
+    maxFlipped = mode === "spread" ? leafCount : total - 1;
+    book.innerHTML = "";
+    leaves = [];
+    var edgeL = document.createElement("div"); edgeL.className = "mg-edge"; edgeL.style.left = "-4px"; edgeL.dataset.edge = "l";
+    var edgeR = document.createElement("div"); edgeR.className = "mg-edge"; edgeR.style.right = "-4px"; edgeR.dataset.edge = "r";
+    book.appendChild(edgeL); book.appendChild(edgeR);
+    for (var k = 0; k < leafCount; k++) {
+      var leaf = document.createElement("div");
+      leaf.className = "mg-leaf";
+      leaf.style.left = (mode === "spread" ? sz.w : 0) + "px";
+      leaf.style.width = sz.w + "px";
+      leaf.appendChild(face(mode === "spread" ? 2 * k : k, "front"));
+      leaf.appendChild(face(mode === "spread" ? 2 * k + 1 : null, "back"));
+      var shine = document.createElement("div"); shine.className = "mg-shine"; leaf.appendChild(shine);
+      book.appendChild(leaf);
+      leaves.push(leaf);
+    }
+    adattaFoto();
+    book.querySelectorAll("[data-goto]").forEach(function (b) {
+      b.addEventListener("click", function () { goToPage(+b.getAttribute("data-goto")); });
+    });
+    initBolletta();
+    initAvvisi();
+    hint.textContent = mode === "spread" ? "Clicca sulla pagina o usa le frecce ← → per sfogliare" : "Scorri col dito o tocca il bordo della pagina per sfogliare";
+    btnFs.hidden = mode !== "spread";
+    mosse = false;
+    book.style.transition = "none";
+    leaves.forEach(function (l) { l.style.transition = "none"; });
+    flipped = mode === "spread" ? Math.min(Math.ceil(pageIndex / 2), maxFlipped) : Math.min(pageIndex, maxFlipped);
+    render(null);
+    fit();
+  }
+
+  function render(turning) {
+    var sz = size();
+    for (var k = 0; k < leafCount; k++) {
+      var l = leaves[k];
+      var isF = k < flipped;
+      l.classList.toggle("is-flipped", isF);
+      l.classList.toggle("is-turning", turning === k);
+      l.style.zIndex = turning === k ? leafCount + 2 : isF ? k + 1 : leafCount - k;
+      l.style.visibility = mode === "single" && isF && k < flipped - 1 && turning !== k ? "hidden" : "";
+      var fr = l.children[0], bk = l.children[1];
+      var vis = (!isF && k === flipped) || (isF && k === flipped - 1 && mode === "spread");
+      fr.setAttribute("aria-hidden", !isF && k === flipped ? "false" : "true");
+      bk.setAttribute("aria-hidden", isF && k === flipped - 1 && mode === "spread" ? "false" : "true");
+      if (!vis) { fr.setAttribute("inert", ""); bk.setAttribute("inert", ""); }
+      else { fr.toggleAttribute("inert", isF); bk.toggleAttribute("inert", !isF); }
+    }
+    var shift = mode === "spread" ? (flipped === 0 ? -sz.w / 2 : flipped === maxFlipped ? sz.w / 2 : 0) : 0;
+    book.style.transform = "translateX(" + shift + "px)";
+    book.querySelector("[data-edge=l]").hidden = !(mode === "spread" && flipped > 0);
+    book.querySelector("[data-edge=r]").hidden = !(flipped < maxFlipped);
+    btnPrev.disabled = flipped === 0;
+    btnNext.disabled = flipped === maxFlipped;
+    var label;
+    if (pageIndex === 0) label = "Copertina";
+    else if (pageIndex === total - 1) label = "Retro di copertina";
+    else if (mode === "spread" && pageIndex % 2 === 1 && pageIndex + 1 < total - 1) label = "Pagine " + pageIndex + "–" + (pageIndex + 1) + " di " + (total - 2);
+    else label = "Pagina " + pageIndex + " di " + (total - 2);
+    counter.textContent = label;
+    stage.setAttribute("aria-label", "AncheCasa Magazine numero " + NUMERO.n + ", " + label);
+  }
+
+  function setFlipped(n) {
+    n = Math.max(0, Math.min(n, maxFlipped));
+    if (n === flipped) return;
+    if (!mosse) {
+      mosse = true;
+      book.style.transition = "";
+      leaves.forEach(function (l) { l.style.transition = ""; });
+      void book.offsetWidth;
+    }
+    var moving = n > flipped ? flipped : n;
+    var salto = Math.abs(n - flipped) > 1;
+    flipped = n;
+    pageIndex = mode === "spread" ? (n === 0 ? 0 : Math.min(2 * n - 1, total - 1)) : n;
+    STAT.traccia("pagina", pageIndex);
+    if (mode === "spread" && pageIndex > 0 && pageIndex + 1 < total) STAT.traccia("pagina", pageIndex + 1);
+    if (salto) leaves.forEach(function (l) { l.style.transitionDuration = ".6s"; });
+    render(moving);
+    clearTimeout(turnTimer);
+    turnTimer = setTimeout(function () {
+      leaves.forEach(function (l) { l.style.transitionDuration = ""; });
+      render(null);
+    }, TURN_MS);
+  }
+  function next() { setFlipped(flipped + 1); }
+  function prev() { setFlipped(flipped - 1); }
+  function goToPage(i) {
+    var p = Math.max(0, Math.min(i, total - 1));
+    setFlipped(mode === "spread" ? Math.ceil(p / 2) : p);
+  }
+
+  function fit() {
+    var sz = size();
+    var bookW = mode === "spread" ? sz.w * 2 : sz.w;
+    root.style.top = "";
+    root.style.height = "";
+    root.style.bottom = "";
+    stage.style.width = "";
+    stage.style.height = "";
+    var availW = Math.max(1, stage.clientWidth - (mode === "spread" ? 32 : 4));
+    var availH = stage.clientHeight;
+    if (availH < 40) return;
+    // Telefono: la capsula dei pulsanti galleggia sopra il fondo della pagina; ne copre solo il piè di pagina.
+    // (telefono: la capsula ora sta sotto la pagina, nessuna riserva)
+    var scale = Math.max(0.3, Math.min(availW / bookW, availH / sz.h, mode === "spread" ? 1.8 : 4));
+    var drawnH = sz.h * scale;
+    scaler.style.width = bookW + "px";
+    scaler.style.height = sz.h + "px";
+    scaler.style.top = (document.body.classList.contains("mg-phone") ? 0 : Math.max(0, (availH - drawnH) / 2)) + "px";
+    scaler.style.transform = "translateX(-50%) scale(" + scale + ")";
+    book.style.width = bookW + "px";
+    book.style.height = sz.h + "px";
+    root.classList.add("is-ready");
+  }
+
+  // Il dito gira la pagina: verso sinistra avanti, verso destra indietro.
+  var down = null, swiped = false, mosse = false;
+  function fineDito(e) {
+    var d = down; down = null;
+    if (!d || e.pointerId !== d.id) return;
+    var dx = e.clientX - d.x, dy = e.clientY - d.y;
+    if (Math.abs(dx) > 12 || Math.abs(dy) > 12) swiped = true;
+    if (Math.abs(dx) > 36 && Math.abs(dx) > Math.abs(dy)) {
+      if (dx < 0) next(); else prev();
+    }
+  }
+  stage.addEventListener("pointerdown", function (e) {
+    if (e.pointerType === "mouse" && e.button !== 0) return;
+    if (e.target.closest(NO_FLIP)) return;
+    down = { x: e.clientX, y: e.clientY, id: e.pointerId };
+    swiped = false;
+    try { stage.setPointerCapture(e.pointerId); } catch (err) { /* cattura non disponibile */ }
+  });
+  stage.addEventListener("pointerup", fineDito);
+  stage.addEventListener("pointercancel", fineDito);
+  stage.addEventListener("click", function (e) {
+    if (swiped) { swiped = false; return; }
+    if (e.target.closest(NO_FLIP)) return;
+    var sel = window.getSelection && window.getSelection();
+    if (sel && String(sel)) return;
+    var r = book.getBoundingClientRect();
+    var rel = (e.clientX - r.left) / r.width;
+    if (mode === "spread") {
+      if (flipped === 0) return next();
+      if (flipped === maxFlipped) return prev();
+      return rel > 0.5 ? next() : prev();
+    }
+    return rel > 0.4 ? next() : prev();
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.target.closest && e.target.closest("input,select,textarea")) return;
+    if (e.key === "ArrowRight") next();
+    if (e.key === "ArrowLeft") prev();
+  });
+  btnPrev.addEventListener("click", prev);
+  btnNext.addEventListener("click", next);
+  var btnToc = root.querySelector("[data-act=toc]");
+  if (btnToc) btnToc.addEventListener("click", function () { goToPage(2); });
+  // Schermo intero vero: dove il browser lo permette (Android, PC). Su iPhone si ottiene da "Aggiungi a Home".
+  var btnPieno = root.querySelector("[data-act=pieno]");
+  var docEl = document.documentElement;
+  var puoPieno = !!(docEl.requestFullscreen || docEl.webkitRequestFullscreen) && !/iPhone|iPod/.test(navigator.userAgent) && !(window.matchMedia && window.matchMedia("(display-mode: standalone)").matches);
+  if (btnPieno && puoPieno) {
+    btnPieno.hidden = false;
+    btnPieno.addEventListener("click", function () {
+      var dentro = document.fullscreenElement || document.webkitFullscreenElement;
+      try {
+        if (dentro) (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+        else { var r = (docEl.requestFullscreen || docEl.webkitRequestFullscreen).call(docEl, { navigationUI: "hide" }); if (r && r.catch) r.catch(function () {}); }
+      } catch (e) { /* schermo intero non disponibile */ }
+    });
+    ["fullscreenchange", "webkitfullscreenchange"].forEach(function (ev) {
+      document.addEventListener(ev, function () {
+        btnPieno.classList.toggle("is-on", !!(document.fullscreenElement || document.webkitFullscreenElement));
+        setTimeout(fit, 80);
+      });
+    });
+  }
+  btnFs.addEventListener("click", function () {
+    try {
+      if (document.fullscreenElement) document.exitFullscreen();
+      else if (root.requestFullscreen) root.requestFullscreen().catch(function () {});
+    } catch (e) { /* schermo intero non disponibile */ }
+  });
+  document.addEventListener("fullscreenchange", fit);
+
+  var resizeT = null;
+  var lastW = window.innerWidth;
+  var lastH = window.innerHeight;
+  function onResize() {
+    var w = window.innerWidth;
+    var h = window.innerHeight;
+    // 10.10.2026: sul telefono la tastiera (mail degli avvisi, Check Bollette) cambia solo l'altezza.
+    // Prima si rifaceva tutta la rivista: il modulo spariva con quello che avevi scritto e la pagina restava bianca.
+    // Se cambia solo l'altezza su un telefono, o mentre scrivi in un campo, la rivista resta com'è.
+    var campo = document.activeElement && document.activeElement.closest && document.activeElement.closest("input,textarea,select");
+    var tocco = window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
+    if (Math.abs(w - lastW) < 30 && (campo || (mode === "single" && tocco))) return;
+    if (currentMode() !== mode) { lastW = w; lastH = h; build(); return; }
+    if (mode === "single" && Math.abs(altezzaSingola() - SINGLE.h) > 12) { lastW = w; lastH = h; build(); return; }
+    if (mode === "single" && Math.abs(w - lastW) < 30 && Math.abs(h - lastH) < 48) return;
+    lastW = w;
+    lastH = h;
+    clearTimeout(resizeT);
+    resizeT = setTimeout(fit, 120);
+  }
+  window.addEventListener("resize", onResize);
+
+  build();
+  if (!root.classList.contains("is-ready")) requestAnimationFrame(fit);
+})();
+
+/* ===== Condividi la rivista (2026-10-09) =====
+   Telefono: menu di condivisione del sistema (WhatsApp, Telegram, messaggi…).
+   PC: pannello in vetro con WhatsApp, Facebook, Telegram, Email, Copia link. */
+(function () {
+  var URL_RIVISTA = "https://anchecasa.it/magazine";
+  var TITOLO = "AncheCasa Magazine";
+  var TESTO = "Ti consiglio AncheCasa Magazine: la rivista gratuita sulla casa, si sfoglia come una vera rivista. In questo numero: come rifare casa senza sorprese e il sopralluogo gratuito.";
+  var ICO = {
+    wa: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.2-.2-.5-.3Z"/></svg>',
+    fb: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M13.5 22v-8h2.7l.4-3.2h-3.1V8.8c0-.9.3-1.5 1.6-1.5h1.7V4.4a22 22 0 0 0-2.5-.1c-2.4 0-4.1 1.5-4.1 4.2v2.3H7.5V14h2.7v8h3.3Z"/></svg>',
+    tg: '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21.5 4.2 18.4 19c-.2 1-.8 1.3-1.7.8l-4.6-3.4-2.2 2.1c-.2.2-.4.4-.9.4l.3-4.7 8.5-7.7c.4-.3-.1-.5-.6-.2L6.7 12.9 2.2 11.5c-1-.3-1-1 .2-1.4L20.2 3.2c.8-.3 1.5.2 1.3 1Z"/></svg>',
+    ml: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>',
+    ln: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg>'
+  };
+  var pannello = null, aperto = false, ultimoBtn = null;
+
+  // Dal telefono il link va DENTRO il testo, su una riga sua: se testo e url vanno separati, WhatsApp li incolla
+  // senza spazio ("…gratis.https://…") o perde il link, e il messaggio arriva con un link che non si apre.
+  // Il link porta "?da=canale": nelle statistiche si vede da quale condivisione arrivano i nuovi lettori.
+  function link(da) {
+    var base = /(^|\.)anchecasa\.it$/.test(location.hostname) ? location.origin + location.pathname : URL_RIVISTA;
+    return da ? base + "?da=" + da : base;
+  }
+  function conta(canale) { if (window.ACMagStat) window.ACMagStat.traccia("condividi", null, canale); }
+  function voci() {
+    var u = function (da) { return encodeURIComponent(link(da)); }, t = encodeURIComponent(TESTO);
+    return [
+      ["wa", "WhatsApp", "https://wa.me/?text=" + t + "%0A%0A" + u("whatsapp")],
+      ["fb", "Facebook", "https://www.facebook.com/sharer/sharer.php?u=" + u("facebook")],
+      ["tg", "Telegram", "https://t.me/share/url?url=" + u("telegram") + "&text=" + t],
+      ["ml", "Email", "mailto:?subject=" + encodeURIComponent(TITOLO + ": la rivista gratuita sulla casa") + "&body=" + t + "%0A%0A" + u("email")]
+    ];
+  }
+  function crea() {
+    pannello = document.createElement("div");
+    pannello.className = "mg-share";
+    pannello.setAttribute("role", "dialog");
+    pannello.setAttribute("aria-label", "Condividi la rivista");
+    pannello.hidden = true;
+    pannello.innerHTML = '<p class="t">Condividi la rivista</p><div class="g">' +
+      voci().map(function (v) {
+        return '<a class="s s-' + v[0] + '" data-canale="' + v[1].toLowerCase() + '" href="' + v[2] + '" target="_blank" rel="noopener">' + ICO[v[0]] + "<span>" + v[1] + "</span></a>";
+      }).join("") +
+      '<button type="button" class="s s-ln" data-copia>' + ICO.ln + "<span>Copia link</span></button></div>" +
+      '<p class="ok" role="status" aria-live="polite"></p>';
+    document.body.appendChild(pannello);
+    pannello.addEventListener("click", function (e) {
+      if (e.target.closest("[data-copia]")) { conta("link copiato"); copia(); return; }
+      var a = e.target.closest("a");
+      if (a) { conta(a.getAttribute("data-canale") || "altro"); setTimeout(chiudi, 150); }
+    });
+  }
+  function copia() {
+    var ok = pannello.querySelector(".ok");
+    var fatto = function () { ok.textContent = "Link copiato: incollalo dove vuoi."; setTimeout(function () { ok.textContent = ""; }, 2500); };
+    try {
+      if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(link("link")).then(fatto, vecchio); return; }
+    } catch (e) { /* uso il metodo vecchio */ }
+    vecchio();
+    function vecchio() {
+      var ta = document.createElement("textarea");
+      ta.value = link("link"); ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); fatto(); } catch (e2) { ok.textContent = link("link"); }
+      document.body.removeChild(ta);
+    }
+  }
+  function posiziona(btn) {
+    var r = btn.getBoundingClientRect();
+    var w = pannello.offsetWidth, h = pannello.offsetHeight;
+    var x = Math.max(12, Math.min(window.innerWidth - w - 12, r.left + r.width / 2 - w / 2));
+    var y = r.top - h - 12;
+    if (y < 12) y = r.bottom + 12;
+    pannello.style.left = x + "px";
+    pannello.style.top = y + "px";
+  }
+  function apri(btn) {
+    if (!pannello) crea();
+    ultimoBtn = btn;
+    pannello.hidden = false;
+    posiziona(btn);
+    requestAnimationFrame(function () { pannello.classList.add("is-on"); });
+    aperto = true;
+    btn.setAttribute("aria-expanded", "true");
+    var primo = pannello.querySelector(".s");
+    if (primo) primo.focus({ preventScroll: true });
+  }
+  function chiudi() {
+    if (!pannello || !aperto) return;
+    pannello.classList.remove("is-on");
+    pannello.hidden = true;
+    aperto = false;
+    if (ultimoBtn) ultimoBtn.setAttribute("aria-expanded", "false");
+  }
+  function condividi(btn) {
+    var tocco = window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
+    if (navigator.share && tocco) {
+      navigator.share({ title: TITOLO, text: TESTO + "\n\n" + link("condiviso") }).then(function () { conta("menu telefono"); }).catch(function () { /* annullato */ });
+      return;
+    }
+    if (aperto) chiudi(); else apri(btn);
+  }
+
+  document.addEventListener("click", function (e) {
+    var btn = e.target.closest('[data-act="share"], [data-share]');
+    if (btn) { e.preventDefault(); e.stopPropagation(); condividi(btn); return; }
+    if (aperto && !e.target.closest(".mg-share")) chiudi();
+  }, true);
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") chiudi(); });
+  window.addEventListener("resize", chiudi);
+  window.addEventListener("scroll", chiudi, { passive: true });
+})();

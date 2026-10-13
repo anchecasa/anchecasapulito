@@ -7,6 +7,7 @@ import { demoDiagnosisForSkill } from "@/lib/sos/demo";
 import { acquireDevicePosition } from "@/lib/sos/location";
 import { holdVideo } from "@/lib/sos/video-hold";
 import { SOS_SKILL_OPTIONS } from "@/lib/sos/constants";
+import type { LoadedDiagnosis } from "@/lib/sos/save-diagnosis";
 
 const ANALYSIS_STEPS = [
   "Guardo le immagini",
@@ -77,12 +78,18 @@ export function VideoDiagnosis({
   contained = false,
   homeHref = "/supermastro",
   note = "",
+  onResult,
+  onClose,
 }: {
   vista?: Vista;
   flowBase?: string;
   contained?: boolean;
   homeHref?: string;
   note?: string;
+  /** Se c'è, la diagnosi resta nella pagina che ha aperto la fotocamera (home). */
+  onResult?: (diagnosis: LoadedDiagnosis) => void;
+  /** Se c'è, «Indietro» chiude la fotocamera invece di cambiare pagina. */
+  onClose?: () => void;
 }) {
   const router = useRouter();
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -246,6 +253,7 @@ export function VideoDiagnosis({
         ok?: boolean;
         id?: string;
         error?: string;
+        diagnosis?: LoadedDiagnosis;
       } | null;
       if (!aliveRef.current) return;
       if (!res.ok || !data?.ok || !data.id) {
@@ -260,6 +268,11 @@ export function VideoDiagnosis({
       }
       if (!aliveRef.current) return;
       await holdVideo(data.id, blob).catch(() => undefined);
+      if (onResult && data.diagnosis) {
+        streamRef.current?.getTracks().forEach((track) => track.stop());
+        onResult(data.diagnosis);
+        return;
+      }
       const base = flowBase || "/supermastro";
       router.push(`${base}/esito?id=${data.id}`);
     } catch {
@@ -331,9 +344,15 @@ export function VideoDiagnosis({
       />
       <div className="pointer-events-none absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-black/70 to-transparent" />
       <header className="relative z-10 flex items-center gap-3 px-4 pb-2 pt-[max(1rem,env(safe-area-inset-top))]">
-        <a href={homeHref} className="text-sm font-semibold text-[#FBF8F3]">
-          Indietro
-        </a>
+        {onClose ? (
+          <button type="button" onClick={onClose} className="min-h-11 text-sm font-semibold text-[#FBF8F3]">
+            Indietro
+          </button>
+        ) : (
+          <a href={homeHref} className="text-sm font-semibold text-[#FBF8F3]">
+            Indietro
+          </a>
+        )}
         <div className="min-w-0">
           <p className="text-sm font-semibold">Registra il problema</p>
           <p className="truncate text-[11px] text-[#FBF8F3]/80">5 secondi, con audio: parla pure</p>

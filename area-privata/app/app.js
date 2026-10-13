@@ -191,7 +191,7 @@
   const PRIMA = {
     privato: [["bacheca", "Bacheca", "home"], ["pv-guasto", "Guasto", "flash"], ["pv-ristruttura", "Ristruttura", "casa"], ["pv-mie-richieste", "Richieste", "doc"]],
     agente: [["home", "Home", "home"], ["re-clienti", "Clienti", "clienti"], ["re-vendi", "Vendi", "euro"], ["guadagno", "Guadagni", "stella"]],
-    admin: [["home", "Home", "home"], ["aziende-admin", "Aziende", "casa"], ["ristrutturazioni-admin", "Pratiche", "doc"], ["rete-admin", "Rete", "rete"]],
+    admin: [["sala-demo", "Presentazione", "stella"], ["home", "Home", "home"], ["aziende-admin", "Aziende", "casa"], ["rete-admin", "Rete", "rete"]],
   };
   const idDa = (a) => decodeURIComponent((a.getAttribute("href") || "").replace(/^#\/[a-z]+\//, ""));
   const svgDa = (a) => { const x = a.querySelector("svg"); return x ? x.outerHTML : ICO.casa; };
@@ -498,6 +498,41 @@
       '<div class="ac-corpo"><div class="eti">' + esc(eti) + "</div><h2 class=\"h1\" style=\"font-size:22px\">" + esc(titolo) + "</h2>" + corpo + "</div>" +
       '<footer class="ac-piedi"><img src="../dashboard/img/contratto-curva.png" alt=""><div>AncheCasa · Costruiamo fiducia · anchecasa.it<br>P.IVA 04724830619</div></footer></article>';
   }
+  function vociSim() {
+    return [
+      ["Demolizione e smaltimento bagno", 1, "a corpo", 780],
+      ["Nuovo bagno con doccia filo pavimento", 1, "a corpo", 4200],
+      ["Linea gas cucina, con certificazione", 1, "a corpo", 450],
+      ["Intonaco deumidificante", 14, "mq", 38],
+      ["Pavimento in gres effetto legno", 24, "mq", 62],
+      ["Infissi in PVC basso-emissivi", 3, "cad", 540],
+      ["Verifica delle crepe del balcone", 1, "a corpo", 320]
+    ];
+  }
+  async function pacchettoFine(dest, o) {
+    await caricaRelazione();
+    const dett = (v) => (v[1] === 1 && v[2] === "a corpo" ? "a corpo" : dec(v[1], 0) + " " + v[2] + " × " + eur(v[3]));
+    const tot = (o.voci || []).reduce((t, v) => t + v[1] * v[3], 0);
+    const scelteH = (o.scelte || []).length ? '<div class="ac-kv">' + o.scelte.map((x) => "<div><small>" + esc(x[0]) + "</small><b>" + esc(x[1]) + "</b></div>").join("") + "</div>" : "";
+    const fotoH = (o.foto || []).length ? '<div class="tre-slot" style="margin:12px 0">' + o.foto.map((m) => '<figure><img src="' + esc(m.url) + '" alt="' + esc(m.nota || "") + '"><span>' + esc(m.nota || "Foto") + "</span></figure>").join("") + "</div>" : "";
+    const kv = o.tn ? '<div class="ac-kv">' + [["Zona sismica", o.tn.zona_sismica], ["Zona climatica", o.tn.zona_climatica], ["Prezzario", o.tn.prezzario], ["Valore OMI", (o.tn.omi_min || o.tn.omi_max) ? (dec(o.tn.omi_min || 0, 0) + "–" + dec(o.tn.omi_max || 0, 0) + " €/mq") : "da verificare"], ["Vincoli", o.tn.vincoli], ["Provincia", o.tn.provincia || "—"]].map((x) => "<div><small>" + esc(x[0]) + "</small><b>" + esc(x[1]) + "</b></div>").join("") + "</div>" : "";
+    const tab = (o.voci || []).length
+      ? '<table class="prev-tab">' + o.voci.map((v) => "<tr><td><b>" + esc(v[0]) + '</b><div class="mut">' + esc(dett(v)) + "</div></td><td>" + eur(v[1] * v[3]) + "</td></tr>").join("") + "</table>" +
+        '<div class="prev-tot"><span>Totale, IVA esclusa</span><b>' + eur(tot) + "</b></div>"
+      : ((o.lavori || []).length ? '<table class="prev-tab">' + o.lavori.map((v) => "<tr><td><b>" + esc(v.voce || "") + '</b><div class="mut">' + esc([v.ambiente, v.qta ? dec(v.qta, 0) + " " + (v.um || "") : ""].filter(Boolean).join(" · ")) + "</div></td><td>prezzo del tecnico</td></tr>").join("") + "</table>" : '<p class="mut">Le voci arrivano dopo la lettura delle foto. I prezzi li chiude il tecnico.</p>');
+    let h = carta("Preventivo per il cliente", "Per il cliente · IVA esclusa",
+      "<p class=\"mut\">" + esc(o.nome || o.dove) + " · " + esc(o.dove) + " · " + esc(o.oggi) + "</p>" + scelteH + tab +
+      '<p class="mut" style="margin-top:8px">Foglio per il cliente. Simulazione: non è un\'offerta e non impegna AncheCasa. Il tecnico conferma i prezzi prima dell\'invio.</p>');
+    h += carta("Documentazione per il tecnico", "Per il tecnico AncheCasa · preventivo",
+      "<p class=\"mut\">" + esc(o.dove) + " · consulente " + esc(o.chi || "") + " · " + esc(o.oggi) + "</p>" + kv + scelteH + fotoH +
+      (o.renderUrl ? '<img class="render-big" src="' + esc(o.renderUrl) + '" alt="Render dettagliato">' : "") +
+      "<p class=\"mut\">Video allegati: " + (o.videoN || 0) + ". L'IA non li ha letti. Restano con questi documenti per il preventivo.</p>" +
+      '<p class="mut">Sotto, la relazione completa nello stile del dossier: ambienti, impianti, sicurezza, voci, dubbi e documenti. Il cliente non vede questa parte.</p>');
+    h += '<div data-tec-rz></div>';
+    dest.innerHTML = h;
+    if (o.relazione && window.ACRelazione) window.ACRelazione.monta(dest.querySelector("[data-tec-rz]"), o.relazione, { tecnico: true, logo: "../dashboard/img/contratto-logo.png" });
+    dest.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
   function paginaProva(scr) {
     scr.insertAdjacentHTML("beforeend",
       '<section class="card"><div class="eti">Sopralluogo Flash</div><h1 class="h1">Vedi cosa so fare</h1>' +
@@ -589,15 +624,7 @@
       const chi = (S.profilo && S.profilo.nome) || (S.admin ? "Admin AncheCasa" : "Consulente AncheCasa");
       const oggi = new Date().toLocaleDateString("it-IT", { day: "numeric", month: "long", year: "numeric" });
       const dove = [indirizzo, comune, tn.provincia].filter(Boolean).join(", ");
-      const voci = [
-        ["Demolizione e smaltimento bagno", 1, "a corpo", 780],
-        ["Nuovo bagno con doccia filo pavimento", 1, "a corpo", 4200],
-        ["Linea gas cucina, con certificazione", 1, "a corpo", 450],
-        ["Intonaco deumidificante", 14, "mq", 38],
-        ["Pavimento in gres effetto legno", 24, "mq", 62],
-        ["Infissi in PVC basso-emissivi", 3, "cad", 540],
-        ["Verifica delle crepe del balcone", 1, "a corpo", 320]
-      ];
+      const voci = vociSim();
       const tot = voci.reduce((t, v) => t + v[1] * v[3], 0);
       const dett = (v) => (v[1] === 1 && v[2] === "a corpo" ? "a corpo" : dec(v[1], 0) + " " + v[2] + " × " + eur(v[3]));
       const fotoH = '<div class="tre-slot" style="margin:12px 0">' + provaMedia.map((m) => '<figure><img src="' + esc(m.url) + '" alt="' + esc(m.nota) + '"><span>' + esc(m.nota) + "</span></figure>").join("") + "</div>";
@@ -622,7 +649,10 @@
         SCELTE.map((g) => '<div class="scelta"><div class="mut" style="font-weight:800;color:#1a334f;margin-bottom:6px">' + esc(g[1]) + '</div><div class="chip-row">' +
           g[2].map((v) => '<button type="button" class="chip' + (scelta[g[0]] === v[0] ? " on" : "") + '" data-g="' + g[0] + '" data-v="' + v[0] + '">' + esc(v[1]) + "</button>").join("") +
           "</div></div>").join("") +
-        '<button type="button" class="btn" data-render style="margin-top:14px">Crea il render dettagliato</button><div data-render-out></div></section>';
+        '<button type="button" class="btn" data-render style="margin-top:14px">Crea il render dettagliato</button><div data-render-out></div></section>' +
+        '<section class="card"><div class="eti">Alla fine</div><h2 class="h2">Come funziona</h2>' +
+        '<p class="mut" style="margin:6px 0 10px">Prepara il preventivo per il cliente e la documentazione completa per il tecnico AncheCasa, con lo stesso stile dei fogli.</p>' +
+        '<button type="button" class="btn" data-fine>Come funziona</button><div data-fine-out></div></section>';
       out.innerHTML = h;
       out.querySelectorAll(".chip").forEach((b) => b.addEventListener("click", () => {
         scelta[b.dataset.g] = b.dataset.v;
@@ -650,6 +680,23 @@
           box.scrollIntoView({ behavior: "smooth", block: "start" });
         } catch (e) { toast("Il render non è uscito. Riprova.", true); }
         b.disabled = false; b.textContent = "Crea di nuovo il render";
+      });
+      out.querySelector("[data-fine]").addEventListener("click", async () => {
+        const b = out.querySelector("[data-fine]");
+        b.disabled = true; b.textContent = "Preparo i due fogli…";
+        const relazione = window.ACRelazione ? window.ACRelazione.esempio("../img/sopralluogo-demo/") : null;
+        if (relazione) {
+          relazione.ia.video = [];
+          relazione.ia.letti = { foto: 3, audio: 0, video: 0, video_allegati: 0 };
+          relazione.testa = { nome: indirizzo, indirizzo: comune + (tn.provincia ? " (" + tn.provincia + ")" : ""), data: oggi, agente: chi, rif: "Simulazione" };
+        }
+        const render = out.querySelector(".render-big");
+        await pacchettoFine(out.querySelector("[data-fine-out]"), {
+          nome: indirizzo, dove, oggi, chi, tn, voci, foto: provaMedia.slice(),
+          scelte: SCELTE.map((g) => [g[1], nomeScelta(g[0], scelta[g[0]])]),
+          videoN: 0, relazione, renderUrl: render ? render.src : ""
+        });
+        b.disabled = false; b.textContent = "Come funziona";
       });
       if (window.ACRelazione) {
         const dati = window.ACRelazione.esempio("../img/sopralluogo-demo/");
@@ -742,6 +789,46 @@
   }
 
   /* ================= SOPRALLUOGO (pratica) ================= */
+  const NOMI_AMBIENTE = ["Bagno", "Cucina", "Soggiorno", "Camera", "Facciata", "Balcone", "Giardino", "Ingresso"];
+  const NOTA_CHIUSURA = "Audio chiusura";
+  const chiaveStanza = (id) => "ac-stanza-" + id;
+  const chiaveAncora = (id) => "ac-ancora-" + id;
+  const nomePulito = (s) => String(s || "").replace(/·/g, " ").replace(/\s+/g, " ").trim().slice(0, 40);
+  function leggiNota(nota) {
+    const n = String(nota || "");
+    if (/^Audio chiusura/i.test(n)) return { kind: "chiusura" };
+    let m = n.match(/^Audio ambiente · (.+)$/i);
+    if (m) return { kind: "audio", nome: m[1].trim() };
+    m = n.match(/^Ambiente · (.+)$/i);
+    if (m) return { kind: "foto", nome: m[1].trim() };
+    return null;
+  }
+  function riepilogoStanze(media) {
+    const map = new Map();
+    let chiusura = 0, pianta = false;
+    const altro = [];
+    (media || []).filter((m) => m.fonte !== "ia").forEach((m) => {
+      if (m.tipo === "foto" && /planimetri/i.test(m.nota || "")) { pianta = true; return; }
+      const t = leggiNota(m.nota);
+      if (!t) { altro.push(m); return; }
+      if (t.kind === "chiusura") { chiusura++; return; }
+      if (!map.has(t.nome)) map.set(t.nome, { nome: t.nome, foto: [], audio: 0 });
+      const g = map.get(t.nome);
+      if (t.kind === "foto" && m.tipo === "foto") g.foto.push(m);
+      if (t.kind === "audio" && m.tipo === "audio") g.audio++;
+    });
+    const tutte = [...map.values()];
+    return { chiuse: tutte.filter((g) => g.audio > 0), aperte: tutte.filter((g) => g.audio === 0), chiusura, pianta, altro };
+  }
+  function nomeAperto(r) {
+    const info = riepilogoStanze(r.media);
+    let nome = "";
+    try { nome = nomePulito(sessionStorage.getItem(chiaveStanza(r.id)) || ""); } catch (e) {}
+    if (nome && info.chiuse.some((g) => g.nome.toLowerCase() === nome.toLowerCase())) nome = "";
+    if (!nome && info.aperte.length === 1) nome = info.aperte[0].nome;
+    return nome;
+  }
+
   async function paginaPratica(scr, id) {
     const r = S.sopr.find((x) => x.id === id);
     if (!r) { scr.insertAdjacentHTML("beforeend", '<div class="card vuoto"><b>Sopralluogo non trovato</b>Forse non è assegnato a te.</div>'); return; }
@@ -783,24 +870,43 @@
       '<div class="fl"><label>Da controllare</label><textarea class="in" name="criticita" placeholder="umidità, crepe, impianti vecchi, amianto…">' + esc(r.criticita || "") + "</textarea></div>" +
       '<button class="btn n" data-salva-mis>Salva misure e casa</button>');
 
-    // 2. Foto, planimetria, voce, video
-    h += passo(2, "Foto, planimetria, voce e video", fatto2 ? foto.length + " foto · " + media.filter((m) => m.tipo === "audio").length + " note · " + media.filter((m) => m.tipo === "video").length + " video" + (pianta ? " · planimetria ✓" : "") : "Stanza per stanza, anche fuori", fatto2,
-      (media.length ? '<div class="gal">' + media.filter((m) => m.fonte !== "ia").map((m) => '<div class="ph">' + (m.tipo === "foto" && m.url ? '<img src="' + esc(m.url) + '" alt="" loading="lazy">' : m.tipo === "video" ? "🎥 Video" : m.tipo === "audio" ? "🎙 Nota vocale" : "Foto") + (m.nota ? "<span>" + esc(m.nota) + "</span>" : "") + "</div>").join("") + "</div>" : "") +
-      '<div class="carica">' +
-      '<label>' + ICO.foto + 'Foto<input type="file" accept="image/*" capture="environment" multiple data-file="foto" hidden></label>' +
-      '<label>' + ICO.pianta + (pianta ? "Planimetria ✓" : "Planimetria") + '<input type="file" accept="image/*" capture="environment" data-file="pianta" hidden></label>' +
-      '<label>' + ICO.video + 'Video<input type="file" accept="video/*" capture="environment" data-file="video" hidden></label>' +
-      '<label data-rec>' + ICO.mic + "<span>Nota vocale</span></label></div>" +
-      '<p class="mut" style="margin:0">Il video non lo legge l\'IA. Si allega ai documenti che vanno al tecnico AncheCasa per il preventivo. Fino a 50 MB per file.</p>');
+    // 2. Foto e audio, un ambiente alla volta. Massimo 5 foto, poi l'audio, si chiude e si va avanti.
+    const stanze = riepilogoStanze(media);
+    const nomeOra = nomeAperto(r);
+    let ancora = false;
+    try { ancora = sessionStorage.getItem(chiaveAncora(r.id)) === "1"; } catch (e) {}
+    const mostraForm = stanze.chiusura === 0 || ancora;
+    const fotoOra = (stanze.aperte.find((g) => g.nome.toLowerCase() === nomeOra.toLowerCase()) || { foto: [] }).foto;
+    const sub2 = stanze.chiuse.length
+      ? stanze.chiuse.length + (stanze.chiuse.length === 1 ? " ambiente chiuso" : " ambienti chiusi") + (stanze.chiusura ? " · sopralluogo chiuso" : "")
+      : "Tre foto bastano, cinque è il massimo";
+    const mini = (m) => '<div class="ph">' + (m.tipo === "foto" && m.url ? '<img src="' + esc(m.url) + '" alt="">' : m.tipo === "audio" ? "Nota vocale" : "File") + "</div>";
+    let corpo2 = '<label class="btn2 pieno" style="margin-bottom:10px">' + ICO.pianta + (stanze.pianta || pianta ? "Planimetria ✓" : "Planimetria, se c'è") + '<input type="file" accept="image/*" capture="environment" data-file="pianta" hidden></label>';
+    if (stanze.chiuse.length) corpo2 += '<div class="stanze">' + stanze.chiuse.map((g) => '<div class="stanza"><b>' + esc(g.nome) + '</b><div class="mut">' + g.foto.length + " foto · audio</div></div>").join("") + "</div>";
+    corpo2 += stanze.aperte.filter((g) => g.nome.toLowerCase() !== nomeOra.toLowerCase() && g.foto.length).map((g) => '<button type="button" class="btn2 pieno" data-riprendi="' + esc(g.nome) + '">' + esc(g.nome) + " · " + g.foto.length + " foto · manca l'audio</button>").join("");
+    if (mostraForm) {
+      corpo2 += '<div class="stanza stanza-ora"><div class="eti">Ambiente in corso</div>' +
+        '<div class="chips" data-nomi>' + NOMI_AMBIENTE.map((n) => '<button type="button" class="chip' + (nomeOra === n ? " on" : "") + '" data-nome="' + esc(n) + '">' + esc(n) + "</button>").join("") + "</div>" +
+        '<div class="fl"><label>Nome</label><input class="in" data-stanza-nome maxlength="40" placeholder="es. Bagno" value="' + esc(nomeOra) + '"></div>' +
+        (fotoOra.length ? '<div class="gal">' + fotoOra.map(mini).join("") + "</div>" : "") +
+        '<div class="carica"><label>' + ICO.foto + (fotoOra.length >= 5 ? "5 foto, il massimo" : "Foto " + fotoOra.length + "/5") + '<input type="file" accept="image/*" capture="environment" multiple data-foto-stanza hidden' + (fotoOra.length >= 5 ? " disabled" : "") + "></label>" +
+        '<label data-rec-stanza>' + ICO.mic + "<span>Registra audio e chiudi</span></label></div>" +
+        '<p class="mut" style="margin:8px 0 0">Cinque è il massimo, non l\'obbligo. Dalla porta tutta la stanza, la parete che non si vede, e il primo piano di ciò che non va. Se con tre si capisce, registra l\'audio e chiudi. Le misure si dicono nell\'audio.</p></div>';
+    } else corpo2 += '<p class="mut">Sopralluogo chiuso. L\'ultimo audio è con i documenti.</p><button type="button" class="btn2 pieno" data-ancora>Aggiungi un ambiente</button>';
+    corpo2 += '<button type="button" class="btn" data-finito' + (stanze.chiuse.length ? "" : " disabled") + ">" + (stanze.chiusura ? "Sopralluogo chiuso" : "Finito sopralluogo") + "</button>" +
+      '<div data-ultimo' + (stanze.chiusura ? "" : " hidden") + '><p class="mut" style="margin:8px 0">' + (stanze.chiusura ? "Audio finale registrato: gusti, stili e problemi." : "Ultimo audio, su tutta la casa: gusti e stili del cliente, o problemi che hai visto.") + "</p>" +
+      '<label class="btn2 pieno" data-rec-fine>' + ICO.mic + "<span>" + (stanze.chiusura ? "Registra di nuovo l'ultimo audio" : "Registra l'ultimo audio") + "</span></label></div>";
+    if (stanze.altro.length) corpo2 += '<p class="mut" style="margin:10px 0 6px">File già in pratica</p><div class="gal">' + stanze.altro.map((m) => '<div class="ph">' + (m.tipo === "foto" && m.url ? '<img src="' + esc(m.url) + '" alt="">' : m.tipo === "video" ? "Video" : "Nota") + (m.nota ? "<span>" + esc(m.nota) + "</span>" : "") + "</div>").join("") + "</div>";
+    h += passo(2, "Foto e audio", sub2, stanze.chiuse.length > 0, corpo2);
 
     // 3. IA
     const corpoIA = ia && ia.stato === "in_corso"
-      ? '<div class="row"><span class="spin"></span><span class="mut">L\'IA sta leggendo solo le foto… 1-3 minuti. Il video non viene letto.</span></div>'
+      ? '<div class="row"><span class="spin"></span><span class="mut">L\'IA sta leggendo foto e audio… 1-3 minuti.</span></div>'
       : fatto3 ? '<p style="margin:0;font-size:14.5px;line-height:1.55">' + esc(ia.sintesi || "") + '</p><div class="mut">' + ((ia.ambienti || []).length) + " ambienti analizzati · letta il " + esc(quando(ia.creato)) + "</div>" +
           ((ia.dubbi || []).length ? ia.dubbi.map((d) => '<div class="avv">❓ <span>' + esc(d) + "</span></div>").join("") : "") +
           '<button class="btn2 pieno" data-ia>Rileggi tutto</button>'
         : (ia && ia.stato === "errore" ? '<div class="avv r">Lettura non riuscita: ' + esc(ia.errore || "") + "</div>" : "") +
-          '<p class="mut" style="margin:0">L\'IA legge solo le foto e la planimetria, e prepara la relazione per il tecnico. Il video resta allegato ai documenti del preventivo.</p>' +
+          '<p class="mut" style="margin:0">L\'IA legge le foto e l\'audio di ogni ambiente, più l\'ultimo audio su gusti, stili e problemi.</p>' +
           '<button class="btn" data-ia' + (foto.length ? "" : " disabled") + ">" + ICO.ia + (foto.length ? "Leggi le foto con l'IA" : "Prima carica le foto") + "</button>";
     h += passo(3, "Relazione con l'IA", fatto3 ? "Pronta per il tecnico" : ia && ia.stato === "in_corso" ? "In lettura…" : "L'IA legge solo le foto", fatto3, corpoIA, "ia");
 
@@ -814,6 +920,9 @@
 
     // 5. Domande del tecnico
     h += passo(5, "Domande del tecnico", "Solo nell'app, resta tutto nella pratica", false, '<div class="chat" data-chat><div class="mut">Carico…</div></div><form class="row" data-scrivi style="gap:8px"><input class="in" name="t" placeholder="Scrivi al tecnico…" autocomplete="off"><button class="btn" style="width:auto">Manda</button></form>', "chat");
+    h += '<section class="card"><div class="eti">Alla fine</div><h2 class="h2">Come funziona</h2>' +
+      '<p class="mut" style="margin:6px 0 10px">Prepara il preventivo per il cliente e la documentazione completa per il tecnico AncheCasa, con lo stesso stile dei fogli.</p>' +
+      '<button type="button" class="btn" data-fine>Come funziona</button><div data-fine-out></div></section>';
     scr.insertAdjacentHTML("beforeend", h);
     agganciaPratica(scr, r);
   }
@@ -828,6 +937,33 @@
     '<div class="g2"><input class="in" name="porta" placeholder="Porta 80×210" value="' + esc(a.porta || "") + '"><input class="in" name="finestra" placeholder="Finestra 70×110" value="' + esc(a.finestra || "") + '"></div><div class="calc" data-calc></div></div>';
 
   function agganciaPratica(scr, r) {
+    const fine = scr.querySelector("[data-fine]");
+    if (fine) fine.addEventListener("click", async () => {
+      if (reale() && !(r.media || []).some((m) => m.tipo === "foto")) return toast("Prima chiudi almeno un ambiente, con le foto.", true);
+      fine.disabled = true; fine.textContent = "Preparo i due fogli…";
+      const tn = r.comune ? await leggiTerranova(r.comune) : null;
+      const foto = (r.media || []).filter((m) => m.tipo === "foto" && m.fonte !== "ia" && m.url).map((m) => ({ url: m.url, nota: m.nota || "Foto" }));
+      const videoN = (r.media || []).filter((m) => m.tipo === "video").length;
+      const oggi = new Date().toLocaleDateString("it-IT", { day: "numeric", month: "long", year: "numeric" });
+      const dove = [r.indirizzo, r.comune, r.provincia ? "(" + r.provincia + ")" : ""].filter(Boolean).join(", ");
+      const chi = (S.profilo && S.profilo.nome) || (S.admin ? "Admin AncheCasa" : "Consulente AncheCasa");
+      await caricaRelazione();
+      let relazione = null;
+      const piena = r.ia && Array.isArray(r.ia.ambienti) && r.ia.ambienti.some((a) => a && a.descrizione);
+      if (piena && window.ACRelazione) relazione = { ia: r.ia, foto, render: [], testa: { nome: r.nome, indirizzo: dove, data: oggi, agente: chi, rif: reale() ? "" : "Simulazione" } };
+      else if (!reale() && window.ACRelazione) {
+        relazione = window.ACRelazione.esempio("../img/sopralluogo-demo/");
+        relazione.ia.video = [];
+        relazione.ia.letti = { foto: Math.max(foto.length, 3), audio: 0, video: 0, video_allegati: videoN };
+        relazione.testa = { nome: r.nome || "La tua casa", indirizzo: dove, data: oggi, agente: chi, rif: "Simulazione" };
+      } else if (r.ia && window.ACRelazione) relazione = { ia: r.ia, foto, render: [], testa: { nome: r.nome, indirizzo: dove, data: oggi, agente: chi, rif: "" } };
+      await pacchettoFine(scr.querySelector("[data-fine-out]"), {
+        nome: r.nome, dove, oggi, chi, tn, voci: reale() ? null : vociSim(),
+        lavori: reale() && r.ia && r.ia.voci ? r.ia.voci : null,
+        foto, videoN, relazione, renderUrl: ""
+      });
+      fine.disabled = false; fine.textContent = "Come funziona";
+    });
     // apri/chiudi passi
     scr.querySelectorAll("[data-apripasso]").forEach((b) => b.addEventListener("click", () => {
       const s = b.closest("[data-passo]"), c = s.querySelector(".corpo"), apri = c.hidden;
@@ -855,24 +991,81 @@
       try { await Q(db().rpc("ristrutturazione_misure", { p_id: r.id, p_ambienti: ambienti, p_immobile: immobile, p_criticita: criticita })); toast("Misure salvate: il tecnico le vede nel dossier."); await ricarica(); }
       catch (x) { e.target.disabled = false; toast("Non salvate: " + errore(x), true); }
     });
-    // file
-    scr.querySelectorAll("[data-file]").forEach((inp) => inp.addEventListener("change", () => carica_file(r, [...inp.files], inp.dataset.file)));
-    // nota vocale
-    const rec = scr.querySelector("[data-rec]");
-    let mr = null, pezzi = [], t0 = 0, timer = null;
-    rec.addEventListener("click", async () => {
-      if (mr) { mr.stop(); return; }
-      if (!navigator.mediaDevices || !window.MediaRecorder) return toast("Questo telefono non registra dal browser: usa il registratore e caricalo come video o audio.", true);
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        const tipo = ["audio/webm", "audio/mp4", "audio/ogg"].find((t) => MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(t)) || "";
-        mr = new MediaRecorder(stream, tipo ? { mimeType: tipo } : undefined); pezzi = []; t0 = Date.now();
-        mr.ondataavailable = (e) => { if (e.data && e.data.size) pezzi.push(e.data); };
-        mr.onstop = () => { stream.getTracks().forEach((x) => x.stop()); clearInterval(timer); const tp = (mr.mimeType || "audio/webm").split(";")[0]; const est = tp.includes("mp4") ? "m4a" : tp.includes("ogg") ? "ogg" : "webm";
-          const f = new File([new Blob(pezzi, { type: tp })], "nota." + est, { type: tp }); mr = null; rec.querySelector("span").textContent = "Nota vocale"; carica_file(r, [f], "audio"); };
-        mr.start(); rec.querySelector("span").innerHTML = '<span class="rec"><span class="dot"></span>Ferma · 0:00</span>';
-        timer = setInterval(() => { const s = Math.floor((Date.now() - t0) / 1000); const sp = rec.querySelector(".rec"); if (sp) sp.lastChild.textContent = "Ferma · " + Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); }, 500);
-      } catch (e) { toast("Microfono non disponibile: permettilo nelle impostazioni del browser.", true); }
+    // planimetria, foto dell'ambiente, audio della stanza, audio finale
+    scr.querySelectorAll("[data-file]").forEach((inp) => inp.addEventListener("change", () => carica_file(r, [...inp.files], inp.dataset.file, inp.dataset.file === "pianta" ? "Planimetria" : "")));
+    const ricordaStanza = (nome) => { try { sessionStorage.setItem(chiaveStanza(r.id), nome); sessionStorage.setItem("ac-passo", "2"); } catch (e) {} };
+    const nomeOraInput = () => nomePulito((scr.querySelector("[data-stanza-nome]") || {}).value);
+    const giaChiusa = (nome) => riepilogoStanze(r.media).chiuse.some((g) => g.nome.toLowerCase() === nome.toLowerCase());
+    const fotoDi = (nome) => (riepilogoStanze(r.media).aperte.find((g) => g.nome.toLowerCase() === nome.toLowerCase()) || { foto: [] }).foto.length;
+    scr.querySelectorAll("[data-nome]").forEach((b) => b.addEventListener("click", () => {
+      const inp = scr.querySelector("[data-stanza-nome]");
+      if (inp) inp.value = b.dataset.nome;
+      scr.querySelectorAll("[data-nome]").forEach((x) => x.classList.toggle("on", x === b));
+      ricordaStanza(b.dataset.nome);
+    }));
+    const inpNome = scr.querySelector("[data-stanza-nome]");
+    if (inpNome) inpNome.addEventListener("input", () => ricordaStanza(nomePulito(inpNome.value)));
+    const fotoInp = scr.querySelector("[data-foto-stanza]");
+    if (fotoInp) fotoInp.addEventListener("change", () => {
+      const nome = nomeOraInput();
+      if (!nome) { fotoInp.value = ""; return toast("Prima dai il nome all'ambiente.", true); }
+      if (giaChiusa(nome)) { fotoInp.value = ""; return toast("Questo ambiente è già chiuso. Scrivi un altro nome, ad esempio Bagno 2.", true); }
+      const rest = 5 - fotoDi(nome);
+      if (rest <= 0) { fotoInp.value = ""; return toast("Massimo 5 foto per ambiente.", true); }
+      const files = [...fotoInp.files].slice(0, rest);
+      if (fotoInp.files.length > rest) toast("In questo ambiente restano " + rest + " foto.");
+      ricordaStanza(nome);
+      carica_file(r, files, "foto", "Ambiente · " + nome);
+    });
+    scr.querySelectorAll("[data-riprendi]").forEach((b) => b.addEventListener("click", () => { ricordaStanza(b.dataset.riprendi); mostra(); }));
+    const ancora = scr.querySelector("[data-ancora]");
+    if (ancora) ancora.addEventListener("click", () => { try { sessionStorage.setItem(chiaveAncora(r.id), "1"); sessionStorage.setItem("ac-passo", "2"); } catch (e) {} mostra(); });
+    const finito = scr.querySelector("[data-finito]");
+    if (finito) finito.addEventListener("click", () => {
+      if (!riepilogoStanze(r.media).chiuse.length) return toast("Chiudi almeno un ambiente, con le foto e l'audio.", true);
+      const box = scr.querySelector("[data-ultimo]");
+      if (box) { box.hidden = false; box.scrollIntoView({ behavior: "smooth", block: "nearest" }); }
+    });
+    const legaRec = (btn, notaDi) => {
+      if (!btn) return;
+      let mr = null, pezzi = [], t0 = 0, timer = null, nota = "";
+      btn.addEventListener("click", async () => {
+        if (mr) { mr.stop(); return; }
+        const n = notaDi();
+        if (!n) return;
+        nota = n;
+        if (!navigator.mediaDevices || !window.MediaRecorder) return toast("Questo telefono non registra dal browser. Permetti il microfono e riprova.", true);
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          const mime = ["audio/webm", "audio/mp4", "audio/ogg"].find((t) => MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(t)) || "";
+          mr = new MediaRecorder(stream, mime ? { mimeType: mime } : undefined); pezzi = []; t0 = Date.now();
+          mr.ondataavailable = (e) => { if (e.data && e.data.size) pezzi.push(e.data); };
+          mr.onstop = () => {
+            stream.getTracks().forEach((x) => x.stop()); clearInterval(timer);
+            const tp = (mr.mimeType || "audio/webm").split(";")[0];
+            const est = tp.includes("mp4") ? "m4a" : tp.includes("ogg") ? "ogg" : "webm";
+            const f = new File([new Blob(pezzi, { type: tp })], "nota." + est, { type: tp });
+            mr = null;
+            const sp = btn.querySelector("span"); if (sp) sp.textContent = nota === NOTA_CHIUSURA ? "Registra l'ultimo audio" : "Registra audio e chiudi";
+            carica_file(r, [f], "audio", nota);
+          };
+          mr.start();
+          const sp = btn.querySelector("span"); if (sp) sp.innerHTML = '<span class="rec"><span class="dot"></span>Ferma · 0:00</span>';
+          timer = setInterval(() => { const s = Math.floor((Date.now() - t0) / 1000); const el = btn.querySelector(".rec"); if (el) el.lastChild.textContent = "Ferma · " + Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); }, 500);
+        } catch (e) { toast("Microfono non disponibile. Permettilo nelle impostazioni del browser.", true); }
+      });
+    };
+    legaRec(scr.querySelector("[data-rec-stanza]"), () => {
+      const nome = nomeOraInput();
+      if (!nome) { toast("Prima dai il nome all'ambiente.", true); return ""; }
+      if (giaChiusa(nome)) { toast("Questo ambiente è già chiuso. Scrivi un altro nome, ad esempio Bagno 2.", true); return ""; }
+      if (fotoDi(nome) < 1) { toast("Prima almeno una foto di questo ambiente.", true); return ""; }
+      ricordaStanza(nome);
+      return "Audio ambiente · " + nome;
+    });
+    legaRec(scr.querySelector("[data-rec-fine]"), () => {
+      if (!riepilogoStanze(r.media).chiuse.length) { toast("Chiudi almeno un ambiente, poi registra l'ultimo audio.", true); return ""; }
+      return NOTA_CHIUSURA;
     });
     // IA
     scr.querySelectorAll("[data-ia]").forEach((b) => b.addEventListener("click", () => leggiIA(r, b)));
@@ -906,20 +1099,29 @@
     });
   }
 
-  async function carica_file(r, files, tipo) {
-    files = files.slice(0, 10); if (!files.length) return;
-    if (files.some((f) => f.size > MAX_FILE)) return toast("File troppo grande: massimo 50 MB. Per i video fai più riprese brevi.", true);
-    if (!reale()) { (r.media = r.media || []).push(...files.map((f, i) => ({ id: "n" + Date.now() + i, tipo: tipo === "pianta" ? "foto" : tipo, nota: tipo === "pianta" ? "Planimetria" : tipo === "video" ? "Giro della casa" : "", url: tipo === "foto" || tipo === "pianta" ? URL.createObjectURL(f) : "" }))); toast("Anteprima: caricato."); return mostra(); }
-    toast(files.length > 1 ? "Carico " + files.length + " file…" : tipo === "video" ? "Carico il video… non chiudere l'app." : "Carico…");
+  async function carica_file(r, files, tipo, nota) {
+    files = (files || []).slice(0, 5); if (!files.length) return;
+    const etichetta = nota || (tipo === "pianta" ? "Planimetria" : "");
+    if (files.some((f) => f.size > MAX_FILE)) return toast("File troppo grande: massimo 50 MB.", true);
+    try { sessionStorage.setItem("ac-passo", "2"); } catch (e) {}
+    if (/^Audio ambiente ·/i.test(etichetta)) { try { sessionStorage.removeItem(chiaveStanza(r.id)); sessionStorage.removeItem(chiaveAncora(r.id)); } catch (e) {} }
+    if (/^Audio chiusura/i.test(etichetta)) { try { sessionStorage.removeItem(chiaveAncora(r.id)); } catch (e) {} }
+    const tipoSalva = tipo === "pianta" ? "foto" : tipo;
+    if (!reale()) {
+      (r.media = r.media || []).push(...files.map((f, i) => ({ id: "n" + Date.now() + i, tipo: tipoSalva, nota: etichetta, url: tipoSalva === "foto" ? URL.createObjectURL(f) : "" })));
+      toast(/^Audio ambiente/i.test(etichetta) ? "Ambiente chiuso." : /^Audio chiusura/i.test(etichetta) ? "Sopralluogo chiuso." : "Anteprima: caricato.");
+      return mostra();
+    }
+    toast(files.length > 1 ? "Carico " + files.length + " foto…" : tipoSalva === "audio" ? "Salvo l'audio…" : "Carico…");
     try {
       for (let i = 0; i < files.length; i++) {
         const f = files[i];
-        const est = ((f.name || "").split(".").pop() || (tipo === "video" ? "mp4" : "jpg")).toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 5) || "bin";
-        const path = r.id + "/" + Date.now() + "-" + i + (tipo === "pianta" ? "-planimetria" : tipo === "video" ? "-video" : "") + "." + est;
+        const est = ((f.name || "").split(".").pop() || (tipoSalva === "audio" ? "webm" : "jpg")).toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 5) || "bin";
+        const path = r.id + "/" + Date.now() + "-" + i + (tipo === "pianta" ? "-planimetria" : tipoSalva === "audio" ? "-audio" : "") + "." + est;
         await Q(db().storage.from("sopralluoghi").upload(path, f, { upsert: false, contentType: f.type || undefined }));
-        await Q(db().rpc("ristrutturazione_media_aggiungi", { p_id: r.id, p_path: path, p_tipo: tipo === "pianta" ? "foto" : tipo, p_nota: tipo === "pianta" ? "Planimetria" : tipo === "video" ? "Giro della casa" : "" }));
+        await Q(db().rpc("ristrutturazione_media_aggiungi", { p_id: r.id, p_path: path, p_tipo: tipoSalva, p_nota: etichetta }));
       }
-      toast(tipo === "audio" ? "Nota vocale salvata." : tipo === "video" ? "Video salvato." : tipo === "pianta" ? "Planimetria salvata." : "Foto salvate.");
+      toast(/^Audio ambiente/i.test(etichetta) ? "Ambiente chiuso." : /^Audio chiusura/i.test(etichetta) ? "Sopralluogo chiuso." : tipo === "pianta" ? "Planimetria salvata." : "Foto salvate.");
       await ricarica();
     } catch (x) { toast(/mime|format/i.test(errore(x)) ? "Formato non accettato dall'archivio: avvisa l'admin." : /size|large/i.test(errore(x)) ? "File troppo grande per l'archivio." : "Non caricato: " + errore(x), true); }
   }
@@ -933,7 +1135,7 @@
       if (r.ia.stato !== "fatto") attendiIA(r); else finitaIA(r);
     } catch (x) {
       b.disabled = false; b.textContent = "Leggi tutto con l'IA";
-      toast({ aspetta_due_minuti: "Hai appena letto: riprova tra due minuti.", niente_da_leggere: "L'IA legge solo le foto. Carica almeno una foto. Il video resta per il tecnico.", motore_non_configurato: "Manca la chiave dell'IA: avvisa l'admin." }[errore(x)] || "Lettura non riuscita: " + errore(x), true);
+      toast({ aspetta_due_minuti: "Hai appena letto: riprova tra due minuti.", niente_da_leggere: "L'IA legge le foto. Chiudi almeno un ambiente con una foto.", motore_non_configurato: "Manca la chiave dell'IA: avvisa l'admin." }[errore(x)] || "Lettura non riuscita: " + errore(x), true);
     }
   }
   function attendiIA(r) {
@@ -1051,7 +1253,7 @@
     azienda: [["d:pubblica", "Pubblica", "Un annuncio o una richiesta", "doc"], ["d:cnt_cerca", "Cerca subappaltatori", "Imprese e artigiani della zona", "clienti"],
       ["d:preventivi", "Nuovo preventivo", "Per un tuo cliente", "euro"], ["d:rapportini", "Rapportino di oggi", "Ore e lavori in cantiere", "doc"],
       ["d:giornali", "Giornale di cantiere", "Cosa è successo oggi", "foto"], ["d:az-documenti", "Carica i documenti", "Visura, DURC e abbonamento", "doc"], ["d:chat", "Scrivi ad AncheCasa", "Ti rispondiamo in chat", "mail"]],
-    agente: [["prova", "Vedi cosa so fare", "Foto o video: report, prima e dopo, preventivo simulato", "flash"], ["flash", "Sopralluogo Flash", "Sei dal cliente: misure, foto, video, IA e invio per mail", "flash"], ["invita", "Invita un cliente", "Privato o azienda: la mail parte da AncheCasa", "mail"],
+    agente: [["prova", "Vedi cosa so fare", "Foto o video: report, prima e dopo, preventivo simulato", "flash"], ["flash", "Sopralluogo Flash", "Sei dal cliente: foto e audio, ambiente per ambiente", "flash"], ["invita", "Invita un cliente", "Privato o azienda: la mail parte da AncheCasa", "mail"],
       ["nuova", "Segnala una ristrutturazione", "Il sopralluogo lo assegna AncheCasa", "casa"], ["proponi", "Porta una persona in rete", "Agente o subagente nella tua squadra", "rete"],
       ["d:re-registra", "Registra un cliente", "Luce, gas, telefono o servizi", "euro"]],
     admin: [["prova", "Vedi cosa so fare", "Foto o video: report, prima e dopo, preventivo simulato", "flash"], ["flash", "Sopralluogo Flash", "Misure, foto, video, IA e invio per mail", "flash"], ["d:inviti-admin", "Invita", "Privati, aziende e rete", "mail"],

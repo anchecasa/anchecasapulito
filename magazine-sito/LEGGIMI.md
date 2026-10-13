@@ -11,7 +11,7 @@ Sito statico della rivista. La rivista sfogliabile resta su https://anchecasa.it
 - Solo per i cittadini. Nessuna impresa citata, sponsorizzata o in pubblicità.
 - Per chi fa i lavori: sempre e solo https://anchecasa.it.
 - Ogni numero con la fonte accanto; ogni articolo con la data dell'ultimo controllo.
-- Le app (Check Bollette, SuperMastro, app della raccolta) sono gratuite per sempre e sviluppate da AncheStudio.
+- Le app (Check Bollette, SuperMastro, app della raccolta) sono gratuite per sempre e sviluppate da AncheCasa Studio srl.
 - Marchio: in fondo la curva AncheCasa identica a mail e report (numeri in CLAUDE.md).
 
 ## Pubblicazione

@@ -18,6 +18,8 @@ export type ModelDraft = {
   motivoProfessionista: string;
   /** Trascrizione di ciò che la persona dice nel video. Vuota se nessuno parla. */
   parlato?: string;
+  /** true se il modello vede un lavoro di ristrutturazione (13.10.2026): va al sopralluogo AncheCasa. */
+  ristrutturazione?: boolean;
   tempoMinuti: number | null;
   difficolta: "facile" | "media" | null;
   attrezzi: string[];
@@ -34,6 +36,8 @@ export type DiagnosisPayload = {
   visto_sentito: string;
   /** Trascrizione AI di ciò che la persona ha detto nel video (assente nelle diagnosi vecchie). */
   parlato?: string;
+  /** Lavoro di ristrutturazione: niente artigiano, sopralluogo gratuito AncheCasa (13.10.2026). */
+  ristrutturazione?: boolean;
   prima_cosa: string;
   azioni: string[];
   fai_da_te: {
@@ -223,6 +227,7 @@ function emptyPayload(draft: ModelDraft, place: { lat: number | null; lng: numbe
   return {
     visto_sentito: clip(draft.vistoSentito || draft.summary, 160),
     parlato: clip(draft.parlato ?? "", 300),
+    ristrutturazione: draft.ristrutturazione === true,
     prima_cosa: "",
     azioni: [],
     fai_da_te: null,

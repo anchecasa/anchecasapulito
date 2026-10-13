@@ -15,3 +15,7 @@ supabase/.temp/
 # esiti e log di PUBBLICA-SUPERMASTRO.bat (12.10.2026)
 supermastro-sos/pubblica-*.txt
 allinea-esito.txt
+
+# demo Assoarma: foto e dati, non nel repository pubblico (13.10.2026)
+/assoarma/
+/assoarma-demo/

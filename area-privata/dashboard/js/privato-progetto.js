@@ -31,7 +31,7 @@
       ]
     },
     trova: {
-      title: "Trova artigiano o impresa",
+      title: "Pronto intervento · artigiano",
       sub: "Cerca per mestiere e zona, manda la richiesta.",
       stato: "parte",
       passi: [

@@ -161,12 +161,13 @@ def articoli(numero=None):
 
 # ------------------------------------------------------------------ home
 def home():
-    N = C.NUMERI[0]
+    N = max(C.NUMERI, key=lambda n: n["n"] if any(a["numero"] == n["n"] for a in C.ARTICOLI) else 0)
     tutti = articoli(N["n"])
-    lead = next(a for a in tutti if a["slug"].startswith("bonus-casa"))
+    cop = [a for a in tutti if a.get("copertina")]
+    lead = next((a for a in cop if a["slug"].startswith("bonus-casa")), cop[0] if cop else next(a for a in tutti if a["rubrica"] != "editoriale"))
     altri = [a for a in tutti if a is not lead and a["rubrica"] != "editoriale"]
     edit = next(a for a in tutti if a["rubrica"] == "editoriale")
-    lista = [a for a in tutti if a.get("copertina") and a is not lead] + [next(a for a in tutti if a["slug"] == "la-bolletta-smontata")]
+    lista = [a for a in cop if a is not lead] + [a for a in tutti if a["slug"] == "la-bolletta-smontata"]
     sommario = "".join(f'<li><a href="{link_art(a)}"><span class="rub">{e(rub_nome(a))}</span><span class="t">{e(a["titolo"])}</span></a></li>' for a in lista)
     resto = [a for a in altri if a not in lista]
     app = "".join(f'''<li class="app app-{x["id"]}"><p class="app-stato">{e(x["stato"])}</p><h3>{e(x["nome"])}</h3><p>{e(x["cosa"])}</p><a class="app-tasto" href="{x["link"]}">{e(x["tasto"])}</a></li>''' for x in C.APP)
@@ -198,7 +199,7 @@ def home():
   <div class="fa-in">
     <div class="fa-testa">
       <h2 id="app-t">App gratuite, per sempre</h2>
-      <p>Dentro la rivista trovi strumenti che puoi usare subito. Si usano e si scaricano gratis, oggi e domani: niente abbonamenti, niente pubblicità. Li sviluppa <strong>AncheStudio</strong>, la società di software di AncheCasa.</p>
+      <p>Dentro la rivista trovi strumenti che puoi usare subito. Si usano e si scaricano gratis, oggi e domani: niente abbonamenti, niente pubblicità. Li sviluppa <strong>AncheCasa Studio srl</strong>, la società di software di AncheCasa.</p>
       <a class="fa-link" href="/app-gratuite">Come funzionano le app</a>
     </div>
     <ul class="fa-app">{app}</ul>
@@ -295,12 +296,12 @@ def app_gratuite():
 <p>Le app di AncheCasa Magazine si usano e si scaricano gratis, oggi e domani. Non chiedono abbonamenti e non mostrano pubblicità. Servono a una cosa sola: risolvere un problema di casa in pochi minuti.</p></section>
 {blocchi}
 <section class="studio" aria-labelledby="st-t"><div class="studio-in">
-<h2 id="st-t">Fatte da AncheStudio</h2>
-<p>AncheStudio è la società di sviluppo software di AncheCasa. Ha realizzato tutti i programmi della piattaforma: la piazza di anchecasa.it, l’area privata di cittadini e imprese, gli strumenti della rivista. Per questo le app sono gratuite: fanno parte del servizio, non sono un prodotto da vendere.</p>
+<h2 id="st-t">Fatte da AncheCasa Studio srl</h2>
+<p>AncheCasa Studio srl è la società di sviluppo software di AncheCasa. Ha realizzato tutti i programmi della piattaforma: la piazza di anchecasa.it, l’area privata di cittadini e imprese, gli strumenti della rivista. Per questo le app sono gratuite: fanno parte del servizio, non sono un prodotto da vendere.</p>
 <ul class="studio-p"><li><b>Gratis per sempre.</b> Niente versioni a pagamento, niente funzioni bloccate.</li><li><b>I tuoi dati restano tuoi.</b> Check Bollette fa i conti sul tuo telefono: i numeri della bolletta non vengono inviati.</li><li><b>Sempre aggiornate.</b> Prezzi di riferimento e regole si aggiornano quando cambiano.</li></ul>
 </div></section>'''
     pagina("app-gratuite.html", "App gratuite per la casa · AncheCasa Magazine",
-           "Check Bollette, SuperMastro e l’app della raccolta differenziata: strumenti gratuiti per sempre, sviluppati da AncheStudio per AncheCasa.", corpo, attiva="app")
+           "Check Bollette, SuperMastro e l’app della raccolta differenziata: strumenti gratuiti per sempre, sviluppati da AncheCasa Studio srl per AncheCasa.", corpo, attiva="app")
 
 # ------------------------------------------------------------------ archivio
 def numeri():
@@ -325,7 +326,7 @@ def chi_siamo():
 <h2>Indipendenza</h2>
 <p>Nella rivista nessuna impresa paga per comparire: non ci sono pubblicità, marchi sponsorizzati o articoli a pagamento. AncheCasa è anche la piazza dove privati e imprese si incontrano: per questo, quando ti serve qualcuno che faccia il lavoro, ti rimandiamo lì, dove scegli tu tra più imprese della tua zona. Lo diciamo apertamente, perché la fiducia comincia sapendo chi ti parla.</p>
 <h2>Le app</h2>
-<p>Gli strumenti della rivista sono sviluppati da AncheStudio, la società di software di AncheCasa, che ha realizzato anche tutti i programmi della piattaforma. Sono gratuiti per sempre.</p>
+<p>Gli strumenti della rivista sono sviluppati da AncheCasa Studio srl, la società di software di AncheCasa, che ha realizzato anche tutti i programmi della piattaforma. Sono gratuiti per sempre.</p>
 <h2>Editore e contatti</h2>
 <p>Palumbo Investment S.r.l.<br>Per segnalazioni e domande alla redazione: <a href="mailto:info@anchecasa.it">info@anchecasa.it</a>.</p>
 </div>'''

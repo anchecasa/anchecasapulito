@@ -166,7 +166,7 @@ export function HomeScreen() {
       )}
 
       <div className="px-4 pt-5">
-        <HomeEntry videoHref="/m/video" />
+        <HomeEntry base="/m" />
       </div>
     </div>
   );

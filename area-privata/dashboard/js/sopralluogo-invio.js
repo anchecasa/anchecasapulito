@@ -102,7 +102,6 @@
     const amb = (Array.isArray(r.ambienti) && r.ambienti.length) ? r.ambienti.slice() : [{ nome: "" }];
     const imm = r.immobile || {};
     const pianta = (r.media || []).filter((m) => m.tipo === "foto" && /planimetri/i.test(m.nota || "")).length;
-    const video = (r.media || []).filter((m) => m.tipo === "video").length;
     const campo = (n, l, v, ph, w) => '<label style="min-width:' + (w || 90) + 'px;flex:1">' + l + '<input name="' + n + '" value="' + esc(v == null ? "" : String(v).replace(".", ",")) + '"' + (ph ? ' placeholder="' + ph + '"' : "") + (/^(larg|lung|alt|h_riv)$/.test(n) ? ' inputmode="decimal"' : "") + "></label>";
     const riga = (a, i) => '<div class="card" data-amb style="padding:12px;margin:8px 0;box-shadow:none;border:1px solid #e3e8ef">' +
       '<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end">' + campo("nome", "Stanza", a.nome, "es. Bagno", 140) +
@@ -116,9 +115,8 @@
       '<form data-mis-f class="prefs wide"><div data-amb-lista>' + amb.map(riga).join("") + "</div>" +
       '<div class="row-actions"><button type="button" class="btn-ghost" data-amb-piu>+ Aggiungi una stanza</button>' +
       '<label class="btn-ghost imp-file">📐 ' + (pianta ? "Planimetria ✓ (rifai)" : "Fotografa la planimetria") + '<input type="file" accept="image/*" capture="environment" data-pianta hidden></label>' +
-      '<label class="btn-ghost imp-file">🎥 ' + (video ? "Video ✓ (aggiungi)" : "Video del giro della casa") + '<input type="file" accept="video/*" capture="environment" data-video hidden></label>' +
       '<button type="button" class="btn-ghost" data-ia-leggi>🤖 Leggi tutto con l\'IA</button></div>' +
-      '<p class="note">Il video non lo legge l\'IA. Si allega ai documenti che vanno al tecnico AncheCasa per il preventivo. Fino a ' + MAX_MB + ' MB per video (circa 3 minuti in 720p): se la casa è grande, fai più video.</p>' +
+      '<p class="note">Dal telefono, un ambiente alla volta. Cinque foto è il massimo, non l\'obbligo: dalla porta tutta la stanza, la parete che non si vede, e il primo piano di ciò che non va. Se con tre si capisce, l\'agente registra l\'audio con le misure e chiude. Alla fine, «Finito sopralluogo» e un ultimo audio su gusti, stili e problemi. La planimetria si può fotografare anche da qui.</p>' +
       '<p class="note" data-ia-esito>' + (r.ia && r.ia.dubbi && r.ia.dubbi.length ? "L'IA chiede: " + r.ia.dubbi.map(esc).join(" · ") : "") + "</p>" +
       '<div class="en-grid">' +
       '<label>Piano<input name="piano" value="' + esc(imm.piano || "") + '" placeholder="es. 1"></label>' +
@@ -175,7 +173,7 @@
         toast("Lettura fatta: la relazione è nel dossier del tecnico.");
       };
       if (!reale()) return setTimeout(() => usa({ ambienti: [{ nome: "Bagno", larg: 2.4, lung: 2.5, alt: 2.7, porta: "80×210", finestra: "70×110", fonte_misure: "nota vocale" }], dubbi: ["Altezza del rivestimento?"] }), 900);
-      const errore = (m) => { rimetti(); toast({ niente_da_leggere: "L'IA legge solo le foto. Carica almeno una foto. Il video resta per il tecnico.", motore_non_configurato: "Manca la chiave dell'IA: avvisa l'admin." }[m] || "Lettura non riuscita: " + m, "error"); };
+      const errore = (m) => { rimetti(); toast({ niente_da_leggere: "L'IA legge le foto. Serve almeno una foto di un ambiente.", motore_non_configurato: "Manca la chiave dell'IA: avvisa l'admin." }[m] || "Lettura non riuscita: " + m, "error"); };
       const aspetta = (giri) => setTimeout(() => {
         window.acDb.functions.invoke("dossier-ia", { body: { azione: "stato", id: r.id } }).then((res) => {
           const ia = res && res.data && res.data.ia;
@@ -192,18 +190,6 @@
         if (res.data && res.data.ia && res.data.ia.stato === "fatto") return usa(res.data.ia);
         aspetta(0);
       }).catch((x) => errore(String((x && x.message) || x)));
-    });
-    // Video del giro della casa: non lo legge l'IA. Va allegato ai documenti del tecnico. Limite 50 MB per file.
-    f.querySelector("[data-video]").addEventListener("change", (e) => {
-      const file = e.target.files && e.target.files[0]; if (!file) return;
-      if (file.size > MAX_MB * 1024 * 1024) return toast("Video troppo grande: massimo " + MAX_MB + " MB. Registra un minuto per volta, o abbassa la qualità a 720p.", "error");
-      if (!reale()) { toast("Anteprima: video caricato."); return; }
-      const ext = ((file.name || "").split(".").pop() || "mp4").toLowerCase().replace(/[^a-z0-9]/g, "").slice(0, 5) || "mp4";
-      const path = r.id + "/" + Date.now() + "-video." + ext;
-      toast("Carico il video… non chiudere la pagina.");
-      Q(window.acDb.storage.from("sopralluoghi").upload(path, file, { upsert: false, contentType: file.type || undefined }))
-        .then(() => Q(window.acDb.rpc("ristrutturazione_media_aggiungi", { p_id: r.id, p_path: path, p_tipo: "video", p_nota: "Giro della casa" })))
-        .then(() => { toast("Video salvato."); if (typeof ricarica === "function") ricarica(); }, (x) => toast(troppoGrande(x) ? "Video troppo grande per l'archivio (massimo " + MAX_MB + " MB): registra un minuto per volta." : "Non caricato: " + ((x && x.message) || x), "error"));
     });
     // Planimetria: è una foto della pratica con nota «Planimetria».
     f.querySelector("[data-pianta]").addEventListener("change", (e) => {

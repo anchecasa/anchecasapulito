@@ -27,7 +27,7 @@ const KEY = () => Deno.env.get("GEMINI_API_KEY") || "";
 const G = "https://generativelanguage.googleapis.com";
 const MODELLI = [Deno.env.get("GEMINI_MODEL"), "gemini-3.8-flash", "gemini-3.6-flash", "gemini-2.5-flash"].filter(Boolean) as string[];
 const MODELLI_IMG = [Deno.env.get("GEMINI_IMAGE_MODEL"), "gemini-3.1-flash-image", "gemini-3-pro-image", "gemini-nano-banana-2.1"].filter(Boolean) as string[];
-const MAX_FOTO = 40, MAX_AUDIO = 6, MAX_VIDEO = 6, MAX_RENDER = 24; // video: il bucket accetta 15 MB, quindi più video brevi
+const MAX_FOTO = 40, MAX_AUDIO = 20, MAX_VIDEO = 6, MAX_RENDER = 24; // un audio per ambiente, più l'audio finale. I video restano allegati e non si mandano.
 
 const SERVIZI: [string, string][] = [
   ["demolizioni", "Demolizioni e scavi"], ["murature", "Opere murarie"], ["strutture", "Strutture in cemento armato"], ["cartongesso", "Cartongesso"],
@@ -109,11 +109,14 @@ async function genera(modelli: string[], corpo: Record<string, unknown>) {
   throw new Error(ultimo || "Gemini");
 }
 
-function prompt(r: Record<string, unknown>, foto: string[], nAudio: number, nVideoAllegati: number) {
+function prompt(r: Record<string, unknown>, foto: string[], noteAudio: string[], nVideoAllegati: number) {
+  const audioRiga = noteAudio.length ? noteAudio.map((n, i) => (i + 1) + "=" + (n || "audio")).join("; ") : "nessuna";
   return `Sei il direttore tecnico di AncheCasa, general contractor di ristrutturazioni in Italia. Un agente ha fatto un sopralluogo e ti manda il materiale.
 Devi scrivere la RELAZIONE DI SOPRALLUOGO più professionale e completa possibile: la leggono il tecnico che fa il preventivo e, dopo il suo controllo, il cliente.
-Materiale che vedi: ${foto.length} foto numerate (${foto.map((f, i) => (i + 1) + "=" + (f || "foto")).join("; ")}), ${nAudio} note vocali.
-I video del giro della casa non ti arrivano (${nVideoAllegati} allegati al dossier del tecnico, per il preventivo). Non descriverli e non usarli. L'array "video" deve essere [].
+Materiale che vedi: ${foto.length} foto numerate (${foto.map((f, i) => (i + 1) + "=" + (f || "foto")).join("; ")}).
+Note vocali, nell'ordine in cui ti arrivano: ${audioRiga}.
+«Audio ambiente · nome» è la stanza appena chiusa: misure e lavori di quello spazio, da unire alle foto con lo stesso nome. «Audio chiusura» è l'ultimo, su tutta la casa: gusti, stili del cliente e problemi visti. Non è una stanza.
+I video non ti arrivano (${nVideoAllegati} eventuali allegati vecchi, da ignorare). Non descriverli. L'array "video" deve essere [].
 Scritto dall'agente: richiesta «${testo(r.descrizione, 600)}»; progetto «${testo(r.riepilogo, 1000)}»; note «${testo(r.nota_agente, 1000)}»; da controllare «${testo(r.criticita, 500)}»;
 casa ${JSON.stringify(r.immobile || {}).slice(0, 600)}; misure ${JSON.stringify(r.ambienti || []).slice(0, 2500)}; comune ${testo(r.comune, 60)} (${testo(r.provincia, 2)}); finitura scelta ${testo(r.pacchetto, 10) || "non indicata"}.
 
@@ -197,21 +200,21 @@ async function analizza(admin: ReturnType<typeof createClient>, id: string) {
     const audio = agente.filter((m) => m.tipo === "audio").slice(-MAX_AUDIO);
     const video = agente.filter((m) => m.tipo === "video").slice(-MAX_VIDEO);
     const parti: unknown[] = [];
-    const idFoto: string[] = [], noteFoto: string[] = [];
-    let nA = 0;
+    const idFoto: string[] = [], noteFoto: string[] = [], noteAudio: string[] = [];
     for (const m of [...audio, ...foto]) {
       const { data: blob } = await admin.storage.from("sopralluoghi").download(m.path);
       if (!blob) continue;
       const f = await carica(blob, mimeDi(m.path, m.tipo, blob.type), m.path.split("/").pop() || "file");
       parti.push({ file_data: { mime_type: f.mime, file_uri: f.uri } });
-      if (m.tipo === "foto") { idFoto.push(m.id); noteFoto.push(testo(m.nota, 60)); } else nA++;
+      if (m.tipo === "foto") { idFoto.push(m.id); noteFoto.push(testo(m.nota, 60)); }
+      else noteAudio.push(testo(m.nota, 80));
     }
     if (!idFoto.length) throw new Error("niente_da_leggere");
-    parti.push({ text: prompt(r || {}, noteFoto, nA, video.length) });
+    parti.push({ text: prompt(r || {}, noteFoto, noteAudio, video.length) });
     const { j, modello } = await genera(MODELLI, { contents: [{ role: "user", parts: parti }], generationConfig: { temperature: 0.2, response_mime_type: "application/json" } });
     const t = j?.candidates?.[0]?.content?.parts?.map((p: { text?: string }) => p.text || "").join("") || "{}";
     const x = normalizza(JSON.parse(t.replace(/^```json\s*|\s*```$/g, "")), idFoto.length);
-    await salva({ stato: "fatto", ...x, foto_id: idFoto, letti: { foto: idFoto.length, audio: nA, video: 0, video_allegati: video.length }, modello, iniziato: inizio, creato: new Date().toISOString() });
+    await salva({ stato: "fatto", ...x, foto_id: idFoto, letti: { foto: idFoto.length, audio: noteAudio.length, video: 0, video_allegati: video.length }, modello, iniziato: inizio, creato: new Date().toISOString() });
   } catch (e) {
     console.error("dossier-ia analizza", e);
     await salva({ stato: "errore", errore: String((e as Error)?.message || e).slice(0, 200), iniziato: inizio, creato: new Date().toISOString() });

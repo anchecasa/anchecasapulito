@@ -1,8 +1,13 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { EsitoView } from "@/components/supermastro/esito-view";
 import { Mascot, type MascotPose } from "@/components/supermastro/mascot";
+import { VideoDiagnosis } from "@/components/supermastro/video-diagnosis";
+import type { LoadedDiagnosis } from "@/lib/sos/save-diagnosis";
+
+/** Gli altri pulsanti della home aprono la fotocamera qui, con questo evento. */
+export const OPEN_VIDEO_EVENT = "supermastro:video";
 
 const TRADES: { pose: MascotPose; label: string }[] = [
   { pose: "idraulico", label: "Idraulico" },
@@ -13,29 +18,101 @@ const TRADES: { pose: MascotPose; label: string }[] = [
 
 const STEPS = ["Video di 5 secondi, con audio", "Ti dico cos'è", "Lo sistemi tu o chiami"] as const;
 
-function withQuery(href: string, extra: Record<string, string>) {
-  const [path, query] = href.split("?");
-  const params = new URLSearchParams(query ?? "");
-  for (const [key, value] of Object.entries(extra)) {
-    if (value) params.set(key, value);
-  }
-  const next = params.toString();
-  return next ? `${path}?${next}` : path;
-}
-
-export function HomeEntry({ videoHref }: { videoHref: string }) {
-  const router = useRouter();
+/**
+ * Home di SuperMastro: il video si registra e si analizza qui, senza cambiare pagina.
+ * Fotocamera sopra la home, poi l'esito (le due strade) al posto del riquadro.
+ * La pagina /supermastro/video resta per i link che arrivano da fuori.
+ */
+export function HomeEntry({ base = "/supermastro" }: { base?: "/m" | "/supermastro" }) {
   const [text, setText] = useState("");
+  const [note, setNote] = useState("");
+  const [camera, setCamera] = useState(false);
+  const [round, setRound] = useState(0);
+  const [diagnosis, setDiagnosis] = useState<LoadedDiagnosis | null>(null);
+  const topRef = useRef<HTMLDivElement>(null);
+
+  function openCamera(testo: string) {
+    setNote(testo);
+    setDiagnosis(null);
+    setRound((n) => n + 1);
+    setCamera(true);
+    try {
+      if (window.location.hash !== "#video") window.history.pushState(null, "", "#video");
+    } catch {
+      // Senza cronologia la fotocamera si apre lo stesso.
+    }
+  }
 
   /** Il mestiere scelto dal riquadro arriva all'AI come indizio, insieme a quello che hai scritto. */
   function go(trade?: string) {
     const parts = [text.trim(), trade ? `Mestiere scelto: ${trade}.` : ""].filter(Boolean);
-    const testo = parts.join(" ").slice(0, 300);
-    router.push(withQuery(videoHref, testo ? { testo } : {}));
+    openCamera(parts.join(" ").slice(0, 300));
+  }
+
+  function closeCamera() {
+    setCamera(false);
+    try {
+      if (window.location.hash === "#video") window.history.back();
+    } catch {
+      // niente
+    }
+  }
+
+  function showResult(result: LoadedDiagnosis) {
+    setDiagnosis(result);
+    setCamera(false);
+    try {
+      window.history.replaceState(null, "", "#esito");
+    } catch {
+      // niente
+    }
+    window.requestAnimationFrame(() => topRef.current?.scrollIntoView({ block: "start" }));
+  }
+
+  // Il tasto Indietro del telefono chiude la fotocamera o torna dalla risposta alla home.
+  useEffect(() => {
+    function onPop() {
+      const hash = window.location.hash;
+      if (hash !== "#video") setCamera(false);
+      if (hash !== "#esito") setDiagnosis(null);
+    }
+    function onOpen() {
+      openCamera("");
+    }
+    window.addEventListener("popstate", onPop);
+    window.addEventListener(OPEN_VIDEO_EVENT, onOpen);
+    return () => {
+      window.removeEventListener("popstate", onPop);
+      window.removeEventListener(OPEN_VIDEO_EVENT, onOpen);
+    };
+  }, []);
+
+  // La fotocamera copre la home: niente scorrimento sotto.
+  useEffect(() => {
+    if (!camera) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [camera]);
+
+  const cameraLayer = camera ? (
+    <VideoDiagnosis key={round} flowBase={base} note={note} onResult={showResult} onClose={closeCamera} />
+  ) : null;
+
+  if (diagnosis) {
+    return (
+      <div ref={topRef} className="mx-auto w-full max-w-lg scroll-mt-4 text-[var(--sm-ink)]">
+        <EsitoView base={base} diagnosis={diagnosis} onRetry={() => openCamera(note)} />
+        {cameraLayer}
+      </div>
+    );
   }
 
   return (
-    <div className="mx-auto w-full max-w-lg text-[var(--sm-ink)]">
+    <div ref={topRef} className="mx-auto w-full max-w-lg scroll-mt-4 text-[var(--sm-ink)]">
+      {cameraLayer}
       <Mascot
         pose="saluta"
         size={200}

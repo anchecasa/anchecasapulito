@@ -17,10 +17,13 @@ export function EsitoView({
   base,
   diagnosis,
   preview,
+  onRetry,
 }: {
   base: "/m" | "/supermastro";
   diagnosis: LoadedDiagnosis;
   preview?: string;
+  /** Nella home: rifà il video nella stessa pagina. */
+  onRetry?: () => void;
 }) {
   const videoHref = `${base}/video`;
   const guideHref = preview ? `${base}/da-solo?prova=${preview}` : `${base}/da-solo?id=${diagnosis.id}`;
@@ -41,9 +44,13 @@ export function EsitoView({
 
   return (
     <section className="mx-auto flex min-h-full w-full max-w-lg flex-col bg-[var(--sm-paper)] px-4 py-6 text-[var(--sm-ink)]">
-      <Link href={videoHref} className="inline-flex min-h-11 items-center text-base font-semibold text-[var(--sm-ink)]">
-        Indietro
-      </Link>
+      <VideoLink
+        href={videoHref}
+        onRetry={onRetry}
+        className="inline-flex min-h-11 items-center text-base font-semibold text-[var(--sm-ink)]"
+      >
+        {onRetry ? "Rifai il video" : "Indietro"}
+      </VideoLink>
 
       {diagnosis.payload.parlato ? (
         <div className="mt-3 rounded-2xl bg-white px-4 py-3">
@@ -61,9 +68,9 @@ export function EsitoView({
           )}
         />
       ) : diagnosis.esito === "fuori_tema" ? (
-        <Fuori videoHref={videoHref} visto={diagnosis.payload.visto_sentito} diagnosisId={diagnosis.id} />
+        <Fuori videoHref={videoHref} onRetry={onRetry} visto={diagnosis.payload.visto_sentito} diagnosisId={diagnosis.id} />
       ) : diagnosis.esito === "da_verificare" ? (
-        <Verifica base={base} diagnosis={diagnosis} videoHref={videoHref} />
+        <Verifica base={base} diagnosis={diagnosis} videoHref={videoHref} onRetry={onRetry} />
       ) : diagnosis.esito === "fai_da_te" && diy ? (
         <div className="mt-4">
           <Mascot
@@ -123,9 +130,25 @@ export function EsitoView({
               <p className="mt-2 text-base leading-relaxed">{diagnosis.payload.prima_cosa}</p>
             </div>
           )}
-          {nearby(
-            `Trova un ${artisanTradeLabel(diagnosis.skillLabel).toLowerCase()} vicino`,
-            "mt-6 flex min-h-12 items-center justify-center rounded-full bg-[var(--sm-accent)] px-5 text-center text-lg font-semibold text-white",
+          {diagnosis.payload.ristrutturazione ? (
+            // 13.10.2026: le ristrutturazioni le fa solo AncheCasa, gli artigiani hanno i pronti interventi.
+            <div className="mt-6 rounded-3xl bg-white p-4">
+              <h2 className="text-lg font-semibold">Questo è un lavoro da ristrutturazione</h2>
+              <p className="mt-2 text-base leading-relaxed">
+                Lo fa AncheCasa: sopralluogo gratuito, preventivo voce per voce e un solo contratto.
+              </p>
+              <a
+                href="https://anchecasa.it/ristruttura.html#sopralluogo"
+                className="mt-4 flex min-h-12 items-center justify-center rounded-full bg-[var(--sm-accent)] px-5 text-center text-lg font-semibold text-white"
+              >
+                Richiedi un sopralluogo gratuito
+              </a>
+            </div>
+          ) : (
+            nearby(
+              `Trova un ${artisanTradeLabel(diagnosis.skillLabel).toLowerCase()} vicino`,
+              "mt-6 flex min-h-12 items-center justify-center rounded-full bg-[var(--sm-accent)] px-5 text-center text-lg font-semibold text-white",
+            )
           )}
           <DiagnosisThumb diagnosisId={diagnosis.id} />
         </div>
@@ -176,7 +199,42 @@ function Pericolo({ diagnosis, cerca }: { diagnosis: LoadedDiagnosis; cerca: Rea
   );
 }
 
-function Fuori({ videoHref, visto, diagnosisId }: { videoHref: string; visto: string; diagnosisId: string }) {
+function VideoLink({
+  href,
+  onRetry,
+  className,
+  children,
+}: {
+  href: string;
+  onRetry?: () => void;
+  className: string;
+  children: React.ReactNode;
+}) {
+  if (onRetry) {
+    return (
+      <button type="button" onClick={onRetry} className={className}>
+        {children}
+      </button>
+    );
+  }
+  return (
+    <Link href={href} className={className}>
+      {children}
+    </Link>
+  );
+}
+
+function Fuori({
+  videoHref,
+  visto,
+  diagnosisId,
+  onRetry,
+}: {
+  videoHref: string;
+  visto: string;
+  diagnosisId: string;
+  onRetry?: () => void;
+}) {
   return (
     <div className="mt-4">
       <Mascot
@@ -187,12 +245,13 @@ function Fuori({ videoHref, visto, diagnosisId }: { videoHref: string; visto: st
       />
       <h1 className="mt-4 text-2xl font-semibold leading-tight">Questo non è un problema di casa</h1>
       <p className="mt-3 text-base leading-relaxed">{visto}</p>
-      <Link
+      <VideoLink
         href={videoHref}
-        className="mt-6 flex min-h-12 items-center justify-center rounded-full bg-[var(--sm-accent)] px-5 text-lg font-semibold text-white"
+        onRetry={onRetry}
+        className="mt-6 flex min-h-12 w-full items-center justify-center rounded-full bg-[var(--sm-accent)] px-5 text-lg font-semibold text-white"
       >
         Inquadra il guasto
-      </Link>
+      </VideoLink>
       <DiagnosisThumb diagnosisId={diagnosisId} />
     </div>
   );
@@ -202,10 +261,12 @@ function Verifica({
   base,
   diagnosis,
   videoHref,
+  onRetry,
 }: {
   base: "/m" | "/supermastro";
   diagnosis: LoadedDiagnosis;
   videoHref: string;
+  onRetry?: () => void;
 }) {
   return (
     <div className="mt-4">
@@ -219,12 +280,13 @@ function Verifica({
           </li>
         ))}
       </ul>
-      <Link
+      <VideoLink
         href={videoHref}
-        className="mt-5 flex min-h-12 items-center justify-center rounded-full bg-[var(--sm-accent)] px-5 text-lg font-semibold text-white"
+        onRetry={onRetry}
+        className="mt-5 flex min-h-12 w-full items-center justify-center rounded-full bg-[var(--sm-accent)] px-5 text-lg font-semibold text-white"
       >
         Rifai il video
-      </Link>
+      </VideoLink>
       <FaultGrid base={base} lat={diagnosis.payload.lat} lng={diagnosis.payload.lng} />
       <DiagnosisThumb diagnosisId={diagnosis.id} />
     </div>
