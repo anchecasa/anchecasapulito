@@ -5,6 +5,7 @@ import AdminHeaderBrand from "@/components/admin/admin-header-brand";
 
 const NAV = [
   { href: "/admin", label: "Panoramica" },
+  { href: "/supermastro/video", label: "Video diagnosi" },
   { href: "/procione/agenda", label: "Agenda Procione" },
   { href: "/admin/talent", label: "Talent" },
   { href: "/admin/annunci", label: "Annunci" },

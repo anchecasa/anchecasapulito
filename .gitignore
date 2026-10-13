@@ -11,3 +11,7 @@ Thumbs.db
 
 # file locali di Supabase CLI (12.10.2026)
 supabase/.temp/
+
+# esiti e log di PUBBLICA-SUPERMASTRO.bat (12.10.2026)
+supermastro-sos/pubblica-*.txt
+allinea-esito.txt

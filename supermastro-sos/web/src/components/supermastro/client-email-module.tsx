@@ -13,7 +13,7 @@ type Props = {
   nextPath?: string;
 };
 
-export function ClientEmailModule({ loginHref, nextPath = "/supermastro/nuova" }: Props) {
+export function ClientEmailModule({ loginHref, nextPath = "/supermastro/video" }: Props) {
   const [state, formAction, pending] = useActionState(sendMagicLink, initial);
 
   return (

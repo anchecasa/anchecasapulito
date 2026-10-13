@@ -23,7 +23,8 @@ const STATO = ["mai", "inviato", "aperto", "risposto", "iscritto"] as const;
 const ASK = ["altro_video", "foto_vicino", "misure", "marca_modello", "domanda"] as const;
 const RISPOSTA = ["posso_venire", "info", "non_posso"] as const;
 const VIDEO_MIME = ["video/webm", "video/mp4", "video/quicktime"];
-const ANSWER_MIME = [...VIDEO_MIME, "image/jpeg", "image/png", "image/webp", "image/heic", "image/heif"];
+// Solo video registrati dal vivo: in SuperMastro nessuno allega foto.
+const ANSWER_MIME = [...VIDEO_MIME];
 const MAX_BYTES = 8 * 1024 * 1024;
 const SIGNED_SECONDS = 600;
 const OTP_COOLDOWN_MS = 60 * 1000;
@@ -207,8 +208,21 @@ export async function createShare(input: {
     return { error: "Formato video non accettato.", status: 400 as const };
   }
 
-  const telefonoNorm = normalizePhone(claim.telefono);
   const db = admin();
+  // Artigiano della rete: il telefono resta nella cassaforte contatti, lo legge solo il server.
+  if (claim.fonte === "rete") {
+    const workerId = claim.fonteId.slice("rete/".length);
+    const { data: contact } = await db
+      .from("contact_vault")
+      .select("phone")
+      .eq("owner_type", "worker")
+      .eq("owner_id", workerId)
+      .maybeSingle();
+    const phone = typeof contact?.phone === "string" ? contact.phone.trim() : "";
+    if (!phone) return { error: "Questo artigiano non ha ancora un numero. Scegline un altro.", status: 409 as const };
+    claim.telefono = phone;
+  }
+  const telefonoNorm = normalizePhone(claim.telefono);
   const { data: existingLead } = await db
     .from("artisan_leads")
     .select("id, opt_out, volte_trovato, stato, telefono, telefono_norm")

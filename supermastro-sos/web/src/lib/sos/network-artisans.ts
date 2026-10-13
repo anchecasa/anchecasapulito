@@ -1,5 +1,6 @@
 import { artisanPlaceMapsUrl } from "@/lib/sos/artisan-maps";
 import type { NearbyArtisan } from "@/lib/sos/search-artisans";
+import { signLead } from "@/lib/sos/lead-token";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 type NetworkRow = {
@@ -25,6 +26,20 @@ export async function searchNetworkArtisans(
     });
     if (error || !Array.isArray(data)) return [];
 
+    // Telefono dalla cassaforte contatti (solo service role): serve per mandargli il video.
+    const ids = (data as NetworkRow[]).map((row) => row.id).filter(Boolean);
+    const phones = new Map<string, string>();
+    if (ids.length) {
+      const { data: contacts } = await admin
+        .from("contact_vault")
+        .select("owner_id, phone")
+        .eq("owner_type", "worker")
+        .in("owner_id", ids);
+      for (const contact of (contacts ?? []) as { owner_id: string; phone: string | null }[]) {
+        if (contact.phone?.trim()) phones.set(contact.owner_id, contact.phone.trim());
+      }
+    }
+
     return (data as NetworkRow[]).flatMap((row) => {
       const placeLat = Number(row.lat);
       const placeLng = Number(row.lng);
@@ -41,6 +56,19 @@ export async function searchNetworkArtisans(
           distanceKm: Number.isFinite(distanceKm) ? distanceKm : 0,
           mapsUrl: artisanPlaceMapsUrl(name, placeLat, placeLng),
           network: true,
+          // Il numero non va al browser: il gettone porta solo l'id, il server lo legge all'invio.
+          leadToken: phones.has(row.id)
+            ? signLead({
+                fonte: "rete",
+                fonteId: `rete/${row.id}`,
+                nome: name,
+                telefono: null,
+                indirizzo: "Rete AncheCasa",
+                lat: placeLat,
+                lng: placeLng,
+                mestiere: trade,
+              })
+            : null,
         } satisfies NearbyArtisan,
       ];
     });

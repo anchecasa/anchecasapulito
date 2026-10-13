@@ -754,6 +754,17 @@ button { cursor: pointer; }
   .kpis, .ind-row, .grid-2 { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 720px) {
-  .kpis, .ind-row, .grid-2, .accounts { grid-template-columns: 1fr; }
-  .login-left { min-height: 360px; }
+  .kpis, .ind-row, .grid-2, .accounts { grid-template-columns: 1fr 1fr; }
+  html, body { overflow-x: hidden; max-width: 100%; touch-action: manipulation; }
+  input, select, textarea,
+  .login-form input, .sheet input { font-size: 16px; }
+  .login-left { min-height: 0; padding: 28px 22px 18px; align-items: flex-start; }
+  .login-form { max-width: 100%; }
+  .login-form .sub { margin-bottom: 14px; }
+  .login-form .row { flex-wrap: nowrap; gap: 10px; }
+  .login-right { padding: 8px 16px 14px; }
+  .login-hero { padding: 0; }
+  .login-hero img { width: min(100%, 260px); }
+  .product-logo { height: 48px; margin-bottom: 6px; }
+  .product-name { padding-bottom: 8px; }
 }

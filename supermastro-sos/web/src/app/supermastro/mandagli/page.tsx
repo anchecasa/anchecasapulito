@@ -43,6 +43,7 @@ export default async function MandagliPage({
       leadToken={lead ? token : ""}
       nome={lead?.nome || "Attività in zona"}
       telefono={lead?.telefono && toE164(lead.telefono) ? lead.telefono : ""}
+      rete={lead?.fonte === "rete"}
       distanza={distanza}
       guasto={one(params.guasto)}
       faultLat={faultLat}

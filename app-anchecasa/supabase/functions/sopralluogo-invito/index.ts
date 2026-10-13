@@ -106,7 +106,17 @@ Deno.serve(async (req) => {
       await db.from("ristrutturazioni").update({ inviato_cliente_il: new Date().toISOString() }).eq("id", p.id);
 
       // Al tecnico AncheCasa (per ora l'admin): il dossier per il preventivo, con la scadenza.
+      // Il video non lo legge l'IA: è un allegato di questi documenti.
       try {
+        const { data: video } = await db.from("ristrutturazioni_media").select("path,nota").eq("ristrutturazione_id", p.id).eq("tipo", "video").order("creato");
+        const linkVideo: string[] = [];
+        for (const v of (video || []).slice(0, 6)) {
+          const { data: s } = await admin.storage.from("sopralluoghi").createSignedUrl(v.path, 60 * 60 * 24 * 7);
+          if (s?.signedUrl) linkVideo.push(s.signedUrl);
+        }
+        const voceVideo = linkVideo.length
+          ? linkVideo.map((u, i) => '<a href="' + esc(u) + '">Apri il video ' + (i + 1) + "</a>").join(" · ") + ". Vale 7 giorni. L'IA non lo ha letto: è allegato a questi documenti per il preventivo."
+          : "In questo sopralluogo non c'è un video.";
         const dossier = `${SITO}/dashboard/?dossier=${p.id}#/admin/ristrutturazioni-admin`;
         await manda(ADMIN_MAIL, (p.urgente ? "URGENTE 48 ore · " : "") + "Nuovo dossier: " + p.nome + (p.comune ? " · " + p.comune : ""), mailMarchio({
           oggetto: (p.urgente ? "URGENTE 48 ore · " : "") + "Nuovo dossier: " + p.nome,
@@ -116,7 +126,8 @@ Deno.serve(async (req) => {
           intro: esc(p.agente) + " ha fatto il sopralluogo e l'ha mandato al cliente. Il preventivo va mandato entro <strong>" + esc(data(p.preventivo_entro)) + "</strong>.",
           punti: [
             ["Il progetto", p.riepilogo ? esc(String(p.riepilogo).slice(0, 260)) : "Vedi le note e le foto nel dossier."],
-            ["Nel dossier", "Misure delle stanze, pre-computo, foto, planimetria, note vocali, dati del comune."],
+            ["Nel dossier", "Misure delle stanze, pre-computo, foto, planimetria, note vocali, dati del comune. L'IA ha letto solo le foto."],
+            ["Video allegato", voceVideo],
             ["Domande all'agente", "Solo dalla chat del dossier: resta tutto nella pratica."],
           ],
           bottone: "Apri il dossier",

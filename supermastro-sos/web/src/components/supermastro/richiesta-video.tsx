@@ -1,7 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
+import { LiveVideoCapture } from "@/components/supermastro/live-video-capture";
 import { ASK_LABEL, REPLY_LABEL, type RequestShare } from "@/lib/sos/share-copy";
 
 const POLL_MS = 10_000;
@@ -231,15 +232,15 @@ function AnswerForm({
   const [text, setText] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
-  const [fileName, setFileName] = useState("");
-  const fileRef = useRef<HTMLInputElement>(null);
+  const [video, setVideo] = useState<File | null>(null);
+  const [captureKey, setCaptureKey] = useState(0);
 
   async function send(event: React.FormEvent) {
     event.preventDefault();
     if (busy) return;
-    const file = fileRef.current?.files?.[0] ?? null;
+    const file = video;
     if (!text.trim() && !file) {
-      setError("Scrivi una risposta o allega un video o una foto.");
+      setError("Scrivi una risposta o registra un video.");
       return;
     }
     setBusy(true);
@@ -258,8 +259,8 @@ function AnswerForm({
         return;
       }
       setText("");
-      setFileName("");
-      if (fileRef.current) fileRef.current.value = "";
+      setVideo(null);
+      setCaptureKey((key) => key + 1);
       await onDone();
     } catch {
       setError("Connessione assente. Riprova.");
@@ -281,16 +282,7 @@ function AnswerForm({
         onChange={(event) => setText(event.target.value)}
         className="mt-1 min-h-24 w-full rounded-2xl border border-[var(--sm-ink)]/20 bg-white px-3 py-2 text-base"
       />
-      <label className="mt-3 inline-flex min-h-11 cursor-pointer items-center text-base font-semibold text-[var(--sm-accent-strong)] underline">
-        {fileName ? `Allegato: ${fileName}` : "Allega video o foto"}
-        <input
-          ref={fileRef}
-          type="file"
-          accept="video/*,image/*"
-          className="sr-only"
-          onChange={(event) => setFileName(event.target.files?.[0]?.name ?? "")}
-        />
-      </label>
+      <LiveVideoCapture key={captureKey} onChange={setVideo} label="Rispondi con un video di 5 secondi" />
       <button
         type="submit"
         disabled={busy}

@@ -38,10 +38,10 @@ export default async function ArtigianiPage({
       <section className="mx-auto max-w-lg bg-[#FBF8F3] px-4 py-8 text-[#1A2432]">
         <h1 className="text-xl font-semibold">Artigiani del guasto</h1>
         <p className="mt-2 text-sm leading-relaxed text-[#2A3C54]">
-          La posizione del guasto manca. Torna alla richiesta, completa la diagnosi e cerca di nuovo.
+          La posizione del guasto manca. Torna al video, completa la diagnosi e cerca di nuovo.
         </p>
-        <HardLink href="/supermastro/nuova" className="mt-4 inline-flex text-sm font-semibold text-[#E56B10]">
-          Torna alla richiesta
+        <HardLink href="/supermastro/video" className="mt-4 inline-flex text-sm font-semibold text-[#E56B10]">
+          Torna al video
         </HardLink>
       </section>
     );

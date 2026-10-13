@@ -13,6 +13,8 @@ type Props = {
   leadToken: string;
   nome: string;
   telefono: string;
+  /** Artigiano della rete AncheCasa: il numero resta sul server, si invia lo stesso. */
+  rete?: boolean;
   distanza: string;
   guasto: string;
   faultLat: number | null;
@@ -181,7 +183,7 @@ export function MandagliVideo(props: Props) {
             AncheCasa conserva la richiesta per seguirla e per avvisare l&apos;artigiano se non risponde.
           </p>
           <p className="text-base leading-snug">Il video parte solo quando tocchi Invia.</p>
-          {props.telefono ? (
+          {props.telefono || props.rete ? (
             <div className="flex flex-col gap-2">
               <button
                 type="button"
@@ -199,7 +201,7 @@ export function MandagliVideo(props: Props) {
               >
                 {sending === "sms" ? "Carico il video…" : "Invia con SMS"}
               </button>
-              <p className="select-all text-sm text-[#2A3C54]">{props.telefono}</p>
+              {props.telefono ? <p className="select-all text-sm text-[#2A3C54]">{props.telefono}</p> : null}
             </div>
           ) : (
             <p className="text-base">Numero non pubblicato. Non posso mandare WhatsApp o SMS.</p>

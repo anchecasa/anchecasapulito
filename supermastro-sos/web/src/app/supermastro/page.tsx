@@ -24,7 +24,7 @@ export default async function SuperMastroPage({
         demoMode={demoMode}
         userEmail={user?.email}
         authError={params.auth === "error"}
-        nuovaHref="/supermastro/nuova"
+        nuovaHref="/supermastro/video"
       />
       {user && (
         <div className="mx-auto max-w-6xl px-4 pb-8 sm:px-6">

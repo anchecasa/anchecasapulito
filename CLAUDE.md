@@ -49,6 +49,54 @@ Sulla cartella e sul GitHub `anchecasa/anchecasapulito` lavorano tre persone o s
 
 ## Registro delle modifiche
 
+### 13.10.2026 04:40 · Claude — presentazione Sopralluogo Flash per gli agenti e allineamento con GitHub
+- Su richiesta di Nando. Presentazione «Sopralluogo Flash · Guida per gli agenti» (23 pagine, carta AncheCasa: logo, curva arancio e blu, Manrope) su claude.ai, privata finché Nando non la condivide. Schermate vere dell'app in anteprima (`app/?demo=1`, `sopralluogo.html?demo=1`, dossier del tecnico `dashboard/?demo=admin&dossier=r9`), dati di esempio. Il preventivo accettato dal cliente è mostrato con dati di esempio aggiunti solo nella copia usata per le foto, non nei file del progetto.
+- Le foto dell'app sono prese dalla copia locale delle 04:00 (prima delle scelte e del render dettagliato di Cursor delle 04:12).
+- Nuovo `ALLINEA-GITHUB.bat`: salva tutto il lavoro del PC in un commit, `git pull --rebase` da GitHub, push su `main`, esito in `allinea-esito.txt`. In `.gitignore` aggiunti i file di esito e di log.
+- File: `ALLINEA-GITHUB.bat`, `.gitignore`, `CLAUDE.md`.
+
+### 13.10.2026 04:12 · Cursor — Vedi cosa so fare: scelte e render dettagliato
+- Dopo l'analisi delle tre foto, sotto i due fogli, si scelgono tipologia di lavoro, stile, rifiniture, piastrelle, porte, box doccia, rubinetteria e sanitari. «Crea il render dettagliato» disegna il render sulla foto scelta, con la proposta di finitura dello stile e l'elenco di quello che è stato selezionato. Il cursore confronta oggi e render.
+- Provato in locale a 390 px, agente: 35 scelte, 8 selezionate, render 960×640, etichette Facciata, Di pregio, Cementine, Rovere, Walk-in, Nero opaco. Il cursore a 20 taglia il render. Larghezza 390. Admin ha il pulsante, il privato no. Barre invariate.
+- Non pubblicato.
+- File: `area-privata/app/app.js` (?v=6), `area-privata/app/app.css` (?v=6), `area-privata/app/index.html`, `CLAUDE.md`.
+
+### 13.10.2026 03:59 · Cursor — Vedi cosa so fare: tre foto, posizione, due report, pubblicato
+- Il pulsante fisso resta per rete e admin. Ora servono tre foto (facciata, interno, dettaglio), città e indirizzo, oppure il tasto «Posizione attuale» che legge il telefono e compila i campi.
+- Escono due fogli con il marchio (logo, filo arancio, curva, piede blu): sopralluogo, con le tre foto e i confronti prima e dopo, e preventivo con i dati Terranova del comune (zona sismica, zona climatica, prezzario, valore OMI, vincoli). Se il comune è in `comuni_dati` si usano quelli. Se manca, il foglio lo dice e mette i valori di esempio della regione. Totale simulato 9.390 €, IVA esclusa, non è un'offerta.
+- Provato in locale a 390 px con Teano, Via Giusti 22 e tre foto: due fogli, logo e curva caricati, zona 2, climatica C, prezzario Campania 2026, OMI 950–1400 €/mq, provincia CE, tre cursori, larghezza 390, campi a 16 px.
+- Pubblicata l'area privata, progetto Vercel `area-privata-produzione`, deployment `dpl_EgE7SfEkUzR7UhuYVfxqiKmSv7Sr`, alias https://entra.anchecasa.it e https://areaprivata.anchecasa.it. Online `app.js?v=5` e `app.css?v=5`. Con questo invio è online anche il profilo da telefono più compatto del 12.10.
+- File: `area-privata/app/app.js` (?v=5), `area-privata/app/app.css` (?v=5), `area-privata/app/index.html`, `CLAUDE.md`.
+
+### 13.10.2026 03:49 · Cursor — Vedi cosa so fare, rete e admin sul telefono
+- Nella vista telefono, rete e admin hanno il pulsante fisso «Vedi cosa so fare» sopra la barra. La barra della rete resta Home, Clienti, +, Rete, Altro. L'admin resta Home, Aziende, +, Pratiche, Rete. Il privato non lo vede. Nel + è la prima voce.
+- Si scattano foto o si gira un video, senza scrivere nome, indirizzo o misure. Esce un report come un sopralluogo vero, con i confronti prima e dopo e un preventivo simulato di 9.390 €, IVA esclusa, con la scritta che non è un'offerta. In pagina c'è cosa fare sul posto e cosa chiedere al cliente, e che non serve essere un ingegnere.
+- Provato in locale a 390 px: agente (una foto, un video, tre cursori prima e dopo, totale 9.390 €, larghezza 390), admin (pulsante sopra la dashboard, pagina aperta), privato (pulsante assente).
+- Non pubblicato: la messa online dell'area privata è ferma in attesa dell'ok.
+- File: `area-privata/app/app.js` (?v=3), `area-privata/app/app.css` (?v=4), `area-privata/app/index.html`, `CLAUDE.md`.
+
+### 12.10.2026 20:35 · Claude — pubblicazione di SuperMastro ferma a Cloudflare
+- Lanciato `PUBBLICA-SUPERMASTRO.bat` (doppio clic, con il permesso di Nando). `web/.env.local` copiato da 04-SuperMastro, `npm ci` e build OpenNext riusciti. Pubblicazione fallita: Cloudflare «Authentication error [code: 10000]» con la CLOUDFLARE_API_TOKEN di `.env.local`.
+- In `supermastro-sos/web/.env.local` la riga CLOUDFLARE_API_TOKEN è commentata (valore non letto né copiato). Nel .bat aggiunti `wrangler login` prima della pubblicazione e il log in `supermastro-sos/pubblica-log.txt`. Secondo tentativo fermo a `wrangler login`, messaggio non letto.
+- Online non è cambiato niente: app ancora quella di luglio, sito non pubblicato.
+- `COMANDO-CURSOR-pubblica-supermastro.md` riscritto (versione 2) per far finire il lavoro a Cursor.
+- Esiti vecchi spostati in `_to_delete/supermastro-sos-1012/`.
+- File: `PUBBLICA-SUPERMASTRO.bat`, `supermastro-sos/web/.env.local` (una riga commentata), `COMANDO-CURSOR-pubblica-supermastro.md`, `CLAUDE.md`.
+
+### 12.10.2026 20:34 · Cursor — profilo da telefono più compatto, niente zoom nei moduli
+- Da telefono la prima parte del Profilo aveva la foto da sola con «Carica» sotto, e Nome, Zona e Salva uno sotto l'altro a tutta larghezza. Ora la foto e «Carica» stanno sulla stessa riga, Nome e Zona affiancati, «Salva profilo» resta un pulsante corto. I campi sono a 16 px.
+- Su tutte le pagine dove si compila (accesso, iscrizione, benvenuto, nuova password, candidatura, sopralluogo, offerte, preventivi, servizi, guasto, verifica, contratto) lo schermo non zooma: viewport bloccato e campi a 16 px. L'accesso da telefono non ha più il riquadro blu alto 360 px.
+- Provato in locale a 390 px, profilo admin: Nome e Zona sulla stessa riga (138 px), foto 72 px con Carica a fianco, Salva a 125 px, campi a 16 px, larghezza 390. Da computer, sopra i 980 px, il profilo resta com'era.
+- Non pubblicato: la messa online dell'area privata è ferma in attesa dell'ok.
+- File: `area-privata/dashboard/css/vista-chiara.css` (?v=4), `dashboard/index.html`, `css/kit.css` (?v=1), `css/sito.css` (?v=1), `css/sopralluogo.css` (?v=3), `index.html`, `nuova-password.html`, `iscriviti.html`, `candidatura-agente.html`, `benvenuto.html`, `sopralluogo.html`, `offerte.html`, `preventivi.html`, `servizi.html`, `guasto.html`, `verifica.html`, `dashboard/contratto.html`, `CLAUDE.md`.
+
+### 12.10.2026 20:20 · Cursor — invito da telefono: schermo fisso, senza zoom
+- Sul telefono, creando un invito, lo schermo si allargava e l’iPhone zoomava. I campi dell’invito erano a 13px e, scelta la zona, il modulo andava su tre colonne.
+- Ora i campi sono a 16px, l’invito resta su una colonna e la pagina non scorre di lato. Il viewport dell’app e della dashboard ha `maximum-scale=1`.
+- Provato in locale a 390 px: modulo Inviti dell’admin (anche con Capo area e zona) largo 390, campi 16px; foglio «Invita un cliente» dell’agente largo 390, scala 1.
+- Pubblicata l’area privata, deployment `dpl_86jME7DMFLJmbDWUTMdBkhroE578`, alias entra e areaprivata. Niente commit e niente push.
+- File: `area-privata/app/index.html`, `area-privata/app/app.css`, `area-privata/dashboard/index.html`, `area-privata/dashboard/css/vista-chiara.css`, `CLAUDE.md`.
+
 ### 12.10.2026 20:12 · Cursor — vista da telefono online per ogni profilo
 - Ok di Nando. La vista da telefono è su https://entra.anchecasa.it/app/ e su https://areaprivata.anchecasa.it/app/. Il computer, da 1400 px, resta sulla dashboard.
 - Confronto con il deployment precedente `dpl_2Syga92GewEiAntPGRK4cSquggML`: 133 file online, nessuno manca in locale.

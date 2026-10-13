@@ -45,6 +45,13 @@ export function EsitoView({
         Indietro
       </Link>
 
+      {diagnosis.payload.parlato ? (
+        <div className="mt-3 rounded-2xl bg-white px-4 py-3">
+          <p className="text-sm font-semibold uppercase tracking-[0.12em] text-[var(--sm-accent-strong)]">Hai detto</p>
+          <p className="mt-1 text-base leading-relaxed">«{diagnosis.payload.parlato}»</p>
+        </div>
+      ) : null}
+
       {diagnosis.esito === "pericolo" ? (
         <Pericolo
           diagnosis={diagnosis}
@@ -109,6 +116,12 @@ export function EsitoView({
           <p className="mt-3 text-base leading-relaxed">{diagnosis.payload.visto_sentito}</p>
           {diagnosis.payload.motivo_professionista && (
             <p className="mt-3 text-base font-semibold leading-relaxed">{diagnosis.payload.motivo_professionista}</p>
+          )}
+          {diagnosis.payload.prima_cosa && (
+            <div className="mt-4 rounded-3xl bg-white p-4">
+              <h2 className="text-lg font-semibold">Intanto fai questo</h2>
+              <p className="mt-2 text-base leading-relaxed">{diagnosis.payload.prima_cosa}</p>
+            </div>
           )}
           {nearby(
             `Trova un ${artisanTradeLabel(diagnosis.skillLabel).toLowerCase()} vicino`,

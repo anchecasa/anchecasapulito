@@ -58,3 +58,19 @@ test("numeri normalizzati: i fissi tengono lo 0", () => {
   assert.equal(toE164("abc"), "");
   assert.equal(normalizePhone("06-1234567"), normalizePhone("+39 06 1234567"));
 });
+
+test("gettone della rete: id worker valido, niente telefono nel gettone", () => {
+  const rete = {
+    ...claim,
+    fonte: "rete" as const,
+    fonteId: "rete/3f2b8c1e-1d2a-4b5c-9e8f-0a1b2c3d4e5f",
+    telefono: null,
+  };
+  const token = signLead(rete);
+  assert.ok(token);
+  const back = verifyLead(token!);
+  assert.equal(back?.fonte, "rete");
+  assert.equal(back?.telefono, null);
+  assert.equal(signLead({ ...rete, fonteId: "rete/non-un-id" }), null);
+  assert.equal(signLead({ ...rete, fonteId: "node/123" }), null);
+});

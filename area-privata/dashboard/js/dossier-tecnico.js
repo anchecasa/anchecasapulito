@@ -268,7 +268,7 @@
     if (d.budget) chips.push('<span class="dt-chip">Budget cliente: ' + esc(d.budget) + "</span>");
     if (d.cliente_ok_il) chips.push('<span class="dt-chip ok">👍 Il cliente ha detto «Mi piace»</span>');
     if (d.aperto_cliente_il) chips.push('<span class="dt-chip ok">Il cliente ha aperto il sopralluogo</span>');
-    chips.push('<span class="dt-chip">' + altre.length + " foto · " + audio.length + (audio.length === 1 ? " nota vocale · " : " note vocali · ") + (pianta.length ? "planimetria ✓" : "planimetria mancante") + "</span>");
+    chips.push('<span class="dt-chip">' + altre.length + " foto · " + audio.length + (audio.length === 1 ? " nota vocale · " : " note vocali · ") + (pianta.length ? "planimetria ✓" : "planimetria mancante") + " · " + video.length + (video.length === 1 ? " video allegato" : " video allegati") + "</span>");
     if (d.tecnico) chips.push('<span class="dt-chip">Tecnico: ' + esc(d.tecnico) + "</span>");
 
     const testa = '<section class="dt-card"><span class="dt-eti">Dossier per il preventivo · pratica ' + esc(String(d.id).slice(0, 8).toUpperCase()) + "</span>" +
@@ -306,10 +306,10 @@
     const materiale = foto.length + " foto · " + audio.length + " note vocali · " + video.length + " video";
     let iaTop = '<section class="dt-card dt-ia-card" data-dt-ia><div class="dt-ia-testa"><div><span class="dt-eti">Relazione di sopralluogo · intelligenza artificiale</span>' +
       "<h2 style=\"margin:6px 0 2px\">" + (fatto ? "Relazione pronta" : inCorso ? "L'IA sta leggendo il sopralluogo…" : "Prepara la relazione di tutta la casa") + "</h2>" +
-      '<div class="dt-sub">' + (fatto ? "Letta il " + esc(breve(ia.creato)) + " · " + ((ia.letti && ia.letti.foto) || 0) + " foto, " + ((ia.letti && ia.letti.audio) || 0) + " audio, " + ((ia.letti && ia.letti.video) || 0) + " video" +
+      '<div class="dt-sub">' + (fatto ? "Letta il " + esc(breve(ia.creato)) + " · " + ((ia.letti && ia.letti.foto) || 0) + " foto, " + ((ia.letti && ia.letti.audio) || 0) + " audio. Video allegati al dossier: " + video.length + ", non letti dall'IA" +
         (d.relazione_pubblicata_il ? " · <b style=\"color:#c45d0c\">pubblicata al cliente il " + esc(breve(d.relazione_pubblicata_il)) + "</b>" : " · il cliente non la vede ancora")
-        : inCorso ? "Foto, planimetria, voce e video: ci vogliono 1-3 minuti. Puoi lavorare, la pagina si aggiorna da sola."
-        : "Stanze, impianti, facciata, tetto, giardino: stato, criticità, priorità, fasi, documenti e simulazioni del dopo. Materiale: " + esc(materiale) + ".") + "</div></div>" +
+        : inCorso ? "L'IA sta leggendo solo le foto: 1-3 minuti. Il video resta allegato e non viene letto."
+        : "L'IA legge solo le foto. Il video del giro della casa è allegato ai documenti del preventivo. Materiale: " + esc(materiale) + ".") + "</div></div>" +
       (inCorso ? '<span class="dt-spin"></span>' : "") + "</div>" +
       (ia && ia.stato === "errore" ? '<div class="dt-alert r">⚠️ <span>Lettura non riuscita: ' + esc(ia.errore || "") + "</span></div>" : "") +
       '<div class="dt-noprint dt-ia-azioni">' +
@@ -319,7 +319,7 @@
         '<button type="button" class="dt-btn ' + (d.relazione_pubblicata_il ? "g" : "n") + '" data-dt-pubblica>' + (d.relazione_pubblicata_il ? "Ritira dal cliente" : "Pubblica la relazione al cliente") + "</button>" +
         '<button type="button" class="dt-btn g" data-dt-rz-pdf>Scarica la relazione (PDF)</button>' +
         '<button type="button" class="dt-btn g" data-dt-ia-via>Rileggi</button>')
-      : inCorso ? "" : '<button type="button" class="dt-btn p" data-dt-ia-via' + (foto.length + audio.length + video.length ? "" : " disabled") + ">" + (foto.length + audio.length + video.length ? "✨ Prepara la relazione con l'IA" : "Servono foto, note vocali o un video") + "</button>") +
+      : inCorso ? "" : '<button type="button" class="dt-btn p" data-dt-ia-via' + (foto.length ? "" : " disabled") + ">" + (foto.length ? "✨ Prepara la relazione dalle foto" : "Servono le foto: il video non si legge") + "</button>") +
       "</div></section>";
     const iaH = "";
 
@@ -335,7 +335,7 @@
 
     // Foto
     const fotoH = '<section class="dt-card"><h2>Foto del sopralluogo (' + foto.length + ")" + (renders.length ? ' <span class="dt-ia">+ ' + renders.length + " simulazioni</span>" : "") + "</h2>" +
-      (video.length ? video.map((m, i) => '<div class="dt-voce">🎥 <b>Video ' + (i + 1) + "</b> " + esc(m.nota || "") + (m.url ? '<video controls preload="none" src="' + esc(m.url) + '" style="width:100%;margin-top:6px;border-radius:10px"></video>' : "") + "</div>").join("") : "") +
+      (video.length ? '<h2 style="margin-top:4px">Video allegati per il preventivo</h2><p class="dt-vuoto" style="margin-top:0">L\'IA non li ha letti. Restano qui, con i documenti del sopralluogo.</p>' + video.map((m, i) => '<div class="dt-voce">🎥 <b>Video ' + (i + 1) + "</b> " + esc(m.nota || "") + (m.url ? '<video controls preload="none" src="' + esc(m.url) + '" style="width:100%;margin-top:6px;border-radius:10px"></video>' : "") + "</div>").join("") : "") +
       (foto.length ? '<div class="dt-foto">' + pianta.concat(altre).map((m, i) => '<button type="button" class="' + (/planimetri/i.test(m.nota || "") ? "pl" : "") + '" data-dt-f="' + i + '">' +
         (m.url ? '<img loading="lazy" src="' + esc(m.url) + '" alt="">' : '<img alt="">') + "<span>" + (i + 1) + " · " + esc(m.nota || "Foto") + "</span></button>").join("") + "</div>"
         : '<p class="dt-vuoto">Nessuna foto. L\'agente le carica dal Sopralluogo Flash.</p>') +

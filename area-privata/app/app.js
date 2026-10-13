@@ -259,6 +259,8 @@
   /* ---------- telaio ---------- */
   // Indirizzi dell'app: #home #clienti #rete #altro #pratica/<id> (native) · #d/<pagina> (pagina della dashboard).
   // Un link della dashboard (#/<profilo>/<pagina>) arrivato dal telefono diventa #d/<pagina>.
+  const puoProva = () => S.nativa || S.admin || S.fam === "agente";
+
   function rotta() {
     let h = location.hash.replace(/^#/, "");
     try { h = decodeURIComponent(h); } catch (e) { /* niente */ }
@@ -273,6 +275,7 @@
       if (S.nativa && NAT[page]) return { tipo: "nativa", pag: NAT[page] };
       return { tipo: "dash", page };
     }
+    if (puoProva() && h === "prova") return { tipo: "nativa", pag: "prova" };
     if (S.nativa && ["home", "clienti", "rete", "altro"].includes(h)) return { tipo: "nativa", pag: h };
     if (S.admin && h === "altro") return { tipo: "nativa", pag: "altro" };
     if (S.nativa) return { tipo: "nativa", pag: "home" };
@@ -316,12 +319,13 @@
   function mostra() {
     const r = rotta();
     const dash = r.tipo === "dash";
+    const prova = r.pag === "prova";
     aperta = r.pag === "pratica" ? r.id : null;
-    if (!dash && r.pag !== "pratica") scheda = r.pag;
+    if (!dash && r.pag !== "pratica" && !prova) scheda = r.pag;
     const nonLette = S.notifiche.filter((n) => !n.letto).length;
-    const titolo = dash ? "" : aperta ? "Sopralluogo" : { home: "", clienti: "Clienti e pratiche", rete: "La mia rete", altro: "Formazione e documenti" }[scheda] || "";
+    const titolo = dash ? "" : aperta ? "Sopralluogo" : prova ? "Vedi cosa so fare" : { home: "", clienti: "Clienti e pratiche", rete: "La mia rete", altro: "Formazione e documenti" }[scheda] || "";
     app.innerHTML =
-      '<header class="top">' + (aperta ? '<button class="ib" data-indietro aria-label="Indietro">' + ICO.indietro + "</button>" : '<img class="logo" src="../assets/logo/anchecasa-orizzontale-trasparente.png?v=3" alt="AncheCasa">') +
+      '<header class="top">' + ((aperta || prova) ? '<button class="ib" data-indietro aria-label="Indietro">' + ICO.indietro + "</button>" : '<img class="logo" src="../assets/logo/anchecasa-orizzontale-trasparente.png?v=3" alt="AncheCasa">') +
       '<div class="tit">' + esc(titolo) + "</div>" +
       '<button class="ib" data-notifiche aria-label="Notifiche">' + ICO.campana + (nonLette ? '<span class="badge">' + nonLette + "</span>" : "") + "</button>" +
       (S.nativa ? "" : '<button class="ib" data-menu aria-label="Altro: tutte le sezioni, profilo, esci">' + ICO.altro + "</button>") + "</header>" +
@@ -335,14 +339,20 @@
       const scr = document.getElementById("scr");
       if (DEMO) scr.insertAdjacentHTML("afterbegin", '<div class="demo">Anteprima con dati di esempio: niente va sul database.</div>');
       if (aperta) paginaPratica(scr, aperta);
+      else if (prova) paginaProva(scr);
       else ({ home: paginaHome, clienti: paginaClienti, rete: paginaRete, altro: paginaAltro }[scheda] || paginaHome)(scr);
       window.scrollTo(0, 0);
     }
+    if (puoProva() && !prova) {
+      app.insertAdjacentHTML("beforeend", '<button type="button" class="vedi-fisso" data-prova>' + ICO.flash + "<span>Vedi cosa so fare</span></button>");
+      app.querySelector("[data-prova]").addEventListener("click", () => { location.hash = "prova"; });
+    }
+    document.body.classList.toggle("ha-vedi", puoProva() && !prova);
     app.querySelector("[data-notifiche]").addEventListener("click", foglioNotifiche);
     const menu = app.querySelector("[data-menu]");
     if (menu) menu.addEventListener("click", foglioMenu);
     const ind = app.querySelector("[data-indietro]");
-    if (ind) ind.addEventListener("click", () => { location.hash = S.nativa ? "clienti" : "d/ristrutturazioni-admin"; });
+    if (ind) ind.addEventListener("click", () => { location.hash = prova ? (S.nativa ? "home" : "d/home") : (S.nativa ? "clienti" : "d/ristrutturazioni-admin"); });
   }
   window.addEventListener("hashchange", () => { if (S.pronta) mostra(); });
   const ricarica = async () => { if (reale()) await carica(); mostra(); };
@@ -354,6 +364,305 @@
   const INVITO = { inviato: ["Mail inviata", "p-gr"], aperto: ["Ha aperto", "p-or"], iscritto: ["Iscritto", "p-ok"] };
 
   function sotto(uid) { const out = []; const giro = (u) => S.rete.filter((x) => x.superiore === u && x.utente !== u).forEach((x) => { out.push(x); giro(x.utente); }); giro(uid); return out; }
+
+  /* ================= VEDI COSA SO FARE ================= */
+  const provaMedia = [];
+  let relazionePronta = null;
+  function caricaRelazione() {
+    if (window.ACRelazione) return Promise.resolve();
+    if (relazionePronta) return relazionePronta;
+    relazionePronta = new Promise((ok) => {
+      if (!document.getElementById("rz-css")) {
+        const l = document.createElement("link");
+        l.id = "rz-css"; l.rel = "stylesheet"; l.href = "../css/relazione.css?v=1";
+        document.head.appendChild(l);
+      }
+      const s = document.createElement("script");
+      s.src = "../js/relazione.js?v=1";
+      s.onload = () => ok();
+      s.onerror = () => ok();
+      document.head.appendChild(s);
+    });
+    return relazionePronta;
+  }
+  const FOTO_PROVA = ["Facciata", "Interno", "Dettaglio"];
+  let provaLuogo = { lat: null, lng: null, provincia: "", regione: "" };
+  const ZONE_TN = [
+    ["campania", { zs: "2", zc: "C", pr: "Campania 2026", omin: 950, omax: 1400 }],
+    ["lazio", { zs: "2", zc: "D", pr: "Lazio 2026", omin: 1600, omax: 2800 }],
+    ["lombardia", { zs: "3", zc: "E", pr: "Lombardia 2026", omin: 1500, omax: 2600 }],
+    ["veneto", { zs: "3", zc: "E", pr: "Veneto 2026", omin: 1400, omax: 2400 }],
+    ["emilia", { zs: "3", zc: "E", pr: "Emilia-Romagna 2026", omin: 1300, omax: 2200 }],
+    ["toscana", { zs: "3", zc: "D", pr: "Toscana 2026", omin: 1500, omax: 2500 }],
+    ["piemonte", { zs: "3", zc: "E", pr: "Piemonte 2026", omin: 1200, omax: 2100 }],
+    ["sicilia", { zs: "2", zc: "B", pr: "Sicilia 2026", omin: 800, omax: 1400 }],
+    ["puglia", { zs: "2", zc: "C", pr: "Puglia 2026", omin: 900, omax: 1500 }],
+    ["calabria", { zs: "1", zc: "C", pr: "Calabria 2026", omin: 700, omax: 1200 }]
+  ];
+  function zonaDi(regione) {
+    const r = String(regione || "").toLowerCase();
+    const t = ZONE_TN.find((x) => r.indexOf(x[0]) >= 0);
+    return t ? t[1] : { zs: "da verificare", zc: "da verificare", pr: "Prezzario regionale", omin: null, omax: null };
+  }
+  async function leggiTerranova(comune) {
+    const base = zonaDi(provaLuogo.regione);
+    const vuoto = { comune: comune, provincia: provaLuogo.provincia, zona_sismica: base.zs, zona_climatica: base.zc, prezzario: base.pr, omi_min: base.omin, omi_max: base.omax, vincoli: "Nessuno noto", fonte: "esempio" };
+    if (!window.acDb || !comune) return vuoto;
+    try {
+      const res = await db().from("comuni_dati").select("comune, provincia, zona_sismica, zona_climatica, prezzario, omi_min, omi_max, vincoli, fonte").ilike("comune", comune).limit(1);
+      const r = res && res.data && res.data[0];
+      if (!r) return vuoto;
+      return { comune: r.comune, provincia: r.provincia || "", zona_sismica: r.zona_sismica || base.zs, zona_climatica: r.zona_climatica || base.zc, prezzario: r.prezzario || base.pr, omi_min: r.omi_min, omi_max: r.omi_max, vincoli: r.vincoli || "Nessuno noto", fonte: r.fonte || "terranova" };
+    } catch (e) { return vuoto; }
+  }
+  const SCELTE = [
+    ["tipo", "Tipologia di lavoro", [["bagno", "Bagno"], ["cucina", "Cucina"], ["soggiorno", "Soggiorno"], ["facciata", "Facciata"], ["giardino", "Giardino"], ["casa", "Tutta la casa"]]],
+    ["stile", "Stile", [["contemporaneo", "Contemporaneo"], ["essenziale", "Essenziale"], ["pregio", "Di pregio"], ["mediterraneo", "Mediterraneo"], ["minimale", "Minimale"]]],
+    ["rif", "Rifiniture", [["calce", "Intonaco a calce"], ["resina", "Resina"], ["pittura", "Pittura lavabile"], ["legno", "Legno a vista"], ["micro", "Microcemento"]]],
+    ["piastrelle", "Piastrelle", [["legno", "Gres effetto legno"], ["marmo", "Gres effetto marmo"], ["cementine", "Cementine"], ["grande", "Grande formato chiaro"], ["pietra", "Pietra naturale"]]],
+    ["porte", "Porte", [["laccata", "Laccata bianca"], ["rovere", "Rovere"], ["scorrevole", "Scorrevole a scomparsa"], ["vetro", "Vetro satinato"]]],
+    ["box", "Box doccia", [["walkin", "Walk-in in vetro"], ["nicchia", "Nicchia con piatto"], ["filo", "Filo pavimento"], ["vasca", "Vasca con cristallo"]]],
+    ["rubinetti", "Rubinetteria", [["cromo", "Cromo"], ["nero", "Nero opaco"], ["oro", "Oro spazzolato"]]],
+    ["sanitari", "Sanitari", [["sospesi", "Sospesi"], ["terra", "A terra"], ["mobile", "Mobile con lavabo"]]]
+  ];
+  const scelta = { tipo: "bagno", stile: "contemporaneo", rif: "micro", piastrelle: "legno", porte: "laccata", box: "walkin", rubinetti: "cromo", sanitari: "sospesi" };
+  const STILE_FILE = { contemporaneo: "medio.jpg", essenziale: "base.jpg", pregio: "alto.jpg", mediterraneo: "giardino-dopo.jpg", minimale: "facciata-dopo.jpg" };
+  const TINTA = { contemporaneo: "rgba(22,48,77,.42)", essenziale: "rgba(70,70,70,.34)", pregio: "rgba(92,58,24,.4)", mediterraneo: "rgba(168,78,18,.4)", minimale: "rgba(16,20,28,.46)" };
+  function nomeScelta(g, id) {
+    const gruppo = SCELTE.find((x) => x[0] === g);
+    const voce = gruppo && gruppo[2].find((x) => x[0] === id);
+    return voce ? voce[1] : id;
+  }
+  function caricaImg(src) {
+    return new Promise((ok, no) => {
+      const i = new Image();
+      i.onload = () => ok(i);
+      i.onerror = no;
+      i.src = src;
+    });
+  }
+  function disegnaCover(ctx, img, x, y, w, h) {
+    const ir = img.width / img.height, r = w / h;
+    let sx = 0, sy = 0, sw = img.width, sh = img.height;
+    if (ir > r) { sh = img.height; sw = sh * r; sx = (img.width - sw) / 2; }
+    else { sw = img.width; sh = sw / r; sy = (img.height - sh) / 2; }
+    ctx.drawImage(img, sx, sy, sw, sh, x, y, w, h);
+  }
+  async function canvasRender() {
+    const W = 960, H = 640;
+    const c = document.createElement("canvas");
+    c.width = W; c.height = H;
+    const ctx = c.getContext("2d");
+    const tipo = scelta.tipo;
+    const indice = { bagno: 1, cucina: 1, soggiorno: 1, facciata: 0, giardino: 0, casa: 1 }[tipo] || 1;
+    const principale = await caricaImg(provaMedia[indice].url);
+    ctx.fillStyle = "#16304d";
+    ctx.fillRect(0, 0, W, H);
+    if (tipo === "casa") {
+      for (let i = 0; i < 3; i++) {
+        const im = await caricaImg(provaMedia[i].url);
+        disegnaCover(ctx, im, i * (W / 3), 0, W / 3, H * 0.62);
+      }
+    } else disegnaCover(ctx, principale, 0, 0, W, H);
+    const grad = ctx.createLinearGradient(0, H * 0.42, 0, H);
+    grad.addColorStop(0, "rgba(16,28,44,0)");
+    grad.addColorStop(1, TINTA[scelta.stile] || "rgba(16,28,44,.5)");
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, W, H);
+    let finitura = null;
+    try { finitura = await caricaImg("../img/sopralluogo-demo/" + (STILE_FILE[scelta.stile] || "medio.jpg")); } catch (e) { finitura = null; }
+    if (finitura && tipo !== "casa") {
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(W - 318, 24, 294, 214);
+      disegnaCover(ctx, finitura, W - 310, 32, 278, 168);
+      ctx.fillStyle = "#16304d";
+      ctx.font = "700 16px Manrope, sans-serif";
+      ctx.fillText("Proposta di finitura", W - 310, 222);
+    }
+    ctx.fillStyle = "#fff";
+    ctx.font = "800 32px Manrope, sans-serif";
+    ctx.fillText(nomeScelta("tipo", tipo) + " · " + nomeScelta("stile", scelta.stile), 28, H - 188);
+    ctx.font = "600 18px Manrope, sans-serif";
+    const righe = [
+      "Rifiniture · " + nomeScelta("rif", scelta.rif),
+      "Piastrelle · " + nomeScelta("piastrelle", scelta.piastrelle),
+      "Porte · " + nomeScelta("porte", scelta.porte),
+      "Box doccia · " + nomeScelta("box", scelta.box),
+      nomeScelta("rubinetti", scelta.rubinetti) + " · " + nomeScelta("sanitari", scelta.sanitari)
+    ];
+    righe.forEach((t, i) => ctx.fillText(t, 28, H - 150 + i * 26));
+    return c.toDataURL("image/jpeg", 0.86);
+  }
+  function carta(titolo, eti, corpo) {
+    return '<article class="ac-doc"><header class="ac-testa"><img src="../dashboard/img/contratto-logo.png" alt="AncheCasa"><div><b>AncheCasa</b><small>Palumbo Investment S.r.l.<br>Via Giusti 22, Teano (CE)</small></div></header>' +
+      '<div class="ac-corpo"><div class="eti">' + esc(eti) + "</div><h2 class=\"h1\" style=\"font-size:22px\">" + esc(titolo) + "</h2>" + corpo + "</div>" +
+      '<footer class="ac-piedi"><img src="../dashboard/img/contratto-curva.png" alt=""><div>AncheCasa · Costruiamo fiducia · anchecasa.it<br>P.IVA 04724830619</div></footer></article>';
+  }
+  function paginaProva(scr) {
+    scr.insertAdjacentHTML("beforeend",
+      '<section class="card"><div class="eti">Sopralluogo Flash</div><h1 class="h1">Vedi cosa so fare</h1>' +
+      '<p class="mut">Non serve essere un ingegnere. Scatti tre foto, indichi dove sei, e AncheCasa prepara due fogli con il marchio: il sopralluogo e il preventivo, con i dati Terranova del comune.</p></section>' +
+      '<section class="card"><h2 class="h2">Tre foto</h2><p class="mut" style="margin:6px 0 10px">Facciata, un interno, e un primo piano di quello che non va.</p>' +
+      '<div class="tre-slot">' + FOTO_PROVA.map((n, i) => '<label><input type="file" accept="image/*" capture="environment" hidden data-slot="' + i + '"><span>' + esc(n) + "</span></label>").join("") + "</div></section>" +
+      '<section class="card"><h2 class="h2">Dove siamo</h2>' +
+      '<div class="fl" style="margin-top:10px"><label>Città</label><input class="in" data-citta maxlength="80" autocomplete="address-level2"></div>' +
+      '<div class="fl" style="margin-top:10px"><label>Indirizzo</label><input class="in" data-via maxlength="160" autocomplete="street-address"></div>' +
+      '<button type="button" class="btn n" data-geo style="margin-top:10px">Posizione attuale</button>' +
+      '<p class="mut" data-geo-st style="margin:8px 0 0">Oppure scrivi città e indirizzo a mano.</p>' +
+      '<button type="button" class="btn" data-report style="margin-top:12px" disabled>Analizza le tre foto</button></section>' +
+      '<div class="prova-out" data-out></div>');
+    const report = scr.querySelector("[data-report]");
+    const citta = scr.querySelector("[data-citta]");
+    const via = scr.querySelector("[data-via]");
+    const out = scr.querySelector("[data-out]");
+    const slotOk = () => FOTO_PROVA.every((_, i) => provaMedia[i] && provaMedia[i].url);
+    const luogoOk = () => citta.value.trim().length > 1 && via.value.trim().length > 2;
+    const aggiorna = () => { report.disabled = !(slotOk() && luogoOk()); };
+    const disegnaSlot = (i) => {
+      const lab = scr.querySelector('[data-slot="' + i + '"]').parentElement;
+      const vecchia = lab.querySelector("img");
+      if (vecchia) vecchia.remove();
+      if (provaMedia[i] && provaMedia[i].url) {
+        const img = document.createElement("img");
+        img.src = provaMedia[i].url;
+        img.alt = FOTO_PROVA[i];
+        lab.insertBefore(img, lab.firstChild);
+      }
+    };
+    scr.querySelectorAll("[data-slot]").forEach((input) => input.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      const i = Number(e.target.dataset.slot);
+      e.target.value = "";
+      if (!file) return;
+      if (file.size > 50 * 1024 * 1024) return toast("Massimo 50 MB.", true);
+      if (provaMedia[i] && provaMedia[i].url) URL.revokeObjectURL(provaMedia[i].url);
+      provaMedia[i] = { url: URL.createObjectURL(file), nota: FOTO_PROVA[i] };
+      disegnaSlot(i);
+      aggiorna();
+    }));
+    FOTO_PROVA.forEach((_, i) => disegnaSlot(i));
+    citta.addEventListener("input", aggiorna);
+    via.addEventListener("input", aggiorna);
+    scr.querySelector("[data-geo]").addEventListener("click", () => {
+      const b = scr.querySelector("[data-geo]");
+      const st = scr.querySelector("[data-geo-st]");
+      if (!navigator.geolocation) { st.textContent = "Questo telefono non dà la posizione. Scrivi città e indirizzo."; return; }
+      b.disabled = true; b.textContent = "Cerco la posizione…";
+      navigator.geolocation.getCurrentPosition(async (pos) => {
+        provaLuogo.lat = pos.coords.latitude; provaLuogo.lng = pos.coords.longitude;
+        try {
+          const r = await fetch("https://nominatim.openstreetmap.org/reverse?format=jsonv2&accept-language=it&lat=" + pos.coords.latitude + "&lon=" + pos.coords.longitude);
+          const j = await r.json();
+          const a = j.address || {};
+          const nome = a.city || a.town || a.village || a.municipality || a.hamlet || "";
+          const strada = [a.road, a.house_number].filter(Boolean).join(" ");
+          if (nome) citta.value = nome;
+          if (strada) via.value = strada;
+          const iso = a["ISO3166-2-lvl6"] || a["ISO3166-2-lvl4"] || "";
+          provaLuogo.provincia = String(iso).replace(/^IT-/, "").slice(0, 2);
+          provaLuogo.regione = a.state || "";
+          st.textContent = nome ? ("Posizione letta: " + [strada, nome].filter(Boolean).join(", ")) : "Posizione letta. Completa città e indirizzo.";
+        } catch (e) { st.textContent = "Posizione letta, indirizzo non trovato. Scrivi città e via."; }
+        b.disabled = false; b.textContent = "Posizione attuale";
+        aggiorna();
+      }, () => {
+        b.disabled = false; b.textContent = "Posizione attuale";
+        st.textContent = "Permesso posizione negato. Scrivi città e indirizzo.";
+      }, { enableHighAccuracy: true, timeout: 12000, maximumAge: 60000 });
+    });
+    report.addEventListener("click", async () => {
+      if (!(slotOk() && luogoOk())) return;
+      report.disabled = true; report.textContent = "Analizzo le tre foto…";
+      await caricaRelazione();
+      const comune = citta.value.trim();
+      const indirizzo = via.value.trim();
+      if (!provaLuogo.regione) {
+        try {
+          const r = await fetch("https://nominatim.openstreetmap.org/search?format=jsonv2&addressdetails=1&accept-language=it&countrycodes=it&limit=1&q=" + encodeURIComponent(comune + ", Italia"));
+          const j = await r.json();
+          const a = (j[0] && j[0].address) || {};
+          provaLuogo.regione = a.state || "";
+          if (!provaLuogo.provincia) provaLuogo.provincia = String(a["ISO3166-2-lvl6"] || "").replace(/^IT-/, "").slice(0, 2);
+        } catch (e) { /* la zona resta da verificare */ }
+      }
+      const tn = await leggiTerranova(comune);
+      const chi = (S.profilo && S.profilo.nome) || (S.admin ? "Admin AncheCasa" : "Consulente AncheCasa");
+      const oggi = new Date().toLocaleDateString("it-IT", { day: "numeric", month: "long", year: "numeric" });
+      const dove = [indirizzo, comune, tn.provincia].filter(Boolean).join(", ");
+      const voci = [
+        ["Demolizione e smaltimento bagno", 1, "a corpo", 780],
+        ["Nuovo bagno con doccia filo pavimento", 1, "a corpo", 4200],
+        ["Linea gas cucina, con certificazione", 1, "a corpo", 450],
+        ["Intonaco deumidificante", 14, "mq", 38],
+        ["Pavimento in gres effetto legno", 24, "mq", 62],
+        ["Infissi in PVC basso-emissivi", 3, "cad", 540],
+        ["Verifica delle crepe del balcone", 1, "a corpo", 320]
+      ];
+      const tot = voci.reduce((t, v) => t + v[1] * v[3], 0);
+      const dett = (v) => (v[1] === 1 && v[2] === "a corpo" ? "a corpo" : dec(v[1], 0) + " " + v[2] + " × " + eur(v[3]));
+      const fotoH = '<div class="tre-slot" style="margin:12px 0">' + provaMedia.map((m) => '<figure><img src="' + esc(m.url) + '" alt="' + esc(m.nota) + '"><span>' + esc(m.nota) + "</span></figure>").join("") + "</div>";
+      const omi = (tn.omi_min || tn.omi_max) ? (dec(tn.omi_min || 0, 0) + "–" + dec(tn.omi_max || 0, 0) + " €/mq") : "da verificare";
+      const kv = [["Zona sismica", tn.zona_sismica], ["Zona climatica", tn.zona_climatica], ["Prezzario", tn.prezzario], ["Valore OMI", omi], ["Vincoli", tn.vincoli], ["Provincia", tn.provincia || "—"]];
+      const fonte = tn.fonte === "esempio"
+        ? "Terranova non ha ancora questo comune nel registro. I dati della zona sono di esempio e il tecnico li conferma."
+        : "Fonte Terranova" + (tn.fonte && tn.fonte !== "terranova" ? " · " + tn.fonte : "") + ".";
+      let h = carta("Sopralluogo", "Report di sopralluogo · AncheCasa",
+        "<p class=\"mut\">" + esc(dove) + " · " + esc(oggi) + " · consulente " + esc(chi) + "</p>" + fotoH +
+        "<p class=\"mut\">Le tre foto sono il materiale di questo giro. Sotto, la relazione della casa e i confronti prima e dopo. La simulazione è indicativa.</p>");
+      h += '<div data-rz-box></div>';
+      h += carta("Preventivo", "Preventivo · dati Terranova · IVA esclusa",
+        "<p class=\"mut\">" + esc(dove) + " · " + esc(oggi) + "</p>" +
+        '<div class="ac-kv">' + kv.map((x) => "<div><small>" + esc(x[0]) + "</small><b>" + esc(x[1]) + "</b></div>").join("") + "</div>" +
+        '<p class="mut">' + esc(fonte) + " I prezzi seguono il prezzario " + esc(tn.prezzario) + ".</p>" +
+        '<table class="prev-tab">' + voci.map((v) => "<tr><td><b>" + esc(v[0]) + '</b><div class="mut">' + esc(dett(v)) + "</div></td><td>" + eur(v[1] * v[3]) + "</td></tr>").join("") + "</table>" +
+        '<div class="prev-tot"><span>Totale, IVA esclusa</span><b>' + eur(tot) + "</b></div>" +
+        '<p class="mut" style="margin-top:8px">Simulazione per far vedere il foglio al cliente. Non è un\'offerta e non impegna AncheCasa. Il tecnico conferma prezzi e dati Terranova prima dell\'invio.</p>');
+      h += '<section class="card" data-scelte><div class="eti">Dopo le foto</div><h2 class="h2">Scegli e crea il render</h2>' +
+        '<p class="mut" style="margin:6px 0 10px">Tipologia di lavoro, stile, rifiniture, piastrelle, porte, box doccia e il resto. Poi il render dettagliato sulla tua foto.</p>' +
+        SCELTE.map((g) => '<div class="scelta"><div class="mut" style="font-weight:800;color:#1a334f;margin-bottom:6px">' + esc(g[1]) + '</div><div class="chip-row">' +
+          g[2].map((v) => '<button type="button" class="chip' + (scelta[g[0]] === v[0] ? " on" : "") + '" data-g="' + g[0] + '" data-v="' + v[0] + '">' + esc(v[1]) + "</button>").join("") +
+          "</div></div>").join("") +
+        '<button type="button" class="btn" data-render style="margin-top:14px">Crea il render dettagliato</button><div data-render-out></div></section>';
+      out.innerHTML = h;
+      out.querySelectorAll(".chip").forEach((b) => b.addEventListener("click", () => {
+        scelta[b.dataset.g] = b.dataset.v;
+        out.querySelectorAll('.chip[data-g="' + b.dataset.g + '"]').forEach((x) => x.classList.toggle("on", x === b));
+      }));
+      out.querySelector("[data-render]").addEventListener("click", async () => {
+        const b = out.querySelector("[data-render]");
+        const box = out.querySelector("[data-render-out]");
+        b.disabled = true; b.textContent = "Creo il render…";
+        try {
+          const url = await canvasRender();
+          const idx = { bagno: 1, cucina: 1, soggiorno: 1, facciata: 0, giardino: 0, casa: 1 }[scelta.tipo] || 1;
+          const oggiFoto = provaMedia[idx].url;
+          const voci = SCELTE.map((g) => [g[1], nomeScelta(g[0], scelta[g[0]])]);
+          box.innerHTML = carta("Render dettagliato", "Proposta sulle tue foto · " + nomeScelta("stile", scelta.stile),
+            '<p class="mut">' + esc(dove) + "</p>" +
+            '<div class="rz-pd" data-render-pd><img src="' + esc(oggiFoto) + '" alt="Oggi"><img class="dopo" src="' + url + '" alt="Render"><div class="linea"></div><span class="et p">Oggi</span><span class="et d">Render</span><input type="range" min="0" max="100" value="62" aria-label="Confronta oggi e render"></div>' +
+            '<img class="render-big" src="' + url + '" alt="Render dettagliato">' +
+            '<div class="ac-kv">' + voci.map((x) => "<div><small>" + esc(x[0]) + "</small><b>" + esc(x[1]) + "</b></div>").join("") + "</div>" +
+            '<p class="mut">Il render è costruito sulla tua foto, con lo stile e le finiture che hai scelto. La proposta di finitura è indicativa: colori e materiali si chiudono con il tecnico.</p>');
+          const pd = box.querySelector("[data-render-pd]");
+          const r = pd.querySelector("input"), dopo = pd.querySelector(".dopo"), linea = pd.querySelector(".linea");
+          const muovi = () => { dopo.style.clipPath = "inset(0 0 0 " + r.value + "%)"; linea.style.left = r.value + "%"; };
+          r.addEventListener("input", muovi); muovi();
+          box.scrollIntoView({ behavior: "smooth", block: "start" });
+        } catch (e) { toast("Il render non è uscito. Riprova.", true); }
+        b.disabled = false; b.textContent = "Crea di nuovo il render";
+      });
+      if (window.ACRelazione) {
+        const dati = window.ACRelazione.esempio("../img/sopralluogo-demo/");
+        dati.ia.letti = { foto: 3, audio: 0, video: 0 };
+        dati.testa = { nome: indirizzo, indirizzo: comune + (tn.provincia ? " (" + tn.provincia + ")" : ""), data: oggi, agente: chi, rif: "Simulazione" };
+        const box = out.querySelector("[data-rz-box]");
+        window.ACRelazione.monta(box, dati, { tecnico: false, logo: "../dashboard/img/contratto-logo.png" });
+      }
+      report.disabled = false; report.textContent = "Analizza di nuovo le foto";
+      out.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+    aggiorna();
+  }
 
   /* ================= HOME ================= */
   function paginaHome(scr) {
@@ -482,17 +791,17 @@
       '<label>' + ICO.pianta + (pianta ? "Planimetria ✓" : "Planimetria") + '<input type="file" accept="image/*" capture="environment" data-file="pianta" hidden></label>' +
       '<label>' + ICO.video + 'Video<input type="file" accept="video/*" capture="environment" data-file="video" hidden></label>' +
       '<label data-rec>' + ICO.mic + "<span>Nota vocale</span></label></div>" +
-      '<p class="mut" style="margin:0">Il video: cammina piano stanza per stanza, anche fuori, e di\' a voce le misure. Fino a 50 MB per file.</p>');
+      '<p class="mut" style="margin:0">Il video non lo legge l\'IA. Si allega ai documenti che vanno al tecnico AncheCasa per il preventivo. Fino a 50 MB per file.</p>');
 
     // 3. IA
     const corpoIA = ia && ia.stato === "in_corso"
-      ? '<div class="row"><span class="spin"></span><span class="mut">L\'IA sta leggendo foto, voce e video… 1-3 minuti. Puoi restare qui.</span></div>'
+      ? '<div class="row"><span class="spin"></span><span class="mut">L\'IA sta leggendo solo le foto… 1-3 minuti. Il video non viene letto.</span></div>'
       : fatto3 ? '<p style="margin:0;font-size:14.5px;line-height:1.55">' + esc(ia.sintesi || "") + '</p><div class="mut">' + ((ia.ambienti || []).length) + " ambienti analizzati · letta il " + esc(quando(ia.creato)) + "</div>" +
           ((ia.dubbi || []).length ? ia.dubbi.map((d) => '<div class="avv">❓ <span>' + esc(d) + "</span></div>").join("") : "") +
           '<button class="btn2 pieno" data-ia>Rileggi tutto</button>'
         : (ia && ia.stato === "errore" ? '<div class="avv r">Lettura non riuscita: ' + esc(ia.errore || "") + "</div>" : "") +
-          '<p class="mut" style="margin:0">L\'IA legge foto, planimetria, voce e video e prepara la relazione per il tecnico. Le misure scritte o dette le mette lei nelle stanze.</p>' +
-          '<button class="btn" data-ia' + (media.length ? "" : " disabled") + ">" + ICO.ia + (media.length ? "Leggi tutto con l'IA" : "Prima carica foto o video") + "</button>";
+          '<p class="mut" style="margin:0">L\'IA legge solo le foto e la planimetria, e prepara la relazione per il tecnico. Il video resta allegato ai documenti del preventivo.</p>' +
+          '<button class="btn" data-ia' + (foto.length ? "" : " disabled") + ">" + ICO.ia + (foto.length ? "Leggi le foto con l'IA" : "Prima carica le foto") + "</button>";
     h += passo(3, "Relazione con l'IA", fatto3 ? "Pronta per il tecnico" : ia && ia.stato === "in_corso" ? "In lettura…" : "Gemini legge tutto il materiale", fatto3, corpoIA, "ia");
 
     // 4. Invia al cliente
@@ -624,7 +933,7 @@
       if (r.ia.stato !== "fatto") attendiIA(r); else finitaIA(r);
     } catch (x) {
       b.disabled = false; b.textContent = "Leggi tutto con l'IA";
-      toast({ aspetta_due_minuti: "Hai appena letto: riprova tra due minuti.", niente_da_leggere: "Prima carica foto, planimetria, voce o video.", motore_non_configurato: "Manca la chiave dell'IA: avvisa l'admin." }[errore(x)] || "Lettura non riuscita: " + errore(x), true);
+      toast({ aspetta_due_minuti: "Hai appena letto: riprova tra due minuti.", niente_da_leggere: "L'IA legge solo le foto. Carica almeno una foto. Il video resta per il tecnico.", motore_non_configurato: "Manca la chiave dell'IA: avvisa l'admin." }[errore(x)] || "Lettura non riuscita: " + errore(x), true);
     }
   }
   function attendiIA(r) {
@@ -742,10 +1051,10 @@
     azienda: [["d:pubblica", "Pubblica", "Un annuncio o una richiesta", "doc"], ["d:cnt_cerca", "Cerca subappaltatori", "Imprese e artigiani della zona", "clienti"],
       ["d:preventivi", "Nuovo preventivo", "Per un tuo cliente", "euro"], ["d:rapportini", "Rapportino di oggi", "Ore e lavori in cantiere", "doc"],
       ["d:giornali", "Giornale di cantiere", "Cosa è successo oggi", "foto"], ["d:az-documenti", "Carica i documenti", "Visura, DURC e abbonamento", "doc"], ["d:chat", "Scrivi ad AncheCasa", "Ti rispondiamo in chat", "mail"]],
-    agente: [["flash", "Sopralluogo Flash", "Sei dal cliente: misure, foto, video, IA e invio per mail", "flash"], ["invita", "Invita un cliente", "Privato o azienda: la mail parte da AncheCasa", "mail"],
+    agente: [["prova", "Vedi cosa so fare", "Foto o video: report, prima e dopo, preventivo simulato", "flash"], ["flash", "Sopralluogo Flash", "Sei dal cliente: misure, foto, video, IA e invio per mail", "flash"], ["invita", "Invita un cliente", "Privato o azienda: la mail parte da AncheCasa", "mail"],
       ["nuova", "Segnala una ristrutturazione", "Il sopralluogo lo assegna AncheCasa", "casa"], ["proponi", "Porta una persona in rete", "Agente o subagente nella tua squadra", "rete"],
       ["d:re-registra", "Registra un cliente", "Luce, gas, telefono o servizi", "euro"]],
-    admin: [["flash", "Sopralluogo Flash", "Misure, foto, video, IA e invio per mail", "flash"], ["d:inviti-admin", "Invita", "Privati, aziende e rete", "mail"],
+    admin: [["prova", "Vedi cosa so fare", "Foto o video: report, prima e dopo, preventivo simulato", "flash"], ["flash", "Sopralluogo Flash", "Misure, foto, video, IA e invio per mail", "flash"], ["d:inviti-admin", "Invita", "Privati, aziende e rete", "mail"],
       ["nuova", "Nuova pratica di ristrutturazione", "La assegni dopo a un tecnico", "casa"], ["d:task", "Nuovo task", "Per te o per il team", "doc"],
       ["d:chat-team", "Chat del team", "Messaggi della squadra AncheCasa", "mail"], ["d:appunti", "Appunti", "Note veloci", "doc"]],
   };
@@ -758,10 +1067,11 @@
     const ids = vociMenu();
     const voci = (PIU[S.fam] || []).filter((x) => {
       // Nella foto approvata il + della rete ha solo le 4 azioni native.
+      if (x[0] === "prova") return puoProva();
       if (S.nativa && x[0].indexOf("d:") === 0) return false;
       if (x[0].indexOf("d:") === 0) return !D.pronto || ids.includes(x[0].slice(2));
       return S.nativa || S.admin; // le azioni native (Flash, inviti, pratiche) sono della rete verificata e dell'admin
-    }).slice(0, 6);
+    }).slice(0, 7);
     if (!voci.length && D.altro.length) D.altro.filter((x) => x.id).slice(0, 6).forEach((x) => voci.push(["d:" + x.id, x.label, "", x.svg]));
     if (!voci.length) return toast("Un momento: sto caricando le tue sezioni.");
     const ico = (k) => ICO[k] || k;
@@ -816,6 +1126,7 @@
 
   function azione(k) {
     if (k.indexOf("d:") === 0) return vai(k.slice(2));
+    if (k === "prova") { location.hash = "prova"; return; }
     if (k === "flash") return foglioFlash();
     if (k === "invita") return foglioInvita();
     if (k === "nuova") return foglioNuova(false);

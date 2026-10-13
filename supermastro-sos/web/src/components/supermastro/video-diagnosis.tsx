@@ -61,7 +61,7 @@ function cameraErrorMessage(err: unknown) {
   if (name === "NotReadableError" || name === "TrackStartError") {
     return "Fotocamera in uso da un'altra app. Chiudila e riprova.";
   }
-  return "Fotocamera non disponibile. Carica un video dal telefono.";
+  return "Fotocamera non disponibile. Apri SuperMastro con Chrome o Safari e consenti la fotocamera.";
 }
 
 function initialPhase(vista?: Vista): Phase {
@@ -156,7 +156,7 @@ export function VideoDiagnosis({
         if (dead) return;
         setHasCamera(false);
         setPhase("error");
-        setError("Su questo collegamento la fotocamera live è bloccata. Apri la fotocamera e carica un video di pochi secondi.");
+        setError("Su questo collegamento la fotocamera è bloccata. Apri SuperMastro da anchecasa.it/supermastro con Chrome o Safari.");
       });
       return () => {
         dead = true;
@@ -167,7 +167,7 @@ export function VideoDiagnosis({
       if (dead || vista === "registra") return;
       setPhase((current) => {
         if (current !== "opening") return current;
-        setError("Fotocamera non disponibile. Carica un video dal telefono.");
+        setError("Fotocamera non disponibile. Apri SuperMastro con Chrome o Safari e consenti la fotocamera.");
         return "error";
       });
     }, 8000);
@@ -176,7 +176,7 @@ export function VideoDiagnosis({
       if (!navigator.mediaDevices?.getUserMedia) {
         if (vista === "registra") return;
         setPhase("error");
-        setError("Fotocamera non disponibile. Carica un video dal telefono.");
+        setError("Fotocamera non disponibile. Apri SuperMastro con Chrome o Safari e consenti la fotocamera.");
         return;
       }
       try {
@@ -284,7 +284,7 @@ export function VideoDiagnosis({
         : new MediaRecorder(stream, { videoBitsPerSecond: 1_200_000 });
     } catch {
       setPhase("error");
-      setError("Registrazione non disponibile su questo browser. Carica un video dal telefono.");
+      setError("Registrazione non disponibile su questo browser. Apri SuperMastro con Chrome o Safari.");
       return;
     }
     const chunks: Blob[] = [];
@@ -336,7 +336,7 @@ export function VideoDiagnosis({
         </a>
         <div className="min-w-0">
           <p className="text-sm font-semibold">Registra il problema</p>
-          <p className="truncate text-[11px] text-[#FBF8F3]/80">Fino a 5 secondi, con audio</p>
+          <p className="truncate text-[11px] text-[#FBF8F3]/80">5 secondi, con audio: parla pure</p>
         </div>
       </header>
 
@@ -384,7 +384,7 @@ export function VideoDiagnosis({
               pose="viso"
               size={72}
               alt=""
-              speech="Il video registra immagini e audio per 5 secondi. Lo uso solo per capire il guasto. Evita di riprendere persone o documenti."
+              speech="Il video registra immagini e voce per 5 secondi. Scrivo quello che dici e lo uso solo per capire il guasto. Evita di riprendere persone o documenti."
             />
             <a
               href="/supermastro/privacy"
@@ -403,7 +403,7 @@ export function VideoDiagnosis({
         ) : gate === "go" ? (
           <>
             {(phase === "opening" || phase === "ready" || phase === "recording") && (
-              <Mascot pose="viso" size={72} alt="" speech="Mostrami il guasto da vicino. Bastano 5 secondi." />
+              <Mascot pose="viso" size={72} alt="" speech="Mostrami il guasto da vicino e dimmi cosa succede. Bastano 5 secondi." />
             )}
             {silent && (phase === "ready" || phase === "recording") && (
               <p className="max-w-xs text-center text-base font-semibold leading-snug">
@@ -436,20 +436,15 @@ export function VideoDiagnosis({
                     Registra di nuovo
                   </button>
                 )}
-                <label className="flex min-h-12 cursor-pointer items-center justify-center rounded-full border border-[#FBF8F3] px-5 text-base font-semibold text-[#FBF8F3]">
-                  Carica un video dal telefono
-                  <input
-                    type="file"
-                    accept="video/mp4,video/webm,video/quicktime"
-                    capture="environment"
-                    className="sr-only"
-                    onChange={(event) => {
-                      const file = event.target.files?.[0];
-                      event.target.value = "";
-                      if (file) void analyzeBlob(file);
-                    }}
-                  />
-                </label>
+                {!hasCamera && (
+                  <button
+                    type="button"
+                    onClick={() => window.location.reload()}
+                    className="flex min-h-12 items-center justify-center rounded-full border border-[#FBF8F3] px-5 text-base font-semibold text-[#FBF8F3]"
+                  >
+                    Riprova ad aprire la fotocamera
+                  </button>
+                )}
               </div>
             ) : (
               <button

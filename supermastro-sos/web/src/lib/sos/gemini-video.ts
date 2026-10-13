@@ -42,6 +42,7 @@ const RESPONSE_SCHEMA = {
     visto_sentito: { type: "string" },
     prima_cosa: { type: "string" },
     motivo_professionista: { type: "string" },
+    parlato: { type: "string" },
     fai_da_te: {
       type: "object",
       properties: {
@@ -66,6 +67,7 @@ const RESPONSE_SCHEMA = {
     "visto_sentito",
     "prima_cosa",
     "motivo_professionista",
+    "parlato",
     "fai_da_te",
   ],
 };
@@ -122,7 +124,8 @@ Ascolta i rumori: gocciolio, sibilo, ronzio, scatti, scintille.
 Ambito unico: interno di un'abitazione, oppure esterno della stessa casa, compreso giardino, cortile, balcone, terrazzo, cancello, recinzione, irrigazione, tetto e grondaia.
 Se la scena è un'auto, una persona come soggetto, un negozio, un cantiere, un ufficio, una strada o qualunque luogo che non sia casa o giardino, imposta in_scope false e skill_slug ${OUT_OF_SCOPE_SLUG}.
 Non identificare persone. Non leggere nomi, targhe o indirizzi. Descrivi solo il guasto visibile e i rumori che senti.${hint}${learned}
-Compila esito, titolo, visto_sentito, prima_cosa, motivo_professionista e fai_da_te.
+Se nel video qualcuno parla, trascrivi in parlato le sue parole esatte, in italiano, massimo 300 caratteri. Se nessuno parla, parlato è vuoto. Usa quello che dice per capire il guasto: spesso spiega cosa non va o da quando.
+Compila esito, titolo, visto_sentito, parlato, prima_cosa, motivo_professionista e fai_da_te.
 esito è la tua ipotesi: fai_da_te, professionista, pericolo, da_verificare o fuori_tema.
 Se non è sicuro, metti da_verificare e passi vuoti. Se è pericoloso, passi e attrezzi vuoti e prima_cosa è l'azione di sicurezza.
 Pericolo: odore o sibilo di gas, fiamma, fumo, odore di bruciato, scintille, cavi bruciati, acqua vicino a prese, quadro o cavi, crollo.
@@ -145,7 +148,8 @@ async function generate(
   examples: string,
 ): Promise<ModelDraft> {
   const generationConfig: Record<string, unknown> = {
-    maxOutputTokens: precise ? (pass === "second" ? 8192 : 2048) : 512,
+    // Il ragionamento consuma token di uscita: con 2048 il JSON poteva arrivare troncato.
+    maxOutputTokens: precise ? (pass === "second" ? 8192 : 4096) : 1024,
     responseMimeType: "application/json",
     responseSchema: RESPONSE_SCHEMA,
   };

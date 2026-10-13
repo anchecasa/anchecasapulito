@@ -23,7 +23,7 @@ export function DemoRichiestaView({ requestId }: Props) {
           Richiesta non trovata o sessione scaduta. Avvia una nuova richiesta SOS.
         </p>
         <Link
-          href="/supermastro/nuova"
+          href="/supermastro/video"
           className="inline-flex rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white"
         >
           Nuova richiesta SOS

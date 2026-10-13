@@ -118,7 +118,7 @@
       '<label class="btn-ghost imp-file">📐 ' + (pianta ? "Planimetria ✓ (rifai)" : "Fotografa la planimetria") + '<input type="file" accept="image/*" capture="environment" data-pianta hidden></label>' +
       '<label class="btn-ghost imp-file">🎥 ' + (video ? "Video ✓ (aggiungi)" : "Video del giro della casa") + '<input type="file" accept="video/*" capture="environment" data-video hidden></label>' +
       '<button type="button" class="btn-ghost" data-ia-leggi>🤖 Leggi tutto con l\'IA</button></div>' +
-      '<p class="note">Il video: cammina piano stanza per stanza, anche fuori (giardino, facciata, tetto se si vede) e di\' a voce le misure. Fino a ' + MAX_MB + ' MB per video (circa 3 minuti in 720p): se la casa è grande, fai più video.</p>' +
+      '<p class="note">Il video non lo legge l\'IA. Si allega ai documenti che vanno al tecnico AncheCasa per il preventivo. Fino a ' + MAX_MB + ' MB per video (circa 3 minuti in 720p): se la casa è grande, fai più video.</p>' +
       '<p class="note" data-ia-esito>' + (r.ia && r.ia.dubbi && r.ia.dubbi.length ? "L'IA chiede: " + r.ia.dubbi.map(esc).join(" · ") : "") + "</p>" +
       '<div class="en-grid">' +
       '<label>Piano<input name="piano" value="' + esc(imm.piano || "") + '" placeholder="es. 1"></label>' +
@@ -156,7 +156,7 @@
       Q(window.acDb.rpc("ristrutturazione_misure", { p_id: r.id, p_ambienti: ambienti, p_immobile: immobile, p_criticita: criticita }))
         .then(() => { Object.assign(r, { ambienti, immobile, criticita }); toast("Misure salvate: il tecnico le vede nel dossier."); }, (x) => toast("Non salvate: " + ((x && x.message) || x), "error"));
     });
-    // IA: legge tutto il materiale (foto, planimetria, voce, video) e prepara la relazione per il tecnico.
+    // IA: legge solo le foto e la planimetria (e le note vocali). Il video resta allegato al dossier del tecnico.
     // Lavora in background: qui si aspetta (max 6 minuti) e poi si riempiono le stanze con le misure trovate.
     f.querySelector("[data-ia-leggi]").addEventListener("click", (e) => {
       const b = e.target; b.disabled = true; b.textContent = "L'IA sta leggendo… (1-3 minuti)";
@@ -175,7 +175,7 @@
         toast("Lettura fatta: la relazione è nel dossier del tecnico.");
       };
       if (!reale()) return setTimeout(() => usa({ ambienti: [{ nome: "Bagno", larg: 2.4, lung: 2.5, alt: 2.7, porta: "80×210", finestra: "70×110", fonte_misure: "nota vocale" }], dubbi: ["Altezza del rivestimento?"] }), 900);
-      const errore = (m) => { rimetti(); toast({ niente_da_leggere: "Prima carica foto, planimetria, una nota vocale o il video.", motore_non_configurato: "Manca la chiave dell'IA: avvisa l'admin." }[m] || "Lettura non riuscita: " + m, "error"); };
+      const errore = (m) => { rimetti(); toast({ niente_da_leggere: "L'IA legge solo le foto. Carica almeno una foto. Il video resta per il tecnico.", motore_non_configurato: "Manca la chiave dell'IA: avvisa l'admin." }[m] || "Lettura non riuscita: " + m, "error"); };
       const aspetta = (giri) => setTimeout(() => {
         window.acDb.functions.invoke("dossier-ia", { body: { azione: "stato", id: r.id } }).then((res) => {
           const ia = res && res.data && res.data.ia;
@@ -193,7 +193,7 @@
         aspetta(0);
       }).catch((x) => errore(String((x && x.message) || x)));
     });
-    // Video del giro della casa (lo legge l'IA). Limite 50 MB per file sul piano Supabase base.
+    // Video del giro della casa: non lo legge l'IA. Va allegato ai documenti del tecnico. Limite 50 MB per file.
     f.querySelector("[data-video]").addEventListener("change", (e) => {
       const file = e.target.files && e.target.files[0]; if (!file) return;
       if (file.size > MAX_MB * 1024 * 1024) return toast("Video troppo grande: massimo " + MAX_MB + " MB. Registra un minuto per volta, o abbassa la qualità a 720p.", "error");

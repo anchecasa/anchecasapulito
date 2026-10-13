@@ -15,6 +15,7 @@ export type RawDiagnosis = {
   visto_sentito?: unknown;
   prima_cosa?: unknown;
   motivo_professionista?: unknown;
+  parlato?: unknown;
   fai_da_te?: {
     possibile?: unknown;
     tempo_minuti?: unknown;
@@ -85,6 +86,8 @@ export function parseDiagnosis(raw: RawDiagnosis, model: string): ModelDraft {
       typeof raw.motivo_professionista === "string"
         ? raw.motivo_professionista.replace(/\s+/g, " ").trim().slice(0, 160)
         : "",
+    // Quello che la persona dice nel video, trascritto dal modello.
+    parlato: typeof raw.parlato === "string" ? raw.parlato.replace(/\s+/g, " ").trim().slice(0, 300) : "",
     tempoMinuti: tempo,
     difficolta,
     attrezzi: textList(diy?.attrezzi, 8),

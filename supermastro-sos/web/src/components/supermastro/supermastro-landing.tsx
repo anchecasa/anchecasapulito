@@ -14,6 +14,9 @@ import { Button } from "@/components/ui/button";
 
 
 
+/** Diagnosi video: aperta a tutti, iscritti e non. */
+const VIDEO_HREF = "/supermastro/video";
+
 type Props = {
 
   demoMode?: boolean;
@@ -22,7 +25,8 @@ type Props = {
 
   authError?: boolean;
 
-  nuovaHref: string;
+  /** Non più usato: l'ingresso è sempre il video. */
+  nuovaHref?: string;
 
 };
 
@@ -53,19 +57,15 @@ export function SuperMastroLanding({
 
   authError,
 
-  nuovaHref,
-
 }: Props) {
 
-  const demoHref = "/supermastro/nuova";
-
-  const startHref = demoMode ? demoHref : nuovaHref;
+  const demoHref = VIDEO_HREF;
 
   const loginHref = demoMode
 
     ? demoHref
 
-    : "/supermastro/auth/login?next=/supermastro/nuova";
+    : "/supermastro/auth/login?next=/supermastro/video";
 
 
 
@@ -90,13 +90,8 @@ export function SuperMastroLanding({
       <section className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14">
 
         <div className="rounded-[28px] bg-[var(--sm-paper)] px-4 py-6">
-          <HomeEntry
-            videoHref={
-              demoMode || userEmail
-                ? "/supermastro/video"
-                : "/supermastro/auth/login?next=/supermastro/video"
-            }
-          />
+          {/* Il video è aperto a tutti: nessun login prima della diagnosi. */}
+          <HomeEntry videoHref={VIDEO_HREF} />
         </div>
 
 
@@ -193,7 +188,7 @@ export function SuperMastroLanding({
 
                 <Button asChild variant="client" size="lg">
 
-                  <HardLink href={startHref}>Invia richiesta SOS</HardLink>
+                  <HardLink href={VIDEO_HREF}>Mostrami il guasto</HardLink>
 
                 </Button>
 
@@ -245,7 +240,7 @@ export function SuperMastroLanding({
 
             <Button asChild variant="client" size="lg">
 
-              <HardLink href={demoMode || userEmail ? startHref : loginHref}>Fai il video</HardLink>
+              <HardLink href={VIDEO_HREF}>Fai il video</HardLink>
 
             </Button>
 

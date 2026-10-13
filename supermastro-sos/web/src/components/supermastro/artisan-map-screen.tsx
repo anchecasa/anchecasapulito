@@ -18,8 +18,8 @@ export function ArtisanMapScreen({ trade, summary, lat, lng, artisans }: Props) 
   return (
     <section className="mx-auto flex w-full max-w-lg flex-col bg-[#FBF8F3] text-[#1A2432]">
       <div className="px-4 pt-4">
-        <HardLink href="/supermastro/nuova" className="text-sm font-medium text-[#2A3C54]">
-          Torna alla richiesta
+        <HardLink href="/supermastro/video" className="text-sm font-medium text-[#2A3C54]">
+          Torna al video
         </HardLink>
         <p className="mt-3 text-xs font-semibold uppercase tracking-[0.14em] text-[#E56B10]">
           Guasto trovato
@@ -52,7 +52,7 @@ export function ArtisanMapScreen({ trade, summary, lat, lng, artisans }: Props) 
               pose="viso"
               size={72}
               alt=""
-              speech="Ancora nessun artigiano della rete qui. Torna alla richiesta e riprova."
+              speech="Ancora nessun artigiano della rete qui. Torna al video e riprova."
             />
           </div>
         ) : (

@@ -182,17 +182,19 @@ export function CinematicSearch({
               {artisan.reviews && <ReviewBlock reviews={artisan.reviews} />}
               {artisan.network ? (
                 <div className="mt-3">
-                  {/* Il flusso reale (richiesta SOS) invia la richiesta agli artigiani verificati vicini:
-                      non può scegliere un solo artigiano. Il testo lo dice in modo onesto. */}
-                  <Link
-                    href={networkRequestHref(artisan.id, trade)}
-                    className="inline-flex min-h-11 items-center rounded-full bg-[#1A2432] px-4 text-base font-semibold text-[#FBF8F3]"
-                  >
-                    Chiedi a AncheCasa di contattarlo
-                  </Link>
-                  <p className="mt-2 text-sm leading-snug text-[#2A3C54]">
-                    Mandiamo la richiesta agli artigiani verificati vicini, anche a lui.
-                  </p>
+                  {/* Anche all'artigiano della rete si manda solo il video del guasto: niente foto, niente moduli. */}
+                  {artisan.leadToken ? (
+                    <Link
+                      href={mandagliHref(flowBase, artisan, summary, lat, lng, diagnosisId)}
+                      className="inline-flex min-h-11 items-center justify-center rounded-full bg-[#B4500B] px-4 text-base font-semibold text-white"
+                    >
+                      Mandagli il video
+                    </Link>
+                  ) : (
+                    <p className="text-sm leading-snug text-[#2A3C54]">
+                      Questo artigiano non ha ancora un numero per ricevere il video.
+                    </p>
+                  )}
                 </div>
               ) : (
                 <div className="mt-3 flex flex-col gap-2">
@@ -250,12 +252,6 @@ export function CinematicSearch({
       </div>
     </section>
   );
-}
-
-/** La richiesta reale passa dal flusso SOS esistente (login + matching con gli iscritti). */
-function networkRequestHref(workerId: string, trade: string) {
-  const query = new URLSearchParams({ worker: workerId, mestiere: trade });
-  return `/supermastro/nuova?${query}`;
 }
 
 /** Nome, telefono e posizione viaggiano solo dentro il gettone firmato dal server. */

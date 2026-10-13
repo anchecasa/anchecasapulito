@@ -15,8 +15,10 @@
   }
 
   html, body, .stage { background: var(--vc-f); }
+  html, body { overflow-x: hidden; max-width: 100%; touch-action: manipulation; }
   body { font-family: Manrope, system-ui, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; }
   button, input, select, textarea { font-family: inherit; }
+  input, select, textarea { font-size: 16px; }
   .app-frame { background: var(--vc-f); }
 
   /* Testata chiara: logo senza riquadro, saluto in una pillola bianca */
@@ -72,13 +74,54 @@
     box-shadow: var(--vc-sh);
   }
 
-  /* Campi */
+  /* Campi: 16px, così l'iPhone non zooma. L'invito resta su una colonna, anche dopo la zona. */
   .toolbar input, .toolbar select, .field input, .field select, .field textarea,
-  .prefs input, .prefs select, .prefs textarea {
+  .prefs input, .prefs select, .prefs textarea,
+  .iv-campi input, .iv-campi select, .iv-campi textarea {
     border-radius: 12px;
     border-color: var(--vc-l);
-    font-size: 16px; /* niente zoom automatico su iPhone */
+    font-size: 16px;
+    max-width: 100%;
   }
+  .iv-campi,
+  #iv-form.con-zona .iv-campi { grid-template-columns: 1fr; }
+
+  /* Profilo: la prima parte sta compatta. Foto e «Carica» sulla stessa riga, campi a due a due. */
+  .pro-id { grid-template-columns: 1fr; gap: 8px; }
+  .pro-ava-row { flex-direction: row; align-items: center; gap: 12px; }
+  .pro-ava {
+    width: auto;
+    grid-template-columns: 72px auto;
+    align-items: center;
+    column-gap: 10px;
+    row-gap: 2px;
+  }
+  .pro-ava-frame { grid-row: span 2; width: 72px; height: 72px; margin: 0; }
+  .pro-ava-lab { text-align: left; }
+  .pro-ava-act { display: flex; flex-direction: row; flex-wrap: wrap; gap: 6px; justify-content: flex-start; }
+  .pro-ava-act .file-lab,
+  .pro-ava-act .btn-mini { width: auto; }
+  .pro-fields { grid-template-columns: 1fr 1fr; gap: 8px 10px; }
+  .pro-fields input,
+  .pro-fields select,
+  .pro-fields textarea,
+  .pro-add-luogo input,
+  .pro-add-luogo select,
+  .pro-cerca input {
+    font-size: 16px;
+    max-width: 100%;
+  }
+  .pro-fields input,
+  .pro-fields select,
+  .pro-add-luogo input,
+  .pro-add-luogo select { height: 44px; }
+  .pro-form .note { margin-bottom: 8px; }
+  .pro-form .row-actions { margin-top: 10px; padding-top: 0; flex-direction: row; flex-wrap: wrap; }
+  .row-actions .btn-in { width: auto; }
+  .mini-table.iv-tab,
+  .mini-table.iv-tab:has(thead) { display: block; width: 100%; max-width: 100%; overflow: hidden; }
+  .mini-table.iv-tab:has(thead) th,
+  .mini-table.iv-tab:has(thead) td { white-space: normal; overflow-wrap: anywhere; word-break: break-word; }
 
   /* Barra in basso: bianca, attivo arancio con lineetta in alto */
   .tabbar {

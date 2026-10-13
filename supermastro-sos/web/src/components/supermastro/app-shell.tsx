@@ -6,6 +6,7 @@ import { HardLink } from "@/components/layout/hard-link";
 import { SuperMastroWordmark } from "@/components/layout/supermastro-wordmark";
 
 const NAV = [
+  { href: "/supermastro/video", label: "Video guasto" },
   { href: "/supermastro/storico", label: "Storico" },
   { href: "/supermastro/preventivo", label: "Preventivo" },
   { href: "/supermastro/privato", label: "Iscrizione" },
@@ -53,7 +54,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <span className="text-[11px] font-medium tracking-wide text-[#2A3C54]">AncheCasa</span>
         </header>
         <main className="min-w-0 flex-1 px-4 py-6 pb-24 sm:px-8 sm:py-8 md:pb-8">{children}</main>
-        <nav className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-3 border-t border-[#2A3C54]/10 bg-white md:hidden">
+        <nav className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-4 border-t border-[#2A3C54]/10 bg-white pb-[env(safe-area-inset-bottom)] md:hidden">
           {NAV.map((item) => (
             <HardLink
               key={item.href}

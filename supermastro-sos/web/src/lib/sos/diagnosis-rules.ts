@@ -16,6 +16,8 @@ export type ModelDraft = {
   vistoSentito: string;
   primaCosa: string;
   motivoProfessionista: string;
+  /** Trascrizione di ciò che la persona dice nel video. Vuota se nessuno parla. */
+  parlato?: string;
   tempoMinuti: number | null;
   difficolta: "facile" | "media" | null;
   attrezzi: string[];
@@ -30,6 +32,8 @@ export type Pericolo = "gas" | "fuoco" | "crollo" | "elettrico" | "altro";
 
 export type DiagnosisPayload = {
   visto_sentito: string;
+  /** Trascrizione AI di ciò che la persona ha detto nel video (assente nelle diagnosi vecchie). */
+  parlato?: string;
   prima_cosa: string;
   azioni: string[];
   fai_da_te: {
@@ -70,15 +74,26 @@ const CONFIDENCE_FLOOR = 0.6;
 
 const GAS_WORD = /\bgas\b|\bgpl\b|\bmetano\b/;
 const GAS_SIGN = /odore|puzza|sibil|fischi|fuga|fuoriusc|esce gas|perdita di gas|perde gas|sento (il )?gas/;
-const FUOCO = /\bfiamm|\bfum(o|i|a|ano)\b|incendi|bruciat|bruciacchiat|annerit|cortocircuit|corto circuito|\bscintill|\bscoppiett|sfrigol/;
+const FUOCO = /\bfiamm|\bfum(o|i|a|ano)\b|incendi|bruciat|bruciacchiat|cortocircuit|corto circuito|\bscintill|\bscoppiett|sfrigol/;
 const CROLLO = /crollo|crollat|crolla|che cede|sta cedendo|cedimento|soffitto che cade|calcinacci che cadono|trave spezzat/;
 const ELECTRIC_THING =
-  "(prese?|spin[ae]|ciabatt\\w*|quadr[oi] elettric\\w*|quadro della (luce|corrente)|quadro generale|salvavita|cav[io]|fili|interruttor\\w*|elettrodomestic\\w* (collegat|acces|attaccat)\\w*|collegat\\w* alla corrente|attaccat\\w* alla corrente|sotto tensione)";
+  "(pres[ae]|spin[ae]|ciabatt\\w*|quadr[oi] elettric\\w*|quadro della (luce|corrente)|quadro generale|salvavita|cav[io]|fili|interruttor\\w*|elettrodomestic\\w* (collegat|acces|attaccat)\\w*|collegat\\w* alla corrente|attaccat\\w* alla corrente|sotto tensione)";
 const WET = "(acqua|bagnat\\w*|allagat\\w*|gocciol\\w*|infiltrazion\\w*)";
 const WATER_ELECTRIC = [
   new RegExp(`\\b${WET}\\b[^.;]{0,50}\\b${ELECTRIC_THING}`),
   new RegExp(`\\b${ELECTRIC_THING}\\b[^.;]{0,40}\\b${WET}`),
 ];
+/** Annerito è pericolo solo vicino a prese, cavi, quadro: le fughe annerite dalla muffa no. */
+const ELECTRIC_BLACK = [
+  new RegExp(`\\b${ELECTRIC_THING}\\b[^.;]{0,40}\\bannerit`),
+  new RegExp(`\\bannerit\\w*[^.;]{0,40}\\b${ELECTRIC_THING}`),
+];
+/**
+ * Annerito o bruciato su muffa, fughe, silicone, pentole e cibo: guasto o sporco
+ * normale, non un incendio. Si neutralizza prima di cercare il fuoco.
+ */
+const BENIGN_BURN =
+  /\b(fughe|silicon\w*|piastrell\w*|muff\w*|pentol\w*|padell\w*|tegam\w*|teglie?|teglia|cibo|arrosto|torta|sugo|caffettiera|moka)\b[^.;]{0,40}\b(annerit\w*|bruciat\w*|bruciacchiat\w*)|\b(annerit\w*|bruciat\w*|bruciacchiat\w*)[^.;]{0,25}\b(muff\w*|fughe|silicon\w*)/g;
 /** "lampadina bruciata" è un guasto normale, non un incendio. */
 const LAMPADINA = /lampadin\w*( \w+){0,2} (e )?bruciat\w*|bruciat\w* (la |una )?lampadin\w*/g;
 
@@ -92,7 +107,7 @@ const NEVER_DIY = [
   /caldai|scaldabagno a gas|bruciatore/,
   /quadr[oi] elettric|quadro della (luce|corrente)|quadro generale|salvavita|differenzial|impianto elettric|contatore|messa a terra|\bdm\s*37/,
   /tubi in pressione|in pressione|autoclave/,
-  /\btett[oi]\b|grondai|pluvial|\bscal[ae]\b|\bscalett\w*|in quota|in altezza|lavori in altezza|cornicion|abbaino/,
+  /\btett[oi]\b|grondai|pluvial|\bscal[ae]\b|in quota|in altezza|lavori in altezza|cornicion|abbaino/,
   /(crep[ae]|crepat|lesion[ei]|fessur\w*|spaccatur\w*)[^.;]{0,40}(struttural|portant|pilastr|\btrav|solai|fondazion|muro|muri|parete|soffitt|balcon)/,
   /struttural|muro portante|parete portante|pilastr/,
   /amianto|eternit/,
@@ -129,17 +144,31 @@ function coords(value: number | null | undefined) {
 
 /** Segnale di pericolo nel testo osservato. Esportata per i test. */
 export function dangerOf(observed: string): Exclude<Pericolo, "altro"> | null {
-  const text = plain(observed).replace(LAMPADINA, "lampadina guasta");
+  const text = plain(observed).replace(LAMPADINA, "lampadina guasta").replace(BENIGN_BURN, "macchia scura");
   if (GAS_WORD.test(text) && GAS_SIGN.test(text)) return "gas";
   if (/odore di gas|puzza di gas|fuga di gas|sibilo di gas/.test(text)) return "gas";
   if (CROLLO.test(text)) return "crollo";
   if (WATER_ELECTRIC.some((rule) => rule.test(text))) return "elettrico";
+  if (ELECTRIC_BLACK.some((rule) => rule.test(text))) return "elettrico";
   if (FUOCO.test(text)) {
     return /scintill|cortocircuit|corto circuito|presa|spina|cav[io]|fili|quadro|interruttor/.test(text)
       ? "elettrico"
       : "fuoco";
   }
   return null;
+}
+
+/**
+ * Nei passi suggeriti le frasi negative ("non salire sulla scala", "non serve
+ * chiudere il gas") sono avvertenze, non lavori: non devono bloccare il fai da te.
+ * Nel testo osservato invece restano tutte ("la caldaia non parte").
+ */
+export function affirmativeOnly(lines: string[]): string {
+  return lines
+    .flatMap((line) => line.split(/[.;!?]+/))
+    .map((part) => part.trim())
+    .filter((part) => part && !/^(non|mai|evita|senza)\b/i.test(part) && !/\bnon (serve|c'?e|bisogna|toccare|salire|usare|aprire)\b/i.test(plain(part)))
+    .join(". ");
 }
 
 /** Lavoro che non si fa da solo. Esportata per i test. */
@@ -193,6 +222,7 @@ function azioniFor(danger: Pericolo, primaCosa: string): string[] {
 function emptyPayload(draft: ModelDraft, place: { lat: number | null; lng: number | null }): DiagnosisPayload {
   return {
     visto_sentito: clip(draft.vistoSentito || draft.summary, 160),
+    parlato: clip(draft.parlato ?? "", 300),
     prima_cosa: "",
     azioni: [],
     fai_da_te: null,
@@ -225,7 +255,7 @@ export function applyRules(
   const lat = coords(place.lat);
   const lng = coords(place.lng);
   const observed = [draft.titolo, draft.vistoSentito, draft.summary, draft.motivoProfessionista].join(". ");
-  const everything = [observed, draft.primaCosa, ...draft.passi, ...draft.attrezzi].join(". ");
+  const instructions = affirmativeOnly([draft.primaCosa, ...draft.passi, ...draft.attrezzi]);
   const skillSlug = isVideoSkill(draft.skillSlug) ? draft.skillSlug : OUT_OF_SCOPE_SLUG;
   const skillLabel = isVideoSkill(skillSlug) ? videoSkillLabel(skillSlug) : "";
   const base: ModelDraft = { ...draft, skillSlug, skillLabel };
@@ -234,7 +264,8 @@ export function applyRules(
 
   // Prima la sicurezza: il pericolo vale anche se il modello è poco sicuro
   // o se pensa che la scena non sia di casa.
-  const signal = dangerOf(observed);
+  // Anche le parole della persona contano per il pericolo ("sento puzza di gas").
+  const signal = dangerOf([observed, draft.parlato ?? ""].join(". "));
   if (signal || esitoModello === "pericolo") {
     const danger: Pericolo = signal ?? "altro";
     const azioni = azioniFor(danger, draft.primaCosa);
@@ -307,11 +338,14 @@ export function applyRules(
     model: draft.model,
     payload: {
       ...payload,
+      // Anche quando serve il professionista, la persona sa cosa fare subito
+      // (es. chiudere il rubinetto generale) mentre aspetta.
+      prima_cosa: clip(draft.primaCosa, 160),
       motivo_professionista: clip(draft.motivoProfessionista || motivo, 160),
     },
   });
 
-  if (neverDiy(everything)) {
+  if (neverDiy(observed) || neverDiy(instructions)) {
     return professionista("Questo lavoro non si fa da solo. Serve chi è abilitato.");
   }
 

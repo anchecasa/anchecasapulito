@@ -3,6 +3,21 @@
  "trailingSlash": false,
  "redirects": [
   {
+   "source": "/supermastro",
+   "destination": "https://supermastro.anchecasa.it/supermastro",
+   "permanent": false
+  },
+  {
+   "source": "/supermastro.html",
+   "destination": "https://supermastro.anchecasa.it/supermastro",
+   "permanent": false
+  },
+  {
+   "source": "/supermastro/:path*",
+   "destination": "https://supermastro.anchecasa.it/supermastro/:path*",
+   "permanent": false
+  },
+  {
    "source": "/agente",
    "destination": "/agenti",
    "permanent": false

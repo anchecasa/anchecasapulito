@@ -100,6 +100,13 @@ export function SiteHeader({
               {secondaryLabel}
             </HardLink>
           )}
+          {/* Diagnosi video: sempre a portata, per privati, artigiani e chiunque. */}
+          <HardLink
+            href="/supermastro/video"
+            className="inline-flex h-9 shrink-0 items-center justify-center rounded-full border border-[#E56B10] px-3 text-xs font-semibold text-[#B4500B] transition hover:bg-[#E56B10]/10"
+          >
+            Video guasto
+          </HardLink>
           {ctaHref && ctaLabel && (
             <HardLink
               href={ctaHref}

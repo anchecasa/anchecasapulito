@@ -285,9 +285,9 @@ export function parseSuperMastroCommand(transcript: string): SuperMastroVoiceCom
 
   if (wantsSos) {
     return {
-      url: "/supermastro/nuova",
+      url: "/supermastro/video",
       label: "SOS casa",
-      reply: "Ok Fernando, apro SuperMastro per cercare un mastro in zona.",
+      reply: "Ok Fernando, apro SuperMastro: fammi vedere il guasto per 5 secondi.",
     };
   }
 

@@ -1,7 +1,8 @@
 // dossier-ia · l'intelligenza artificiale (Gemini) per il sopralluogo di tutta la casa (12.10.2026, app-28 e app-29).
 //
 //   { azione: "analizza", id }   (token dell'admin, del tecnico o dell'agente della pratica)
-//     Legge TUTTO il materiale della pratica (foto, planimetria, note vocali, video del giro della casa) con le note scritte
+//     Legge solo foto e planimetria, più le note vocali. Il video del giro della casa non si manda a Gemini:
+//     resta allegato ai documenti del dossier che vanno al tecnico per il preventivo.
 //     e prepara la RELAZIONE DI SOPRALLUOGO: sintesi, stato di ogni ambiente interno ed esterno (anche giardino, facciata,
 //     copertura, terrazzi), materiali, criticità con gravità, impianti, sicurezza (amianto sospetto, crepe, umidità),
 //     efficienza energetica, interventi con priorità, voci del computo (MAI prezzi), fasi e durata indicativa,
@@ -108,10 +109,11 @@ async function genera(modelli: string[], corpo: Record<string, unknown>) {
   throw new Error(ultimo || "Gemini");
 }
 
-function prompt(r: Record<string, unknown>, foto: string[], nAudio: number, nVideo: number) {
+function prompt(r: Record<string, unknown>, foto: string[], nAudio: number, nVideoAllegati: number) {
   return `Sei il direttore tecnico di AncheCasa, general contractor di ristrutturazioni in Italia. Un agente ha fatto un sopralluogo e ti manda il materiale.
 Devi scrivere la RELAZIONE DI SOPRALLUOGO più professionale e completa possibile: la leggono il tecnico che fa il preventivo e, dopo il suo controllo, il cliente.
-Materiale: ${foto.length} foto numerate (${foto.map((f, i) => (i + 1) + "=" + (f || "foto")).join("; ")}), ${nAudio} note vocali, ${nVideo} video del giro della casa.
+Materiale che vedi: ${foto.length} foto numerate (${foto.map((f, i) => (i + 1) + "=" + (f || "foto")).join("; ")}), ${nAudio} note vocali.
+I video del giro della casa non ti arrivano (${nVideoAllegati} allegati al dossier del tecnico, per il preventivo). Non descriverli e non usarli. L'array "video" deve essere [].
 Scritto dall'agente: richiesta «${testo(r.descrizione, 600)}»; progetto «${testo(r.riepilogo, 1000)}»; note «${testo(r.nota_agente, 1000)}»; da controllare «${testo(r.criticita, 500)}»;
 casa ${JSON.stringify(r.immobile || {}).slice(0, 600)}; misure ${JSON.stringify(r.ambienti || []).slice(0, 2500)}; comune ${testo(r.comune, 60)} (${testo(r.provincia, 2)}); finitura scelta ${testo(r.pacchetto, 10) || "non indicata"}.
 
@@ -119,7 +121,7 @@ Rispondi SOLO con un oggetto JSON con queste chiavi:
 {
  "sintesi": "5-7 frasi in italiano chiaro e professionale: che immobile è, stato generale, cosa va fatto e perché, cosa conviene fare insieme",
  "immobile": { "tipologia": "appartamento|villa|villetta a schiera|casa indipendente|rustico|altro", "epoca": "es. anni '70 (stima)", "piani": "es. 2 fuori terra", "stato_generale": 1-5, "superficie_planimetria": mq solo se leggibile dalla planimetria altrimenti null, "note": "max 300 caratteri" },
- "ambienti": [ { "nome": "es. Soggiorno", "categoria": una di ${CATEGORIE.join("|")}, "esterno": true/false, "larg": metri o null, "lung": metri o null, "alt": metri o null, "superficie": mq o null, "fonte_misure": "planimetria|nota vocale|agente|video|nessuna",
+ "ambienti": [ { "nome": "es. Soggiorno", "categoria": una di ${CATEGORIE.join("|")}, "esterno": true/false, "larg": metri o null, "lung": metri o null, "alt": metri o null, "superficie": mq o null, "fonte_misure": "planimetria|nota vocale|agente|nessuna",
      "stato": 1-5, "descrizione": "2-3 frasi: com'è oggi", "materiali": ["pavimento in cotto", "infissi in alluminio senza taglio termico", ...],
      "criticita": [ { "testo": "cosa e dove", "gravita": "bassa|media|alta|urgente", "foto": [numeri] } ],
      "interventi": [ { "testo": "cosa fare", "priorita": "necessario|consigliato|migliorativo" } ], "foto": [numeri delle foto di questo ambiente] } ],
@@ -139,14 +141,14 @@ Rispondi SOLO con un oggetto JSON con queste chiavi:
 Chiavi dei servizi per le voci: ${SERVIZI.map((s) => s[0] + " (" + s[1] + ")").join("; ")}.
 Regole obbligatorie:
 - Considera TUTTA la casa: ogni stanza, impianti, facciata, copertura, balconi, giardino, cortile, recinzioni, piscina se ci sono. Un ambiente per ogni spazio che vedi o che viene nominato.
-- MISURE: solo da planimetria quotata, nota vocale, video (se detto a voce) o misure scritte dall'agente. MAI stimarle guardando le foto: null e scrivilo nei dubbi.
+- MISURE: solo da planimetria quotata, nota vocale o misure scritte dall'agente. MAI dal video e MAI stimandole guardando le foto: null e scrivilo nei dubbi.
 - Quantità delle voci: calcolale dalle misure (pavimento = L×P, pareti = perimetro × altezza − aperture). Senza misure: qta 0 e un dubbio.
 - Niente prezzi, niente marche, niente nomi di persone. Tono professionale, frasi brevi, niente promesse.
 - Sicurezza: segnala ciò che SEMBRA un rischio (amianto, crepe strutturali, distacchi, umidità di risalita, impianti non a norma) sempre come «da verificare».
 - Stato da 1 (pessimo) a 5 (ottimo). Gravità: urgente solo per pericoli o danni che peggiorano in fretta.
 - Energia e incentivi: solo indicazioni generali, sempre «da verificare con il tecnico».
 - Titolo edilizio solo come suggerimento: opere interne con impianti o tramezzi di solito "cila"; manutenzione ordinaria "edilizia_libera"; strutture, prospetti, volumi, facciate in zone vincolate "da_verificare".
-- Se un audio o un video è vuoto o incomprensibile, scrivilo nei dubbi.`;
+- Se un audio è vuoto o incomprensibile, scrivilo nei dubbi. Il video non lo commentare: non lo hai visto.`;
 }
 
 function normalizza(x: Record<string, unknown>, nFoto: number) {
@@ -174,7 +176,7 @@ function normalizza(x: Record<string, unknown>, nFoto: number) {
     durata_settimane: numero(x.durata_settimane, 104),
     foto: arr(x.foto).slice(0, MAX_FOTO).map((f: Record<string, unknown>) => ({ n: Math.round(Number(f?.n)) || 0, ambiente: testo(f?.ambiente, 40), didascalia: testo(f?.didascalia, 120) })).filter((f) => f.n >= 1 && f.n <= nFoto),
     trascrizioni: arr(x.trascrizioni).map((t) => testo(t, 8000)).slice(0, MAX_AUDIO),
-    video: arr(x.video).slice(0, MAX_VIDEO).map((v: Record<string, unknown>) => ({ n: Math.round(Number(v?.n)) || 1, sintesi: testo(v?.sintesi, 600) })),
+    video: [],
     documenti: arr(x.documenti).map((t) => testo(t, 120)).filter(Boolean).slice(0, 10),
     dubbi: arr(x.dubbi).map((t) => testo(t, 200)).filter(Boolean).slice(0, 8),
     titolo: tra(x.titolo, TITOLI, "da_verificare"), titolo_motivo: testo(x.titolo_motivo, 250),
@@ -196,20 +198,20 @@ async function analizza(admin: ReturnType<typeof createClient>, id: string) {
     const video = agente.filter((m) => m.tipo === "video").slice(-MAX_VIDEO);
     const parti: unknown[] = [];
     const idFoto: string[] = [], noteFoto: string[] = [];
-    let nA = 0, nV = 0;
-    for (const m of [...video, ...audio, ...foto]) {
+    let nA = 0;
+    for (const m of [...audio, ...foto]) {
       const { data: blob } = await admin.storage.from("sopralluoghi").download(m.path);
       if (!blob) continue;
       const f = await carica(blob, mimeDi(m.path, m.tipo, blob.type), m.path.split("/").pop() || "file");
       parti.push({ file_data: { mime_type: f.mime, file_uri: f.uri } });
-      if (m.tipo === "foto") { idFoto.push(m.id); noteFoto.push(testo(m.nota, 60)); } else if (m.tipo === "audio") nA++; else nV++;
+      if (m.tipo === "foto") { idFoto.push(m.id); noteFoto.push(testo(m.nota, 60)); } else nA++;
     }
-    if (!parti.length) throw new Error("niente_da_leggere");
-    parti.push({ text: prompt(r || {}, noteFoto, nA, nV) });
+    if (!idFoto.length) throw new Error("niente_da_leggere");
+    parti.push({ text: prompt(r || {}, noteFoto, nA, video.length) });
     const { j, modello } = await genera(MODELLI, { contents: [{ role: "user", parts: parti }], generationConfig: { temperature: 0.2, response_mime_type: "application/json" } });
     const t = j?.candidates?.[0]?.content?.parts?.map((p: { text?: string }) => p.text || "").join("") || "{}";
     const x = normalizza(JSON.parse(t.replace(/^```json\s*|\s*```$/g, "")), idFoto.length);
-    await salva({ stato: "fatto", ...x, foto_id: idFoto, letti: { foto: idFoto.length, audio: nA, video: nV }, modello, iniziato: inizio, creato: new Date().toISOString() });
+    await salva({ stato: "fatto", ...x, foto_id: idFoto, letti: { foto: idFoto.length, audio: nA, video: 0, video_allegati: video.length }, modello, iniziato: inizio, creato: new Date().toISOString() });
   } catch (e) {
     console.error("dossier-ia analizza", e);
     await salva({ stato: "errore", errore: String((e as Error)?.message || e).slice(0, 200), iniziato: inizio, creato: new Date().toISOString() });

@@ -6,8 +6,9 @@
   --safe-b:env(safe-area-inset-bottom,0px);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;background:var(--f);color:var(--t);font-family:Manrope,system-ui,"Segoe UI",sans-serif;font-size:15px;-webkit-font-smoothing:antialiased}
+html,body{margin:0;background:var(--f);color:var(--t);font-family:Manrope,system-ui,"Segoe UI",sans-serif;font-size:15px;-webkit-font-smoothing:antialiased;overflow-x:hidden;max-width:100%;touch-action:manipulation}
 button,input,select,textarea{font-family:inherit;color:inherit}
+input,select,textarea{font-size:16px}
 a{color:var(--n2)}
 img{display:block;max-width:100%}
 [hidden]{display:none!important}
@@ -181,3 +182,47 @@ textarea.in{padding:12px 13px;min-height:90px;resize:vertical;line-height:1.45}
 body.con-dash{overflow:hidden;overscroll-behavior:none}
 body.con-dash .top{position:fixed;left:0;right:0;top:0;height:62px}
 .top .ib + .ib{margin-left:-2px}
+
+/* Pulsante fisso sopra la barra: rete e admin, «Vedi cosa so fare». */
+.vedi-fisso{position:fixed;left:16px;right:16px;z-index:38;bottom:calc(86px + var(--safe-b));max-width:608px;margin:0 auto;min-height:46px;border:0;border-radius:14px;background:var(--n);color:#fff;font-size:15px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 8px 18px rgba(26,51,79,.28);cursor:pointer}
+.vedi-fisso svg{width:20px;height:20px;flex:none}
+body.ha-vedi .scr{padding-bottom:calc(168px + var(--safe-b))}
+body.ha-vedi.con-dash #dash{height:calc(100vh - 196px - var(--safe-b));height:calc(100dvh - 196px - var(--safe-b))}
+.passi{margin:8px 0 0;padding-left:18px}
+.passi li{margin:6px 0;line-height:1.45}
+.presa{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.presa .btn{position:relative}
+.anteprime{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.anteprime img,.anteprime video{width:100%;height:88px;object-fit:cover;border-radius:12px;background:#e8eef5}
+.anteprime video{grid-column:1 / -1;height:160px}
+.prev-tab{width:100%;border-collapse:collapse;font-size:13.5px}
+.prev-tab td{padding:8px 0;border-bottom:1px solid var(--l);vertical-align:top}
+.prev-tab td:last-child{text-align:right;font-weight:800;white-space:nowrap;padding-left:10px}
+.prev-tot{display:flex;justify-content:space-between;align-items:baseline;margin-top:12px;font-weight:800}
+.prev-tot b{font-size:22px;color:var(--a2)}
+.prova-out{display:flex;flex-direction:column;gap:14px}
+.prova-out .rz{max-width:100%}
+.tre-slot{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.tre-slot label,.tre-slot figure{position:relative;min-height:96px;margin:0;border-radius:14px;background:#fff4ea;border:1px dashed #E56B10;display:flex;align-items:flex-end;justify-content:center;padding:6px;overflow:hidden;cursor:pointer}
+.tre-slot figure{border-style:solid;background:#e8eef5}
+.tre-slot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.tre-slot span{position:relative;z-index:1;background:rgba(255,255,255,.92);border-radius:8px;padding:2px 6px;font-size:11px;font-weight:800;color:#a04a07;text-align:center}
+.ac-doc{background:#fff;border-radius:16px;overflow:hidden;box-shadow:var(--sh);color:#24384c}
+.ac-testa{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 14px 12px;border-bottom:2px solid #E56B10}
+.ac-testa img{height:32px;width:auto}
+.ac-testa b{display:block;color:#16304d;font-size:13px}
+.ac-testa small{display:block;text-align:right;color:#66758a;font-size:10px;line-height:1.35;font-weight:600}
+.ac-corpo{padding:14px 14px 6px}
+.ac-piedi img{width:100%;height:36px;object-fit:cover;object-position:center;display:block}
+.ac-piedi div{background:#16304d;color:#fff;font-size:11px;font-weight:600;padding:10px 14px 14px;line-height:1.45}
+.ac-kv{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.ac-kv div{background:#f4f6f9;border-radius:10px;padding:8px 10px}
+.ac-kv small{display:block;color:#66758a;font-size:11px;font-weight:700}
+.ac-kv b{color:#16304d;font-size:14px}
+.scelta{margin-top:12px}
+.chip-row{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid #d5deea;background:#fff;border-radius:999px;padding:8px 12px;min-height:40px;font-size:14px;font-weight:700;color:#1a334f;cursor:pointer}
+.chip.on{background:#fff0e1;border-color:#E56B10;color:#a04a07}
+.render-big{width:100%;border-radius:14px;margin-top:10px;display:block}
+.prova-out .rz-pd{margin:10px 0;background:#e3e8ef}
+.prova-out .rz-pd .linea::after{color:#16304d}

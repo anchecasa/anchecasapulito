@@ -133,8 +133,8 @@
       if ((ia.voci || []).length) int += '<h3 style="margin:14px 0 4px">Voci proposte per il computo · ' + ia.voci.length + '</h3><div style="overflow-x:auto"><table><tr><th>Voce</th><th>Ambiente</th><th>Priorità</th><th style="text-align:right">Q.tà</th></tr>' +
         ia.voci.map((v) => "<tr><td>" + esc(v.voce) + "</td><td>" + esc(v.ambiente) + '</td><td><span class="rz-p ' + v.priorita + '">' + v.priorita + '</span></td><td class="n">' + (v.qta ? dec(v.qta, v.qta % 1 ? 1 : 0) + " " + esc(v.um) : "—") + "</td></tr>").join("") + "</table></div>";
       if ((ia.trascrizioni || []).filter(Boolean).length) int += '<h3 style="margin:14px 0 4px">Note vocali trascritte</h3>' + ia.trascrizioni.filter(Boolean).map((t, i) => '<p style="margin:6px 0;background:#f3f5f9;padding:10px 12px;border-radius:10px">🎙 <b>' + (i + 1) + ".</b> «" + esc(t) + "»</p>").join("");
-      if ((ia.video || []).length) int += '<h3 style="margin:14px 0 4px">Video del giro della casa</h3>' + ia.video.map((v) => '<p style="margin:6px 0;background:#f3f5f9;padding:10px 12px;border-radius:10px">🎥 ' + esc(v.sintesi) + "</p>").join("");
-      if (int) h += sez("Note tecniche", "Lettura automatica di foto, voce e video: il cliente non vede questa parte.", int, "rz-int");
+      if ((ia.video || []).length) int += '<h3 style="margin:14px 0 4px">Video del giro della casa</h3><p class="rz-sub">Lettura di una versione precedente. Oggi il video non lo legge l\'IA: resta allegato al dossier.</p>' + ia.video.map((v) => '<p style="margin:6px 0;background:#f3f5f9;padding:10px 12px;border-radius:10px">🎥 ' + esc(v.sintesi) + "</p>").join("");
+      if (int) h += sez("Note tecniche", "L'IA ha letto le foto. Il video è allegato al dossier del tecnico e il cliente non vede questa parte.", int, "rz-int");
     }
 
     h += '<div class="rz-firma">' + (o.logo ? '<img src="' + esc(o.logo) + '" alt="AncheCasa">' : "<b>AncheCasa</b>") +

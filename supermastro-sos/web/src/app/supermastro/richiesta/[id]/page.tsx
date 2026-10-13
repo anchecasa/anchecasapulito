@@ -134,7 +134,7 @@ export default async function RichiestaPage({
 
         <Link
 
-          href="/supermastro/nuova"
+          href="/supermastro/video"
 
           className="inline-flex w-full items-center justify-center rounded-xl border border-zinc-300 px-4 py-3 text-sm font-medium"
 

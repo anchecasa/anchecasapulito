@@ -9,8 +9,11 @@ import { createHmac, timingSafeEqual } from "node:crypto";
  * SUPABASE_SERVICE_ROLE_KEY (mai usata in chiaro). Senza nessuno dei due: niente gettoni.
  */
 
+/** osm: attività trovata sulla mappa. rete: artigiano iscritto ad AncheCasa (rete/<id worker>). */
+export type LeadFonte = "osm" | "rete";
+
 export type LeadClaim = {
-  fonte: "osm";
+  fonte: LeadFonte;
   fonteId: string;
   nome: string;
   telefono: string | null;
@@ -21,7 +24,7 @@ export type LeadClaim = {
 };
 
 type Packed = {
-  f: "osm";
+  f: LeadFonte;
   i: string;
   n: string;
   p: string | null;
@@ -34,6 +37,11 @@ type Packed = {
 
 const LIFETIME_MS = 24 * 60 * 60 * 1000;
 const OSM_REF = /^(node|way|relation)\/\d{1,20}$/;
+const RETE_REF = /^rete\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+function validRef(fonte: LeadFonte, ref: string) {
+  return fonte === "rete" ? RETE_REF.test(ref) : OSM_REF.test(ref);
+}
 
 function secret(): Buffer | null {
   const own = process.env.SOS_SHARE_SECRET?.trim();
@@ -53,9 +61,9 @@ export function isOsmRef(value: string) {
 
 export function signLead(claim: LeadClaim, now = Date.now()): string | null {
   const key = secret();
-  if (!key || !isOsmRef(claim.fonteId)) return null;
+  if (!key || !validRef(claim.fonte, claim.fonteId)) return null;
   const packed: Packed = {
-    f: "osm",
+    f: claim.fonte,
     i: claim.fonteId,
     n: claim.nome.slice(0, 160),
     p: claim.telefono ? claim.telefono.slice(0, 40) : null,
@@ -83,11 +91,11 @@ export function verifyLead(token: string, now = Date.now()): LeadClaim | null {
   } catch {
     return null;
   }
-  if (packed.f !== "osm" || typeof packed.e !== "number" || packed.e < now) return null;
-  if (typeof packed.i !== "string" || !isOsmRef(packed.i) || typeof packed.n !== "string") return null;
+  if ((packed.f !== "osm" && packed.f !== "rete") || typeof packed.e !== "number" || packed.e < now) return null;
+  if (typeof packed.i !== "string" || !validRef(packed.f, packed.i) || typeof packed.n !== "string") return null;
   if (!Number.isFinite(packed.la) || !Number.isFinite(packed.ln)) return null;
   return {
-    fonte: "osm",
+    fonte: packed.f,
     fonteId: packed.i,
     nome: packed.n,
     telefono: typeof packed.p === "string" && packed.p ? packed.p : null,

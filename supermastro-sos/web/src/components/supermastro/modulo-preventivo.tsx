@@ -141,18 +141,6 @@ export function ModuloPreventivo({ nome, mestiere, guasto, ruolo }: Props) {
     setNotice(`Saldo di ${euro(job.totalEuro - job.depositEuro)} sulla carta che finisce con ${cliente.cardLast4}.`);
   }
 
-  async function addPhotos(files: FileList | null) {
-    if (!files) return;
-    const room = 5 - photos.length;
-    const selected = Array.from(files).slice(0, room);
-    try {
-      const encoded = await Promise.all(selected.map(readPhoto));
-      setPhotos((current) => [...current, ...encoded].slice(0, 5));
-    } catch {
-      setNotice("Una foto non è stata letta. Riprova.");
-    }
-  }
-
   function saveReview() {
     if (!job || stars < 1) {
       setNotice("Scegli le stelle.");
@@ -246,15 +234,12 @@ export function ModuloPreventivo({ nome, mestiere, guasto, ruolo }: Props) {
             signature={signature}
             stars={stars}
             review={review}
-            photos={photos}
             returnPath={returnPath}
             onSignature={setSignature}
             onPayDeposit={payDeposit}
             onPayBalance={payBalance}
             onStars={setStars}
             onReview={setReview}
-            onPhotos={addPhotos}
-            onRemovePhoto={(index) => setPhotos((current) => current.filter((_, i) => i !== index))}
             onSaveReview={saveReview}
           />
         )}
@@ -271,15 +256,12 @@ function ClientePreventivo({
   signature,
   stars,
   review,
-  photos,
   returnPath,
   onSignature,
   onPayDeposit,
   onPayBalance,
   onStars,
   onReview,
-  onPhotos,
-  onRemovePhoto,
   onSaveReview,
 }: {
   job: Intervento | null;
@@ -287,15 +269,12 @@ function ClientePreventivo({
   signature: string | null;
   stars: number;
   review: string;
-  photos: string[];
   returnPath: string;
   onSignature: (value: string | null) => void;
   onPayDeposit: () => void;
   onPayBalance: () => void;
   onStars: (value: number) => void;
   onReview: (value: string) => void;
-  onPhotos: (files: FileList | null) => void;
-  onRemovePhoto: (index: number) => void;
   onSaveReview: () => void;
 }) {
   if (!job || job.totalEuro <= 0) {
@@ -396,36 +375,12 @@ function ClientePreventivo({
               className="mt-1 w-full rounded-xl border border-[#2A3C54]/15 bg-[#FBF8F3] px-3 py-2.5 text-sm"
             />
           </label>
-          <p className="text-xs text-[#2A3C54]">{photos.length} di 5 foto</p>
-          <div className="grid grid-cols-5 gap-2">
-            {photos.map((photo, index) => (
-              <button key={`${index}-${photo.length}`} type="button" onClick={() => onRemovePhoto(index)} aria-label="Togli foto">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={photo} alt="" className="aspect-square w-full rounded-lg object-cover" />
-              </button>
-            ))}
-          </div>
-          {photos.length < 5 && (
-            <label className="inline-flex cursor-pointer rounded-xl border border-[#2A3C54]/15 px-4 py-2 text-sm font-semibold">
-              Aggiungi foto
-              <input
-                type="file"
-                accept="image/*"
-                multiple
-                className="sr-only"
-                onChange={(event) => {
-                  void onPhotos(event.target.files);
-                  event.target.value = "";
-                }}
-              />
-            </label>
-          )}
           <button
             type="button"
             onClick={onSaveReview}
             className="inline-flex h-11 w-full items-center justify-center rounded-xl bg-[#E56B10] px-4 text-sm font-semibold text-white"
           >
-            Salva stelle e foto
+            Salva stelle e recensione
           </button>
         </div>
       )}
@@ -507,27 +462,4 @@ function SignaturePad({ onChange }: { onChange: (value: string | null) => void }
       </button>
     </div>
   );
-}
-
-function readPhoto(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const image = new Image();
-    const url = URL.createObjectURL(file);
-    image.onload = () => {
-      const max = 640;
-      const scale = Math.min(1, max / Math.max(image.width, image.height));
-      const canvas = document.createElement("canvas");
-      canvas.width = Math.max(1, Math.round(image.width * scale));
-      canvas.height = Math.max(1, Math.round(image.height * scale));
-      const ctx = canvas.getContext("2d");
-      ctx?.drawImage(image, 0, 0, canvas.width, canvas.height);
-      URL.revokeObjectURL(url);
-      resolve(canvas.toDataURL("image/jpeg", 0.72));
-    };
-    image.onerror = () => {
-      URL.revokeObjectURL(url);
-      reject(new Error("foto"));
-    };
-    image.src = url;
-  });
 }
