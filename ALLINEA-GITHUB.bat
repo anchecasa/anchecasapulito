@@ -6,7 +6,7 @@ echo === 1/3 Salvo il lavoro del PC ===
 git add -A || goto errore
 git commit -m "Allineamento PC: SuperMastro solo video, Vedi cosa so fare, comandi Cursor (13.10.2026)" || echo Niente di nuovo da salvare.
 echo === 2/3 Prendo le novita da GitHub ===
-git pull --rebase origin main || goto errore
+git pull --rebase --autostash origin main || goto errore
 echo === 3/3 Invio su GitHub ===
 git push origin main || goto errore
 git status -sb > "%~dp0allinea-esito.txt"

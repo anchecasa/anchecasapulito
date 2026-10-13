@@ -378,7 +378,7 @@
         document.head.appendChild(l);
       }
       const s = document.createElement("script");
-      s.src = "../js/relazione.js?v=1";
+      s.src = "../js/relazione.js?v=2";
       s.onload = () => ok();
       s.onerror = () => ok();
       document.head.appendChild(s);
@@ -802,7 +802,7 @@
         : (ia && ia.stato === "errore" ? '<div class="avv r">Lettura non riuscita: ' + esc(ia.errore || "") + "</div>" : "") +
           '<p class="mut" style="margin:0">L\'IA legge solo le foto e la planimetria, e prepara la relazione per il tecnico. Il video resta allegato ai documenti del preventivo.</p>' +
           '<button class="btn" data-ia' + (foto.length ? "" : " disabled") + ">" + ICO.ia + (foto.length ? "Leggi le foto con l'IA" : "Prima carica le foto") + "</button>";
-    h += passo(3, "Relazione con l'IA", fatto3 ? "Pronta per il tecnico" : ia && ia.stato === "in_corso" ? "In lettura…" : "Gemini legge tutto il materiale", fatto3, corpoIA, "ia");
+    h += passo(3, "Relazione con l'IA", fatto3 ? "Pronta per il tecnico" : ia && ia.stato === "in_corso" ? "In lettura…" : "L'IA legge solo le foto", fatto3, corpoIA, "ia");
 
     // 4. Invia al cliente
     h += passo(4, "Manda al cliente per mail", fatto4 ? "Mandato il " + giorno(r.inviato_cliente_il) : "Solo per mail, mai WhatsApp", fatto4,

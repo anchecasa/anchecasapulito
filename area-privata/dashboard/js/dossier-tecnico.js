@@ -35,7 +35,7 @@
     if (window.ACRelazione) return Promise.resolve();
     if (relazionePronta) return relazionePronta;
     if (!document.getElementById("rz-css")) { const l = document.createElement("link"); l.id = "rz-css"; l.rel = "stylesheet"; l.href = "../css/relazione.css?v=1"; document.head.appendChild(l); }
-    relazionePronta = new Promise((ok) => { const sc = document.createElement("script"); sc.src = "../js/relazione.js?v=1"; sc.onload = ok; sc.onerror = ok; document.head.appendChild(sc); });
+    relazionePronta = new Promise((ok) => { const sc = document.createElement("script"); sc.src = "../js/relazione.js?v=2"; sc.onload = ok; sc.onerror = ok; document.head.appendChild(sc); });
     return relazionePronta;
   }
 
