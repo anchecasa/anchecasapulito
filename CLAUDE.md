@@ -49,6 +49,23 @@ Sulla cartella e sul GitHub `anchecasa/anchecasapulito` lavorano tre persone o s
 
 ## Registro delle modifiche
 
+### 14.10.2026 07:53 · Cursor — Demo Assoarma riestratta, schema su Supabase, sito ripubblicato
+- Zip `C:\Users\palum\Desktop\assoarma-demo.zip` (13.10.2026 23:53) estratto al posto della cartella precedente. La copia di prima è in `_to_delete/assoarma-prima-1410/`.
+- In `scripts/base.mjs` è rimasta la correzione per Windows, `fileURLToPath`: lo zip aveva il percorso che sul PC diventava doppio. `node scripts/build.mjs` ha scritto «Sito generato in dist/: 128 pagine».
+- Eseguito `assoarma/supabase/assoarma_demo.sql` sul progetto ANCHECASA `edsvmnxojsmknjuhobqa`, lo stesso passaggio dell'SQL Editor. Controllo: c'è lo schema `assoarma_demo`, 5 funzioni `assoarma_demo_*`, 4 parametri, 3 fornitori, bucket privato `assoarma-demo`.
+- Pubblicato su Cloudflare Pages, progetto `assoarma-demo`, account Palumbofernando12@gmail.com's Account. Deployment `42b1d115`. https://assoarma-demo.pages.dev/ risponde 200, titolo del Consiglio Nazionale. https://assoarma-demo.pages.dev/chi-siamo/ risponde 200. I file erano già quelli online: 0 file nuovi su 162.
+- https://assoarma.anchecasa.it non risponde. Manca ancora il CNAME `assoarma` verso `assoarma-demo.pages.dev`, nuvola arancione.
+- La cartella `assoarma/` non è nel commit: resta in `.gitignore`, il repository è pubblico.
+- File: `assoarma/` (solo sul computer), `CLAUDE.md`.
+
+### 14.10.2026 00:05 · Cursor — Dominio assoarma.anchecasa.it in attesa del CNAME
+- https://assoarma.anchecasa.it non si apre: il nome non esiste nel DNS (`DNS_PROBE_FINISHED_NXDOMAIN`). Il sito resta su https://assoarma-demo.pages.dev/.
+- Sul progetto Pages `assoarma-demo` il dominio `assoarma.anchecasa.it` è stato aggiunto. Stato `pending`, messaggio «CNAME record not set».
+- La scrittura del record DNS ha risposto 403 «Authentication error». Il pannello Cloudflare chiede l'accesso, quindi il record non è stato scritto da qui.
+- Record da aggiungere, nuvola arancione: CNAME `assoarma` verso `assoarma-demo.pages.dev`.
+- Niente commit e niente push. Supabase non toccato.
+- File: `CLAUDE.md`.
+
 ### 13.10.2026 23:58 · Cursor — Sito dimostrativo Assoarma online
 - Sito dimostrativo Assoarma in `assoarma/` (128 pagine, Supabase schema assoarma_demo, Cloudflare Pages progetto assoarma-demo), realizzato da Claude.
 - Zip `assoarma-demo.zip` estratto e cartella rinominata in `assoarma`. Su Windows il generatore cercava i dati in un percorso doppio (`C:\C:\Users\...`): in `scripts/base.mjs` la radice ora usa `fileURLToPath`. `node scripts/build.mjs` ha scritto «Sito generato in dist/: 128 pagine».
