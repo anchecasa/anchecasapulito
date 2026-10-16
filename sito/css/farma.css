@@ -1,0 +1,107 @@
+/* AncheFarma · pagine interne e negozio (16.10.2026) */
+.af-badge { display: block; }
+/* card cliccabili nella pagina principale */
+a.af-valore { display: flex; flex-direction: column; padding: 0; overflow: hidden; text-align: left; transition: transform .2s, box-shadow .2s; }
+a.af-valore:hover { transform: translateY(-4px); box-shadow: var(--ombra); }
+a.af-valore .foto-v { display: block; position: relative; aspect-ratio: 16/10; background: var(--carta); }
+a.af-valore .foto-v img { width: 100%; height: 100%; object-fit: cover; display: block; }
+a.af-valore .foto-v .af-badge { position: absolute; left: 18px; bottom: -34px; width: 76px; height: 76px; color: var(--blu); filter: drop-shadow(0 6px 14px rgba(11,26,44,.22)); }
+a.af-valore .t { display: flex; padding: 46px 22px 22px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+a.af-valore .vai { margin-top: auto; padding-top: 8px; color: var(--arancio); font-weight: 700; }
+a.af-persona { display: block; transition: transform .2s; }
+a.af-persona:hover { transform: translateY(-4px); }
+a.af-persona .foto { overflow: hidden; padding: 0; display: block; position: relative; }
+a.af-persona .foto img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
+a.af-persona small { display: block; }
+a.af-persona .vai { display: block; margin-top: 6px; color: var(--arancio); font-weight: 700; font-size: 15px; }
+/* sezione negozio nella pagina principale */
+.af-vetrina { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+/* pagine interne */
+.af-intro { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+.af-intro > img { width: 100%; border-radius: var(--r); box-shadow: var(--ombra); aspect-ratio: 4/3; object-fit: cover; }
+.af-intro p { color: var(--grigio); font-size: 18px; margin-top: 14px; }
+.af-numeri { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.af-numeri div { background: #fff; border: 1px solid var(--linea); border-radius: var(--r); padding: 24px; }
+.af-numeri b { display: block; font: 800 36px/1 var(--display); color: var(--arancio); margin-bottom: 8px; }
+.af-numeri span { color: var(--grigio); }
+.af-impegni { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.af-impegni div { background: #fff; border-radius: var(--r); padding: 26px 24px; border-top: 4px solid var(--arancio); box-shadow: 0 6px 18px rgba(11,26,44,.06); }
+.af-impegni h3 { margin-bottom: 8px; }
+.af-impegni p { color: var(--grigio); }
+.af-altri { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+.af-altri a { background: #fff; border: 1px solid var(--linea); border-radius: var(--r); padding: 18px 12px; text-align: center; transition: transform .2s; }
+.af-altri a:hover { transform: translateY(-3px); }
+.af-altri .af-badge { width: 64px; height: 64px; margin: 0 auto 8px; color: var(--blu); }
+.af-altri b { font-family: var(--display); color: var(--blu); font-size: 15px; }
+.af-altri img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 50%; margin-bottom: 10px; }
+.af-hero-badge { width: 92px; height: 92px; color: #fff; margin-bottom: 14px; }
+/* negozio */
+.af-shop-hero { background: var(--blu); color: #fff; padding: 40px 0 34px; }
+.af-shop-hero .wrap { display: flex; gap: 24px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+.af-shop-hero h1 { color: #fff; font-size: clamp(32px, 4.4vw, 52px); }
+.af-shop-hero p { color: rgba(255,255,255,.85); margin-top: 10px; max-width: 620px; }
+.af-cerca { display: flex; gap: 8px; background: #fff; border-radius: 999px; padding: 6px 6px 6px 18px; width: min(420px, 100%); }
+.af-cerca input { border: 0; outline: 0; font: inherit; flex: 1; min-width: 0; color: var(--ink); }
+.af-garanzie { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 26px; }
+.af-garanzie div { background: rgba(255,255,255,.08); border-radius: 12px; padding: 12px 14px; font-size: 14px; color: rgba(255,255,255,.9); }
+.af-garanzie b { display: block; color: #fff; }
+.af-avviso { background: var(--arancio-chiaro); border-radius: var(--r); padding: 16px 20px; color: var(--ink); margin-bottom: 26px; }
+.af-reparti { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+.af-reparti button { font: 600 15px var(--testo); border: 1px solid var(--linea); background: #fff; color: var(--blu); padding: 9px 16px; border-radius: 999px; cursor: pointer; }
+.af-reparti button[aria-pressed="true"] { background: var(--blu); border-color: var(--blu); color: #fff; }
+.af-barra { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 18px; color: var(--grigio); flex-wrap: wrap; }
+.af-barra select { font: inherit; padding: 8px 12px; border-radius: 10px; border: 1px solid var(--linea); background: #fff; }
+.af-prodotti { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+.af-prod { background: #fff; border: 1px solid var(--linea); border-radius: var(--r); overflow: hidden; display: flex; flex-direction: column; transition: box-shadow .2s, transform .2s; }
+.af-prod:hover { box-shadow: var(--ombra); transform: translateY(-3px); }
+.af-prod button.apri-p { all: unset; cursor: pointer; display: block; }
+.af-prod img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; background: #eee; }
+.af-prod .t { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+.af-prod .rep { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--arancio); }
+.af-prod h3 { font-size: 17px; line-height: 1.25; }
+.af-prod p { color: var(--grigio); font-size: 14px; }
+.af-prod .piede-p { margin-top: auto; padding-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.af-prezzo { font: 800 21px var(--display); color: var(--blu); }
+.af-agg { font: 700 14px var(--testo); background: var(--arancio); color: #fff; border: 0; border-radius: 999px; padding: 10px 16px; cursor: pointer; }
+.af-agg:hover { background: var(--arancio-scuro); }
+.af-carrello-btn { position: fixed; right: 18px; bottom: 18px; z-index: 40; display: flex; align-items: center; gap: 10px; background: var(--blu); color: #fff; border: 0; border-radius: 999px; padding: 14px 20px; font: 700 16px var(--testo); box-shadow: var(--ombra); cursor: pointer; }
+.af-carrello-btn span { background: var(--arancio); border-radius: 999px; min-width: 26px; height: 26px; display: grid; place-items: center; font-size: 14px; }
+.af-velo { position: fixed; inset: 0; background: rgba(11,26,44,.5); z-index: 50; }
+.af-pannello { position: fixed; top: 0; right: 0; bottom: 0; width: min(440px, 100%); background: #fff; z-index: 51; display: flex; flex-direction: column; box-shadow: var(--ombra); }
+.af-pannello header { display: flex; justify-content: space-between; align-items: center; padding: 18px 20px; border-bottom: 1px solid var(--linea); }
+.af-pannello header h2 { font-size: 22px; }
+.af-chiudi { border: 0; background: var(--carta); width: 38px; height: 38px; border-radius: 50%; font-size: 20px; cursor: pointer; color: var(--blu); }
+.af-pannello .corpo-p { padding: 16px 20px; overflow: auto; flex: 1; }
+.af-pannello footer { padding: 16px 20px; border-top: 1px solid var(--linea); }
+.af-riga { display: grid; grid-template-columns: 58px 1fr auto; gap: 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--linea); }
+.af-riga img { width: 58px; height: 58px; border-radius: 10px; object-fit: cover; }
+.af-riga b { display: block; font-size: 15px; color: var(--blu); }
+.af-qta { display: inline-flex; align-items: center; gap: 6px; margin-top: 4px; }
+.af-qta button { width: 28px; height: 28px; border-radius: 8px; border: 1px solid var(--linea); background: #fff; cursor: pointer; font-weight: 700; }
+.af-sped { background: var(--carta); border-radius: 12px; padding: 12px 14px; font-size: 14px; margin-bottom: 12px; }
+.af-sped i { display: block; height: 6px; border-radius: 6px; background: var(--linea); margin-top: 8px; overflow: hidden; }
+.af-sped i b { display: block; height: 100%; background: var(--arancio); }
+.af-tot { display: flex; justify-content: space-between; font-weight: 700; margin: 6px 0; }
+.af-tot.grande { font: 800 22px var(--display); color: var(--blu); }
+.af-scheda { position: fixed; inset: 0; z-index: 52; display: grid; place-items: center; padding: 16px; pointer-events: none; }
+.af-scheda > div { pointer-events: auto; background: #fff; border-radius: 20px; width: min(920px, 100%); max-height: calc(100vh - 32px); overflow: auto; display: grid; grid-template-columns: 1fr 1fr; position: relative; }
+.af-scheda .af-chiudi { position: absolute; right: 14px; top: 14px; z-index: 2; }
+.af-scheda img { width: 100%; height: 100%; object-fit: cover; aspect-ratio: 1; }
+.af-scheda .info { padding: 30px 28px; display: flex; flex-direction: column; gap: 12px; }
+.af-scheda dl { margin: 0; display: grid; gap: 10px; }
+.af-scheda dt { font-weight: 700; color: var(--blu); font-size: 14px; }
+.af-scheda dd { margin: 2px 0 0; color: var(--grigio); font-size: 15px; }
+.af-scheda .avv { background: var(--arancio-chiaro); border-radius: 12px; padding: 12px 14px; font-size: 14px; }
+.af-passi-c { display: flex; gap: 6px; margin-bottom: 14px; }
+.af-passi-c span { flex: 1; text-align: center; font-size: 12px; font-weight: 700; padding: 6px 0; border-radius: 8px; background: var(--carta); color: var(--grigio); }
+.af-passi-c span.on { background: var(--blu); color: #fff; }
+.af-pannello .modulo label { font-size: 14px; }
+@media (max-width: 1000px) { .af-prodotti, .af-vetrina { grid-template-columns: repeat(3, 1fr); } .af-altri { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 860px) {
+  .af-intro { grid-template-columns: 1fr; gap: 24px; }
+  .af-numeri, .af-impegni { grid-template-columns: 1fr; }
+  .af-garanzie { grid-template-columns: 1fr 1fr; }
+  .af-scheda > div { grid-template-columns: 1fr; }
+  .af-scheda img { max-height: 320px; }
+}
+@media (max-width: 640px) { .af-prodotti, .af-vetrina { grid-template-columns: 1fr 1fr; gap: 12px; } .af-prod .t { padding: 10px 12px 12px; } .af-prod h3 { font-size: 15px; } .af-prod .piede-p { flex-direction: column; align-items: stretch; } .af-agg { text-align: center; } .af-altri { grid-template-columns: 1fr 1fr; } }

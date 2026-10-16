@@ -49,6 +49,13 @@ Sulla cartella e sul GitHub `anchecasa/anchecasapulito` lavorano tre persone o s
 
 ## Registro delle modifiche
 
+### 16.10.2026 08:20 · Nando + Claude — AncheFarma: negozio, persone e valori
+- `sito/farma.html`: tolta la sezione Contatti in fondo. Nuova sezione «Il negozio AncheFarma» con 4 prodotti e il pulsante al negozio. I 6 valori ora sono card con foto e marchio rotondo e aprono `farma-valore-<valore>.html`. Le 4 persone hanno la foto e aprono `farma-farmacie.html`, `farma-farmacisti.html`, `farma-corrieri.html`, `farma-assistenza.html` (foto, testi, come funziona, numeri, modulo di candidatura).
+- Nuovo negozio `sito/farma-negozio.html`: 21 prodotti in 6 reparti (farmaci senza ricetta, dispositivi medici, medicazione, ausili, igiene e cura, integratori e palestra), ricerca, filtri, ordinamento, scheda prodotto con formato, uso e avvertenze di legge, carrello con consegna gratis da 29 €, consegna in 3 passi. **Nessun pagamento**: l'ultimo passo è una prenotazione che va in `marketplace.richieste_iscrizione` (`privato`, modulo `anchefarma-prenotazione`). Massimo 2 confezioni per medicinale.
+- Foto prodotto: generate con Canva (senza marchi), scaricate in Download e copiate in `sito/img/farma/prodotti/` (550 × 550). Foto di persone e valori: dalla cartella Desktop `foto farmacia`, con lo schermo dei telefoni sostituito dall'app AncheFarma, in `sito/img/farma/foto/`.
+- Pagine generate da `scripts/genera-anchefarma.py` (legge testata e piede da `farma.html`; catalogo in `js/farma-prodotti.js`). Stile in `css/farma.css`, negozio in `js/farma-negozio.js`. Home: pulsante «Vai al negozio» nella sezione AncheFarma.
+- Copie prima della modifica: `_copie-anchefarma-0810/`. Non pubblicato, niente commit.
+
 ### 16.10.2026 07:37 · Nando + Claude — AncheFarma online
 - Su richiesta di Nando lanciato `PUBBLICA-SITO-VERCEL.bat` (cartella `sito`, progetto Vercel anchecasa-pulito, produzione). Pubblicata dalla cartella sul PC, non da un `main` aggiornato: le modifiche AncheFarma non sono ancora in git.
 - Controllo: https://anchecasa.it/farma.html risponde con «Parliamo di AncheFarma» e il 70%; in home c'è la sezione «A breve · AncheFarma».
