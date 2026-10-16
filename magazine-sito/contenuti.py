@@ -14,7 +14,7 @@ NUMERI = [
     {"n": 2, "data": "Ottobre 2026", "uscita": "2026-10-13", "copertina": "copertina-n2.jpg",
      "titolo": "Speciale ristrutturazioni",
      "strillo": "Rifare casa senza sorprese in 5 pagine: il sopralluogo, il bagno nell’ordine giusto, la casa vista prima e dopo, il preventivo che si capisce. E arriva l’app della raccolta.",
-     "sfoglia": "https://anchecasa.it/magazine"},
+     "sfoglia": "https://anchecasa.it/magazine-2"},
 ]
 
 RUBRICHE = [

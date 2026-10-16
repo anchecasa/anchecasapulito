@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AncheFarma · La farmacia a casa tua · AncheCasa</title>
+<meta name="description" content="AncheFarma, a breve: ordina dalla farmacia della tua zona e ricevi a casa tutti i prodotti da farmacia, anche con ricetta. Un servizio AncheCasa.">
+<meta name="theme-color" content="#16304D">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32x32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=DM+Sans:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="css/ac.css?v=6">
+<link rel="stylesheet" href="css/cerca-casa.css?v=3">
+</head>
+<body data-page="farma">
+<a class="skip" href="#contenuto">Vai al contenuto</a>
+
+<header class="testata"><div class="wrap">
+  <a class="marchio" href="index.html" aria-label="AncheCasa, home"><img src="assets/logo-colore.png" alt="AncheCasa · Costruiamo fiducia"></a>
+  <nav class="menu" id="menu" aria-label="Menu principale"><div class="gruppo"><button type="button" class="apri" aria-expanded="false" aria-controls="g-casa">Per la casa<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="tendina" id="g-casa"><a href="trova.html"><b>Trova artigiano</b><small>Video di 5 secondi, artigiani in zona</small></a><a href="supermastro.html"><b>SuperMastro</b><small>Il pronto intervento per i guasti</small></a><a href="ristruttura.html"><b>Ristruttura casa</b><small>AncheCasa general contractor, con garanzie</small></a><a href="bacheca.html"><b>Bacheca annunci</b><small>Case, affitti, alloggi studenti, lavoro</small></a><a href="farma.html"><b>AncheFarma · a breve</b><small>Farmaci senza ricetta e parafarmacia, a casa tua</small></a></div></div><div class="gruppo"><button type="button" class="apri" aria-expanded="false" aria-controls="g-aziende">Per le aziende<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="tendina" id="g-aziende"><a href="app.html"><b>App per la tua attività</b><small>Un'app per ogni mestiere, con l'Ufficio</small></a><a href="appalti.html"><b>Appalti e subappalti</b><small>General contractor, imprese e fornitori</small></a><a href="https://sicura.anchecasa.it"><b>AncheSicura</b><small>La sicurezza di AncheCasa</small></a></div></div><div class="gruppo"><button type="button" class="apri" aria-expanded="false" aria-controls="g-lavora">Lavora con noi<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><div class="tendina" id="g-lavora"><a href="agenti.html"><b>Diventa agente</b><small>Porti persone e aziende nella rete</small></a><a href="partner.html"><b>Diventa affiliato</b><small>Ristrutturazioni AncheCasa in subappalto</small></a><a href="citta.html"><b>AncheCasa nella tua città</b><small>Le città d'Italia</small></a></div></div><a class="voce" href="come-funziona.html">Come funziona</a><a class="voce" href="prezzi.html">Prezzi</a><a class="voce" href="https://magazine.anchecasa.it/">Magazine</a><a class="voce voce-pc" href="presentazione.html">Presentazione</a></nav>
+  <div class="azioni">
+    <a class="accedi" href="https://areaprivata.anchecasa.it/">Accedi</a>
+    <a class="btn" href="iscriviti.html">Iscriviti</a>
+    <button class="hamburger" id="hamburger" type="button" aria-label="Apri il menu" aria-expanded="false" aria-controls="menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+  </div>
+</div></header>
+<style>
+/* AncheFarma · stile della pagina (16.10.2026) */
+.af-hero { background: var(--blu); color: #fff; padding: 64px 0 72px; position: relative; overflow: hidden; }
+.af-hero::before { content: ""; position: absolute; right: -120px; top: -120px; width: 460px; height: 460px; border-radius: 50%; background: rgba(229,107,16,.14); }
+.af-hero .wrap { position: relative; display: grid; grid-template-columns: 1.15fr .85fr; gap: 48px; align-items: center; }
+.af-hero .af-logo { width: min(420px, 100%); height: auto; display: block; margin-bottom: 26px; }
+.af-hero h1 { color: #fff; }
+.af-hero .lead { font-size: 20px; color: rgba(255,255,255,.86); margin-top: 18px; max-width: 560px; }
+.af-hero .kicker { color: var(--arancio); }
+.af-breve { display: inline-flex; align-items: center; gap: 8px; background: var(--arancio); color: #fff; font-weight: 700; font-size: 13px; letter-spacing: .1em; text-transform: uppercase; padding: 7px 14px; border-radius: 999px; margin-bottom: 18px; }
+.af-breve::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #fff; animation: af-pulsa 1.6s infinite; }
+@keyframes af-pulsa { 50% { opacity: .25; } }
+.af-hero .btns { margin-top: 28px; }
+.af-blocchi { display: grid; gap: 56px; }
+.af-blocco { display: grid; grid-template-columns: 90px 1fr; gap: 28px; align-items: start; max-width: 920px; }
+.af-blocco .num { font: 800 54px/1 var(--display); color: var(--arancio); }
+.af-blocco h2 { margin-bottom: 14px; }
+.af-blocco p { color: var(--grigio); font-size: 18px; }
+.af-valori { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+.af-valore { background: #fff; border: 1px solid var(--linea); border-radius: var(--r); padding: 28px 24px; text-align: center; }
+.af-valore .ico { width: 64px; height: 64px; margin: 0 auto 16px; border-radius: 50%; background: var(--arancio-chiaro); color: var(--arancio); display: grid; place-items: center; }
+.af-valore h3 { margin-bottom: 10px; }
+.af-valore p { color: var(--grigio); }
+.af-valore p strong { color: var(--blu); }
+.af-persone { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.af-persona { text-align: center; }
+.af-persona .foto { aspect-ratio: 1; border-radius: 50%; background: var(--carta); display: grid; place-items: center; color: var(--blu); margin: 0 auto 14px; width: min(170px, 100%); border: 4px solid #fff; box-shadow: var(--ombra); }
+.af-persona b { display: block; font-family: var(--display); color: var(--blu); font-size: 18px; }
+.af-persona small { color: var(--grigio); font-size: 15px; }
+.af-team { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+.af-team .vuoto-pos { margin-top: 26px; padding: 22px 24px; border-radius: var(--r); background: var(--arancio-chiaro); }
+.af-team .vuoto-pos h3 { margin-bottom: 6px; }
+.af-contatti { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.af-contatti > div { background: #fff; border-radius: var(--r); padding: 22px 24px; border: 1px solid var(--linea); }
+.af-contatti b { display: block; font-family: var(--display); color: var(--blu); margin-bottom: 6px; }
+.af-nota { font-size: 14px; color: var(--grigio); margin-top: 18px; }
+@media (max-width: 900px) {
+  .af-hero .wrap, .af-team { grid-template-columns: 1fr; }
+  .af-hero .telefono { display: none; }
+  .af-valori { grid-template-columns: 1fr 1fr; }
+  .af-persone { grid-template-columns: 1fr 1fr; }
+  .af-contatti { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .af-valori { grid-template-columns: 1fr; }
+  .af-blocco { grid-template-columns: 1fr; gap: 8px; }
+  .af-blocco .num { font-size: 40px; }
+}
+</style>
+<main id="contenuto">
+
+<section class="af-hero">
+  <div class="wrap">
+    <div>
+      <img class="af-logo" src="assets/anchefarma-logo-negativo.png" alt="AncheFarma" width="1011" height="214">
+      <span class="af-breve">A breve</span>
+      <h1>Parliamo di <span class="acc">AncheFarma</span></h1>
+      <p class="lead">Siamo AncheFarma, il servizio AncheCasa per ordinare dalla farmacia della tua zona e ricevere a casa i prodotti della farmacia: per ora farmaci senza ricetta, parafarmacia e dispositivi medici.</p>
+      <p class="lead" style="font-size:17px;margin-top:12px"><strong style="color:#fff">Presto anche i farmaci con ricetta:</strong> AncheCasa è in trattativa con un fornitore nazionale e a breve potrà vendere tutto, in tutta Italia, nel 70% delle farmacie.</p>
+      <div class="btns"><a class="btn" href="#avvisami">Avvisami quando parte</a><a class="btn chiaro" href="#unisciti">Sei una farmacia?</a></div>
+    </div>
+    <div class="telefono" aria-hidden="true"><div class="schermo"><div class="barra"><img src="assets/anchefarma-logo.png" alt=""><span>Il mio ordine</span></div><div class="corpo"><div class="riga blu"><b>Farmacia di quartiere</b><small style="color:rgba(255,255,255,.75)">Aperta · a 600 m da te</small></div><div class="riga"><b>Farmaci senza ricetta</b><small>Prezzi della farmacia</small></div><div class="riga"><b>Prodotti da banco</b><small>3 articoli nel carrello</small></div><div class="riga"><b>Chat con il farmacista</b><small>Ti risponde un professionista</small></div><div class="riga"><b>Consegna</b><small>Oggi, tra le 18 e le 20</small></div><div class="riga arancio">Ordina ora</div></div><div class="tabbar"><span class="on">Farmacia</span><span>Ordini</span><span>Offerte</span><span>Profilo</span></div></div></div>
+  </div>
+</section>
+
+<section class="sez"><div class="wrap">
+  <div class="af-blocchi">
+    <div class="af-blocco"><span class="num">01</span><div><h2>Avviciniamo la farmacia alle persone</h2><p>AncheFarma nasce dentro AncheCasa, la rete che mette dalla stessa parte chi cerca e chi lavora. Portiamo online le singole farmacie di quartiere, una per una, senza togliere niente alla loro professionalità: il consiglio resta quello del tuo farmacista, la consegna la organizziamo noi.</p></div></div>
+    <div class="af-blocco"><span class="num">02</span><div><h2>Abbiamo un grande obiettivo</h2><p>Vogliamo che chiunque possa ricevere a casa qualsiasi prodotto acquistabile in farmacia, con l'aiuto di un esperto in ogni momento. Un unico punto di riferimento per la salute, per le persone e per le farmacie, semplice da usare dal telefono come dal computer.</p></div></div>
+    <div class="af-blocco"><span class="num">03</span><div><h2>Siamo più di un servizio di consegna</h2><p>AncheFarma usa la stessa rete di AncheCasa: corrieri della tua città, assistenza che risponde e un'area privata dove trovi ordini e documenti. Cresciamo città per città, insieme alle farmacie che scelgono di farne parte.</p></div></div>
+  </div>
+</div></section>
+
+<section class="sez"><div class="wrap duo">
+  <div><p class="kicker">Il prossimo passo</p><h2>Presto anche i farmaci con ricetta, in tutta Italia.</h2>
+    <p style="color:var(--grigio);font-size:18px;margin-top:14px">Per ora AncheFarma consegna farmaci senza ricetta, parafarmacia e dispositivi medici. AncheCasa è in trattativa con un fornitore nazionale: a breve AncheFarma potrà vendere tutto, compresi i farmaci con ricetta, in tutta Italia e nel 70% delle farmacie.</p></div>
+  <div class="af-valori" style="grid-template-columns:1fr 1fr">
+    <div class="af-valore"><h3 style="font-size:40px;color:var(--arancio)">Oggi</h3><p><strong>Senza ricetta</strong>, parafarmacia e dispositivi medici.</p></div>
+    <div class="af-valore"><h3 style="font-size:40px;color:var(--arancio)">70%</h3><p>delle farmacie italiane, <strong>con ricetta</strong>, a breve.</p></div>
+  </div>
+</div></section>
+
+<section class="sez carta"><div class="wrap">
+  <div class="testa"><div><h2>I valori in cui crediamo</h2><p>Gli stessi di AncheCasa, applicati alla salute.</p></div></div>
+  <div class="af-valori">
+    <div class="af-valore"><span class="ico"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 8-7 9-4-1-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg></span><h3>Affidabilità</h3><p><strong>Offriamo</strong> consegne puntuali e un'<strong>assistenza continua</strong>, prima e dopo l'ordine.</p></div>
+    <div class="af-valore"><span class="ico"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 12l3 3 5-5"/><path d="M3 12l4-4 3 2 4-3 3 3 4 2-5 6-3 1-4-2z"/></svg></span><h3>Alleanza</h3><p><strong>Crediamo</strong> che <strong>onestà</strong> e <strong>trasparenza</strong> con farmacie e clienti ci rendano migliori ogni giorno.</p></div>
+    <div class="af-valore"><span class="ico"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><h3>Protezione</h3><p><strong>Tuteliamo</strong> il lavoro dei <strong>farmacisti</strong>, la dignità dei <strong>corrieri</strong> e la privacy di chi <strong>ordina</strong>.</p></div>
+    <div class="af-valore"><span class="ico"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z"/></svg></span><h3>Innovazione</h3><p><strong>Apriamo</strong> al <strong>digitale</strong> un settore delicato, rispettandone i tempi e le regole.</p></div>
+    <div class="af-valore"><span class="ico"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4.5" r="2"/><path d="M12 7v6M8 9h8M10 13l-2 8M14 13l2 8"/></svg></span><h3>Accessibilità</h3><p><strong>Garantiamo</strong> un servizio di <strong>comodità</strong> e di <strong>necessità</strong>, per chi ha problemi di salute o di movimento.</p></div>
+    <div class="af-valore"><span class="ico"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19c0-8 6-14 15-14-1 9-6 15-14 15"/><path d="M5 19l7-7"/></svg></span><h3>Sostenibilità</h3><p><strong>Rispettiamo</strong> l'ambiente con consegne di quartiere e creiamo <strong>valore sociale</strong> nella città.</p></div>
+  </div>
+</div></section>
+
+<section class="sez"><div class="wrap">
+  <div class="testa"><div><h2>Come funzionerà</h2><p>Tre passi, dal telefono o dal computer.</p></div></div>
+  <div class="passi"><div class="passo"><div><h3>Scegli la farmacia</h3><p>La tua di fiducia o la più vicina tra quelle aderenti ad AncheFarma.</p></div></div><div class="passo"><div><h3>Ordina senza ricetta</h3><p>Farmaci da banco, parafarmacia e dispositivi medici nel carrello. Il farmacista prepara l'ordine e ti consiglia in chat.</p></div></div><div class="passo"><div><h3>Ricevi a casa</h3><p>Un corriere AncheCasa della tua città consegna nella fascia oraria che scegli.</p></div></div></div>
+</div></section>
+
+<section class="sez carta"><div class="wrap">
+  <div class="testa"><div><h2>Le persone dietro AncheFarma</h2><p>Una squadra sola, dalla farmacia alla tua porta.</p></div></div>
+  <div class="af-persone">
+    <div class="af-persona"><span class="foto"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10l9-6 9 6v10H3z"/><path d="M12 11v6M9 14h6"/></svg></span><b>Le farmacie</b><small>Aderenti, città per città</small></div>
+    <div class="af-persona"><span class="foto"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="7" r="3.5"/><path d="M5 21v-2a7 7 0 0 1 14 0v2"/><path d="M12 15v4M10 17h4"/></svg></span><b>I farmacisti</b><small>Consiglio e ricette</small></div>
+    <div class="af-persona"><span class="foto"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="12" height="9" rx="1"/><path d="M14 10h4l3 3v3h-7"/><circle cx="6" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg></span><b>I corrieri</b><small>Della tua città</small></div>
+    <div class="af-persona"><span class="foto"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13a8 8 0 0 1 16 0"/><rect x="2" y="13" width="4" height="6" rx="1.5"/><rect x="18" y="13" width="4" height="6" rx="1.5"/><path d="M20 19a4 4 0 0 1-4 3h-3"/></svg></span><b>L'assistenza</b><small>AncheCasa, che risponde</small></div>
+  </div>
+</div></section>
+
+<section class="sez" id="unisciti"><div class="wrap af-team">
+  <div><p class="kicker">Lavora con noi</p><h2>Entra nel team!</h2>
+    <p style="color:var(--grigio);font-size:18px;margin-top:14px">Siamo una realtà giovane, dove ognuno lavora con autonomia e responsabilità e contribuisce alla crescita di AncheFarma con il proprio talento, qualunque sia il ruolo. Cerchiamo farmacie, farmacisti e corrieri in ogni città.</p>
+    <div class="vuoto-pos"><h3>Non ci sono posizioni aperte, per ora.</h3><p>Ma siamo sicuri che valga la pena conoscerci: compila il modulo.</p></div>
+  </div>
+  <div class="pannello"><form class="modulo" data-invia="azienda|anchefarma-candidatura" data-ok="Grazie, abbiamo ricevuto la tua richiesta. Ti scriviamo noi.">
+    <div class="due"><label>Nome e cognome<input required type="text" autocomplete="name"></label><label>Mail<input required type="email" autocomplete="email"></label></div>
+    <div class="due"><label>Telefono<input type="tel" autocomplete="tel"></label><label>Città<input required type="text" data-comuni></label></div>
+    <label>Sei<select><option>Una farmacia</option><option>Un farmacista</option><option>Un corriere</option><option>Altro (candidatura spontanea)</option></select></label>
+    <label>Raccontaci di te<textarea></textarea></label>
+    <label class="spunta"><input required type="checkbox">Ho letto l'<a href="privacy.html" style="text-decoration:underline">informativa privacy</a>.</label>
+    <button class="btn" type="submit">Invia</button></form></div>
+</div></section>
+
+<section class="sez blu" id="avvisami"><div class="wrap duo">
+  <div><p class="kicker">A breve</p><h2>AncheFarma sta arrivando.</h2>
+    <p style="color:rgba(255,255,255,.82);margin-top:14px">Lascia la mail e la tua città: ti scriviamo appena il servizio è attivo nella tua zona.</p></div>
+  <div class="pannello"><form class="modulo" data-invia="privato|anchefarma-avvisami" data-ok="Fatto. Ti avvisiamo appena AncheFarma arriva nella tua città.">
+    <div class="due"><label>Mail<input required type="email" autocomplete="email"></label><label>Città<input required type="text" data-comuni></label></div>
+    <label class="spunta"><input required type="checkbox">Ho letto l'<a href="privacy.html" style="text-decoration:underline">informativa privacy</a>.</label>
+    <button class="btn" type="submit">Avvisami</button></form></div>
+</div></section>
+
+<section class="sez carta"><div class="wrap">
+  <div class="testa"><div><h2>Contatti</h2></div></div>
+  <div class="af-contatti">
+    <div><b>Mail</b>info@anchecasa.it</div>
+    <div><b>Area privata</b><a href="https://areaprivata.anchecasa.it/" style="text-decoration:underline">areaprivata.anchecasa.it</a></div>
+    <div><b>Un servizio</b>AncheCasa · Palumbo Investments Srl</div>
+  </div>
+  <p class="af-nota">I farmaci li vende e li consegna sempre la farmacia aderente, nel rispetto delle norme sulla vendita e sulla dispensazione dei medicinali. AncheFarma non salva dati sanitari.</p>
+</div></section>
+
+</main>
+
+<footer class="piede"><div class="wrap">
+  <div class="col">
+    <div><img src="assets/logo-negativo.png" alt="AncheCasa · Costruiamo fiducia"><p style="margin-top:14px;max-width:260px">Artigiani, imprese, fornitori e servizi per la casa e il lavoro, in tutta Italia.</p></div>
+    <div><h4>Per la casa</h4><a href="trova.html">Trova artigiano</a><a href="supermastro.html">SuperMastro · video 5 secondi</a><a href="ristruttura.html">Ristruttura casa</a><a href="bacheca.html">Bacheca annunci</a><a href="farma.html">AncheFarma · a breve</a></div>
+    <div><h4>Per le aziende</h4><a href="app.html">App per la tua attività</a><a href="appalti.html">Appalti e subappalti</a><a href="https://sicura.anchecasa.it">AncheSicura</a></div>
+    <div><h4>Lavora con noi</h4><a href="agenti.html">Diventa agente</a><a href="partner.html">Diventa affiliato</a><a href="citta.html#roma">AncheCasa nelle città</a></div>
+    <div><h4>AncheCasa</h4><a href="come-funziona.html">Come funziona</a><a href="servizi.html">Tutti i servizi</a><a href="prezzi.html">Prezzi</a><a href="https://magazine.anchecasa.it/">Magazine</a><a href="faq.html">Domande frequenti</a><a href="chi-siamo.html">Chi siamo</a><a href="contatti.html">Contatti</a></div>
+  </div>
+  <div class="basso"><span>AncheCasa è un marchio di Palumbo Investments Srl. Tutti i diritti riservati.</span>
+    <nav aria-label="Informazioni legali"><a href="privacy.html">Privacy</a><a href="cookie.html">Cookie</a><a href="note-legali.html">Note legali</a></nav></div>
+</div></footer>
+<script src="js/ac.js?v=8"></script>
+<script src="js/comuni.js?v=2"></script>
+</body>
+</html>

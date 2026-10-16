@@ -49,6 +49,298 @@ Sulla cartella e sul GitHub `anchecasa/anchecasapulito` lavorano tre persone o s
 
 ## Registro delle modifiche
 
+### 16.10.2026 07:37 · Nando + Claude — AncheFarma online
+- Su richiesta di Nando lanciato `PUBBLICA-SITO-VERCEL.bat` (cartella `sito`, progetto Vercel anchecasa-pulito, produzione). Pubblicata dalla cartella sul PC, non da un `main` aggiornato: le modifiche AncheFarma non sono ancora in git.
+- Controllo: https://anchecasa.it/farma.html risponde con «Parliamo di AncheFarma» e il 70%; in home c'è la sezione «A breve · AncheFarma».
+- File: `CLAUDE.md`.
+
+### 16.10.2026 07:35 · Nando + Claude — AncheFarma: per ora solo senza ricetta
+- Decisione di Nando: per ora AncheFarma vende solo farmaci senza ricetta (più parafarmacia e dispositivi medici). Tolti dalla pagina e dalla home i riferimenti all'ordine con ricetta e al codice NRE.
+- Aggiunto in `sito/farma.html` (apertura e nuova sezione «Il prossimo passo») e nella sezione della home: AncheCasa è in trattativa con un fornitore nazionale e a breve potrà vendere tutto, anche con ricetta, in tutta Italia e nel 70% delle farmacie.
+- Voce del menu in tutte le pagine: «Farmaci senza ricetta e parafarmacia, a casa tua». Riquadri in home e `servizi.html`: «Farmaci senza ricetta a casa tua. Presto anche con ricetta.»
+- Copia prima della modifica: `_copie-anchefarma-0735/`. Non pubblicato, niente commit.
+- File: `sito/farma.html`, `sito/index.html`, `sito/servizi.html`, `sito/*.html` (menu), `CLAUDE.md`.
+
+### 16.10.2026 07:45 · Nando + Claude — AncheFarma, pagina nuova e «a breve» in home
+- Nuova pagina `sito/farma.html` (AncheFarma, a breve). Struttura presa dalla pagina «Chi siamo» di pharmercure.com: apertura con logo, tre blocchi (avviciniamo la farmacia, obiettivo, più di un servizio di consegna), sei valori, come funzionerà, le persone dietro AncheFarma (ruoli, non nomi), «Entra nel team!» con modulo, «Avvisami» e contatti. Testi scritti per AncheCasa, niente copiato.
+- I moduli usano `data-invia` come gli altri: `azienda|anchefarma-candidatura` e `privato|anchefarma-avvisami`, quindi vanno in `marketplace.richieste_iscrizione`. Supabase non toccato.
+- Logo AncheFarma in `sito/assets/anchefarma-logo.png` (fondo trasparente) e `anchefarma-logo-negativo.png` (scritta bianca, per il blu).
+- Home `sito/index.html`: sezione «A breve · AncheFarma» dopo SuperMastro e riquadro «A breve» in «Tutti i servizi». `servizi.html`: riquadro AncheFarma. Menu «Per la casa» e piede di tutte le pagine: voce «AncheFarma · a breve». Le versioni `?v=` non cambiano (CSS e JS non toccati).
+- Copia delle pagine prima della modifica e script usato: `_copie-anchefarma-0745/`.
+- Non pubblicato. Niente commit e niente push.
+- File: `sito/farma.html` (nuova), `sito/assets/anchefarma-logo*.png` (nuovi), `sito/*.html` (menu e piede), `sito/index.html`, `sito/servizi.html`, `CLAUDE.md`.
+
+### 15.10.2026 09:54 · Cursor — Assoarma: SQL e funzione, fermo ai segreti
+- Versione controllata: `AGGIORNA-CURSOR.md` inizia con «Aggiornamento unico Assoarma · 15 ottobre 2026 (sera)». La cartella `assoarma/static/img/4-novembre` c’è, 9 foto. File delle 09:47. Zip non estratto. `assoarma/` resta in `.gitignore`. Niente commit e niente push.
+- Rieseguito `assoarma/supabase/assoarma_demo.sql` sul progetto `edsvmnxojsmknjuhobqa`. Rieseguito `assoarma_demo_partner_imposta_codice`: «Password della pagina Partner impostata.»
+- Ripubblicata `assoarma-email` con `--no-verify-jwt`.
+- `RESEND_API_KEY` c’è. Mancano `MITTENTE`, `RISPONDI_A` e `CRON_SEGRETO`. Il file `email-ogni-5-minuti.sql` non è stato eseguito. `PUBBLICA-ASSOARMA.bat` non è stato lanciato in questo passo.
+- File: `assoarma/` (solo sul computer), `CLAUDE.md`.
+
+### 15.10.2026 09:52 · Cursor — Sito Assoarma aggiornato con i file delle 09:47
+- `node scripts/build.mjs` ha scritto «Sito generato in dist/: 181 pagine». Pubblicato su Cloudflare Pages, progetto `assoarma-demo`, deployment `76c4e86c`. https://assoarma.anchecasa.it/ risponde 200, stesso file della pagina su https://76c4e86c.assoarma-demo.pages.dev.
+- A 1440 px le 7 voci sono su una riga: L'Ente, Le Associazioni, Ricorrenze, Notizie, Servizi ai soci, Il progetto, Contatti. La freccia di Ricorrenze apre il riquadro con «4 Novembre · la proposta». A 390 px c’è il tasto Menu.
+- L'accordo ha 653.000, 2 milioni, «20 anni, senza penali», «Sciarpe vendute agli stand» e «Pagina 1 di 11». La strategia ha 21 slide, «10% del prezzo netto» e «restano dell'Ente». La sciarpa ha la riga Palumbo Investment e i prezzi 35 e 29. Le condizioni di vendita sono nel piede. Le domande non hanno «80%». /4-novembre/proposta/ e /4-novembre/presentazione/ rispondono 200, la presentazione ha 13 slide.
+- Le email non partono: mancano i tre segreti e il cron non c’è. Il cruscotto non è stato aperto.
+- Niente commit e niente push.
+- File: `assoarma/` (solo sul computer), `CLAUDE.md`.
+
+### 15.10.2026 09:49 · Cursor — Assoarma: ricontrollo segreti, pubblicazione ferma
+- Ricontrollati i segreti della funzione, solo i nomi. `RESEND_API_KEY` c’è. Mancano ancora `MITTENTE`, `RISPONDI_A` e `CRON_SEGRETO`.
+- Lo script SQL e la funzione `assoarma-email` restano quelli eseguiti alle 09:48. Il cron non è stato avviato. Il sito non è stato ripubblicato.
+- Niente commit e niente push.
+- File: `CLAUDE.md`.
+
+### 15.10.2026 09:48 · Cursor — Assoarma: SQL e funzione email, fermo ai segreti
+- `assoarma/` è in `.gitignore`. Nessun commit e nessun push. Lo zip non è stato estratto: i file erano già in cartella, aggiornati alle 09:47.
+- Rieseguito `assoarma/supabase/assoarma_demo.sql` sul progetto `edsvmnxojsmknjuhobqa`. Rieseguito `assoarma_demo_partner_imposta_codice`: «Password della pagina Partner impostata.»
+- Ripubblicata `assoarma-email` con `--no-verify-jwt`.
+- `RESEND_API_KEY` c’è. Mancano `MITTENTE`, `RISPONDI_A` e `CRON_SEGRETO`. Il cron ogni 5 minuti non è stato avviato. Il sito non è stato ripubblicato in questo passo.
+- File: `assoarma/` (solo sul computer), `CLAUDE.md`.
+
+### 15.10.2026 09:27 · Cursor — Demo Assoarma pubblicata
+- `node scripts/build.mjs` ha scritto «Sito generato in dist/: 179 pagine». Pubblicato su Cloudflare Pages, progetto `assoarma-demo`, deployment `c3b20bf9`. https://assoarma.anchecasa.it/ risponde 200.
+- Il menu ha le 9 voci su una riga. L'accordo ha i cinque riquadri e il PDF da 11 pagine. La strategia ha 21 slide. La sciarpa è a 35 € e 29 € soci. Le domande non hanno «80%». La password Partner apre l'anteprima.
+- I segreti `MITTENTE`, `RISPONDI_A` e `CRON_SEGRETO` mancano ancora. Il cron ogni 5 minuti non è stato avviato. Le email di prova non partono. Il cruscotto non è stato aperto: serve l'account di Nando.
+- Niente commit e niente push. `assoarma/` resta in `.gitignore`.
+- File: `assoarma/` (solo sul computer), `CLAUDE.md`.
+
+### 15.10.2026 09:21 · Cursor — Demo Assoarma dallo zip delle 09:15, fermo ai segreti email
+- `assoarma/` è in `.gitignore` (riga `/assoarma/`). Nessun commit e nessun push.
+- Zip `C:\Users\palum\Desktop\assoarma-demo-chiaro.zip` del 15.10.2026 ore 09:15, 31.378.800 byte. Il contenuto ha sostituito `assoarma/`. Fuori da quella cartella non è stato cancellato niente.
+- Eseguito `assoarma/supabase/assoarma_demo.sql` sul progetto ANCHECASA `edsvmnxojsmknjuhobqa`. Controllo: c’è il prodotto `sciarpa-assoarma`, 35 € e 29 € soci. Eseguito `assoarma_demo_partner_imposta_codice`: risposta «Password della pagina Partner impostata.»
+- Pubblicata la funzione `assoarma-email` con `--no-verify-jwt` e `--use-api`. Dashboard: Deployed Functions.
+- Segreti presenti, solo il nome: `RESEND_API_KEY`. Mancano `MITTENTE`, `RISPONDI_A` e `CRON_SEGRETO`. Il cron `assoarma-email` non c’è. Lo script dei 5 minuti non è stato eseguito e il sito non è stato ripubblicato. Resta online la versione di prima.
+- File: `assoarma/` (solo sul computer), `CLAUDE.md`.
+
+### 15.10.2026 09:16 · Cursor — PDF gadget: richiesta di preventivo, solo la sciarpa
+- Dal PDF sono tolti i prezzi. Il file è una richiesta di preventivo per chi produce.
+- Per ora si chiede solo la sciarpa. Le misure scritte (180 × 30 cm, stemma circa 40 mm) sono un consiglio: misura, tessuto e ricamo li indica chi produce.
+- Polo, cappellino, cravatta, distintivo, portachiavi, crest, tazza e calendari restano in elenco. Non si preventivano adesso. Si chiede quali si possono fare.
+- L’approvazione resta solo per mail a rete@anchecasa.it e direzione@gruppopalumbo.com. La foto della sciarpa del sito resta.
+- Cartella e zip aggiornati sul Desktop: `C:\Users\palum\Desktop\ASSOARMA-GADGET` e `ASSOARMA-GADGET.zip`.
+- Niente commit e niente push. Supabase non toccato. Il sito non è stato ripubblicato.
+- File: `assoarma/gadget/genera-gadget.py`, `CLAUDE.md`.
+
+### 15.10.2026 09:12 · Cursor — PDF gadget: via il marchio orizzontale, dentro la sciarpa del sito
+- Dal PDF è tolto il marchio orizzontale (stemma più scritta ASSOARMA). Restano lo stemma su bianco e lo stemma su blu notte.
+- Nella pagina Abbigliamento c’è la foto della sciarpa già sul sito, blu notte, filo oro, banda tricolore. Il file è anche in `foto/sciarpa-assoarma.jpg`. Lo stemma da ricamare resta il file `stemma-colore`.
+- L’approvazione resta solo per mail a rete@anchecasa.it e direzione@gruppopalumbo.com.
+- Cartella e zip aggiornati sul Desktop: `C:\Users\palum\Desktop\ASSOARMA-GADGET` e `ASSOARMA-GADGET.zip`.
+- Niente commit e niente push. Supabase non toccato. Il sito non è stato ripubblicato.
+- File: `assoarma/gadget/genera-gadget.py`, `CLAUDE.md`.
+
+### 15.10.2026 09:10 · Cursor — PDF gadget: approvazione solo per mail
+- Riscritto `ASSOARMA-proposta-gadget.pdf`. L'approvazione dei gadget è solo per mail, a rete@anchecasa.it e a direzione@gruppopalumbo.com. Si scrive a tutti e due. La serie parte dopo la risposta di entrambe. Il telefono e ogni altro indirizzo non approvano.
+- Tolti dal PDF il telefono 06 474 6397 e la mail assoarma.cons.naz@gmail.com. In copertina e nel piede di pagina 2, 3 e 4 restano i due indirizzi. Stemma, colori e pezzi restano quelli di prima.
+- Aggiornati la cartella `C:\Users\palum\Desktop\ASSOARMA-GADGET` e lo zip `C:\Users\palum\Desktop\ASSOARMA-GADGET.zip`.
+- Niente commit e niente push. Supabase non toccato. Il sito online non è stato ripubblicato.
+- File: `assoarma/gadget/genera-gadget.py`, `C:\Users\palum\Desktop\ASSOARMA-GADGET\ASSOARMA-proposta-gadget.pdf`, `C:\Users\palum\Desktop\ASSOARMA-GADGET.zip`, `CLAUDE.md`.
+
+### 15.10.2026 09:06 · Cursor — Logo in alta risoluzione e PDF gadget
+- Sul Desktop, cartella `ASSOARMA-GADGET` e zip `ASSOARMA-GADGET.zip` (15.10.2026 ore 09:06, 23.894.557 byte). Dentro ci sono il PDF `ASSOARMA-proposta-gadget.pdf` (4 pagine) e la cartella `logo`.
+- Lo stemma di partenza è `assoarma/static/img/foto/stemma.png`, 724×937, con trasparenza. In `logo/stemma-colore-2896x3748.png` è lo stesso stemma ingrandito quattro volte, fondo trasparente, da dare al laboratorio. Ci sono anche lo stemma su bianco, su blu notte, il marchio orizzontale con la scritta ASSOARMA e il file originale.
+- Il PDF ha i colori con HEX, RGB e CMYK, i gadget del negozio (sciarpa, polo, cappellino, cravatta, distintivo, portachiavi, crest, tazza, calendari) e le regole: stemma intero, prova da approvare prima della serie. I prezzi scritti sono quelli al socio, non il costo di produzione.
+- Niente commit e niente push. Supabase non toccato. Il sito online non è stato ripubblicato.
+- File: `assoarma/gadget/genera-gadget.py`, `C:\Users\palum\Desktop\ASSOARMA-GADGET\`, `C:\Users\palum\Desktop\ASSOARMA-GADGET.zip`, `CLAUDE.md`.
+
+### 15.10.2026 08:15 · Cursor — Zip di lavoro aggiornato sul Desktop
+- `C:\Users\palum\Desktop\assoarma-demo-chiaro.zip` è stato riscritto con la cartella `assoarma` com’è adesso. 15.10.2026 ore 08:14, 28.646.296 byte, 189 file, cartella radice `assoarma/`. Dentro ci sono Strategia, Futuro, Affiliazioni e il pulsante Proposta.
+- Fuori dallo zip restano `dist/` e `.wrangler/`, come nello zip delle 07:36. Sul Desktop `assoarma-demo.zip` non c’è.
+- Niente commit e niente push. Supabase non toccato. Il sito online resta il deployment `7351b6b9`.
+- File: `C:\Users\palum\Desktop\assoarma-demo-chiaro.zip`, `CLAUDE.md`.
+
+### 15.10.2026 08:08 · Cursor — Affiliazioni nel menu e pulsante Proposta
+- Nel menu principale, prima di Contatti, c’è Affiliazioni. Apre /affiliazioni/. In fondo alla stessa barra c’è il pulsante Proposta, che porta a /affiliazioni/#proposta.
+- La pagina dice che la proposta aperta è per le farmacie: almeno il 10% ai soci e ai familiari, 29 € al mese, 6% solo sugli ordini online. Il pulsante Proposta della pagina apre /farmacie-affiliate/#aderisci. Nel piede, sotto Partecipa, c’è anche Affiliazioni.
+- `node scripts/build.mjs` ha scritto «Sito generato in dist/: 177 pagine». Pubblicato su Cloudflare Pages, progetto `assoarma-demo`, deployment `7351b6b9`. Il foglio è `sito.css?v=13`.
+- https://assoarma.anchecasa.it/affiliazioni/ risponde 200, titolo «Affiliazioni · ASSOARMA». Nel menu la voce Affiliazioni è la pagina aperta e il pulsante Proposta è in fondo alla barra.
+- Lo zip sul Desktop `assoarma-demo-chiaro.zip` è ancora quello delle 07:36 e non ha questa pagina. `assoarma-demo.zip` non è stato toccato.
+- Niente commit e niente push. Supabase non toccato.
+- File: `assoarma/scripts/base.mjs`, `assoarma/scripts/pagina-farmacie.mjs`, `assoarma/scripts/build.mjs`, `assoarma/static/css/sito.css`, `CLAUDE.md`.
+
+### 15.10.2026 08:02 · Cursor — Futuro nella barra del menu
+- Nel menu principale, dopo Le Associazioni, c’è Futuro. Apre /futuro/. La barra in basso del telefono resta Home, Associazioni, Servizi, Magazine, Tessera.
+- `node scripts/build.mjs` ha scritto «Sito generato in dist/: 176 pagine». Pubblicato su Cloudflare Pages, progetto `assoarma-demo`, deployment `ab636da0`. Il file `PUBBLICA-ASSOARMA.bat` si ferma in attesa di un tasto: eseguiti gli stessi passi.
+- https://assoarma.anchecasa.it/futuro/ risponde 200, titolo «Assoarma Futuro · ASSOARMA». Nel menu la voce Futuro è la pagina aperta. Le voci restano Chi siamo, Strategia, Le Associazioni, Futuro, Sul territorio, Ricorrenze, Notizie e Magazine, Servizi ai soci, Contatti.
+- Lo zip sul Desktop `assoarma-demo-chiaro.zip` è ancora quello delle 07:36 e non ha questa voce di menu. `assoarma-demo.zip` non è stato toccato.
+- Niente commit e niente push. Supabase non toccato.
+- File: `assoarma/scripts/base.mjs`, `CLAUDE.md`.
+
+### 15.10.2026 08:00 · Cursor — Strategia nel menu del sito
+- Nel menu principale, dopo Chi siamo, c’è Strategia. Apre /strategia/. La barra in basso del telefono resta Home, Associazioni, Servizi, Magazine, Tessera.
+- `node scripts/build.mjs` ha scritto «Sito generato in dist/: 176 pagine». Pubblicato su Cloudflare Pages, progetto `assoarma-demo`, deployment `b3a6c5c6`. Il file `PUBBLICA-ASSOARMA.bat` si ferma in attesa di un tasto: eseguiti gli stessi passi.
+- https://assoarma.anchecasa.it/ risponde 200 e nel menu c’è Strategia. https://assoarma.anchecasa.it/strategia/ risponde 200, titolo «Strategia 2027–2030 · ASSOARMA», e la voce Strategia è la pagina aperta.
+- Lo zip sul Desktop `assoarma-demo-chiaro.zip` è ancora quello delle 07:36 e non ha questa voce di menu. `assoarma-demo.zip` non è stato toccato.
+- Niente commit e niente push. Supabase non toccato.
+- File: `assoarma/scripts/base.mjs`, `CLAUDE.md`.
+
+### 15.10.2026 07:41 · Cursor — Assoarma Futuro e strategia online
+- Zip `C:\Users\palum\Desktop\assoarma-demo-chiaro.zip` del 15.10.2026 ore 07:36, 28.635.243 byte. `assoarma-demo.zip` non è stato toccato. La cartella `assoarma` era in uso e non si è potuta spostare: il contenuto dello zip è stato copiato sopra, file per file. La copia delle 06:26 resta in `_to_delete/assoarma-prima-1510-0626/`. Lo zip scompattato sta in `_to_delete/_zip-assoarma-0736/`. In `scripts/base.mjs` la radice usa già `fileURLToPath`. `assoarma/` resta in `.gitignore`.
+- `node scripts/build.mjs` ha scritto «Sito generato in dist/: 176 pagine». Pubblicato su Cloudflare Pages, progetto `assoarma-demo`, deployment `0941638c`. Il file `PUBBLICA-ASSOARMA.bat` si ferma in attesa di un tasto: eseguiti gli stessi passi.
+- https://assoarma.anchecasa.it/futuro/ risponde 200, titolo «Assoarma Futuro · ASSOARMA». Ci sono i concorsi (VFI 2027, 7000 posti, domande fino all'11 novembre 2026), i quiz, i sette corpi, il tutor e la richiesta della tessera Futuro. https://assoarma.anchecasa.it/strategia/ risponde 200, titolo «Strategia 2027–2030 · ASSOARMA». https://assoarma.anchecasa.it/farmacia/ e https://assoarma.anchecasa.it/vantaggi/farmacia/ hanno «−10%» e «almeno il 10».
+- Lo script SQL, la funzione `assoarma-email` e il cron delle email non sono stati eseguiti. Nel comando dello zip restano in attesa dell'ok. Senza, tessera Futuro, tutor, sciarpa nel negozio e sconto della farmacia in cassa restano sulla versione di dati precedente. Le email restano «In uscita».
+- Niente commit e niente push. Supabase non toccato.
+- File: `assoarma/` (solo sul computer), `CLAUDE.md`.
+
+### 15.10.2026 06:37 · Cursor — Assoarma chiaro online
+- Zip `C:\Users\palum\Desktop\assoarma-demo-chiaro.zip` del 15.10.2026 ore 06:26, 26.043.726 byte. La copia di prima è in `_to_delete/assoarma-prima-1510-0626/`. In `scripts/base.mjs` la radice usa già `fileURLToPath`. `assoarma/` resta in `.gitignore`.
+- `node scripts/build.mjs` ha scritto «Sito generato in dist/: 172 pagine». Pubblicato su Cloudflare Pages, progetto `assoarma-demo`, deployment `34a39c9a`. Il file `PUBBLICA-ASSOARMA.bat` si ferma in attesa di un tasto: eseguiti gli stessi passi.
+- https://assoarma.anchecasa.it/ risponde 200, titolo «ASSOARMA · Consiglio Nazionale Permanente delle Associazioni d'Arma», con «La casa comune» e il link alle farmacie affiliate. https://assoarma.anchecasa.it/vantaggi/ ha l'apertura chiara, testo scuro su avorio. https://assoarma.anchecasa.it/farmacie-affiliate/ risponde 200, titolo «Farmacie affiliate · ASSOARMA». https://assoarma.anchecasa.it/farmacia/ ha «Sei una farmacia» e «Farmacie vicine».
+- Lo script `assoarma/supabase/assoarma_demo.sql` è diverso da quello già eseguito (adesioni farmacia e coordinate delle farmacie vicine). Non è stato rieseguito: nel comando dello zip l'esecuzione resta in attesa dell'ok. Senza quello script, l'invio dell'adesione e la ricerca delle farmacie vicine possono restare sulla versione di dati precedente.
+- Niente commit e niente push.
+- File: `assoarma/` (solo sul computer), `CLAUDE.md`.
+
+### 14.10.2026 18:07 · Cursor — Assoarma: stile 2026 e nota della proposta in home
+- Zip `C:\Users\palum\Desktop\assoarma-demo.zip` del 14.10.2026 ore 17:50, 23.122.480 byte. La copia di prima è in `_to_delete/assoarma-prima-1410-1750/`. In `scripts/base.mjs` la radice usa già `fileURLToPath`. `assoarma/` resta in `.gitignore`. Lo schema SQL è uguale e non è stato rieseguito.
+- `node scripts/build.mjs` ha scritto «Sito generato in dist/: 171 pagine». Pubblicato su Cloudflare Pages, progetto `assoarma-demo`, deployment `27e30017`. Il file `PUBBLICA-ASSOARMA.bat` si ferma in attesa di un tasto: eseguiti gli stessi passi.
+- https://assoarma.anchecasa.it/ risponde 200. Il titolo resta «La casa comune di chi ha servito l'Italia.». Il menu ha le 7 voci. Sotto il titolo c’è «Questo non è un sito web: è una proposta di AncheCasa ad Assoarma per un accordo di sviluppo.».
+- Niente commit e niente push. Supabase non toccato.
+- File: `assoarma/` (solo sul computer), `CLAUDE.md`.
+
+### 14.10.2026 17:35 · Cursor — Assoarma: pagina Servizi ai soci rifatta
+- Zip `C:\Users\palum\Desktop\assoarma-demo.zip` del 14.10.2026 ore 17:25, 22.764.386 byte. La copia di prima è in `_to_delete/assoarma-prima-1410-1725/`. In `scripts/base.mjs` la radice usa già `fileURLToPath`. `assoarma/` resta in `.gitignore`. Lo schema SQL è uguale e non è stato rieseguito.
+- `node scripts/build.mjs` ha scritto «Sito generato in dist/: 171 pagine». Pubblicato su Cloudflare Pages, progetto `assoarma-demo`, deployment `5383b8f2`. Il file `PUBBLICA-ASSOARMA.bat` si ferma in attesa di un tasto: eseguiti gli stessi passi.
+- https://assoarma.anchecasa.it/vantaggi/ risponde 200, titolo «Servizi ai soci · ASSOARMA». Il titolo in pagina è «La tessera Assoarma, utile ogni giorno.». Ci sono luce e gas, la farmacia e il Negozio, i tre passi e le domande. Le foto dei telefoni rispondono. Ristrutturazione, pronto intervento e alloggi non ci sono.
+- Niente commit e niente push. Supabase non toccato.
+- File: `assoarma/` (solo sul computer), `CLAUDE.md`.
+
+### 14.10.2026 16:51 · Cursor — Assoarma già online, zip invariato
+- Lo zip `C:\Users\palum\Desktop\assoarma-demo.zip` è ancora quello del 14.10.2026 ore 15:43, 22.023.193 byte. La cartella `assoarma` ha gli stessi file. Non è stata sostituita e il sito non è stato ripubblicato.
+- Resta online il deployment `15ef8219`. https://assoarma.anchecasa.it/farmacia/ risponde 200, titolo «Farmacia online · ASSOARMA», con «Farmaci senza ricetta e salute in casa, dalla farmacia sotto casa.».
+- Niente commit e niente push. Supabase non toccato.
+- File: `CLAUDE.md`.
+
+### 14.10.2026 15:47 · Cursor — Assoarma: farmacia e negozio con la vetrina nuova
+- Zip `C:\Users\palum\Desktop\assoarma-demo.zip` del 14.10.2026 ore 15:43, 22.023.193 byte. La copia di prima è in `_to_delete/assoarma-prima-1410-1543/`. In `scripts/base.mjs` la radice usa già `fileURLToPath`. `assoarma/` resta in `.gitignore`. Lo schema SQL è uguale e non è stato rieseguito.
+- `node scripts/build.mjs` ha scritto «Sito generato in dist/: 171 pagine». Pubblicato su Cloudflare Pages, progetto `assoarma-demo`, deployment `15ef8219`. Il file `PUBBLICA-ASSOARMA.bat` si ferma in attesa di un tasto: eseguiti gli stessi passi.
+- https://assoarma.anchecasa.it/farmacia/ risponde 200, titolo «Farmacia online · ASSOARMA». Ci sono ricerca, reparti, filtri per prezzo e «Aggiungi al carrello». La ricerca «termometro» lascia 1 prodotto. Il carrellino si apre e segna 9,90 € e «Ti mancano 19,10 € per la consegna gratuita». In fondo c’è il riquadro dei dati legali della farmacia, da completare. I prezzi della farmacia non hanno «Soci». https://assoarma.anchecasa.it/negozio/ tiene il prezzo soci.
+- Niente commit e niente push. Supabase non toccato.
+- File: `assoarma/` (solo sul computer), `CLAUDE.md`.
+
+### 14.10.2026 15:19 · Cursor — Assoarma: servizi ai soci solo luce, gas e farmacia
+- Zip `C:\Users\palum\Desktop\assoarma-demo.zip` del 14.10.2026 ore 15:13, 22.014.716 byte. La copia di prima è in `_to_delete/assoarma-prima-1410-1513/`. In `scripts/base.mjs` la radice usa già `fileURLToPath`. Lo schema SQL non è cambiato e non è stato rieseguito.
+- `node scripts/build.mjs` ha scritto «Sito generato in dist/: 171 pagine». Pubblicato su Cloudflare Pages, progetto `assoarma-demo`, deployment `3097d197`. Il file `PUBBLICA-ASSOARMA.bat` si ferma in attesa di un tasto: eseguiti gli stessi passi.
+- https://assoarma.anchecasa.it/vantaggi/ risponde 200, titolo «Servizi ai soci · ASSOARMA». In pagina ci sono Bollette luce e gas, La tua farmacia e Il Negozio di Assoarma. Ristrutturazione, pronto intervento e alloggi rispondono 404. La home resta «La casa comune di chi ha servito l'Italia.» e non elenca più quei tre servizi.
+- Niente commit e niente push. Supabase non toccato. La cartella `assoarma/` resta fuori da GitHub.
+- File: `assoarma/` (solo sul computer), `CLAUDE.md`.
+
+### 14.10.2026 14:36 · Cursor — Assoarma: home «La casa comune» e menu a 7 voci
+- Zip `C:\Users\palum\Desktop\assoarma-demo.zip` del 14.10.2026 ore 14:05, 22.014.791 byte. La copia di prima è in `_to_delete/assoarma-prima-1410-1405/`. In `scripts/base.mjs` la radice usa già `fileURLToPath`. `assoarma/` resta in `.gitignore`. Lo schema SQL non è cambiato e non è stato rieseguito.
+- `node scripts/build.mjs` ha scritto «Sito generato in dist/: 174 pagine». Pubblicato su Cloudflare Pages, progetto `assoarma-demo`, deployment `345195ed`. Il file `PUBBLICA-ASSOARMA.bat` si ferma in attesa di un tasto: eseguiti gli stessi passi.
+- https://assoarma.anchecasa.it/ risponde 200. Il titolo è «La casa comune di chi ha servito l'Italia.». Il menu ha 7 voci: Chi siamo, Le Associazioni, Sul territorio, Ricorrenze, Notizie e Magazine, Servizi ai soci, Contatti. I caratteri sono sul sito, non da Google. Lo stemma in testata è quello nuovo.
+- Niente commit e niente push. Supabase non toccato.
+- File: `assoarma/` (solo sul computer), `CLAUDE.md`.
+
+### 14.10.2026 13:02 · Cursor — Assoarma già online, zip invariato
+- Lo zip `C:\Users\palum\Desktop\assoarma-demo.zip` è ancora quello del 14.10.2026 ore 12:43, 30.462.473 byte. La cartella `assoarma` ha gli stessi file. Non è stata sostituita e il sito non è stato ripubblicato.
+- Resta online il deployment `b1ccfc88`. https://assoarma.anchecasa.it/ risponde 200 con «Assoarma cambia rotta.». https://assoarma.anchecasa.it/farmacia/ scrive «13 prodotti».
+- Niente commit e niente push. Supabase non toccato.
+- File: `CLAUDE.md`.
+
+### 14.10.2026 12:56 · Cursor — Assoarma: lavoro di Cloud delle 12:43 online
+- Zip `C:\Users\palum\Desktop\assoarma-demo.zip` del 14.10.2026 ore 12:43, 30.462.473 byte. La copia di prima è in `_to_delete/assoarma-prima-1410-1251/`. In `scripts/base.mjs` la radice usa già `fileURLToPath`. `assoarma/` resta in `.gitignore`.
+- Eseguito `assoarma/supabase/assoarma_demo.sql` sul progetto ANCHECASA `edsvmnxojsmknjuhobqa`. Azzera gli sconti dimostrativi: ristrutturazione 0, bonus bollette 0, sconto farmacia 0. Spedizione farmacia resta 2,90 €. Non tocca le tabelle di AncheCasa.
+- `node scripts/build.mjs` ha scritto «Sito generato in dist/: 175 pagine». Pubblicato su Cloudflare Pages, progetto `assoarma-demo`, deployment `b1ccfc88`. Il file `PUBBLICA-ASSOARMA.bat` si ferma in attesa di un tasto: eseguiti gli stessi passi.
+- Sul telefono la home parte con «Scorri per entrare», il tasto Aa apre A, A+, A++ e Contrasto, e in basso ci sono Home, Associazioni, Vantaggi, Negozio, Tessera. Sul computer l'apertura è «Assoarma cambia rotta.» con lo stemma in testata.
+- https://assoarma.anchecasa.it/associazioni/ scrive «39 associazioni». Il filtro Marina ne lascia 2. La ricerca «alpini» ne lascia 1, l'A.N.A.
+- Bollette e ristrutturazione non mostrano prezzi né il 10%. La farmacia ha i prezzi e non scrive «Soci». Il negozio tiene il prezzo soci. L'articolo del manifesto ha «Ascolta l'articolo»: il lettore parte, il tasto diventa Pausa e compare la velocità. Il file audio risponde.
+- Niente commit e niente push.
+- File: `assoarma/` (solo sul computer), `CLAUDE.md`.
+
+### 14.10.2026 11:55 · Cursor — Assoarma: farmacia con 13 prodotti online
+- Zip `C:\Users\palum\Desktop\assoarma-demo.zip` del 14.10.2026 ore 11:31, 29.290.206 byte. La copia di prima è in `_to_delete/assoarma-prima-1410-1152/`. In `scripts/base.mjs` la radice usa già `fileURLToPath`.
+- Eseguito `assoarma/supabase/assoarma_demo.sql` sul progetto ANCHECASA `edsvmnxojsmknjuhobqa`. Aggiunge le colonne `tipo`, `max_qta` e `avvertenze`, i 13 prodotti della farmacia e la spedizione farmacia 2,90 € (gratis da 29 €). Controllo: 13 prodotti farmacia, 12 delle associazioni, 3 colonne nuove. Non tocca le tabelle di AncheCasa.
+- `node scripts/build.mjs` ha scritto «Sito generato in dist/: 175 pagine». Pubblicato su Cloudflare Pages, progetto `assoarma-demo`, deployment `976c49f4`. Il file `PUBBLICA-ASSOARMA.bat` si ferma in attesa di un tasto: eseguiti gli stessi passi.
+- https://assoarma.anchecasa.it/farmacia/ risponde 200, titolo «La farmacia · ASSOARMA», e scrive «13 prodotti». In elenco ci sono Paracetamolo, Ibuprofene, Cetirizina, misuratore, saturimetro, termometro, fisiologica, cerotti, garze, portapillole, calze, gel mani e crema mani.
+- Niente commit e niente push. La cartella `assoarma/` resta fuori da GitHub.
+- File: `assoarma/` (solo sul computer), `CLAUDE.md`.
+
+### 14.10.2026 10:49 · Cursor — Assoarma: negozio con 12 prodotti, ordine fino alla conferma
+- Zip `C:\Users\palum\Desktop\assoarma-demo.zip` del 14.10.2026 ore 10:45, 29.047.319 byte. La copia di prima è in `_to_delete/assoarma-prima-1410-1046/`. In `scripts/base.mjs` la radice usa già `fileURLToPath`.
+- Eseguito `assoarma/supabase/assoarma_demo.sql` sul progetto ANCHECASA `edsvmnxojsmknjuhobqa`. Aggiunge colonne e prodotti nello schema `assoarma_demo`. Controllo: 12 prodotti delle associazioni, 5 della farmacia, e le colonne `categoria`, `immagine`, `prezzo_soci`, `varianti`. Non tocca le tabelle di AncheCasa.
+- `node scripts/build.mjs` ha scritto «Sito generato in dist/: 158 pagine». Pubblicato su Cloudflare Pages, progetto `assoarma-demo`, deployment `074fbeed`. Il file `PUBBLICA-ASSOARMA.bat` si ferma in attesa di un tasto: eseguiti gli stessi passi.
+- https://assoarma.anchecasa.it/negozio/ risponde e scrive «12 prodotti». Un ordine di prova (portachiavi, 10,90 € con spedizione, pagamento dimostrativo) arriva a https://assoarma.anchecasa.it/negozio/conferma/ con il titolo «Grazie, ordine AS-NEG-261014-AJ2P4».
+- Niente commit e niente push. La cartella `assoarma/` resta fuori da GitHub.
+- File: `assoarma/` (solo sul computer), `CLAUDE.md`.
+
+### 14.10.2026 10:31 · Cursor — Assoarma: apertura «Assoarma cambia rotta.» con la bandiera
+- Zip `C:\Users\palum\Desktop\assoarma-demo.zip` del 14.10.2026 ore 10:17, 28.613.055 byte, 132 voci. La copia di prima è in `_to_delete/assoarma-prima-1410-1028/`. In `scripts/base.mjs` la radice usa già `fileURLToPath`.
+- `node scripts/build.mjs` ha scritto «Sito generato in dist/: 143 pagine». Pubblicato su Cloudflare Pages, progetto `assoarma-demo`, deployment `0652a41e`. Il file `PUBBLICA-ASSOARMA.bat` si ferma in attesa di un tasto: eseguiti gli stessi passi, senza lo schema SQL.
+- https://assoarma.anchecasa.it/ risponde 200. In apertura c’è il titolo «Assoarma cambia rotta.» e la bandiera (asta e tricolore, 36 fette). https://0652a41e.assoarma-demo.pages.dev è lo stesso invio.
+- Niente commit e niente push. Supabase non toccato. La cartella `assoarma/` resta fuori da GitHub.
+- File: `assoarma/` (solo sul computer), `CLAUDE.md`.
+
+### 14.10.2026 09:34 · Cursor — Magazine numero 1 di nuovo su anchecasa.it
+- Su anchecasa.it/magazine era uscito il numero 2, senza il modulo della luce e del gas. Ripristinato il numero 1 di ottobre, quello di partenza, con Check Bollette.
+- Il numero 2 resta su https://anchecasa.it/magazine-2. Sul sito del Magazine, «Sfoglia il numero 2» apre quella pagina.
+- Pubblicato il sito, progetto Vercel `anchecasa-pulito`, deployment `dpl_6NhPQ3ND3DhiD1nVuNdpFF2Tpf4d`, alias https://anchecasa.it. Pubblicato il Magazine, progetto `magazine-anchecasa`, deployment `dpl_HmzTnQBAvgXLtDp4mn3wN32NUAgs`, alias https://magazine.anchecasa.it.
+- Online https://anchecasa.it/magazine risponde 200, titolo «AncheCasa Magazine · N. 1 · Ottobre 2026», script `js/magazine.js?v=39`. Nella pagina ci sono i tasti Luce e Gas, «Quanto hai pagato», «Quanto hai consumato» e «Analizza la mia bolletta». https://anchecasa.it/magazine-2 risponde 200 con `js/magazine-2.js`. https://magazine.anchecasa.it rimanda il numero 2 a /magazine-2.
+- Niente commit e niente push. Supabase non toccato.
+- File: `sito/magazine.html`, `sito/magazine-2.html`, `magazine-sito/contenuti.py`, `magazine-sito/index.html`, `magazine-sito/numeri.html`, `CLAUDE.md`.
+
+### 14.10.2026 09:21 · Cursor — sito Assoarma aggiornato online
+- Zip `C:\Users\palum\Desktop\assoarma-demo.zip` del 14.10.2026 ore 09:17, 27.939.568 byte. La cartella precedente non si poteva spostare perché era in uso: copiata in `_to_delete/assoarma-prima-1410-0918/`, poi sostituita con lo zip. In `scripts/base.mjs` la radice usa già `fileURLToPath`.
+- Eseguito `assoarma/supabase/assoarma_demo.sql` versione 2 sul progetto ANCHECASA `edsvmnxojsmknjuhobqa`. Controllo: 4 utenti, 10 parametri. Non tocca le tabelle di AncheCasa.
+- `node scripts/build.mjs` ha scritto «Sito generato in dist/: 143 pagine». Pubblicato su Cloudflare Pages, progetto `assoarma-demo`, deployment `21c510f3`.
+- https://assoarma.anchecasa.it/ e https://assoarma-demo.pages.dev/ rispondono 200 e in home c'è «Si parte da due cose di ogni giorno». La presentazione `7-Assoarma-cambia-rotta` risponde 200, titolo «Assoarma · Una tessera per tutta la famiglia».
+- Niente commit e niente push. La cartella `assoarma/` resta fuori da GitHub.
+- File: `assoarma/` (solo sul computer), `CLAUDE.md`.
+
+### 14.10.2026 09:11 · Cursor — secondo comando di estrazione, zip invariato
+- Stesso file `C:\Users\palum\Desktop\assoarma-demo.zip`: 13.10.2026 ore 23:53, 6.835.226 byte, 353 voci. Ancora senza «Si parte da due cose di ogni giorno», senza la presentazione e senza `fileURLToPath`.
+- Cartella non sostituita. Sito non ripubblicato. Resta il deployment `425d60e9`.
+- Niente commit e niente push. Supabase non toccato.
+- File: `CLAUDE.md`.
+
+### 14.10.2026 09:07 · Cursor — zip Assoarma sul Desktop ancora quello del 13.10, niente sostituzione
+- Il comando chiedeva di estrarre `C:\Users\palum\Desktop\assoarma-demo.zip`, eseguire lo schema e pubblicare. Il file è ancora quello del 13.10.2026 ore 23:53, 6.835.226 byte, 353 voci. Dentro non c'è «Si parte da due cose di ogni giorno» e non c'è `7-Assoarma-cambia-rotta`. In `scripts/base.mjs` dello zip manca `fileURLToPath`.
+- La cartella `assoarma` non è stata sostituita. Lo schema non è stato rieseguito. Il sito non è stato ripubblicato. Resta online il deployment `425d60e9`.
+- Niente commit e niente push. Supabase non toccato.
+- File: `CLAUDE.md`.
+
+### 14.10.2026 08:23 · Cursor — Su Assoarma solo «Assoarma cambia rotta»
+- Cloud ha salvato la presentazione in `C:\Users\palum\Downloads\presentazione-assoarma.zip` (14.10.2026 08:02). Il comando dentro lo zip la mandava su anchecasa.it e sull'area privata. Qui è stata messa solo su assoarma.anchecasa.it.
+- La pagina Presentazioni, password 242424, ora ha una voce sola: Assoarma cambia rotta, 15 slide. Le sei presentazioni di AncheCasa sono tolte dal sito. La prima slide risponde 200, titolo «AncheCasa · Assoarma cambia rotta». La freccia destra passa da `#1` a `#2`.
+- Un sito Assoarma più nuovo di quello già online (zip del 13.10.2026 ore 23:53) su questo computer non c'è. Desktop, Download, Documenti e la cartella di lavoro non hanno un altro pacchetto.
+- Pubblicato su Cloudflare Pages, progetto `assoarma-demo`, deployment `425d60e9`. anchecasa.it e l'area privata non sono stati toccati. Niente commit e niente push. Supabase non toccato.
+- File: `assoarma/scripts/pagine-ente.mjs`, `assoarma/static/js/presentazioni.js`, `assoarma/static/presentazioni/7-Assoarma-cambia-rotta.html`, `CLAUDE.md`.
+
+### 14.10.2026 08:14 · Cursor — Presentazioni solo su assoarma.anchecasa.it
+- Nel menu del sito Assoarma c'è Presentazioni. La pagina chiede la password 242424 e poi elenca le sei presentazioni. Ogni voce si apre a schermo intero su questo stesso sito, con le frecce avanti e indietro.
+- Pubblicato su Cloudflare Pages, progetto `assoarma-demo`, deployment `9b8ff50c`. https://assoarma.anchecasa.it/presentazioni/ risponde 200, titolo Presentazioni. La prima presentazione risponde 200, titolo «AncheCasa · Perché adesso». La freccia destra passa da `#1` a `#2`.
+- anchecasa.it e l'area privata non sono stati toccati. Niente commit e niente push. Supabase non toccato. La cartella `assoarma/` resta fuori da GitHub.
+- File: `assoarma/scripts/base.mjs`, `assoarma/scripts/pagine-ente.mjs`, `assoarma/static/js/presentazioni.js`, `assoarma/static/presentazioni/` (sei file html), `CLAUDE.md`.
+
+### 14.10.2026 08:02 · Cursor — assoarma.anchecasa.it online
+- Nuvola grigia. Il CNAME `assoarma` punta a `assoarma-demo.pages.dev`.
+- https://assoarma.anchecasa.it/ risponde 200, titolo del Consiglio Nazionale. https://assoarma.anchecasa.it/chi-siamo/ risponde 200. La pagina è `noindex`.
+- Niente commit e niente push. Supabase non toccato.
+- File: `CLAUDE.md`.
+
+### 14.10.2026 08:01 · Cursor — assoarma.anchecasa.it risponde 523, il CNAME è nascosto dalla nuvola
+- Il nome ora esiste. I nameserver di Cloudflare danno gli indirizzi `188.114.96.7` e `188.114.97.7`: la nuvola è arancione.
+- https://assoarma.anchecasa.it/ risponde 523. Sul progetto Pages `assoarma-demo` il dominio resta `pending`, messaggio «CNAME record not set». Con la nuvola arancione il CNAME non si vede, quindi Pages non collega il sito.
+- La nuvola va messa grigia, così resta visibile il CNAME `assoarma` verso `assoarma-demo.pages.dev`. La scrittura DNS da qui risponde ancora 403.
+- https://assoarma-demo.pages.dev/ resta il sito che risponde.
+- Niente commit e niente push. Supabase non toccato.
+- File: `CLAUDE.md`.
+
+### 14.10.2026 07:59 · Cursor — il CNAME di assoarma non è sui nameserver
+- Nando dice che il record DNS è stato messo ieri. I nameserver autorevoli `collins.ns.cloudflare.com` e `elmo.ns.cloudflare.com` rispondono «Non-existent domain» per `assoarma.anchecasa.it`.
+- Nel progetto Pages `assoarma-demo` il dominio c’è ed è `pending`. Quella riga non pubblica il nome. https://assoarma-demo.pages.dev/ risponde.
+- Record che deve comparire nella zona `anchecasa.it`: CNAME `assoarma` verso `assoarma-demo.pages.dev`, nuvola arancione.
+- Niente commit e niente push. Supabase non toccato.
+- File: `CLAUDE.md`.
+
+### 14.10.2026 07:57 · Cursor — assoarma.anchecasa.it ancora senza nome DNS
+- Nel browser compare «Impossibile raggiungere questa pagina», codice `DNS_PROBE_FINISHED_NXDOMAIN`, su https://assoarma.anchecasa.it.
+- Il sito risponde su https://assoarma-demo.pages.dev/. Sul progetto Pages `assoarma-demo` il dominio `assoarma.anchecasa.it` è `pending`.
+- La lettura dei record DNS con l'accesso già attivo risponde 403 «Authentication error». Il pannello Cloudflare chiede l'accesso, quindi il record non è stato scritto.
+- Record da aggiungere, nuvola arancione: CNAME `assoarma` verso `assoarma-demo.pages.dev`.
+- Niente commit e niente push. Supabase non toccato.
+- File: `CLAUDE.md`.
+
 ### 14.10.2026 07:53 · Cursor — Demo Assoarma riestratta, schema su Supabase, sito ripubblicato
 - Zip `C:\Users\palum\Desktop\assoarma-demo.zip` (13.10.2026 23:53) estratto al posto della cartella precedente. La copia di prima è in `_to_delete/assoarma-prima-1410/`.
 - In `scripts/base.mjs` è rimasta la correzione per Windows, `fileURLToPath`: lo zip aveva il percorso che sul PC diventava doppio. `node scripts/build.mjs` ha scritto «Sito generato in dist/: 128 pagine».

@@ -1,0 +1,6 @@
+# 15.10.2026: la cartella assoarma è esclusa da git (repository pubblico) ma Cursor deve vederla
+!assoarma/
+!assoarma/**
+# dist e foto restano fuori dall indice
+assoarma/dist/
+assoarma/.wrangler/
