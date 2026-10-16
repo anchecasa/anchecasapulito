@@ -20,9 +20,22 @@
     bar.appendChild(b);
   });
   $("#af-ordina").onchange = function () { stato.ord = this.value; disegna(); };
-  var q = $("#af-q"); q.oninput = function () { stato.q = q.value.trim(); disegna(); };
-  q.form.onsubmit = function (e) { e.preventDefault(); stato.q = q.value.trim(); disegna(); $("#af-prodotti").scrollIntoView({ behavior: "smooth" }); q.blur(); };
-  $("#af-q-btn").onclick = function () { stato.q = q.value.trim(); disegna(); $("#af-prodotti").scrollIntoView({ behavior: "smooth" }); };
+  var q = $("#af-q"); 
+  var tendina = document.createElement("div"); tendina.className = "af-tendina"; tendina.hidden = true; q.form.style.position = "relative"; q.form.appendChild(tendina);
+  function suggerisci() {
+    var testo = q.value.trim(); if (testo.length < 2) { tendina.hidden = true; return; }
+    var l = P.filter(function (p) { return trova(p, testo); });
+    tendina.innerHTML = (l.length ? l.slice(0, 6).map(function (p) {
+      return '<button type="button" data-scheda="' + p.id + '"><img src="' + p.img + '" alt=""><span><b>' + esc(p.nome) + "</b><small>" + esc(p.rep) + "</small></span><em>" + euro(p.prezzo) + "</em></button>";
+    }).join("") + '<button type="button" class="tutti" data-vedi>Vedi ' + (l.length === 1 ? "il risultato" : "tutti i " + l.length + " risultati") + " →</button>"
+      : '<p>Nessun prodotto per «' + esc(testo) + '». Prova «proteine», «febbre», «pressione».</p>');
+    tendina.hidden = false;
+  }
+  q.oninput = function () { stato.q = q.value.trim(); disegna(); suggerisci(); };
+  q.onfocus = suggerisci;
+  document.addEventListener("click", function (e) { if (!q.form.contains(e.target)) tendina.hidden = true; });
+  q.form.onsubmit = function (e) { e.preventDefault(); stato.q = q.value.trim(); disegna(); tendina.hidden = true; $("#af-prodotti").scrollIntoView({ behavior: "smooth" }); q.blur(); };
+  $("#af-q-btn").onclick = function () { stato.q = q.value.trim(); disegna(); tendina.hidden = true; $("#af-prodotti").scrollIntoView({ behavior: "smooth" }); };
 
   // ricerca: senza accenti, per parole, al singolare e al plurale, con sinonimi e piccoli errori
   function norm(s) { return String(s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9 ]+/g, " ").replace(/\s+/g, " ").trim(); }
@@ -157,13 +170,14 @@
   }
 
   document.addEventListener("click", function (e) {
-    var t = e.target.closest("[data-cerca],[data-agg],[data-scheda],[data-chiudi],[data-passo],[data-piu],[data-meno],#af-apri-carrello,#af-velo");
+    var t = e.target.closest("[data-vedi],[data-cerca],[data-agg],[data-scheda],[data-chiudi],[data-passo],[data-piu],[data-meno],#af-apri-carrello,#af-velo");
     if (!t) return;
     if (t.id === "af-apri-carrello") return apri();
     if (t.id === "af-velo" || t.hasAttribute("data-chiudi")) return chiudi();
+    if (t.hasAttribute("data-vedi")) { tendina.hidden = true; $("#af-prodotti").scrollIntoView({ behavior: "smooth" }); return; }
     if (t.hasAttribute("data-cerca")) { q.value = t.getAttribute("data-cerca"); stato.q = q.value; disegna(); return; }
     if (t.hasAttribute("data-agg")) { aggiungi(t.getAttribute("data-agg"), 1); avvisa("Aggiunto al carrello"); if (t.hasAttribute("data-poi-carrello")) { $("#af-scheda").hidden = true; apri(); } return; }
-    if (t.hasAttribute("data-scheda")) return scheda(t.getAttribute("data-scheda"));
+    if (t.hasAttribute("data-scheda")) { tendina.hidden = true; return scheda(t.getAttribute("data-scheda")); }
     if (t.hasAttribute("data-piu")) return aggiungi(t.getAttribute("data-piu"), 1);
     if (t.hasAttribute("data-meno")) return aggiungi(t.getAttribute("data-meno"), -1);
     if (t.hasAttribute("data-passo")) return passo(+t.getAttribute("data-passo"));

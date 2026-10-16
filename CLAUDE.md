@@ -49,6 +49,12 @@ Sulla cartella e sul GitHub `anchecasa/anchecasapulito` lavorano tre persone o s
 
 ## Registro delle modifiche
 
+### 16.10.2026 08:35 · Nando + Claude — AncheFarma: ricerca del negozio
+- Nando: «la barra di ricerca non trova niente». La ricerca filtrava solo la griglia, che sta sotto la piega, e cercava il testo esatto («proteina» non trovava «Proteine»).
+- `sito/js/farma-negozio.js`: mentre scrivi si apre sotto la barra una tendina con i prodotti trovati (foto, reparto, prezzo; clic apre la scheda) e «Vedi tutti i risultati». Ricerca senza accenti, per parole, singolare e plurale, piccoli errori («creatna») e sinonimi (febbre, tachipirina, pressione, palestra, vitamine…). Se non trova niente propone parole da provare. Il negozio legge anche `?q=` dall'indirizzo.
+- `sito/js/cerca-casa.js` (ricerca della home): nuova voce «Farmacia a casa · AncheFarma» per farmaci, integratori, proteine e simili; apre il negozio con la parola cercata. `index.html` passa a `cerca-casa.js?v=4`.
+- Versioni: `css/farma.css?v=3`, `js/farma-negozio.js?v=3` in tutte le pagine AncheFarma. Copia di prima: `_copie-anchefarma-0825/`. Non pubblicato.
+
 ### 16.10.2026 08:20 · Nando + Claude — AncheFarma: negozio, persone e valori
 - `sito/farma.html`: tolta la sezione Contatti in fondo. Nuova sezione «Il negozio AncheFarma» con 4 prodotti e il pulsante al negozio. I 6 valori ora sono card con foto e marchio rotondo e aprono `farma-valore-<valore>.html`. Le 4 persone hanno la foto e aprono `farma-farmacie.html`, `farma-farmacisti.html`, `farma-corrieri.html`, `farma-assistenza.html` (foto, testi, come funziona, numeri, modulo di candidatura).
 - Nuovo negozio `sito/farma-negozio.html`: 21 prodotti in 6 reparti (farmaci senza ricetta, dispositivi medici, medicazione, ausili, igiene e cura, integratori e palestra), ricerca, filtri, ordinamento, scheda prodotto con formato, uso e avvertenze di legge, carrello con consegna gratis da 29 €, consegna in 3 passi. **Nessun pagamento**: l'ultimo passo è una prenotazione che va in `marketplace.richieste_iscrizione` (`privato`, modulo `anchefarma-prenotazione`). Massimo 2 confezioni per medicinale.

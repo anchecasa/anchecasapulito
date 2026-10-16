@@ -105,3 +105,12 @@ a.af-persona .vai { display: block; margin-top: 6px; color: var(--arancio); font
   .af-scheda img { max-height: 320px; }
 }
 @media (max-width: 640px) { .af-prodotti, .af-vetrina { grid-template-columns: 1fr 1fr; gap: 12px; } .af-prod .t { padding: 10px 12px 12px; } .af-prod h3 { font-size: 15px; } .af-prod .piede-p { flex-direction: column; align-items: stretch; } .af-agg { text-align: center; } .af-altri { grid-template-columns: 1fr 1fr; } }
+.af-tendina { position: absolute; left: 0; right: 0; top: calc(100% + 8px); background: #fff; border-radius: 16px; box-shadow: var(--ombra); z-index: 30; padding: 6px; max-height: 70vh; overflow: auto; color: var(--ink); }
+.af-tendina button { all: unset; box-sizing: border-box; cursor: pointer; display: grid; grid-template-columns: 44px 1fr auto; gap: 10px; align-items: center; width: 100%; padding: 8px 10px; border-radius: 10px; }
+.af-tendina button:hover, .af-tendina button:focus-visible { background: var(--carta); }
+.af-tendina img { width: 44px; height: 44px; border-radius: 8px; object-fit: cover; }
+.af-tendina b { display: block; font-size: 14px; color: var(--blu); }
+.af-tendina small { color: var(--grigio); font-size: 12px; }
+.af-tendina em { font-style: normal; font-weight: 700; color: var(--blu); font-size: 14px; }
+.af-tendina .tutti { display: block; text-align: center; color: var(--arancio); font-weight: 700; padding: 10px; }
+.af-tendina p { padding: 12px; font-size: 14px; color: var(--grigio); }
