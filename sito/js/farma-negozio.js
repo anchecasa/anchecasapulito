@@ -20,11 +20,45 @@
     bar.appendChild(b);
   });
   $("#af-ordina").onchange = function () { stato.ord = this.value; disegna(); };
-  var q = $("#af-q"); q.oninput = function () { stato.q = q.value.trim().toLowerCase(); disegna(); };
-  $("#af-q-btn").onclick = function () { stato.q = q.value.trim().toLowerCase(); disegna(); $("#af-prodotti").scrollIntoView({ behavior: "smooth" }); };
+  var q = $("#af-q"); q.oninput = function () { stato.q = q.value.trim(); disegna(); };
+  q.form.onsubmit = function (e) { e.preventDefault(); stato.q = q.value.trim(); disegna(); $("#af-prodotti").scrollIntoView({ behavior: "smooth" }); q.blur(); };
+  $("#af-q-btn").onclick = function () { stato.q = q.value.trim(); disegna(); $("#af-prodotti").scrollIntoView({ behavior: "smooth" }); };
+
+  // ricerca: senza accenti, per parole, al singolare e al plurale, con sinonimi e piccoli errori
+  function norm(s) { return String(s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9 ]+/g, " ").replace(/\s+/g, " ").trim(); }
+  function radice(w) { return w.length > 4 ? w.replace(/(i|e|a|o|he|hi)$/, "") : w; }
+  var SIN = {
+    febbre: "paracetamolo ibuprofene termometro", dolore: "paracetamolo ibuprofene", dolori: "paracetamolo ibuprofene", testa: "paracetamolo ibuprofene",
+    tachipirina: "paracetamolo", moment: "ibuprofene", brufen: "ibuprofene", antidolorifico: "paracetamolo ibuprofene", analgesico: "paracetamolo",
+    allergia: "cetirizina", allergie: "cetirizina", antistaminico: "cetirizina", raffreddore: "fisiologica cetirizina", naso: "fisiologica",
+    pressione: "misuratore", sfigmomanometro: "misuratore", ossigeno: "saturimetro", ossimetro: "saturimetro", saturazione: "saturimetro",
+    temperatura: "termometro", ferita: "cerotti garze", ferite: "cerotti garze", taglio: "cerotti garze", medicazione: "cerotti garze", garza: "garze",
+    pillole: "portapillole", pastiglie: "portapillole", calze: "calze", gambe: "calze", igienizzante: "gel", disinfettante: "gel", amuchina: "gel", mani: "gel crema",
+    palestra: "integratori", sport: "integratori", fitness: "integratori", muscoli: "proteine creatina aminoacidi", massa: "proteine creatina",
+    proteina: "proteine whey barrette", protein: "proteine whey barrette", whey: "proteine", bcaa: "aminoacidi", amminoacidi: "aminoacidi", barretta: "barrette",
+    vitamina: "multivitaminico", vitamine: "multivitaminico", sali: "magnesio potassio", minerali: "magnesio potassio multivitaminico", stanchezza: "magnesio potassio multivitaminico",
+    pesce: "omega", borraccia: "shaker", integratore: "integratori", farmaco: "farmaci", medicina: "farmaci", medicinale: "farmaci", medicine: "farmaci", medicinali: "farmaci"
+  };
+  P.forEach(function (p) { p._t = norm(p.nome + " " + p.breve + " " + p.rep + " " + p.formato + " " + p.indicazioni + " " + p.id.replace(/-/g, " ")).split(" "); });
+  function vicino(a, b) { // al massimo un errore (lettera in più, in meno o sbagliata)
+    if (Math.abs(a.length - b.length) > 1) return false;
+    var i = 0, j = 0, e = 0;
+    while (i < a.length && j < b.length) { if (a[i] === b[j]) { i++; j++; continue; } if (++e > 1) return false; if (a.length > b.length) i++; else if (b.length > a.length) j++; else { i++; j++; } }
+    return e + (a.length - i) + (b.length - j) <= 1;
+  }
+  function parola(w, p) {
+    var r = radice(w);
+    return p._t.some(function (t) { return t.indexOf(w) === 0 || t.indexOf(r) === 0 || (w.length >= 5 && [0, 1, -1].some(function (d) { return vicino(w, t.slice(0, w.length + d)); })); });
+  }
+  function trova(p, testo) {
+    var ws = norm(testo).split(" ").filter(function (w) { return w.length >= 2 && ["di", "da", "per", "il", "la", "le", "lo", "un", "una", "con", "mal", "del", "della"].indexOf(w) < 0; });
+    if (!ws.length) return true;
+    return ws.every(function (w) { if (parola(w, p)) return true; var s = SIN[w] || SIN[radice(w)]; return s ? s.split(" ").some(function (x) { return parola(x, p); }) : false; });
+  }
 
   function disegna() {
-    var l = P.filter(function (p) { return (!stato.rep || p.rep === stato.rep) && (!stato.q || (p.nome + " " + p.breve + " " + p.rep).toLowerCase().indexOf(stato.q) >= 0); });
+    var l = P.filter(function (p) { return (!stato.rep || p.rep === stato.rep) && (!stato.q || trova(p, stato.q)); });
+    var vuoto = !l.length && stato.q;
     if (stato.ord === "su") l.sort(function (a, b) { return a.prezzo - b.prezzo; });
     if (stato.ord === "giu") l.sort(function (a, b) { return b.prezzo - a.prezzo; });
     if (stato.ord === "nome") l.sort(function (a, b) { return a.nome.localeCompare(b.nome); });
@@ -33,7 +67,7 @@
       return '<article class="af-prod"><button class="apri-p" type="button" data-scheda="' + p.id + '" aria-label="Apri la scheda di ' + esc(p.nome) + '"><img src="' + p.img + '" alt="' + esc(p.nome) + '" loading="lazy"></button>' +
         '<div class="t"><span class="rep">' + esc(p.rep) + '</span><h3>' + esc(p.nome) + '</h3><p>' + esc(p.breve) + '</p>' +
         '<div class="piede-p"><span class="af-prezzo">' + euro(p.prezzo) + '</span><button class="af-agg" type="button" data-agg="' + p.id + '">Aggiungi</button></div></div></article>';
-    }).join("") : '<p class="vuoto">Nessun prodotto trovato. Prova un\'altra parola.</p>';
+    }).join("") : '<div class="vuoto" style="grid-column:1/-1"><p><strong>Nessun prodotto per «' + esc(q.value.trim()) + '».</strong> Prova con: ' + ["proteine", "febbre", "pressione", "cerotti", "vitamine", "creatina"].map(function (s) { return '<button type="button" class="af-agg" style="margin:4px" data-cerca="' + s + '">' + s + "</button>"; }).join("") + '</p><p style="margin-top:10px"><button type="button" class="btn linea" data-cerca="">Mostra tutti i prodotti</button></p></div>';
   }
 
   // carrello
@@ -123,10 +157,11 @@
   }
 
   document.addEventListener("click", function (e) {
-    var t = e.target.closest("[data-agg],[data-scheda],[data-chiudi],[data-passo],[data-piu],[data-meno],#af-apri-carrello,#af-velo");
+    var t = e.target.closest("[data-cerca],[data-agg],[data-scheda],[data-chiudi],[data-passo],[data-piu],[data-meno],#af-apri-carrello,#af-velo");
     if (!t) return;
     if (t.id === "af-apri-carrello") return apri();
     if (t.id === "af-velo" || t.hasAttribute("data-chiudi")) return chiudi();
+    if (t.hasAttribute("data-cerca")) { q.value = t.getAttribute("data-cerca"); stato.q = q.value; disegna(); return; }
     if (t.hasAttribute("data-agg")) { aggiungi(t.getAttribute("data-agg"), 1); avvisa("Aggiunto al carrello"); if (t.hasAttribute("data-poi-carrello")) { $("#af-scheda").hidden = true; apri(); } return; }
     if (t.hasAttribute("data-scheda")) return scheda(t.getAttribute("data-scheda"));
     if (t.hasAttribute("data-piu")) return aggiungi(t.getAttribute("data-piu"), 1);
@@ -135,6 +170,7 @@
   });
   document.addEventListener("keydown", function (e) { if (e.key === "Escape") chiudi(); });
 
+  var qs = new URLSearchParams(location.search).get("q"); if (qs) { q.value = qs; stato.q = qs; }
   disegna(); conta();
   var h = location.hash.slice(1); if (byId[h]) scheda(h);
 })();

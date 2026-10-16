@@ -13,7 +13,8 @@
     ["Casa in vendita o in affitto", "Bacheca annunci", "bacheca.html", "casa vendita affitto vendo cerco appartamento"],
     ["Alloggio per studenti", "Bacheca annunci", "bacheca.html#studenti", "studenti stanza posto letto alloggio"],
     ["Cerco o offro lavoro", "Bacheca annunci", "bacheca.html#lavoro", "lavoro cerco offro"],
-    ["App per la tua attività", "Per le aziende", "app.html", "app gestionale azienda attività"]
+    ["App per la tua attività", "Per le aziende", "app.html", "app gestionale azienda attività"],
+    ["Farmacia a casa · AncheFarma", "Farmaci senza ricetta, parafarmacia e integratori", "farma-negozio.html", "farmacia farmaci farmaco medicinali medicine paracetamolo tachipirina ibuprofene febbre termometro pressione saturimetro cerotti garze parafarmacia integratori proteine creatina palestra vitamine omega anchefarma"]
   ];
   var ICO = {
     casa: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11 12 4l8 7"/><path d="M6 10v10h12V10"/></svg>',
@@ -58,7 +59,7 @@
       var dove = x.l === "fuori" ? "Fuori casa" : x.l === "casa" ? "In casa" : "Mestiere";
       return { tipo: x.l === "mestiere" ? "mestiere" : x.l, html: evidenzia(x.t, testo), tag: (P.mestieri[x.m] || {}).nome || "", sotto: dove, x: x };
     });
-    servizi(testo).forEach(function (s) { voci.push({ tipo: "servizio", html: evidenzia(s[0], testo), tag: "", sotto: s[1], href: s[2] }); });
+    servizi(testo).forEach(function (s) { voci.push({ tipo: "servizio", html: evidenzia(s[0], testo), tag: "", sotto: s[1], href: s[2].indexOf("farma-negozio") === 0 ? s[2] + "?q=" + encodeURIComponent(testo) : s[2] }); });
     if (testo.length >= 3) voci.push({ tipo: "ai", html: "Chiedi a SuperMastro: «" + esc(testo) + "»", tag: "", sotto: "Te lo spiega e trova chi chiamare", libero: testo });
     attivo = -1;
     sugg.innerHTML = '<div class="sugg-head">' + (r.length ? "Forse cerchi" : "Non l’ho trovato, ma SuperMastro può capirlo") + "</div>" +

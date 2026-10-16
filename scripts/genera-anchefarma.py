@@ -13,7 +13,7 @@ def w(p, t): io.open(os.path.join(SITO, p), "w", encoding="utf-8", newline="").w
 BASE = r("farma.html")
 TESTA = BASE[:BASE.index("<style>")]
 PIEDE = BASE[BASE.index('<footer class="piede">'):BASE.index("<script")]
-V = "1"
+V = "2"
 
 def pagina(nome, titolo, desc, corpo, script=""):
     t = TESTA
