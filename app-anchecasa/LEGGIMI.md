@@ -156,3 +156,21 @@ L'app è su `https://entra.anchecasa.it`. `app.anchecasa.it` non si usa più e n
 4. Supabase → Authentication → URL Configuration: aggiungere `https://entra.anchecasa.it` (Site URL e Redirect URLs).
 5. Google Cloud → chiave di Maps → restrizioni HTTP: aggiungere `https://entra.anchecasa.it/*`.
 6. Secrets delle funzioni: `DIAGNOSI_ORIGINI` deve contenere `https://entra.anchecasa.it`; `APP_URL` = `https://entra.anchecasa.it`.
+
+## «Quanto costa ristrutturare?» — pagina pubblica senza account (16.10.2026 · versione 2.9.1)
+Per chi arriva dal web e vuole ristrutturare: **una stima in un minuto, senza registrarsi**, poi il telefono per il sopralluogo gratuito.
+- Indirizzo: `https://entra.anchecasa.it/quanto-costa.html` (prova: `quanto-costa.html?prova`, prezzi di ESEMPIO e niente inviato).
+- Parametri utili nei link: `?lavoro=bagno` (cucina, pareti, completa, facciata, altro) apre già il lavoro; `?codice=XXX` registra chi ha portato il cliente (agente, sub-agente).
+- Il giro: il cliente sceglie il lavoro, i mq, la regione e la finitura → vede la forbice di prezzo → lascia nome e telefono → la richiesta arriva in **Admin → Richieste dai siti** (tipo «Simulazione», con la stima allegata e la campanella) → l'admin la affida alla ditta convenzionata, che chiama entro 48 ore e fa il **Sopralluogo Flash** → preventivo → contratto con AncheCasa.
+- Pulsanti già messi: nella prima schermata dell'app («Vuoi ristrutturare? Calcola quanto costa, senza registrarti») e nel profilo Privato → Ristruttura. Per il sito anchecasa.it: vedi `PULSANTE-SITO-quanto-costa.txt`.
+
+**Per accenderla**
+1. Supabase → SQL Editor: `sql/app-32-simulatore-pubblico.sql` → Run (dopo app-03 e app-11). Si può rilanciare.
+2. I prezzi arrivano dagli stessi prezzari regionali del Sopralluogo Flash (Admin → Cruscotto → «Prezzari regionali per la stima»): importare il CSV della Regione e collegare le lavorazioni. **Senza prezzario di quella regione la pagina non dà numeri** e chiede solo il sopralluogo.
+3. Le quantità di partenza (es. bagno: rivestimento = 3,5 volte i mq del pavimento) sono in `marketplace.app_simulatore_ricette`: **le deve controllare l'ufficio tecnico** prima di andare online. Si cambiano dal Table Editor di Supabase, senza toccare l'app.
+4. Impostazioni in `app_impostazioni`, chiave `simulatore`: `forbice` (0.25 = ±25%), `copertura` (0.8 = servono i prezzi di almeno l'80% delle lavorazioni, altrimenti niente stima), `attivo` (false = la pagina chiede solo il sopralluogo). I coefficienti di finitura sono quelli del Flash (`stima_flash`).
+5. Ripubblicare: `node scripts/prepara-pubblicazione.mjs` e poi il deploy (la pagina è già nell'elenco dei file da copiare).
+- Se il punto 1 non è ancora fatto, la pagina funziona lo stesso: niente stima, la richiesta arriva come «Sopralluogo» nelle richieste dai siti. Nessun cliente si perde.
+- Prove SQL: `sql/prove/32-prove.sql`.
+
+**Attenzione: entra.anchecasa.it oggi NON mostra questa app.** Al 16.10.2026 l'indirizzo apre ancora la vecchia pagina «Area riservata» (solo mail e password), mentre l'app vera è su `app-anchecasa.pages.dev`. Va fatto il punto 3 di «Pubblicare l'app su Cloudflare Pages»: Cloudflare → Workers & Pages → `app-anchecasa` → Custom domains → `entra.anchecasa.it` (e togliere il dominio dal vecchio progetto).

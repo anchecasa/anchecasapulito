@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#16304D">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://*.supabase.co; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'">
+<meta name="description" content="Quanto costa ristrutturare? Calcola una stima indicativa in un minuto, senza registrarti, con i prezzari della tua regione. Poi il sopralluogo è gratuito.">
+<title>Quanto costa ristrutturare · AncheCasa</title>
+<link rel="icon" href="img/icona-192.png">
+<link rel="apple-touch-icon" href="img/icona-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{--blu:#16304D;--blu-2:#2C4A6E;--arancio:#E56B10;--arancio-2:#FFF1E4;--carta:#EEF2F7;--linea:#DDE4EE;--testo:#0B1A2C;--grigio:#66758A;--verde:#1F8A5B;--verde-2:#E3F4EC;--rosso:#D2392B;--rosso-2:#FDE8E6;--giallo-2:#FFF6DC;
+  --font:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif;--titoli:Montserrat,system-ui,sans-serif}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--carta);color:var(--testo);font:16px/1.5 var(--font);-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+h1,h2,h3{font-family:var(--titoli);margin:0;letter-spacing:-.01em;color:var(--blu)}
+a{color:var(--blu)}
+.testa{background:var(--blu);color:#fff;padding:18px 16px 64px}
+.testa .riga{max-width:640px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.testa img{height:30px;display:block}
+.testa a.entra{color:#fff;font-weight:700;font-size:14px;text-decoration:none;border:1.5px solid rgba(255,255,255,.4);border-radius:999px;padding:6px 12px;white-space:nowrap}
+.testa h1{color:#fff;font-size:clamp(26px,6vw,34px);line-height:1.12;max-width:640px;margin:22px auto 8px}
+.testa p{max-width:640px;margin:0 auto;color:#C9D6E6}
+.corpo{max-width:640px;margin:-44px auto 0;padding:0 16px 40px}
+.card{background:#fff;border-radius:20px;padding:20px;box-shadow:0 10px 30px rgba(11,26,44,.10);border:1px solid #e7ecf3}
+.card+.card{margin-top:14px}
+.passi{display:flex;gap:6px;margin:0 0 16px}
+.passi i{flex:1;height:5px;border-radius:9px;background:var(--linea)}
+.passi i.on{background:var(--arancio)}
+.domanda{font:800 19px/1.25 var(--titoli);color:var(--blu);margin:0 0 4px}
+.sotto{color:var(--grigio);font-size:14.5px;margin:0 0 16px}
+.lavori{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.lavori button{text-align:left;background:#fff;border:1.5px solid var(--linea);border-radius:16px;padding:14px;cursor:pointer;min-height:96px;display:flex;flex-direction:column;gap:4px}
+.lavori button b{font:800 16px var(--titoli);color:var(--blu)}
+.lavori button span{font-size:13px;color:var(--grigio);line-height:1.35}
+.lavori button:hover{border-color:var(--blu-2)}
+.lavori button[aria-pressed="true"]{border-color:var(--arancio);background:var(--arancio-2)}
+.lavori button:focus-visible,.scelte input:focus-visible+span,.btn:focus-visible{outline:3px solid var(--arancio);outline-offset:2px}
+@media (max-width:380px){.lavori{grid-template-columns:1fr}}
+.campo{display:block;margin:0 0 14px}
+.campo>span{display:block;font-weight:700;font-size:14px;color:var(--blu);margin:0 0 6px}
+.campo input,.campo select,.campo textarea{width:100%;border:1.5px solid var(--linea);border-radius:12px;padding:12px;background:#fff;font-size:16px}
+.campo textarea{min-height:84px;resize:vertical}
+.campo input:focus,.campo select:focus,.campo textarea:focus{outline:none;border-color:var(--blu-2)}
+.mq{display:flex;align-items:center;gap:12px}
+.mq input[type=range]{flex:1;accent-color:var(--arancio);padding:0;border:0}
+.mq output{font:800 22px var(--titoli);color:var(--blu);min-width:86px;text-align:right;font-variant-numeric:tabular-nums}
+.scelte{display:flex;gap:8px}
+.scelte label{flex:1;position:relative}
+.scelte input{position:absolute;opacity:0}
+.scelte span{display:block;text-align:center;border:1.5px solid var(--linea);border-radius:12px;padding:10px 6px;font-weight:700;color:var(--blu);cursor:pointer}
+.scelte small{display:block;font-weight:400;font-size:12px;color:var(--grigio)}
+.scelte input:checked+span{background:var(--blu);border-color:var(--blu);color:#fff}
+.scelte input:checked+span small{color:#C9D6E6}
+.due{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:420px){.due{grid-template-columns:1fr}}
+.btn{display:block;width:100%;border:0;border-radius:14px;background:var(--arancio);color:#fff;font-weight:800;font-size:16px;padding:15px;cursor:pointer;text-align:center;text-decoration:none}
+.btn.chiaro{background:var(--carta);color:var(--blu)}
+.btn[disabled]{opacity:.6;cursor:wait}
+.azioni{display:flex;gap:10px;margin-top:6px}
+.azioni .btn.chiaro{flex:0 0 auto;width:auto;padding:15px 18px}
+.risultato{background:var(--blu);color:#fff;border-radius:18px;padding:18px;margin:0 0 16px}
+.risultato small{color:#C9D6E6;font-size:13px;display:block}
+.risultato .cifra{font:800 clamp(26px,7vw,34px)/1.1 var(--titoli);margin:6px 0;font-variant-numeric:tabular-nums}
+.risultato p{margin:8px 0 0;color:#DCE5F0;font-size:13.5px}
+.nota{background:var(--giallo-2);border-radius:14px;padding:12px 14px;font-size:14px;margin:0 0 16px}
+.nota.esempio{background:var(--rosso-2);color:#7a1f16;font-weight:700}
+.spunta{display:flex;gap:10px;align-items:flex-start;font-size:14px;margin:4px 0 16px}
+.spunta input{width:20px;height:20px;margin:2px 0 0;accent-color:var(--arancio);flex:0 0 auto}
+.errore{color:var(--rosso);font-size:14px;font-weight:700;margin:0 0 12px;min-height:0}
+.giro{list-style:none;padding:0;margin:14px 0 0;counter-reset:g}
+.giro li{counter-increment:g;display:flex;gap:12px;padding:10px 0;border-top:1px solid var(--linea)}
+.giro li:before{content:counter(g);flex:0 0 28px;height:28px;border-radius:50%;background:var(--arancio-2);color:var(--arancio);font-weight:800;display:grid;place-items:center}
+.giro b{display:block;color:var(--blu)}
+.giro span{color:var(--grigio);font-size:14px}
+.fatto{text-align:center}
+.fatto .ok{width:64px;height:64px;border-radius:50%;background:var(--verde-2);color:var(--verde);display:grid;place-items:center;margin:0 auto 12px;font-size:32px;font-weight:800}
+.condividi{text-align:left;background:var(--arancio-2);border-radius:16px;padding:16px;margin:16px 0 0}
+.condividi h3{font-size:17px;margin:0 0 6px}
+.condividi p{margin:0 0 12px;font-size:14.5px}
+.piede{max-width:640px;margin:0 auto;padding:0 16px 32px;color:var(--grigio);font-size:13px;text-align:center}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header class="testa">
+  <div class="riga"><a href="https://anchecasa.it/" aria-label="AncheCasa"><img src="img/logo-negativo.png" alt="AncheCasa · Costruiamo fiducia"></a>
+    <a class="entra" href="./">Hai già un account? Entra</a></div>
+  <h1>Quanto costa ristrutturare?</h1>
+  <p>Una stima indicativa in un minuto, senza registrarti, con i prezzari della tua regione. Poi il sopralluogo è gratuito.</p>
+</header>
+
+<main class="corpo">
+  <div id="banner-prova" class="nota esempio" hidden>PROVA: prezzi di ESEMPIO, non veri. Niente viene inviato.</div>
+
+  <!-- passo 1 -->
+  <section class="card" id="p1" aria-labelledby="t1">
+    <div class="passi" aria-hidden="true"><i class="on"></i><i></i><i></i></div>
+    <h2 class="domanda" id="t1">Che lavoro vuoi fare?</h2>
+    <p class="sotto">Scegli quello che si avvicina di più.</p>
+    <div class="lavori" id="lavori" role="group" aria-label="Tipo di lavoro"><p class="sotto">Carico…</p></div>
+  </section>
+
+  <!-- passo 2 -->
+  <section class="card" id="p2" hidden aria-labelledby="t2">
+    <div class="passi" aria-hidden="true"><i class="on"></i><i class="on"></i><i></i></div>
+    <h2 class="domanda" id="t2">Com'è la casa?</h2>
+    <p class="sotto" id="t2-sotto"></p>
+    <form id="f2" novalidate>
+      <label class="campo" id="campo-mq"><span>Metri quadri</span>
+        <div class="mq"><input type="range" id="mq" name="mq" min="2" max="400" step="1" value="6" aria-describedby="mq-val"><output id="mq-val" for="mq">6 mq</output></div>
+      </label>
+      <div class="due">
+        <label class="campo"><span>Regione</span><select name="regione" id="regione" required><option value="">Scegli…</option></select></label>
+        <label class="campo"><span>Comune</span><input name="comune" id="comune" maxlength="80" autocomplete="address-level2" placeholder="Es. Roma"></label>
+      </div>
+      <div class="campo" id="campo-finitura" role="radiogroup" aria-label="Finitura"><span>Finitura</span>
+        <div class="scelte">
+          <label><input type="radio" name="finitura" value="base"><span>Base<small>essenziale</small></span></label>
+          <label><input type="radio" name="finitura" value="medio" checked><span>Media<small>la più scelta</small></span></label>
+          <label><input type="radio" name="finitura" value="alto"><span>Alta<small>materiali top</small></span></label>
+        </div></div>
+      <label class="campo"><span>Quando vorresti iniziare?</span>
+        <select name="quando"><option value="prima possibile">Prima possibile</option><option value="entro 3 mesi">Entro 3 mesi</option><option value="sto valutando">Sto valutando</option></select></label>
+      <p class="errore" id="err2" role="alert"></p>
+      <div class="azioni"><button type="button" class="btn chiaro" data-indietro="p1">Indietro</button><button class="btn" type="submit" id="vai2">Calcola</button></div>
+    </form>
+  </section>
+
+  <!-- passo 3 -->
+  <section class="card" id="p3" hidden aria-labelledby="t3">
+    <div class="passi" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i></div>
+    <div id="esito" aria-live="polite"></div>
+    <h2 class="domanda" id="t3">Vuoi il prezzo vero?</h2>
+    <p class="sotto">Lascia il telefono: una ditta convenzionata AncheCasa ti chiama entro 48 ore e fissa il sopralluogo gratuito. Nessun impegno.</p>
+    <form id="f3" novalidate>
+      <label class="campo"><span>Nome e cognome</span><input name="nome" maxlength="120" autocomplete="name" required></label>
+      <div class="due">
+        <label class="campo"><span>Telefono</span><input name="telefono" type="tel" maxlength="30" autocomplete="tel" inputmode="tel" required></label>
+        <label class="campo"><span>Mail (facoltativa)</span><input name="email" type="email" maxlength="120" autocomplete="email"></label>
+      </div>
+      <label class="campo"><span>Raccontaci il lavoro (facoltativo)</span><textarea name="note" maxlength="600" placeholder="Es. bagno al secondo piano, vorrei la doccia al posto della vasca"></textarea></label>
+      <label class="spunta"><input type="checkbox" name="consenso" required><span>Ho letto l'<a id="privacy" href="https://anchecasa.it/privacy.html" target="_blank" rel="noopener">informativa privacy</a> e voglio essere richiamato da AncheCasa.</span></label>
+      <p class="errore" id="err3" role="alert"></p>
+      <div class="azioni"><button type="button" class="btn chiaro" data-indietro="p2">Indietro</button><button class="btn" type="submit" id="vai3">Voglio il sopralluogo gratuito</button></div>
+    </form>
+  </section>
+
+  <!-- fatto -->
+  <section class="card fatto" id="p4" hidden aria-labelledby="t4" tabindex="-1">
+    <div class="ok" aria-hidden="true">✓</div>
+    <h2 class="domanda" id="t4">Richiesta arrivata</h2>
+    <p class="sotto">Ti chiamiamo entro 48 ore. Ecco cosa succede adesso:</p>
+    <ol class="giro" style="text-align:left">
+      <li><div><b>Ti chiama la ditta convenzionata</b><span>Fissate insieme il giorno del sopralluogo.</span></div></li>
+      <li><div><b>Sopralluogo Flash a casa tua</b><span>Misure, foto e note: il computo lo prepara l'ufficio tecnico.</span></div></li>
+      <li><div><b>Preventivo unico AncheCasa</b><span>Tutti i lavori, i tempi e un solo prezzo, sul link che ti mandiamo.</span></div></li>
+      <li><div><b>Un contratto con AncheCasa</b><span>Fideiussione, conto dedicato e l'app del tuo cantiere.</span></div></li>
+    </ol>
+    <div class="condividi" id="condividi" hidden>
+      <h3>Hai già una ditta di fiducia?</h3>
+      <p>Mandale la scheda dei lavori su carta intestata AncheCasa: <b>i lavori e le quantità, senza i prezzi</b>. Se vuole, può chiedere di lavorare con AncheCasa e seguire il tuo cantiere con le nostre garanzie.</p>
+      <div class="azioni"><button type="button" class="btn" id="manda-ditta">Manda la scheda alla ditta</button></div>
+      <p class="sotto" id="link-ditta" style="margin:8px 0 0;word-break:break-all"></p>
+    </div>
+    <div style="height:14px"></div>
+    <a class="btn chiaro" href="https://anchecasa.it/ristruttura.html#garanzie">Le nostre garanzie</a>
+  </section>
+</main>
+<p class="piede">AncheCasa · Costruiamo fiducia. La stima è indicativa: si basa sui prezzari regionali e su quantità medie. Il prezzo vero arriva solo dopo il sopralluogo. IVA, pratiche edilizie, smaltimento e mobili esclusi.</p>
+
+<script src="vendor/supabase.js"></script>
+<script type="module" src="js/simulatore.js?v=1"></script>
+</body>
+</html>

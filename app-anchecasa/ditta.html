@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#16304D">
+<meta name="robots" content="noindex">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://*.supabase.co; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'">
+<title>Scheda lavori · AncheCasa</title>
+<link rel="icon" href="img/icona-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{--blu:#16304D;--blu-2:#2C4A6E;--arancio:#E56B10;--arancio-2:#FFF1E4;--carta:#EEF2F7;--linea:#DDE4EE;--testo:#0B1A2C;--grigio:#66758A;--verde:#1F8A5B;--verde-2:#E3F4EC;--rosso:#D2392B;--rosso-2:#FDE8E6;
+  --font:"DM Sans",system-ui,-apple-system,"Segoe UI",sans-serif;--titoli:Montserrat,system-ui,sans-serif}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--carta);color:var(--testo);font:16px/1.5 var(--font);-webkit-font-smoothing:antialiased}
+button,input,textarea{font:inherit;color:inherit}
+h1,h2,h3{font-family:var(--titoli);margin:0;letter-spacing:-.01em;color:var(--blu)}
+a{color:var(--blu)}
+.pagina{max-width:760px;margin:0 auto;padding:16px}
+.foglio{background:#fff;border-radius:18px;box-shadow:0 10px 30px rgba(11,26,44,.10);border:1px solid #e7ecf3;overflow:hidden}
+.intestazione{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;padding:22px 24px 18px;border-bottom:4px solid var(--arancio)}
+.intestazione img{height:42px;display:block}
+.intestazione .dati{text-align:right;font-size:13px;color:var(--grigio);line-height:1.45}
+.intestazione .dati b{color:var(--blu);font-size:14px}
+.contenuto{padding:22px 24px}
+.contenuto h1{font-size:24px;margin:0 0 4px}
+.sotto{color:var(--grigio);margin:0 0 18px;font-size:14.5px}
+.riepilogo{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:0 0 20px}
+.riepilogo div{background:var(--carta);border-radius:12px;padding:10px 12px}
+.riepilogo small{display:block;color:var(--grigio);font-size:12px}
+.riepilogo b{color:var(--blu)}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th{text-align:left;font-size:12.5px;color:var(--grigio);font-weight:700;text-transform:uppercase;letter-spacing:.04em;border-bottom:2px solid var(--linea);padding:8px 6px}
+td{border-bottom:1px solid var(--linea);padding:10px 6px;vertical-align:top}
+td.q{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums;width:1%}
+.nota{background:var(--arancio-2);border-radius:12px;padding:12px 14px;font-size:14px;margin:18px 0 0}
+.nota.esempio{background:var(--rosso-2);color:#7a1f16;font-weight:700;margin:0 0 14px}
+.piede-foglio{padding:14px 24px;border-top:1px solid var(--linea);font-size:12.5px;color:var(--grigio);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.strumenti{display:flex;gap:10px;margin:14px 0}
+.btn{display:block;width:100%;border:0;border-radius:14px;background:var(--arancio);color:#fff;font-weight:800;font-size:16px;padding:15px;cursor:pointer;text-align:center;text-decoration:none}
+.btn.chiaro{background:#fff;color:var(--blu);border:1.5px solid var(--linea)}
+.btn[disabled]{opacity:.6;cursor:wait}
+.btn:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--arancio);outline-offset:2px}
+.invito{background:var(--blu);color:#fff;border-radius:18px;padding:22px;margin:16px 0 0}
+.invito h2{color:#fff;font-size:22px;margin:0 0 6px}
+.invito>p{color:#C9D6E6;margin:0 0 14px}
+.invito ul{list-style:none;padding:0;margin:0 0 18px;display:grid;gap:8px}
+.invito li{display:flex;gap:10px;color:#E6EDF6;font-size:15px}
+.invito li:before{content:"✓";color:var(--arancio);font-weight:800}
+.modulo{background:#fff;color:var(--testo);border-radius:14px;padding:16px}
+.modulo h3{font-size:17px;margin:0 0 12px}
+.campo{display:block;margin:0 0 12px}
+.campo>span{display:block;font-weight:700;font-size:14px;color:var(--blu);margin:0 0 6px}
+.campo input,.campo textarea{width:100%;border:1.5px solid var(--linea);border-radius:12px;padding:11px 12px;background:#fff;font-size:16px}
+.due{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:520px){.due{grid-template-columns:1fr}.intestazione{flex-direction:column}.intestazione .dati{text-align:left}.contenuto,.intestazione{padding-left:16px;padding-right:16px}}
+.spunta{display:flex;gap:10px;align-items:flex-start;font-size:14px;margin:4px 0 14px}
+.spunta input{width:20px;height:20px;margin:2px 0 0;accent-color:var(--arancio);flex:0 0 auto}
+.errore{color:var(--rosso);font-size:14px;font-weight:700;margin:0 0 10px}
+.ok{background:var(--verde-2);color:#145c3d;border-radius:12px;padding:14px;font-weight:700}
+.vuoto{text-align:center;padding:40px 16px}
+[hidden]{display:none!important}
+@media print{
+  body{background:#fff}
+  .pagina{padding:0;max-width:none}
+  .foglio{box-shadow:none;border:0;border-radius:0}
+  .strumenti,.invito,.nota.esempio{display:none!important}
+  @page{margin:14mm}
+}
+</style>
+</head>
+<body>
+<div class="pagina">
+  <div id="banner-prova" class="nota esempio" hidden>PROVA: scheda di ESEMPIO. Niente viene inviato.</div>
+  <div id="carico" class="foglio vuoto"><p class="sotto">Carico la scheda…</p></div>
+  <div id="manca" class="foglio vuoto" hidden><h1>Scheda non trovata</h1><p class="sotto">Il link è scaduto o non è corretto. Chiedi al tuo cliente di mandartelo di nuovo.</p><a class="btn chiaro" href="https://anchecasa.it/">Vai ad anchecasa.it</a></div>
+
+  <article class="foglio" id="foglio" hidden>
+    <header class="intestazione">
+      <img src="img/logo-colore.png" alt="AncheCasa · Costruiamo fiducia">
+      <div class="dati"><b>Scheda lavori</b><br><span id="s-data"></span><br>anchecasa.it</div>
+    </header>
+    <div class="contenuto">
+      <h1 id="s-titolo"></h1>
+      <p class="sotto" id="s-sotto"></p>
+      <div class="riepilogo" id="s-riepilogo"></div>
+      <div id="s-voci"></div>
+      <div id="s-note"></div>
+      <p class="nota">Questa scheda descrive i lavori richiesti dal cliente con quantità indicative, stimate a distanza. <b>Non contiene prezzi.</b> Misure e lavorazioni vanno confermate con il sopralluogo.</p>
+    </div>
+    <footer class="piede-foglio"><span>AncheCasa · Costruiamo fiducia</span><span>Documento generato da anchecasa.it</span></footer>
+  </article>
+
+  <div class="strumenti" id="strumenti" hidden><button type="button" class="btn chiaro" id="stampa">Stampa o salva in PDF</button></div>
+
+  <section class="invito" id="invito" hidden aria-labelledby="t-invito">
+    <h2 id="t-invito">Il tuo cliente ti ha scelto. Lavora con AncheCasa.</h2>
+    <p>Puoi seguire questo lavoro, e i prossimi della tua zona, come impresa partner AncheCasa.</p>
+    <ul>
+      <li>Lavori di ristrutturazione in subappalto da AncheCasa, pagati a SAL.</li>
+      <li>Un solo contratto per il cliente, con AncheCasa: fideiussione e conto dedicato lo rassicurano.</li>
+      <li>L'app del cantiere: giornale, presenze, foto e SAL dal telefono.</li>
+      <li>Il marchio AncheCasa sul tuo lavoro: furgoni, divise e striscioni.</li>
+    </ul>
+    <form class="modulo" id="f-ditta" novalidate>
+      <h3>Chiedi di lavorare con AncheCasa</h3>
+      <div class="due">
+        <label class="campo"><span>Nome della ditta</span><input name="ditta" maxlength="120" autocomplete="organization" required></label>
+        <label class="campo"><span>Referente</span><input name="referente" maxlength="80" autocomplete="name"></label>
+      </div>
+      <div class="due">
+        <label class="campo"><span>Telefono</span><input name="telefono" type="tel" maxlength="30" autocomplete="tel" inputmode="tel" required></label>
+        <label class="campo"><span>Mail</span><input name="email" type="email" maxlength="120" autocomplete="email"></label>
+      </div>
+      <div class="due">
+        <label class="campo"><span>Partita IVA</span><input name="piva" maxlength="20" inputmode="numeric"></label>
+        <label class="campo"><span>Comune della sede</span><input name="comune" maxlength="80" autocomplete="address-level2"></label>
+      </div>
+      <label class="campo"><span>Che lavori fate?</span><input name="mestieri" maxlength="200" placeholder="Es. muratura, impianti idraulici, cartongesso"></label>
+      <label class="spunta"><input type="checkbox" name="consenso" required><span>Ho letto l'<a id="privacy" href="https://anchecasa.it/privacy.html" target="_blank" rel="noopener">informativa privacy</a> e voglio essere ricontattato da AncheCasa.</span></label>
+      <p class="errore" id="err" role="alert"></p>
+      <button class="btn" type="submit" id="invia">Invia la richiesta</button>
+      <div class="ok" id="fatto" hidden tabindex="-1">Richiesta inviata. AncheCasa ti chiama per spiegarti come funziona.</div>
+    </form>
+  </section>
+</div>
+<script src="vendor/supabase.js"></script>
+<script type="module" src="js/ditta.js?v=1"></script>
+</body>
+</html>

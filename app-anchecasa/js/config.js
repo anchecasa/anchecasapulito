@@ -14,7 +14,7 @@ export const CONFIG = {
   privacyUrl: "",            // indirizzo dell'informativa privacy (da mettere prima di andare online)
   premioSegnalazione: "",    // testo del premio per chi segnala (vuoto finché Nando non lo decide)
   passaggio: { interventi: 20, media: 4.5 }, // requisiti per passare da artigiano a Impresa (li decide Nando)
-  versione: "2.9.0 · 11.10.2026",
+  versione: "2.9.1 · 16.10.2026",
   // Acceso solo dopo che Nando attiva il fornitore in Supabase → Authentication → Providers.
   accessoGoogle: false,
   accessoApple: false,

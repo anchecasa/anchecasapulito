@@ -65,7 +65,7 @@ export function installa(core) {
   };
 
   /* ---------------- Richieste dai siti ---------------- */
-  const TIPI_C = { iscrizione: "Iscrizione", contatto: "Contatto", sopralluogo: "Sopralluogo", opportunita: "Opportunità", rete_sicura: "Società per la rete AncheSicura", offerta_sicura: "Offerta AncheSicura", corso: "Corso", albo: "Albo general contractor", lavora: "Lavora con noi", partner: "Partner", agente: "Agente" };
+  const TIPI_C = { iscrizione: "Iscrizione", contatto: "Contatto", sopralluogo: "Sopralluogo", opportunita: "Opportunità", rete_sicura: "Società per la rete AncheSicura", offerta_sicura: "Offerta AncheSicura", corso: "Corso", albo: "Albo general contractor", lavora: "Lavora con noi", partner: "Partner", agente: "Agente", simulazione: "Simulazione «Quanto costa» (da affidare a una ditta)" };
   V["ad-contatti"] = async (filtro) => {
     filtro = filtro || "nuovo";
     const l = await Q.sel("app_contatti", { eq: { stato: filtro }, ord: ["creato", false], lim: 200 }).catch(() => []);

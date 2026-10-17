@@ -1,0 +1,24 @@
+PULSANTE «QUANTO COSTA» PER IL SITO anchecasa.it (16.10.2026)
+==============================================================
+Dove: pagina ristruttura.html, subito sotto il titolo (vicino a «Chiedi un sopralluogo»),
+e se volete anche nella home vicino a «Ristruttura casa».
+Funziona appena entra.anchecasa.it punta all'app nuova (vedi LEGGIMI). Prima si può usare
+https://app-anchecasa.pages.dev/quanto-costa.html al posto di entra.anchecasa.it.
+
+1) Pulsante grande (incollare nell'HTML):
+
+<a href="https://entra.anchecasa.it/quanto-costa.html"
+   style="display:inline-block;background:#E56B10;color:#fff;font-weight:800;padding:14px 22px;border-radius:14px;text-decoration:none">
+  Quanto costa? Calcolalo in 1 minuto
+</a>
+
+2) Nelle schede «Cosa ristrutturiamo», accanto a «Chiedi un sopralluogo →»:
+   Cucina            → https://entra.anchecasa.it/quanto-costa.html?lavoro=cucina
+   Bagno e pareti    → https://entra.anchecasa.it/quanto-costa.html?lavoro=bagno
+   Casa completa     → https://entra.anchecasa.it/quanto-costa.html?lavoro=completa
+   Condominio        → https://entra.anchecasa.it/quanto-costa.html?lavoro=facciata
+   testo del link:   Calcola quanto costa →
+
+3) Link per agenti e sub-agenti (WhatsApp, social): aggiungere il proprio codice
+   https://entra.anchecasa.it/quanto-costa.html?codice=IL-TUO-CODICE
+   La richiesta arriva all'admin con il codice di chi ha portato il cliente.

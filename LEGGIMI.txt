@@ -24,9 +24,15 @@ Cartelle di lavoro
 - supermastro-sos · copia del lavoro SuperMastro SOS dell'11.10. Non pubblicato.
 - supabase · migrazioni del progetto ANCHECASA
 - iscrizione-unica · modulo di iscrizione condiviso
+- comandi-cursor · comandi scritti per Cursor (17.10.2026)
+- app-anchecasa contiene anche «Quanto costa» (quanto-costa.html, 2.9.1)
 
 _archivio
 Cartelle che nessun sito e nessuno script usano più. Non cancellate, solo spostate.
+- _archivio\copie · tutte le copie fatte prima delle modifiche (anche le nuove vanno qui)
+- _archivio\backup-db, _archivio\anteprime, _archivio\da-cancellare · backup, anteprime, file da cancellare
+- _archivio\assoarma · Assoarma, non serve più (17.10.2026)
+- Desktop\_VECCHIO-ANCHECASA · le cartelle AncheCasa che stavano sul Desktop
 - _archivio\sicura · sito AncheSicura di prima. Quello online è sicura-DA-CARICARE-SU-CLOUDFLARE.
 - _archivio\superapp e _archivio\superapp-viste · bozze, nessun indirizzo le pubblica.
 - _archivio\anchecasapulito · cartella vuota (solo .gitattributes). Il repository vero è questa cartella, su GitHub anchecasa/anchecasapulito.

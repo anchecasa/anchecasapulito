@@ -171,6 +171,7 @@ V.benvenuto = async () => ({
          <div class="griglia-prova">${DB.utentiProva().map((u) => `<button type="button" class="btn chiaro" data-az="prova:${esc(u.chiave)}">${esc(u.etichetta)}</button>`).join("")}</div>
          <div style="height:14px"></div><button type="button" class="link" data-az="azzera-prova">Ricomincia la prova da capo</button>`
       : `${btn("Entra", "go:entra")}<div style="height:10px"></div>${btn("Crea un account", "go:registrati", "chiaro")}`}
+    <div style="height:18px"></div><a class="btn chiaro" style="text-align:center" href="quanto-costa.html${DB.prova ? "?prova" : ""}">Vuoi ristrutturare? Calcola quanto costa, senza registrarti</a>
     <p class="piede">AncheCasa · Costruiamo fiducia</p></div>`,
 });
 V.entra = async () => ({
@@ -502,6 +503,8 @@ V.ristruttura = async () => ({
   t: "Ristruttura con AncheCasa",
   h: `<div class="pad"><div class="eroe"><h3>Un referente, un contratto</h3><p>AncheCasa fa da general contractor: sceglie imprese selezionate, segue il cantiere e ti dà l'app per vedere avanzamento, foto e pagamenti.</p></div><div style="height:14px"></div>
     ${lista([voce("scudo", "Imprese selezionate", "Controllate da AncheCasa prima di lavorare per te"), voce("doc", "Un solo contratto", "Con AncheCasa, non con dieci ditte"), voce("foto", "L'app del tuo cantiere", "Foto, avanzamento, segnalazioni, pagamenti")])}
+    <div style="height:14px"></div>
+    <a class="btn chiaro" style="text-align:center" href="quanto-costa.html${DB.prova ? "?prova" : ""}">Calcola quanto costa (stima in un minuto)</a>
     <div style="height:14px"></div>
     <form data-form="ristruttura" novalidate>${campo("Cosa vuoi fare?", `<textarea name="note" maxlength="400" placeholder="Es. rifare il bagno e la cucina, 80 mq a Roma"></textarea>`)}
       ${campo("Telefono", `<input name="telefono" type="tel" maxlength="30" value="${esc((S.profilo || {}).telefono)}" required>`)}

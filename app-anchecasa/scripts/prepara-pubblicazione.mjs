@@ -13,7 +13,7 @@ import { fileURLToPath } from "node:url";
 
 const APP = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const DIST = join(APP, "dist");
-const DA_COPIARE = ["index.html", "sw.js", "manifest.webmanifest", "css", "js", "img", "vendor"];
+const DA_COPIARE = ["index.html", "quanto-costa.html", "ditta.html", "sw.js", "manifest.webmanifest", "css", "js", "img", "vendor"];
 const ESTENSIONI_OK = new Set([".html", ".js", ".css", ".png", ".jpg", ".jpeg", ".webp", ".svg", ".ico", ".webmanifest", ".json", ".woff", ".woff2", ".txt"]);
 const SEGRETI = [
   /sb_secret_[A-Za-z0-9_-]{10,}/,              // chiave segreta nuova di Supabase
@@ -36,6 +36,13 @@ const HEADERS = `/*
 
 /index.html
   Cache-Control: no-cache
+
+/quanto-costa.html
+  Cache-Control: no-cache
+
+/ditta.html
+  Cache-Control: no-cache
+  X-Robots-Tag: noindex
 
 /sw.js
   Cache-Control: no-cache

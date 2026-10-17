@@ -49,6 +49,21 @@ Sulla cartella e sul GitHub `anchecasa/anchecasapulito` lavorano tre persone o s
 
 ## Registro delle modifiche
 
+### 17.10.2026 05:40 · Nando + Claude — Ordine: Quanto costa dentro, copie in archivio, Desktop pulito
+- `app-anchecasa` passa alla 2.9.1 (16.10.2026) con il simulatore «Quanto costa», preso dalla cartella Desktop `SOPRALLUOGO-FLASH` (era solo lì). Nuovi: `quanto-costa.html`, `ditta.html`, `js/simulatore.js`, `js/ditta.js`, `sql/app-32-simulatore-pubblico.sql`, `sql/prove/32-prove.sql`, `PULSANTE-SITO-quanto-costa.txt`. Aggiornati: `LEGGIMI.md`, `js/config.js`, `js/main.js`, `js/viste-admin.js`, `scripts/prepara-pubblicazione.mjs`, `sw.js`. Copia di prima: `_archivio/copie/app-anchecasa-prima-di-quanto-costa-1710/`. Ora la cartella è identica a quella del Desktop (dist esclusa). `app-32` NON eseguito, niente pubblicato.
+- I 19 `COMANDO-CURSOR-*` in `comandi-cursor/` (resta su GitHub). `APPUNTI-FRANCESCO.md` e `APPUNTI-PER-FRANCESCO.md` restano in radice: l'area privata li indica lì.
+- 63 `_copie-*` in `_archivio/copie/`, `_backup-db-*` in `_archivio/backup-db/`, `_anteprima-*` e `_scene-canva` in `_archivio/anteprime/`, `_to_delete` in `_archivio/da-cancellare/`. Niente cancellato.
+- **Regola nuova:** le copie prima di una modifica si fanno in `_archivio/copie/<nome>-<ora>/`, non più in radice.
+- Desktop: 21 cartelle superate spostate in `Desktop/_VECCHIO-ANCHECASA/` (04-SuperMastro, BIM-SICUR, ANCHECASA-LAVORO, SOPRALLUOGO-FLASH, sito, VERCEL e le altre). Restano fuori: SUPERMASTRO-GITHUB (modifiche del 16.10 da chiarire), BIM-MOTORI (motore AncheBIM) e le cartelle di immagini.
+- File: `app-anchecasa/*` (sopra), `CLAUDE.md`, `LEGGIMI.txt`.
+
+### 17.10.2026 05:25 · Nando + Claude — Assoarma archiviato
+- Decisione di Nando: Assoarma non serve più. Spostati (niente cancellato) in `_archivio/assoarma/`: `assoarma/`, `assoarma-media/`, `_copie-assoarma-prima-0946/`, `APPUNTI-FRANCESCO-EMAIL-ASSOARMA.md`, `INVIA-APPUNTO-FRANCESCO.bat`.
+- `assoarma-media/` e l'appunto erano su GitHub: al prossimo commit escono dal repository (restano sul PC in `_archivio`).
+- Ancora acceso: https://assoarma.anchecasa.it (Cloudflare Pages `assoarma-demo`) e la funzione Supabase `assoarma-email`. Da spegnere a mano.
+- Fatto anche l'inventario delle funzioni e delle cartelle del Desktop: documento «AncheCasa · Stato del lavoro e piano d'azione» su claude.ai.
+- File: `CLAUDE.md`.
+
 ### 16.10.2026 08:35 · Nando + Claude — AncheFarma: ricerca del negozio
 - Nando: «la barra di ricerca non trova niente». La ricerca filtrava solo la griglia, che sta sotto la piega, e cercava il testo esatto («proteina» non trovava «Proteine»).
 - `sito/js/farma-negozio.js`: mentre scrivi si apre sotto la barra una tendina con i prodotti trovati (foto, reparto, prezzo; clic apre la scheda) e «Vedi tutti i risultati». Ricerca senza accenti, per parole, singolare e plurale, piccoli errori («creatna») e sinonimi (febbre, tachipirina, pressione, palestra, vitamine…). Se non trova niente propone parole da provare. Il negozio legge anche `?q=` dall'indirizzo.
